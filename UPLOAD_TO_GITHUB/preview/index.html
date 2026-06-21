@@ -515,6 +515,73 @@
         transform: translateX(22px);
       }
 
+      .drawer-scrim {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: rgba(16, 20, 24, 0.34);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.18s ease;
+      }
+
+      .drawer-scrim.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .profile-drawer {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 4;
+        width: min(86%, 356px);
+        overflow: auto;
+        padding: 18px 16px 24px;
+        background: var(--paper);
+        border-left: 1px solid var(--line);
+        box-shadow: -22px 0 48px rgba(16, 20, 24, 0.24);
+        transform: translateX(110%);
+        transition: transform 0.22s ease;
+        scrollbar-width: none;
+      }
+
+      .profile-drawer::-webkit-scrollbar {
+        display: none;
+      }
+
+      .profile-drawer.open {
+        transform: translateX(0);
+      }
+
+      .drawer-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .drawer-head h2 {
+        font-size: 22px;
+      }
+
+      .drawer-close {
+        width: 38px;
+        height: 38px;
+        border: 0;
+        border-radius: 50%;
+        color: var(--ink);
+        background: var(--surface);
+        font-size: 18px;
+        font-weight: 950;
+      }
+
+      body[data-theme="dark"] .drawer-close {
+        color: #fffaf0;
+      }
+
       .nav {
         position: absolute;
         left: 18px;
@@ -522,7 +589,7 @@
         bottom: 16px;
         height: 66px;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
         padding: 8px;
         border-radius: 26px;
@@ -599,6 +666,7 @@
             </div>
             <div class="icon-row">
               <button class="icon-btn" id="listenBtn" aria-label="Ascolta traccia">&#9654;</button>
+              <button class="icon-btn" id="profileBtn" aria-label="Apri profilo">S</button>
             </div>
           </header>
 
@@ -645,67 +713,76 @@
             </div>
           </section>
 
-          <section class="view" id="profile">
-            <div class="panel profile-card">
-              <div class="profile-head">
-                <div class="profile-avatar">V</div>
-                <div>
-                  <h2>Profilo</h2>
-                  <p>Preferenze salvate su questo dispositivo.</p>
-                </div>
-              </div>
-
-              <div class="theme-choice" aria-label="Tema app">
-                <button id="themeLight" type="button">Light</button>
-                <button id="themeDark" type="button">Dark</button>
-              </div>
-            </div>
-
-            <div class="panel">
-              <h2>Impostazioni</h2>
-              <div class="settings-list">
-                <div class="setting-row">
-                  <div>
-                    <strong>Promemoria giornaliero</strong>
-                    <span>Mostra un richiamo leggero per aprire la vision.</span>
-                  </div>
-                  <button class="switch" id="dailyReminder" type="button" aria-label="Promemoria giornaliero"></button>
-                </div>
-
-                <div class="setting-row">
-                  <div>
-                    <strong>Audio piu lento</strong>
-                    <span>Traccia mindset con ritmo piu calmo.</span>
-                  </div>
-                  <button class="switch" id="slowAudio" type="button" aria-label="Audio piu lento"></button>
-                </div>
-
-                <div class="setting-row">
-                  <div>
-                    <strong>Salvataggio locale</strong>
-                    <span>Goal, mantra e foto restano nel browser.</span>
-                  </div>
-                  <button class="switch on" type="button" aria-label="Salvataggio locale attivo" disabled></button>
-                </div>
-              </div>
-            </div>
-
-            <div class="panel">
-              <h2>Dati</h2>
-              <p>Puoi riportare il prototipo allo stato iniziale quando vuoi.</p>
-              <div class="action-row">
-                <button class="btn secondary" id="resetData" type="button">Reset</button>
-                <button class="btn primary" id="saveProfile" type="button">Salva</button>
-              </div>
-            </div>
-          </section>
         </main>
+
+        <div class="drawer-scrim" id="profileScrim"></div>
+        <aside class="profile-drawer" id="profileDrawer" aria-hidden="true">
+          <div class="drawer-head">
+            <div>
+              <span class="field-note">Visualize</span>
+              <h2>Profilo</h2>
+            </div>
+            <button class="drawer-close" id="closeProfile" type="button" aria-label="Chiudi profilo">x</button>
+          </div>
+
+          <div class="panel profile-card">
+            <div class="profile-head">
+              <div class="profile-avatar">V</div>
+              <div>
+                <h2>Samuele</h2>
+                <p>Preferenze salvate su questo dispositivo.</p>
+              </div>
+            </div>
+
+            <div class="theme-choice" aria-label="Tema app">
+              <button id="themeLight" type="button">Light</button>
+              <button id="themeDark" type="button">Dark</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Impostazioni</h2>
+            <div class="settings-list">
+              <div class="setting-row">
+                <div>
+                  <strong>Promemoria giornaliero</strong>
+                  <span>Mostra un richiamo leggero per aprire la vision.</span>
+                </div>
+                <button class="switch" id="dailyReminder" type="button" aria-label="Promemoria giornaliero"></button>
+              </div>
+
+              <div class="setting-row">
+                <div>
+                  <strong>Audio piu lento</strong>
+                  <span>Traccia mindset con ritmo piu calmo.</span>
+                </div>
+                <button class="switch" id="slowAudio" type="button" aria-label="Audio piu lento"></button>
+              </div>
+
+              <div class="setting-row">
+                <div>
+                  <strong>Salvataggio locale</strong>
+                  <span>Goal, mantra e foto restano nel browser.</span>
+                </div>
+                <button class="switch on" type="button" aria-label="Salvataggio locale attivo" disabled></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Dati</h2>
+            <p>Puoi riportare il prototipo allo stato iniziale quando vuoi.</p>
+            <div class="action-row">
+              <button class="btn secondary" id="resetData" type="button">Reset</button>
+              <button class="btn primary" id="saveProfile" type="button">Salva</button>
+            </div>
+          </div>
+        </aside>
 
         <nav class="nav" aria-label="Navigazione principale">
           <button class="active" data-view="goal">Goal</button>
           <button data-view="vision">Vision</button>
           <button data-view="anti">Anti</button>
-          <button data-view="profile">Profilo</button>
         </nav>
       </div>
     </div>
@@ -783,10 +860,22 @@
         const titles = {
           goal: "Goal",
           vision: "Vision",
-          anti: "Anti-vision",
-          profile: "Profilo"
+          anti: "Anti-vision"
         };
         document.getElementById("screenTitle").textContent = titles[name] || "Visualize";
+        closeProfile();
+      }
+
+      function openProfile() {
+        document.getElementById("profileDrawer").classList.add("open");
+        document.getElementById("profileScrim").classList.add("open");
+        document.getElementById("profileDrawer").setAttribute("aria-hidden", "false");
+      }
+
+      function closeProfile() {
+        document.getElementById("profileDrawer").classList.remove("open");
+        document.getElementById("profileScrim").classList.remove("open");
+        document.getElementById("profileDrawer").setAttribute("aria-hidden", "true");
       }
 
       function speak() {
@@ -813,6 +902,9 @@
       });
 
       document.getElementById("listenBtn").addEventListener("click", speak);
+      document.getElementById("profileBtn").addEventListener("click", openProfile);
+      document.getElementById("closeProfile").addEventListener("click", closeProfile);
+      document.getElementById("profileScrim").addEventListener("click", closeProfile);
 
       document.getElementById("themeLight").addEventListener("click", () => {
         state.settings.theme = "light";
