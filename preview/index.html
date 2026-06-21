@@ -21,27 +21,25 @@
     <style>
       :root {
         --ink: #101418;
+        --paper: #f3ead8;
+        --surface: #fffaf0;
+        --surface-muted: rgba(255, 250, 240, 0.84);
+        --line: #dfcfad;
+        --muted: #72695b;
         --gold: #e8c468;
         --rust: #da5a3a;
-        --paper: #f4efe4;
-        --surface: #fffaf0;
-        --surface-2: #f8edcf;
-        --line: #e4d3b3;
-        --muted: #746b5c;
-        --soft-gold: #f6e4af;
-        --soft-rust: #f5d4ca;
-        --shadow: 0 18px 38px rgba(16, 20, 24, 0.14);
+        --row: #fbf2df;
+        --danger: #2a1612;
       }
 
       body[data-theme="dark"] {
         --paper: #101418;
-        --surface: #182026;
-        --surface-2: #202a31;
-        --line: #2d3942;
-        --muted: #bcae91;
-        --soft-gold: #3b321f;
-        --soft-rust: #3b221c;
-        --shadow: 0 18px 38px rgba(0, 0, 0, 0.32);
+        --surface: #171f25;
+        --surface-muted: rgba(23, 31, 37, 0.88);
+        --line: #2a353d;
+        --muted: #baa982;
+        --row: #1e282f;
+        --danger: #321b16;
       }
 
       * {
@@ -69,22 +67,23 @@
         cursor: pointer;
       }
 
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
       .stage {
         min-height: 100vh;
         display: grid;
         place-items: start center;
         padding: 24px;
-        background:
-          radial-gradient(circle at 12% 10%, rgba(232, 196, 104, 0.44), transparent 30%),
-          radial-gradient(circle at 88% 20%, rgba(218, 90, 58, 0.2), transparent 28%),
-          #d4c9b4;
+        background: #d1c4aa;
       }
 
       body[data-theme="dark"] .stage {
-        background:
-          radial-gradient(circle at 12% 10%, rgba(232, 196, 104, 0.18), transparent 30%),
-          radial-gradient(circle at 88% 20%, rgba(218, 90, 58, 0.14), transparent 28%),
-          #080b0e;
+        background: #080b0e;
       }
 
       .phone {
@@ -95,10 +94,65 @@
         border: 8px solid #0b0e11;
         border-radius: 34px;
         background: var(--paper);
-        box-shadow: 0 28px 70px rgba(16, 20, 24, 0.24);
+        box-shadow: 0 24px 62px rgba(16, 20, 24, 0.22);
+      }
+
+      .inspiration-bg {
+        position: absolute;
+        inset: 72px 0 68px;
+        z-index: 0;
+        overflow: hidden;
+        opacity: 0.25;
+        filter: blur(1.4px);
+        pointer-events: none;
+      }
+
+      body[data-theme="dark"] .inspiration-bg {
+        opacity: 0.18;
+      }
+
+      .inspo-card {
+        position: absolute;
+        width: 126px;
+        height: 168px;
+        border-radius: 8px;
+        overflow: hidden;
+        transform: rotate(-7deg);
+        background: #c9aa65;
+      }
+
+      .inspo-card.one {
+        top: 18px;
+        left: -28px;
+        background:
+          radial-gradient(circle at 50% 24%, #2b201b 0 13%, transparent 14%),
+          radial-gradient(ellipse at 50% 65%, #1b1512 0 28%, transparent 29%),
+          linear-gradient(145deg, #e2c176, #7d2f24);
+      }
+
+      .inspo-card.two {
+        top: 158px;
+        right: -34px;
+        transform: rotate(9deg);
+        background:
+          radial-gradient(circle at 51% 25%, #211b18 0 12%, transparent 13%),
+          radial-gradient(ellipse at 52% 66%, #1a1310 0 30%, transparent 31%),
+          linear-gradient(145deg, #b88c52, #2b3034);
+      }
+
+      .inspo-card.three {
+        bottom: 28px;
+        left: 34px;
+        transform: rotate(5deg);
+        background:
+          radial-gradient(circle at 50% 23%, #231816 0 12%, transparent 13%),
+          radial-gradient(ellipse at 50% 64%, #1b1110 0 32%, transparent 33%),
+          linear-gradient(145deg, #8d3428, #e8c468);
       }
 
       .app {
+        position: relative;
+        z-index: 1;
         min-height: calc(100vh - 64px);
         max-height: 900px;
         overflow: auto;
@@ -116,7 +170,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        margin-bottom: 16px;
+        margin-bottom: 18px;
       }
 
       .brand {
@@ -135,19 +189,19 @@
         font-weight: 950;
       }
 
-      .logo-mark {
-        width: 42px;
-        height: 42px;
-        border-radius: 15px;
-      }
-
       body[data-theme="dark"] .logo-mark,
       body[data-theme="dark"] .profile-avatar {
         background: #050709;
       }
 
+      .logo-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+      }
+
       .brand span,
-      .eyebrow,
+      .label,
       .caption {
         display: block;
         color: var(--muted);
@@ -167,16 +221,15 @@
       }
 
       .icon-btn {
-        width: 42px;
-        height: 42px;
-        border: 0;
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
         display: grid;
         place-items: center;
         color: var(--ink);
-        background: var(--surface);
-        box-shadow: 0 8px 18px rgba(16, 20, 24, 0.08);
-        font-size: 16px;
+        background: var(--surface-muted);
+        font-size: 14px;
         font-weight: 950;
       }
 
@@ -197,122 +250,118 @@
         display: block;
       }
 
-      .section-title {
-        margin: 0 0 12px;
-        font-size: 25px;
+      .screen-kicker {
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .screen-title {
+        margin-bottom: 14px;
+        font-size: 28px;
         line-height: 1.04;
         letter-spacing: 0;
       }
 
-      .focus-card {
-        min-height: 340px;
+      .media-card {
+        min-height: 286px;
         position: relative;
         display: grid;
         align-content: end;
         overflow: hidden;
-        padding: 18px;
-        border-radius: 30px;
+        padding: 16px;
+        border: 1px solid rgba(16, 20, 24, 0.18);
+        border-radius: 8px;
         color: #fffaf0;
         background:
-          linear-gradient(180deg, rgba(16, 20, 24, 0.04), rgba(16, 20, 24, 0.78)),
-          linear-gradient(135deg, var(--ink), var(--rust) 54%, var(--gold));
+          linear-gradient(180deg, rgba(16, 20, 24, 0.02), rgba(16, 20, 24, 0.76)),
+          linear-gradient(145deg, #101418, #da5a3a 58%, #e8c468);
         background-size: cover;
         background-position: center;
-        box-shadow: var(--shadow);
       }
 
-      .focus-card::before {
-        content: "";
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        width: 74px;
-        height: 74px;
-        border-radius: 50%;
-        background: rgba(232, 196, 104, 0.24);
+      .media-card.small {
+        min-height: 238px;
+        background:
+          linear-gradient(180deg, rgba(16, 20, 24, 0.08), rgba(16, 20, 24, 0.7)),
+          linear-gradient(145deg, #e8c468, #da5a3a);
       }
 
-      .pill {
+      .media-card.danger {
+        background:
+          linear-gradient(180deg, rgba(16, 20, 24, 0.12), rgba(16, 20, 24, 0.92)),
+          linear-gradient(145deg, #231c19, #da5a3a);
+      }
+
+      .tag {
         width: fit-content;
+        padding: 6px 9px;
+        margin-bottom: 9px;
         border-radius: 999px;
-        padding: 7px 11px;
-        margin-bottom: 10px;
         color: var(--ink);
         background: rgba(255, 250, 240, 0.9);
         font-size: 12px;
         font-weight: 950;
       }
 
-      h1,
-      h2,
-      h3,
-      p {
-        margin: 0;
+      .media-card h1 {
+        max-width: 340px;
+        font-size: 31px;
+        line-height: 1.02;
       }
 
-      .focus-card h1 {
+      .media-card p {
         max-width: 340px;
-        font-size: 36px;
-        line-height: 0.98;
-      }
-
-      .focus-card p {
-        max-width: 340px;
-        margin-top: 12px;
+        margin-top: 10px;
         color: rgba(255, 250, 240, 0.82);
-        line-height: 1.45;
-        font-size: 15px;
+        line-height: 1.42;
+        font-size: 14px;
         font-weight: 650;
       }
 
-      .session-strip {
+      .stats-grid {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 8px;
-        margin: 12px 0 14px;
+        margin: 10px 0 12px;
       }
 
-      .metric {
-        min-height: 74px;
+      .stat,
+      .card,
+      .row-list {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface-muted);
+      }
+
+      .stat {
+        min-height: 70px;
         display: grid;
         align-content: center;
         gap: 4px;
-        padding: 11px;
-        border: 1px solid var(--line);
-        border-radius: 22px;
-        background: var(--surface);
+        padding: 10px;
       }
 
-      .metric strong {
+      .stat strong {
         font-size: 18px;
       }
 
-      .metric span {
+      .stat span {
         color: var(--muted);
         font-size: 11px;
         font-weight: 850;
       }
 
       .card {
-        margin-top: 12px;
-        padding: 15px;
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        background: var(--surface);
-      }
-
-      .card.gold {
-        background: var(--soft-gold);
-      }
-
-      .card.rust {
-        background: var(--soft-rust);
+        margin-top: 10px;
+        padding: 14px;
       }
 
       .card h2 {
-        font-size: 20px;
-        line-height: 1;
         margin-bottom: 8px;
+        font-size: 19px;
+        line-height: 1.05;
       }
 
       .body-copy,
@@ -342,14 +391,53 @@
 
       .plus-btn {
         flex: 0 0 auto;
-        width: 36px;
-        height: 36px;
+        width: 34px;
+        height: 34px;
         border: 0;
-        border-radius: 50%;
+        border-radius: 8px;
         color: #fffaf0;
         background: var(--rust);
-        font-size: 24px;
+        font-size: 22px;
         line-height: 1;
+      }
+
+      .row-list {
+        overflow: hidden;
+      }
+
+      .list-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 64px;
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .list-row:last-child {
+        border-bottom: 0;
+      }
+
+      .row-icon {
+        flex: 0 0 auto;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: var(--row);
+      }
+
+      .list-row strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .list-row span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        line-height: 1.35;
       }
 
       .action-row {
@@ -360,9 +448,9 @@
       }
 
       .btn {
-        min-height: 46px;
+        min-height: 44px;
         border: 0;
-        border-radius: 17px;
+        border-radius: 8px;
         padding: 12px 14px;
         font-weight: 950;
       }
@@ -382,107 +470,14 @@
         border: 1px solid var(--line);
       }
 
-      .vision-board {
-        min-height: 292px;
-        display: grid;
-        align-content: end;
-        padding: 16px;
-        border-radius: 30px;
-        color: #fffaf0;
-        background:
-          linear-gradient(180deg, rgba(16, 20, 24, 0.08), rgba(16, 20, 24, 0.74)),
-          linear-gradient(135deg, var(--gold), var(--rust));
-        background-size: cover;
-        background-position: center;
-        box-shadow: var(--shadow);
-      }
-
-      .vision-board h1 {
-        max-width: 330px;
-        font-size: 34px;
-        line-height: 1;
-      }
-
-      .change-list {
-        display: grid;
-        gap: 9px;
-        margin-top: 12px;
-      }
-
-      .change-item,
-      .setting-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 12px 0;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .change-item:last-child,
-      .setting-row:last-child {
-        border-bottom: 0;
-      }
-
-      .change-item strong,
-      .setting-row strong {
-        display: block;
-        font-size: 15px;
-      }
-
-      .change-item span,
-      .setting-row span {
-        display: block;
-        margin-top: 3px;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 750;
-        line-height: 1.35;
-      }
-
-      .change-dot {
-        flex: 0 0 auto;
-        width: 36px;
-        height: 36px;
-        border-radius: 14px;
-        background: var(--soft-gold);
-      }
-
-      .anti-card {
-        min-height: 340px;
-        display: grid;
-        align-content: end;
-        padding: 18px;
-        border-radius: 30px;
-        color: #fffaf0;
-        background:
-          linear-gradient(180deg, rgba(16, 20, 24, 0.16), rgba(16, 20, 24, 0.92)),
-          linear-gradient(135deg, #27211c, var(--rust));
-        box-shadow: var(--shadow);
-      }
-
-      .anti-card h1 {
-        font-size: 34px;
-        line-height: 1;
-        margin-bottom: 12px;
-      }
-
-      .anti-card p {
-        color: rgba(255, 250, 240, 0.82);
-        line-height: 1.5;
-        font-weight: 650;
-      }
-
-      .anti-list {
-        display: grid;
-        gap: 10px;
-        margin-top: 12px;
-      }
-
       .anti-point {
         padding: 13px;
-        border-radius: 20px;
-        background: var(--surface-2);
+        border-bottom: 1px solid var(--line);
+        background: var(--surface-muted);
+      }
+
+      .anti-point:last-child {
+        border-bottom: 0;
       }
 
       .anti-point strong {
@@ -503,7 +498,7 @@
       textarea {
         width: 100%;
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: 8px;
         outline: 0;
         padding: 13px 14px;
         color: var(--ink);
@@ -566,8 +561,8 @@
       .drawer-close {
         width: 38px;
         height: 38px;
-        border: 0;
-        border-radius: 50%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
         color: var(--ink);
         background: var(--surface);
         font-size: 18px;
@@ -581,9 +576,9 @@
       }
 
       .profile-avatar {
-        width: 58px;
-        height: 58px;
-        border-radius: 22px;
+        width: 56px;
+        height: 56px;
+        border-radius: 8px;
         font-size: 24px;
       }
 
@@ -600,7 +595,7 @@
 
       .theme-choice button {
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: 8px;
         padding: 12px;
         color: var(--ink);
         background: var(--surface);
@@ -615,17 +610,44 @@
 
       .settings-list {
         display: grid;
-        gap: 10px;
-        margin-top: 14px;
+        gap: 0;
+        margin-top: 10px;
+      }
+
+      .setting-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .setting-row:last-child {
+        border-bottom: 0;
+      }
+
+      .setting-row strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .setting-row span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        line-height: 1.35;
       }
 
       .switch {
         flex: 0 0 auto;
-        width: 54px;
-        height: 32px;
+        width: 52px;
+        height: 30px;
         border: 0;
         border-radius: 999px;
-        padding: 4px;
+        padding: 3px;
         background: #d7c5a2;
       }
 
@@ -652,19 +674,20 @@
         left: 18px;
         right: 18px;
         bottom: 16px;
-        height: 66px;
+        height: 64px;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        padding: 8px;
-        border-radius: 26px;
+        gap: 6px;
+        padding: 7px;
+        border: 1px solid rgba(255, 250, 240, 0.08);
+        border-radius: 8px;
         background: var(--ink);
-        box-shadow: 0 18px 40px rgba(16, 20, 24, 0.22);
+        box-shadow: 0 16px 32px rgba(16, 20, 24, 0.22);
       }
 
       .nav button {
         border: 0;
-        border-radius: 20px;
+        border-radius: 6px;
         color: rgba(255, 250, 240, 0.66);
         background: transparent;
         font-size: 13px;
@@ -720,6 +743,12 @@
   <body>
     <div class="stage">
       <div class="phone">
+        <div class="inspiration-bg" aria-hidden="true">
+          <div class="inspo-card one"></div>
+          <div class="inspo-card two"></div>
+          <div class="inspo-card three"></div>
+        </div>
+
         <main class="app">
           <header class="topbar">
             <div class="brand">
@@ -730,37 +759,37 @@
               </div>
             </div>
             <div class="icon-row">
-              <button class="icon-btn" id="listenBtn" aria-label="Ascolta traccia">&#9654;</button>
+              <button class="icon-btn" id="listenBtn" aria-label="Ascolta traccia">Play</button>
               <button class="icon-btn" id="profileBtn" aria-label="Apri profilo">S</button>
             </div>
           </header>
 
           <section class="view active" id="goal">
-            <span class="eyebrow">Workspace di oggi</span>
-            <h1 class="section-title">Visualizza, scegli, agisci.</h1>
+            <div class="screen-kicker">Today workspace</div>
+            <h1 class="screen-title">Visualizza. Scegli. Fai.</h1>
 
-            <article class="focus-card" id="goalHero">
-              <span class="pill">Focus principale</span>
+            <article class="media-card" id="goalHero">
+              <span class="tag">Focus principale</span>
               <h1 id="goalTitle">La vita che sto costruendo</h1>
               <p id="goalText">Ogni giorno scelgo una piccola azione che rende reale la mia vision.</p>
             </article>
 
-            <div class="session-strip">
-              <div class="metric">
-                <strong>7 min</strong>
+            <div class="stats-grid">
+              <div class="stat">
+                <strong>7m</strong>
                 <span>Sessione</span>
               </div>
-              <div class="metric">
+              <div class="stat">
                 <strong>1</strong>
                 <span>Azione</span>
               </div>
-              <div class="metric">
+              <div class="stat">
                 <strong>28</strong>
                 <span>Streak</span>
               </div>
             </div>
 
-            <article class="card gold">
+            <article class="card">
               <span class="caption">Mantra</span>
               <div class="mantra-row">
                 <p id="mantraText">Sono il tipo di persona che mantiene le promesse fatte a se stesso.</p>
@@ -776,11 +805,11 @@
           </section>
 
           <section class="view" id="vision">
-            <span class="eyebrow">Vision board</span>
-            <h1 class="section-title">Come cambia la tua vita.</h1>
+            <div class="screen-kicker">Vision board</div>
+            <h1 class="screen-title">Come cambia la tua vita.</h1>
 
-            <article class="vision-board" id="visionPhoto">
-              <span class="pill">Future self</span>
+            <article class="media-card small" id="visionPhoto">
+              <span class="tag">Future self</span>
               <h1 id="visionTitle">Energia, disciplina e liberta</h1>
             </article>
 
@@ -794,25 +823,22 @@
               <input id="photoInput" type="file" accept="image/*" hidden />
             </div>
 
-            <div class="card">
-              <h2>Cosa migliora</h2>
-              <div class="change-list" id="changeList"></div>
-            </div>
+            <div class="row-list" id="changeList"></div>
           </section>
 
           <section class="view" id="anti">
-            <span class="eyebrow">Anti-vision</span>
-            <h1 class="section-title">Il costo del rinvio.</h1>
+            <div class="screen-kicker">Anti-vision</div>
+            <h1 class="screen-title">Il costo del rinvio.</h1>
 
-            <article class="anti-card">
-              <span class="pill">Scenario da evitare</span>
+            <article class="media-card danger">
+              <span class="tag">Scenario da evitare</span>
               <h1>Se non scegli oggi</h1>
-              <p id="antiText">Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola. Questa immagine serve a scegliere oggi, non a punirmi.</p>
+              <p id="antiText">Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola.</p>
             </article>
 
-            <div class="anti-list" id="antiList"></div>
+            <div class="row-list" id="antiList"></div>
 
-            <article class="card gold">
+            <article class="card">
               <h2>Rientro immediato</h2>
               <p>Guarda l'anti-vision per pochi secondi, poi torna al Goal e completa una sola azione concreta.</p>
             </article>
@@ -907,7 +933,7 @@
           ["Ambiente", "Spazi e persone allineati ai tuoi obiettivi."],
           ["Identita", "Meno promesse vuote, piu prove concrete."]
         ],
-        antiText: "Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola. Questa immagine serve a scegliere oggi, non a punirmi.",
+        antiText: "Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola.",
         antiPoints: [
           ["Costo emotivo", "Ti abitui a non credere alle tue intenzioni."],
           ["Costo pratico", "Le stesse scelte diventano piu difficili da recuperare."],
@@ -948,7 +974,7 @@
         document.body.dataset.theme = state.settings.theme;
         document.querySelector('meta[name="theme-color"]').setAttribute(
           "content",
-          state.settings.theme === "dark" ? "#101418" : "#f4efe4"
+          state.settings.theme === "dark" ? "#101418" : "#f3ead8"
         );
         document.getElementById("themeLight").classList.toggle("active", state.settings.theme === "light");
         document.getElementById("themeDark").classList.toggle("active", state.settings.theme === "dark");
@@ -967,12 +993,12 @@
         document.getElementById("antiText").textContent = state.antiText;
 
         document.getElementById("changeList").innerHTML = state.changes.map(([title, text]) => `
-          <div class="change-item">
+          <div class="list-row">
+            <div class="row-icon"></div>
             <div>
               <strong>${title}</strong>
               <span>${text}</span>
             </div>
-            <div class="change-dot"></div>
           </div>
         `).join("");
 
