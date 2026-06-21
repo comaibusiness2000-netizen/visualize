@@ -320,37 +320,11 @@
         font-weight: 650;
       }
 
-      .stats-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 8px;
-        margin: 10px 0 12px;
-      }
-
-      .stat,
       .card,
       .row-list {
         border: 1px solid var(--line);
         border-radius: 8px;
         background: var(--surface-muted);
-      }
-
-      .stat {
-        min-height: 70px;
-        display: grid;
-        align-content: center;
-        gap: 4px;
-        padding: 10px;
-      }
-
-      .stat strong {
-        font-size: 18px;
-      }
-
-      .stat span {
-        color: var(--muted);
-        font-size: 11px;
-        font-weight: 850;
       }
 
       .card {
@@ -418,12 +392,28 @@
         border-bottom: 0;
       }
 
+      .home-link {
+        width: 100%;
+        border: 0;
+        color: inherit;
+        background: transparent;
+        text-align: left;
+      }
+
       .row-icon {
         flex: 0 0 auto;
         width: 34px;
         height: 34px;
         border-radius: 8px;
         background: var(--row);
+      }
+
+      .row-icon.vision {
+        background: linear-gradient(145deg, var(--gold), var(--rust));
+      }
+
+      .row-icon.anti {
+        background: linear-gradient(145deg, #2a1612, var(--rust));
       }
 
       .list-row strong {
@@ -765,29 +755,14 @@
           </header>
 
           <section class="view active" id="goal">
-            <div class="screen-kicker">Today workspace</div>
-            <h1 class="screen-title">Visualizza. Scegli. Fai.</h1>
+            <div class="screen-kicker">Daily vision</div>
+            <h1 class="screen-title">La tua visione, in un colpo d'occhio.</h1>
 
             <article class="media-card" id="goalHero">
               <span class="tag">Focus principale</span>
               <h1 id="goalTitle">La vita che sto costruendo</h1>
-              <p id="goalText">Ogni giorno scelgo una piccola azione che rende reale la mia vision.</p>
+              <p id="goalText">Ogni giorno torno all'immagine della persona che sto costruendo.</p>
             </article>
-
-            <div class="stats-grid">
-              <div class="stat">
-                <strong>7m</strong>
-                <span>Sessione</span>
-              </div>
-              <div class="stat">
-                <strong>1</strong>
-                <span>Azione</span>
-              </div>
-              <div class="stat">
-                <strong>28</strong>
-                <span>Streak</span>
-              </div>
-            </div>
 
             <article class="card">
               <span class="caption">Mantra</span>
@@ -797,11 +772,22 @@
               </div>
             </article>
 
-            <article class="card">
-              <span class="caption">Prossima azione</span>
-              <h2 id="actionTitle">Una prova concreta entro stasera</h2>
-              <p id="actionText">Fai una scelta visibile che conferma la persona che vuoi diventare.</p>
-            </article>
+            <div class="row-list" style="margin-top: 10px;">
+              <button class="list-row home-link" data-view="vision" type="button">
+                <div class="row-icon vision"></div>
+                <div>
+                  <strong>Apri la vision</strong>
+                  <span>Guarda come cambia la tua vita quando segui la direzione giusta.</span>
+                </div>
+              </button>
+              <button class="list-row home-link" data-view="anti" type="button">
+                <div class="row-icon anti"></div>
+                <div>
+                  <strong>Guarda l'anti-vision</strong>
+                  <span>Ricorda cosa succede se continui a rimandare troppo a lungo.</span>
+                </div>
+              </button>
+            </div>
           </section>
 
           <section class="view" id="vision">
@@ -840,7 +826,7 @@
 
             <article class="card">
               <h2>Rientro immediato</h2>
-              <p>Guarda l'anti-vision per pochi secondi, poi torna al Goal e completa una sola azione concreta.</p>
+              <p>Guarda l'anti-vision per pochi secondi, poi torna al Goal e scegli il prossimo passo con lucidita.</p>
             </article>
           </section>
         </main>
@@ -922,10 +908,8 @@
     <script>
       const defaults = {
         goalTitle: "La vita che sto costruendo",
-        goalText: "Ogni giorno scelgo una piccola azione che rende reale la mia vision.",
+        goalText: "Ogni giorno torno all'immagine della persona che sto costruendo.",
         mantra: "Sono il tipo di persona che mantiene le promesse fatte a se stesso.",
-        actionTitle: "Una prova concreta entro stasera",
-        actionText: "Fai una scelta visibile che conferma la persona che vuoi diventare.",
         visionTitle: "Energia, disciplina e liberta",
         visionText: "Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.",
         changes: [
@@ -986,8 +970,6 @@
         document.getElementById("goalTitle").textContent = state.goalTitle;
         document.getElementById("goalText").textContent = state.goalText;
         document.getElementById("mantraText").textContent = state.mantra;
-        document.getElementById("actionTitle").textContent = state.actionTitle;
-        document.getElementById("actionText").textContent = state.actionText;
         document.getElementById("visionTitle").textContent = state.visionTitle;
         document.getElementById("visionText").textContent = state.visionText;
         document.getElementById("antiText").textContent = state.antiText;
@@ -1051,8 +1033,7 @@
           state.goalTitle,
           state.goalText,
           state.visionText,
-          state.actionText,
-          "Ora scegli una azione concreta e falla prima che la giornata finisca."
+          "Resta qualche secondo dentro questa immagine e lascia che guidi la prossima scelta."
         ].join(" ");
         speechSynthesis.cancel();
         const voice = new SpeechSynthesisUtterance(text);
@@ -1127,8 +1108,6 @@
           state.visionText = text.trim();
           state.goalText = text.trim();
         }
-        const action = prompt("Qual e la prossima azione concreta?", state.actionText);
-        if (action && action.trim()) state.actionText = action.trim();
         save();
         paint();
         notify("Vision aggiornata");
