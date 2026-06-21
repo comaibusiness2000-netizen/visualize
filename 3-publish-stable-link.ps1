@@ -74,7 +74,11 @@ try {
     Write-Host "Nessuna modifica nuova da committare."
   }
 
-  & $Git remote remove origin 2>$null
+  $ExistingOrigin = & $Git remote
+  if ($ExistingOrigin -contains "origin") {
+    & $Git remote remove origin
+    if ($LASTEXITCODE -ne 0) { throw "git remote remove origin non riuscito" }
+  }
   & $Git remote add origin $RepoUrl
   if ($LASTEXITCODE -ne 0) { throw "git remote add non riuscito" }
 

@@ -1,12 +1,12 @@
 ﻿**********************
 Inizio trascrizione Windows PowerShell
-Ora di inizio: 20260621173805
+Ora di inizio: 20260621174026
 Nome utente: SAMCOMP\comai
 Esegui come utente: SAMCOMP\comai
 Nome configurazione: 
 Computer SAMCOMP (Microsoft Windows NT 10.0.26200.0)
 Applicazione host: powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\comai\OneDrive\Documenti\VISUALISATION APP\3-publish-stable-link.ps1
-ID processo: 25380
+ID processo: 6952
 PSVersion: 5.1.26100.8655
 PSEdition: Desktop
 PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8655
