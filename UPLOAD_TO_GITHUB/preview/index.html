@@ -25,19 +25,23 @@
         --rust: #da5a3a;
         --paper: #f4efe4;
         --surface: #fffaf0;
-        --line: #e5d4b5;
+        --surface-2: #f8edcf;
+        --line: #e4d3b3;
         --muted: #746b5c;
-        --gold-soft: #f7e6b7;
-        --rust-soft: #f7d8cf;
+        --soft-gold: #f6e4af;
+        --soft-rust: #f5d4ca;
+        --shadow: 0 18px 38px rgba(16, 20, 24, 0.14);
       }
 
       body[data-theme="dark"] {
         --paper: #101418;
-        --surface: #181f25;
-        --line: #2c353d;
-        --muted: #b9aa8d;
-        --gold-soft: #3a3120;
-        --rust-soft: #3a231d;
+        --surface: #182026;
+        --surface-2: #202a31;
+        --line: #2d3942;
+        --muted: #bcae91;
+        --soft-gold: #3b321f;
+        --soft-rust: #3b221c;
+        --shadow: 0 18px 38px rgba(0, 0, 0, 0.32);
       }
 
       * {
@@ -46,9 +50,9 @@
 
       body {
         margin: 0;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: var(--ink);
         background: var(--paper);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
       body[data-theme="dark"] {
@@ -71,15 +75,15 @@
         place-items: start center;
         padding: 24px;
         background:
-          radial-gradient(circle at 15% 10%, rgba(232, 196, 104, 0.42), transparent 30%),
-          radial-gradient(circle at 86% 22%, rgba(218, 90, 58, 0.22), transparent 28%),
+          radial-gradient(circle at 12% 10%, rgba(232, 196, 104, 0.44), transparent 30%),
+          radial-gradient(circle at 88% 20%, rgba(218, 90, 58, 0.2), transparent 28%),
           #d4c9b4;
       }
 
       body[data-theme="dark"] .stage {
         background:
-          radial-gradient(circle at 15% 10%, rgba(232, 196, 104, 0.22), transparent 30%),
-          radial-gradient(circle at 86% 22%, rgba(218, 90, 58, 0.18), transparent 28%),
+          radial-gradient(circle at 12% 10%, rgba(232, 196, 104, 0.18), transparent 30%),
+          radial-gradient(circle at 88% 20%, rgba(218, 90, 58, 0.14), transparent 28%),
           #080b0e;
       }
 
@@ -98,11 +102,12 @@
         min-height: calc(100vh - 64px);
         max-height: 900px;
         overflow: auto;
-        padding: 18px 16px 92px;
+        padding: 18px 16px 94px;
         scrollbar-width: none;
       }
 
-      .app::-webkit-scrollbar {
+      .app::-webkit-scrollbar,
+      .profile-drawer::-webkit-scrollbar {
         display: none;
       }
 
@@ -121,10 +126,8 @@
         min-width: 0;
       }
 
-      .logo-mark {
-        width: 42px;
-        height: 42px;
-        border-radius: 15px;
+      .logo-mark,
+      .profile-avatar {
         display: grid;
         place-items: center;
         color: var(--gold);
@@ -132,15 +135,24 @@
         font-weight: 950;
       }
 
-      body[data-theme="dark"] .logo-mark {
+      .logo-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 15px;
+      }
+
+      body[data-theme="dark"] .logo-mark,
+      body[data-theme="dark"] .profile-avatar {
         background: #050709;
       }
 
-      .brand span {
+      .brand span,
+      .eyebrow,
+      .caption {
         display: block;
         color: var(--muted);
         font-size: 12px;
-        font-weight: 800;
+        font-weight: 850;
       }
 
       .brand strong {
@@ -164,32 +176,58 @@
         color: var(--ink);
         background: var(--surface);
         box-shadow: 0 8px 18px rgba(16, 20, 24, 0.08);
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 950;
       }
 
-      .hero {
-        min-height: 430px;
-        border-radius: 30px;
-        padding: 18px;
-        display: grid;
-        align-content: end;
-        color: #fff;
-        overflow: hidden;
-        position: relative;
-        background:
-          linear-gradient(180deg, rgba(16, 20, 24, 0.05), rgba(16, 20, 24, 0.78)),
-          linear-gradient(135deg, var(--ink), var(--rust) 52%, var(--gold));
-        background-size: cover;
-        background-position: center;
+      body[data-theme="dark"] .icon-btn,
+      body[data-theme="dark"] input,
+      body[data-theme="dark"] textarea,
+      body[data-theme="dark"] .btn.secondary,
+      body[data-theme="dark"] .drawer-close,
+      body[data-theme="dark"] .theme-choice button {
+        color: #fffaf0;
       }
 
-      .hero::before {
+      .view {
+        display: none;
+      }
+
+      .view.active {
+        display: block;
+      }
+
+      .section-title {
+        margin: 0 0 12px;
+        font-size: 25px;
+        line-height: 1.04;
+        letter-spacing: 0;
+      }
+
+      .focus-card {
+        min-height: 340px;
+        position: relative;
+        display: grid;
+        align-content: end;
+        overflow: hidden;
+        padding: 18px;
+        border-radius: 30px;
+        color: #fffaf0;
+        background:
+          linear-gradient(180deg, rgba(16, 20, 24, 0.04), rgba(16, 20, 24, 0.78)),
+          linear-gradient(135deg, var(--ink), var(--rust) 54%, var(--gold));
+        background-size: cover;
+        background-position: center;
+        box-shadow: var(--shadow);
+      }
+
+      .focus-card::before {
         content: "";
         position: absolute;
-        inset: 16px 16px auto auto;
-        width: 82px;
-        height: 82px;
+        top: 16px;
+        right: 16px;
+        width: 74px;
+        height: 74px;
         border-radius: 50%;
         background: rgba(232, 196, 104, 0.24);
       }
@@ -212,57 +250,94 @@
         margin: 0;
       }
 
-      .hero h1 {
-        max-width: 330px;
+      .focus-card h1 {
+        max-width: 340px;
         font-size: 36px;
         line-height: 0.98;
-        letter-spacing: 0;
       }
 
-      .hero p {
+      .focus-card p {
         max-width: 340px;
         margin-top: 12px;
-        color: rgba(255, 255, 255, 0.82);
+        color: rgba(255, 250, 240, 0.82);
         line-height: 1.45;
         font-size: 15px;
         font-weight: 650;
       }
 
-      .mantra-strip {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 14px;
-        padding: 12px;
+      .session-strip {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        margin: 12px 0 14px;
+      }
+
+      .metric {
+        min-height: 74px;
+        display: grid;
+        align-content: center;
+        gap: 4px;
+        padding: 11px;
         border: 1px solid var(--line);
         border-radius: 22px;
         background: var(--surface);
       }
 
-      .mantra-strip p {
+      .metric strong {
+        font-size: 18px;
+      }
+
+      .metric span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 850;
+      }
+
+      .card {
+        margin-top: 12px;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--surface);
+      }
+
+      .card.gold {
+        background: var(--soft-gold);
+      }
+
+      .card.rust {
+        background: var(--soft-rust);
+      }
+
+      .card h2 {
+        font-size: 20px;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+
+      .body-copy,
+      .card p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
+        font-weight: 650;
+      }
+
+      .mantra-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mantra-row p {
         flex: 1;
         min-width: 0;
         color: var(--ink);
-        font-size: 14px;
-        line-height: 1.35;
-        font-weight: 800;
+        font-weight: 850;
       }
 
-      body[data-theme="dark"] .mantra-strip p,
-      body[data-theme="dark"] input,
-      body[data-theme="dark"] textarea,
-      body[data-theme="dark"] .btn.secondary {
+      body[data-theme="dark"] .mantra-row p {
         color: #fffaf0;
-      }
-
-      body[data-theme="dark"] .icon-btn,
-      body[data-theme="dark"] .btn.primary,
-      body[data-theme="dark"] .plus-btn {
-        color: #fffaf0;
-      }
-
-      body[data-theme="dark"] .btn.primary {
-        border: 1px solid var(--line);
       }
 
       .plus-btn {
@@ -271,77 +346,123 @@
         height: 36px;
         border: 0;
         border-radius: 50%;
-        color: var(--surface);
+        color: #fffaf0;
         background: var(--rust);
         font-size: 24px;
         line-height: 1;
-        font-weight: 700;
       }
 
-      .view {
-        display: none;
+      .action-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 12px;
       }
 
-      .view.active {
-        display: block;
+      .btn {
+        min-height: 46px;
+        border: 0;
+        border-radius: 17px;
+        padding: 12px 14px;
+        font-weight: 950;
       }
 
-      .panel {
-        margin-top: 14px;
-        padding: 16px;
+      .btn.primary {
+        color: #fffaf0;
+        background: var(--ink);
+      }
+
+      .btn.secondary {
         border: 1px solid var(--line);
-        border-radius: 24px;
+        color: var(--ink);
         background: var(--surface);
       }
 
-      .panel h2 {
-        font-size: 22px;
-        line-height: 1;
-        margin-bottom: 10px;
+      body[data-theme="dark"] .btn.primary {
+        border: 1px solid var(--line);
       }
 
-      .panel p,
-      .field-note {
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.45;
-        font-weight: 650;
-      }
-
-      .vision-photo {
-        min-height: 250px;
-        border-radius: 26px;
-        padding: 16px;
+      .vision-board {
+        min-height: 292px;
         display: grid;
         align-content: end;
-        color: #fff;
+        padding: 16px;
+        border-radius: 30px;
+        color: #fffaf0;
         background:
-          linear-gradient(180deg, rgba(16, 20, 24, 0.08), rgba(16, 20, 24, 0.7)),
+          linear-gradient(180deg, rgba(16, 20, 24, 0.08), rgba(16, 20, 24, 0.74)),
           linear-gradient(135deg, var(--gold), var(--rust));
         background-size: cover;
         background-position: center;
+        box-shadow: var(--shadow);
       }
 
-      .vision-photo h2 {
-        max-width: 320px;
-        font-size: 31px;
+      .vision-board h1 {
+        max-width: 330px;
+        font-size: 34px;
         line-height: 1;
       }
 
-      .anti-card {
-        min-height: 360px;
-        border-radius: 30px;
-        padding: 18px;
+      .change-list {
         display: grid;
-        align-content: end;
-        color: var(--surface);
-        background:
-          linear-gradient(180deg, rgba(16, 20, 24, 0.2), rgba(16, 20, 24, 0.92)),
-          linear-gradient(135deg, #27211c, var(--rust));
+        gap: 9px;
+        margin-top: 12px;
       }
 
-      .anti-card h2 {
-        font-size: 33px;
+      .change-item,
+      .setting-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .change-item:last-child,
+      .setting-row:last-child {
+        border-bottom: 0;
+      }
+
+      .change-item strong,
+      .setting-row strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .change-item span,
+      .setting-row span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        line-height: 1.35;
+      }
+
+      .change-dot {
+        flex: 0 0 auto;
+        width: 36px;
+        height: 36px;
+        border-radius: 14px;
+        background: var(--soft-gold);
+      }
+
+      .anti-card {
+        min-height: 340px;
+        display: grid;
+        align-content: end;
+        padding: 18px;
+        border-radius: 30px;
+        color: #fffaf0;
+        background:
+          linear-gradient(180deg, rgba(16, 20, 24, 0.16), rgba(16, 20, 24, 0.92)),
+          linear-gradient(135deg, #27211c, var(--rust));
+        box-shadow: var(--shadow);
+      }
+
+      .anti-card h1 {
+        font-size: 34px;
         line-height: 1;
         margin-bottom: 12px;
       }
@@ -352,9 +473,30 @@
         font-weight: 650;
       }
 
-      .form {
+      .anti-list {
         display: grid;
         gap: 10px;
+        margin-top: 12px;
+      }
+
+      .anti-point {
+        padding: 13px;
+        border-radius: 20px;
+        background: var(--surface-2);
+      }
+
+      .anti-point strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 15px;
+      }
+
+      .anti-point span {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+        font-weight: 650;
       }
 
       input,
@@ -371,148 +513,6 @@
       textarea {
         min-height: 116px;
         resize: vertical;
-      }
-
-      .action-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 10px;
-      }
-
-      .btn {
-        border: 0;
-        border-radius: 18px;
-        padding: 13px 14px;
-        font-weight: 950;
-      }
-
-      .btn.primary {
-        color: var(--surface);
-        background: var(--ink);
-      }
-
-      .btn.secondary {
-        border: 1px solid var(--line);
-        color: var(--ink);
-        background: var(--gold-soft);
-      }
-
-      .profile-card {
-        margin-top: 0;
-      }
-
-      .profile-head {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .profile-avatar {
-        width: 58px;
-        height: 58px;
-        border-radius: 22px;
-        display: grid;
-        place-items: center;
-        color: var(--gold);
-        background: var(--ink);
-        font-size: 24px;
-        font-weight: 950;
-      }
-
-      body[data-theme="dark"] .profile-avatar {
-        background: #050709;
-      }
-
-      .profile-head h2 {
-        margin-bottom: 4px;
-      }
-
-      .settings-list {
-        display: grid;
-        gap: 10px;
-        margin-top: 14px;
-      }
-
-      .theme-choice {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-top: 12px;
-      }
-
-      .theme-choice button {
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        padding: 12px;
-        color: var(--ink);
-        background: var(--surface);
-        font-weight: 950;
-      }
-
-      body[data-theme="dark"] .theme-choice button {
-        color: #fffaf0;
-      }
-
-      .theme-choice button.active {
-        border-color: var(--gold);
-        background: var(--gold);
-        color: var(--ink);
-      }
-
-      .setting-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 14px;
-        padding: 13px 0;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .setting-row:last-child {
-        border-bottom: 0;
-      }
-
-      .setting-row strong {
-        display: block;
-        font-size: 15px;
-      }
-
-      .setting-row span {
-        display: block;
-        margin-top: 3px;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 1.35;
-      }
-
-      .switch {
-        flex: 0 0 auto;
-        width: 54px;
-        height: 32px;
-        border: 0;
-        border-radius: 999px;
-        padding: 4px;
-        background: #d7c5a2;
-      }
-
-      .switch::before {
-        content: "";
-        display: block;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        background: #fffaf0;
-        transition: transform 0.18s ease;
-      }
-
-      .switch.on {
-        background: var(--rust);
-      }
-
-      .switch.on::before {
-        transform: translateX(22px);
       }
 
       .drawer-scrim {
@@ -547,10 +547,6 @@
         scrollbar-width: none;
       }
 
-      .profile-drawer::-webkit-scrollbar {
-        display: none;
-      }
-
       .profile-drawer.open {
         transform: translateX(0);
       }
@@ -578,8 +574,77 @@
         font-weight: 950;
       }
 
-      body[data-theme="dark"] .drawer-close {
-        color: #fffaf0;
+      .profile-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .profile-avatar {
+        width: 58px;
+        height: 58px;
+        border-radius: 22px;
+        font-size: 24px;
+      }
+
+      .profile-head h2 {
+        margin-bottom: 4px;
+      }
+
+      .theme-choice {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .theme-choice button {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 12px;
+        color: var(--ink);
+        background: var(--surface);
+        font-weight: 950;
+      }
+
+      .theme-choice button.active {
+        border-color: var(--gold);
+        background: var(--gold);
+        color: var(--ink);
+      }
+
+      .settings-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .switch {
+        flex: 0 0 auto;
+        width: 54px;
+        height: 32px;
+        border: 0;
+        border-radius: 999px;
+        padding: 4px;
+        background: #d7c5a2;
+      }
+
+      .switch::before {
+        content: "";
+        display: block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #fffaf0;
+        transition: transform 0.18s ease;
+      }
+
+      .switch.on {
+        background: var(--rust);
+      }
+
+      .switch.on::before {
+        transform: translateX(22px);
       }
 
       .nav {
@@ -621,7 +686,7 @@
         transition: 0.22s ease;
         border-radius: 999px;
         padding: 12px 14px;
-        color: var(--surface);
+        color: #fffaf0;
         background: var(--ink);
         font-weight: 950;
       }
@@ -671,26 +736,56 @@
           </header>
 
           <section class="view active" id="goal">
-            <article class="hero" id="goalHero">
-              <span class="pill">Schermata principale</span>
+            <span class="eyebrow">Workspace di oggi</span>
+            <h1 class="section-title">Visualizza, scegli, agisci.</h1>
+
+            <article class="focus-card" id="goalHero">
+              <span class="pill">Focus principale</span>
               <h1 id="goalTitle">La vita che sto costruendo</h1>
               <p id="goalText">Ogni giorno scelgo una piccola azione che rende reale la mia vision.</p>
             </article>
 
-            <div class="mantra-strip">
-              <p id="mantraText">Sono il tipo di persona che mantiene le promesse fatte a se stesso.</p>
-              <button class="plus-btn" id="addMantra" aria-label="Aggiungi mantra">+</button>
+            <div class="session-strip">
+              <div class="metric">
+                <strong>7 min</strong>
+                <span>Sessione</span>
+              </div>
+              <div class="metric">
+                <strong>1</strong>
+                <span>Azione</span>
+              </div>
+              <div class="metric">
+                <strong>28</strong>
+                <span>Streak</span>
+              </div>
             </div>
+
+            <article class="card gold">
+              <span class="caption">Mantra</span>
+              <div class="mantra-row">
+                <p id="mantraText">Sono il tipo di persona che mantiene le promesse fatte a se stesso.</p>
+                <button class="plus-btn" id="addMantra" aria-label="Aggiungi mantra">+</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <span class="caption">Prossima azione</span>
+              <h2 id="actionTitle">Una prova concreta entro stasera</h2>
+              <p id="actionText">Fai una scelta visibile che conferma la persona che vuoi diventare.</p>
+            </article>
           </section>
 
           <section class="view" id="vision">
-            <article class="vision-photo" id="visionPhoto">
-              <span class="pill">Vision</span>
-              <h2 id="visionTitle">Energia, disciplina e liberta</h2>
+            <span class="eyebrow">Vision board</span>
+            <h1 class="section-title">Come cambia la tua vita.</h1>
+
+            <article class="vision-board" id="visionPhoto">
+              <span class="pill">Future self</span>
+              <h1 id="visionTitle">Energia, disciplina e liberta</h1>
             </article>
 
-            <div class="panel">
-              <h2>La tua vision</h2>
+            <div class="card">
+              <h2>Scenario visualizzato</h2>
               <p id="visionText">Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.</p>
               <div class="action-row">
                 <button class="btn primary" id="editVision">Modifica</button>
@@ -698,39 +793,48 @@
               </div>
               <input id="photoInput" type="file" accept="image/*" hidden />
             </div>
-          </section>
 
-          <section class="view" id="anti">
-            <article class="anti-card">
-              <span class="pill">Anti-vision</span>
-              <h2>Il costo del rinvio</h2>
-              <p id="antiText">Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola. Questa immagine serve a scegliere oggi, non a punirmi.</p>
-            </article>
-
-            <div class="panel">
-              <h2>Promemoria</h2>
-              <p>Guarda l'anti-vision solo per pochi secondi, poi torna alla vision e scegli la prossima azione concreta.</p>
+            <div class="card">
+              <h2>Cosa migliora</h2>
+              <div class="change-list" id="changeList"></div>
             </div>
           </section>
 
+          <section class="view" id="anti">
+            <span class="eyebrow">Anti-vision</span>
+            <h1 class="section-title">Il costo del rinvio.</h1>
+
+            <article class="anti-card">
+              <span class="pill">Scenario da evitare</span>
+              <h1>Se non scegli oggi</h1>
+              <p id="antiText">Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola. Questa immagine serve a scegliere oggi, non a punirmi.</p>
+            </article>
+
+            <div class="anti-list" id="antiList"></div>
+
+            <article class="card gold">
+              <h2>Rientro immediato</h2>
+              <p>Guarda l'anti-vision per pochi secondi, poi torna al Goal e completa una sola azione concreta.</p>
+            </article>
+          </section>
         </main>
 
         <div class="drawer-scrim" id="profileScrim"></div>
         <aside class="profile-drawer" id="profileDrawer" aria-hidden="true">
           <div class="drawer-head">
             <div>
-              <span class="field-note">Visualize</span>
+              <span class="caption">Visualize</span>
               <h2>Profilo</h2>
             </div>
             <button class="drawer-close" id="closeProfile" type="button" aria-label="Chiudi profilo">x</button>
           </div>
 
-          <div class="panel profile-card">
+          <div class="card">
             <div class="profile-head">
-              <div class="profile-avatar">V</div>
+              <div class="profile-avatar">S</div>
               <div>
                 <h2>Samuele</h2>
-                <p>Preferenze salvate su questo dispositivo.</p>
+                <p class="body-copy">Preferenze salvate su questo dispositivo.</p>
               </div>
             </div>
 
@@ -740,13 +844,13 @@
             </div>
           </div>
 
-          <div class="panel">
+          <div class="card">
             <h2>Impostazioni</h2>
             <div class="settings-list">
               <div class="setting-row">
                 <div>
                   <strong>Promemoria giornaliero</strong>
-                  <span>Mostra un richiamo leggero per aprire la vision.</span>
+                  <span>Richiamo leggero per aprire la vision.</span>
                 </div>
                 <button class="switch" id="dailyReminder" type="button" aria-label="Promemoria giornaliero"></button>
               </div>
@@ -769,9 +873,9 @@
             </div>
           </div>
 
-          <div class="panel">
+          <div class="card">
             <h2>Dati</h2>
-            <p>Puoi riportare il prototipo allo stato iniziale quando vuoi.</p>
+            <p class="body-copy">Puoi riportare il prototipo allo stato iniziale quando vuoi.</p>
             <div class="action-row">
               <button class="btn secondary" id="resetData" type="button">Reset</button>
               <button class="btn primary" id="saveProfile" type="button">Salva</button>
@@ -794,9 +898,21 @@
         goalTitle: "La vita che sto costruendo",
         goalText: "Ogni giorno scelgo una piccola azione che rende reale la mia vision.",
         mantra: "Sono il tipo di persona che mantiene le promesse fatte a se stesso.",
+        actionTitle: "Una prova concreta entro stasera",
+        actionText: "Fai una scelta visibile che conferma la persona che vuoi diventare.",
         visionTitle: "Energia, disciplina e liberta",
         visionText: "Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.",
+        changes: [
+          ["Energia", "Routine piu stabile, corpo piu presente."],
+          ["Ambiente", "Spazi e persone allineati ai tuoi obiettivi."],
+          ["Identita", "Meno promesse vuote, piu prove concrete."]
+        ],
         antiText: "Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola. Questa immagine serve a scegliere oggi, non a punirmi.",
+        antiPoints: [
+          ["Costo emotivo", "Ti abitui a non credere alle tue intenzioni."],
+          ["Costo pratico", "Le stesse scelte diventano piu difficili da recuperare."],
+          ["Costo identitario", "Rinvii abbastanza volte da confondere pausa e resa."]
+        ],
         photo: "",
         settings: {
           theme: "light",
@@ -812,7 +928,9 @@
         settings: {
           ...defaults.settings,
           ...((savedState && savedState.settings) || {})
-        }
+        },
+        changes: (savedState && savedState.changes) || defaults.changes,
+        antiPoints: (savedState && savedState.antiPoints) || defaults.antiPoints
       };
       const toast = document.getElementById("toast");
 
@@ -842,9 +960,28 @@
         document.getElementById("goalTitle").textContent = state.goalTitle;
         document.getElementById("goalText").textContent = state.goalText;
         document.getElementById("mantraText").textContent = state.mantra;
+        document.getElementById("actionTitle").textContent = state.actionTitle;
+        document.getElementById("actionText").textContent = state.actionText;
         document.getElementById("visionTitle").textContent = state.visionTitle;
         document.getElementById("visionText").textContent = state.visionText;
         document.getElementById("antiText").textContent = state.antiText;
+
+        document.getElementById("changeList").innerHTML = state.changes.map(([title, text]) => `
+          <div class="change-item">
+            <div>
+              <strong>${title}</strong>
+              <span>${text}</span>
+            </div>
+            <div class="change-dot"></div>
+          </div>
+        `).join("");
+
+        document.getElementById("antiList").innerHTML = state.antiPoints.map(([title, text]) => `
+          <div class="anti-point">
+            <strong>${title}</strong>
+            <span>${text}</span>
+          </div>
+        `).join("");
 
         const image = state.photo
           ? `linear-gradient(180deg, rgba(16,20,24,.08), rgba(16,20,24,.72)), url('${state.photo}')`
@@ -888,6 +1025,7 @@
           state.goalTitle,
           state.goalText,
           state.visionText,
+          state.actionText,
           "Ora scegli una azione concreta e falla prima che la giornata finisca."
         ].join(" ");
         speechSynthesis.cancel();
@@ -936,6 +1074,7 @@
 
       document.getElementById("saveProfile").addEventListener("click", () => {
         save();
+        closeProfile();
         notify("Profilo salvato");
       });
 
@@ -962,6 +1101,8 @@
           state.visionText = text.trim();
           state.goalText = text.trim();
         }
+        const action = prompt("Qual e la prossima azione concreta?", state.actionText);
+        if (action && action.trim()) state.actionText = action.trim();
         save();
         paint();
         notify("Vision aggiornata");
