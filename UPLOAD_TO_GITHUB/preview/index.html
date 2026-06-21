@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="manifest" href="./manifest.webmanifest" />
-    <meta name="theme-color" content="#101418" />
+    <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="icon" href="./icon.svg" />
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
@@ -20,26 +20,21 @@
     </script>
     <style>
       :root {
-        --ink: #101418;
-        --paper: #f3ead8;
-        --surface: #fffaf0;
-        --surface-muted: rgba(255, 250, 240, 0.84);
-        --line: #dfcfad;
-        --muted: #72695b;
+        --paper: #f4f4f2;
+        --ink: #111111;
+        --muted: #7a7a76;
+        --line: #d9d9d4;
+        --panel: rgba(255, 255, 255, 0.62);
         --gold: #e8c468;
         --rust: #da5a3a;
-        --row: #fbf2df;
-        --danger: #2a1612;
       }
 
       body[data-theme="dark"] {
         --paper: #101418;
-        --surface: #171f25;
-        --surface-muted: rgba(23, 31, 37, 0.88);
-        --line: #2a353d;
-        --muted: #baa982;
-        --row: #1e282f;
-        --danger: #321b16;
+        --ink: #f5f1e8;
+        --muted: #b9b0a4;
+        --line: #30383e;
+        --panel: rgba(24, 31, 37, 0.72);
       }
 
       * {
@@ -49,12 +44,8 @@
       body {
         margin: 0;
         color: var(--ink);
-        background: var(--paper);
+        background: #d8d8d4;
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      body[data-theme="dark"] {
-        color: #fffaf0;
       }
 
       button,
@@ -69,7 +60,6 @@
 
       h1,
       h2,
-      h3,
       p {
         margin: 0;
       }
@@ -79,11 +69,11 @@
         display: grid;
         place-items: start center;
         padding: 24px;
-        background: #d1c4aa;
+        background: #d8d8d4;
       }
 
       body[data-theme="dark"] .stage {
-        background: #080b0e;
+        background: #07090b;
       }
 
       .phone {
@@ -91,72 +81,17 @@
         min-height: min(920px, calc(100vh - 48px));
         position: relative;
         overflow: hidden;
-        border: 8px solid #0b0e11;
+        border: 8px solid #0b0b0b;
         border-radius: 34px;
         background: var(--paper);
-        box-shadow: 0 24px 62px rgba(16, 20, 24, 0.22);
-      }
-
-      .inspiration-bg {
-        position: absolute;
-        inset: 72px 0 68px;
-        z-index: 0;
-        overflow: hidden;
-        opacity: 0.25;
-        filter: blur(1.4px);
-        pointer-events: none;
-      }
-
-      body[data-theme="dark"] .inspiration-bg {
-        opacity: 0.18;
-      }
-
-      .inspo-card {
-        position: absolute;
-        width: 126px;
-        height: 168px;
-        border-radius: 8px;
-        overflow: hidden;
-        transform: rotate(-7deg);
-        background: #c9aa65;
-      }
-
-      .inspo-card.one {
-        top: 18px;
-        left: -28px;
-        background:
-          radial-gradient(circle at 50% 24%, #2b201b 0 13%, transparent 14%),
-          radial-gradient(ellipse at 50% 65%, #1b1512 0 28%, transparent 29%),
-          linear-gradient(145deg, #e2c176, #7d2f24);
-      }
-
-      .inspo-card.two {
-        top: 158px;
-        right: -34px;
-        transform: rotate(9deg);
-        background:
-          radial-gradient(circle at 51% 25%, #211b18 0 12%, transparent 13%),
-          radial-gradient(ellipse at 52% 66%, #1a1310 0 30%, transparent 31%),
-          linear-gradient(145deg, #b88c52, #2b3034);
-      }
-
-      .inspo-card.three {
-        bottom: 28px;
-        left: 34px;
-        transform: rotate(5deg);
-        background:
-          radial-gradient(circle at 50% 23%, #231816 0 12%, transparent 13%),
-          radial-gradient(ellipse at 50% 64%, #1b1110 0 32%, transparent 33%),
-          linear-gradient(145deg, #8d3428, #e8c468);
+        box-shadow: 0 24px 62px rgba(17, 17, 17, 0.22);
       }
 
       .app {
-        position: relative;
-        z-index: 1;
         min-height: calc(100vh - 64px);
         max-height: 900px;
         overflow: auto;
-        padding: 18px 16px 94px;
+        padding: 18px 18px 96px;
         scrollbar-width: none;
       }
 
@@ -165,202 +100,192 @@
         display: none;
       }
 
-      .topbar {
+      .top-actions {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 18px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
+        justify-content: flex-end;
         gap: 10px;
-        min-width: 0;
-      }
-
-      .logo-mark,
-      .profile-avatar {
-        display: grid;
-        place-items: center;
-        color: var(--gold);
-        background: var(--ink);
-        font-weight: 950;
-      }
-
-      body[data-theme="dark"] .logo-mark,
-      body[data-theme="dark"] .profile-avatar {
-        background: #050709;
-      }
-
-      .logo-mark {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-      }
-
-      .brand span,
-      .label,
-      .caption {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 850;
-      }
-
-      .brand strong {
-        display: block;
-        font-size: 22px;
-        line-height: 1;
-      }
-
-      .icon-row {
-        display: flex;
-        gap: 8px;
+        min-height: 44px;
       }
 
       .icon-btn {
         width: 40px;
         height: 40px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
+        border: 0;
         display: grid;
         place-items: center;
-        color: var(--ink);
-        background: var(--surface-muted);
-        font-size: 14px;
-        font-weight: 950;
+        color: var(--muted);
+        background: transparent;
+        font-size: 20px;
+        font-weight: 800;
       }
 
-      body[data-theme="dark"] .icon-btn,
-      body[data-theme="dark"] input,
-      body[data-theme="dark"] textarea,
-      body[data-theme="dark"] .btn.secondary,
-      body[data-theme="dark"] .drawer-close,
-      body[data-theme="dark"] .theme-choice button {
-        color: #fffaf0;
-      }
-
-      .view {
+      .screen {
         display: none;
+        min-height: 710px;
       }
 
-      .view.active {
+      .screen.active {
         display: block;
       }
 
-      .screen-kicker {
-        margin-bottom: 8px;
-        color: var(--muted);
-        font-size: 13px;
-        font-weight: 850;
-      }
-
-      .screen-title {
-        margin-bottom: 14px;
-        font-size: 28px;
-        line-height: 1.04;
-        letter-spacing: 0;
-      }
-
-      .media-card {
-        min-height: 286px;
+      .stoic-hero {
+        min-height: 672px;
         position: relative;
         display: grid;
-        align-content: end;
+        grid-template-rows: 1fr auto;
         overflow: hidden;
-        padding: 16px;
-        border: 1px solid rgba(16, 20, 24, 0.18);
-        border-radius: 8px;
-        color: #fffaf0;
-        background:
-          linear-gradient(180deg, rgba(16, 20, 24, 0.02), rgba(16, 20, 24, 0.76)),
-          linear-gradient(145deg, #101418, #da5a3a 58%, #e8c468);
-        background-size: cover;
-        background-position: center;
       }
 
-      .media-card.small {
-        min-height: 238px;
-        background:
-          linear-gradient(180deg, rgba(16, 20, 24, 0.08), rgba(16, 20, 24, 0.7)),
-          linear-gradient(145deg, #e8c468, #da5a3a);
+      .hero-copy {
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 36px 12px 0;
       }
 
-      .media-card.danger {
-        background:
-          linear-gradient(180deg, rgba(16, 20, 24, 0.12), rgba(16, 20, 24, 0.92)),
-          linear-gradient(145deg, #231c19, #da5a3a);
-      }
-
-      .tag {
-        width: fit-content;
-        padding: 6px 9px;
-        margin-bottom: 9px;
-        border-radius: 999px;
-        color: var(--ink);
-        background: rgba(255, 250, 240, 0.9);
-        font-size: 12px;
-        font-weight: 950;
-      }
-
-      .media-card h1 {
+      .hero-copy h1 {
         max-width: 340px;
-        font-size: 31px;
-        line-height: 1.02;
+        font-size: 39px;
+        line-height: 1.05;
+        letter-spacing: -0.5px;
+        font-weight: 900;
       }
 
-      .media-card p {
-        max-width: 340px;
-        margin-top: 10px;
-        color: rgba(255, 250, 240, 0.82);
-        line-height: 1.42;
-        font-size: 14px;
+      .hero-copy p {
+        max-width: 300px;
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.45;
         font-weight: 650;
       }
 
-      .card,
-      .row-list {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--surface-muted);
+      .figure-wrap {
+        position: relative;
+        height: 300px;
+        margin: 0 -18px;
       }
 
-      .card {
-        margin-top: 10px;
-        padding: 14px;
+      .future-figure {
+        position: absolute;
+        left: -38px;
+        bottom: 0;
+        width: 274px;
+        height: 286px;
+        background: var(--ink);
+        border-radius: 58% 42% 47% 53% / 20% 70% 30% 80%;
+        transform: skewX(-13deg);
       }
 
-      .card h2 {
-        margin-bottom: 8px;
-        font-size: 19px;
+      .future-figure::before {
+        content: "";
+        position: absolute;
+        right: 58px;
+        top: 64px;
+        width: 28px;
+        height: 17px;
+        border: 5px solid var(--paper);
+        border-bottom: 0;
+        border-radius: 22px 22px 0 0;
+        transform: skewX(13deg);
+      }
+
+      .future-figure::after {
+        content: "";
+        position: absolute;
+        right: -105px;
+        bottom: 0;
+        width: 196px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--ink);
+        transform: skewX(13deg);
+      }
+
+      .leg {
+        position: absolute;
+        bottom: 0;
+        left: 122px;
+        width: 8px;
+        height: 78px;
+        background: var(--ink);
+      }
+
+      .leg.two {
+        left: 174px;
+        height: 42px;
+      }
+
+      .brand-strip {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 18px;
+        color: #fff;
+        background: rgba(17, 17, 17, 0.82);
+      }
+
+      .logo-chip {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        display: grid;
+        place-items: center;
+        color: var(--ink);
+        background: #fff;
+        font-weight: 950;
+      }
+
+      .brand-strip strong {
+        font-size: 16px;
+      }
+
+      .brand-strip span {
+        margin-left: auto;
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .quiet-panel {
+        border-top: 1px solid var(--line);
+        padding: 18px 0;
+      }
+
+      .quiet-panel h2 {
+        font-size: 30px;
         line-height: 1.05;
+        font-weight: 900;
       }
 
-      .body-copy,
-      .card p {
+      .quiet-panel p {
+        margin-top: 10px;
         color: var(--muted);
-        font-size: 14px;
-        line-height: 1.45;
+        font-size: 15px;
+        line-height: 1.55;
         font-weight: 650;
       }
 
       .mantra-row {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
       }
 
       .mantra-row p {
         flex: 1;
         min-width: 0;
-        color: var(--ink);
+        font-size: 16px;
+        line-height: 1.35;
         font-weight: 850;
-      }
-
-      body[data-theme="dark"] .mantra-row p {
-        color: #fffaf0;
       }
 
       .plus-btn {
@@ -368,143 +293,179 @@
         width: 34px;
         height: 34px;
         border: 0;
-        border-radius: 8px;
-        color: #fffaf0;
-        background: var(--rust);
+        border-radius: 50%;
+        color: var(--paper);
+        background: var(--ink);
         font-size: 22px;
         line-height: 1;
       }
 
-      .row-list {
-        overflow: hidden;
+      .route-list {
+        margin-top: 22px;
+        border-top: 1px solid var(--line);
       }
 
-      .list-row {
+      .route {
+        width: 100%;
         display: flex;
         align-items: center;
-        gap: 12px;
-        min-height: 64px;
-        padding: 12px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .list-row:last-child {
-        border-bottom: 0;
-      }
-
-      .home-link {
-        width: 100%;
+        gap: 14px;
+        min-height: 72px;
         border: 0;
+        border-bottom: 1px solid var(--line);
         color: inherit;
         background: transparent;
         text-align: left;
       }
 
-      .row-icon {
+      .route-dot {
+        flex: 0 0 auto;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ink);
+      }
+
+      .route-dot.anti {
+        background: var(--rust);
+      }
+
+      .route strong {
+        display: block;
+        font-size: 17px;
+      }
+
+      .route span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+        font-weight: 650;
+      }
+
+      .vision-visual {
+        min-height: 286px;
+        display: grid;
+        align-content: end;
+        padding: 16px;
+        color: #fff;
+        background:
+          linear-gradient(180deg, rgba(17, 17, 17, 0.04), rgba(17, 17, 17, 0.78)),
+          linear-gradient(145deg, #111, #da5a3a 58%, #e8c468);
+        background-size: cover;
+        background-position: center;
+      }
+
+      .vision-visual h2 {
+        max-width: 340px;
+        font-size: 34px;
+        line-height: 1.02;
+      }
+
+      .vision-visual span {
+        width: fit-content;
+        margin-bottom: 9px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        color: #111;
+        background: rgba(255, 255, 255, 0.92);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .list {
+        border-top: 1px solid var(--line);
+        margin-top: 16px;
+      }
+
+      .list-item {
+        display: flex;
+        gap: 12px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .square {
         flex: 0 0 auto;
         width: 34px;
         height: 34px;
-        border-radius: 8px;
-        background: var(--row);
+        background: var(--ink);
       }
 
-      .row-icon.vision {
-        background: linear-gradient(145deg, var(--gold), var(--rust));
+      .square.rust {
+        background: var(--rust);
       }
 
-      .row-icon.anti {
-        background: linear-gradient(145deg, #2a1612, var(--rust));
-      }
-
-      .list-row strong {
+      .list-item strong {
         display: block;
-        font-size: 15px;
+        font-size: 16px;
       }
 
-      .list-row span {
+      .list-item span {
         display: block;
-        margin-top: 3px;
+        margin-top: 4px;
         color: var(--muted);
-        font-size: 12px;
-        font-weight: 750;
-        line-height: 1.35;
+        font-size: 13px;
+        line-height: 1.45;
+        font-weight: 650;
       }
 
       .action-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
-        margin-top: 12px;
+        margin-top: 14px;
       }
 
       .btn {
-        min-height: 44px;
-        border: 0;
-        border-radius: 8px;
-        padding: 12px 14px;
-        font-weight: 950;
-      }
-
-      .btn.primary {
-        color: #fffaf0;
+        min-height: 46px;
+        border: 1px solid var(--ink);
+        color: var(--paper);
         background: var(--ink);
+        font-weight: 900;
       }
 
       .btn.secondary {
-        border: 1px solid var(--line);
         color: var(--ink);
-        background: var(--surface);
+        background: transparent;
       }
 
-      body[data-theme="dark"] .btn.primary {
-        border: 1px solid var(--line);
+      .anti-figure {
+        position: relative;
+        height: 284px;
+        margin: 6px -18px 22px;
+        overflow: hidden;
       }
 
-      .anti-point {
-        padding: 13px;
-        border-bottom: 1px solid var(--line);
-        background: var(--surface-muted);
+      .anti-shape {
+        position: absolute;
+        right: -46px;
+        bottom: 0;
+        width: 280px;
+        height: 284px;
+        border-radius: 54% 46% 38% 62% / 18% 72% 28% 82%;
+        background: var(--ink);
+        transform: scaleX(-1) skewX(-9deg);
       }
 
-      .anti-point:last-child {
+      .anti-shape::before {
+        content: "";
+        position: absolute;
+        right: 58px;
+        top: 70px;
+        width: 31px;
+        height: 17px;
+        border: 5px solid var(--paper);
         border-bottom: 0;
-      }
-
-      .anti-point strong {
-        display: block;
-        margin-bottom: 4px;
-        font-size: 15px;
-      }
-
-      .anti-point span {
-        display: block;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.4;
-        font-weight: 650;
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        outline: 0;
-        padding: 13px 14px;
-        color: var(--ink);
-        background: var(--surface);
-      }
-
-      textarea {
-        min-height: 116px;
-        resize: vertical;
+        border-radius: 22px 22px 0 0;
       }
 
       .drawer-scrim {
         position: absolute;
         inset: 0;
         z-index: 3;
-        background: rgba(16, 20, 24, 0.34);
+        background: rgba(17, 17, 17, 0.32);
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.18s ease;
@@ -523,10 +484,9 @@
         z-index: 4;
         width: min(86%, 356px);
         overflow: auto;
-        padding: 18px 16px 24px;
+        padding: 18px 18px 24px;
         background: var(--paper);
         border-left: 1px solid var(--line);
-        box-shadow: -22px 0 48px rgba(16, 20, 24, 0.24);
         transform: translateX(110%);
         transition: transform 0.22s ease;
         scrollbar-width: none;
@@ -536,44 +496,41 @@
         transform: translateX(0);
       }
 
-      .drawer-head {
+      .drawer-head,
+      .setting-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        margin-bottom: 14px;
       }
 
-      .drawer-head h2 {
-        font-size: 22px;
+      .drawer-head {
+        margin-bottom: 18px;
       }
 
       .drawer-close {
         width: 38px;
         height: 38px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        color: var(--ink);
-        background: var(--surface);
-        font-size: 18px;
-        font-weight: 950;
+        border: 0;
+        color: var(--muted);
+        background: transparent;
+        font-size: 22px;
       }
 
-      .profile-head {
-        display: flex;
-        align-items: center;
-        gap: 12px;
+      .profile-card {
+        border-top: 1px solid var(--line);
+        padding: 16px 0;
       }
 
-      .profile-avatar {
-        width: 56px;
-        height: 56px;
-        border-radius: 8px;
+      .profile-card h2 {
         font-size: 24px;
       }
 
-      .profile-head h2 {
-        margin-bottom: 4px;
+      .profile-card p {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
       }
 
       .theme-choice {
@@ -584,37 +541,22 @@
       }
 
       .theme-choice button {
+        min-height: 44px;
         border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 12px;
         color: var(--ink);
-        background: var(--surface);
-        font-weight: 950;
+        background: transparent;
+        font-weight: 900;
       }
 
       .theme-choice button.active {
-        border-color: var(--gold);
-        background: var(--gold);
-        color: var(--ink);
-      }
-
-      .settings-list {
-        display: grid;
-        gap: 0;
-        margin-top: 10px;
+        border-color: var(--ink);
+        background: var(--ink);
+        color: var(--paper);
       }
 
       .setting-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 12px 0;
+        padding: 14px 0;
         border-bottom: 1px solid var(--line);
-      }
-
-      .setting-row:last-child {
-        border-bottom: 0;
       }
 
       .setting-row strong {
@@ -627,8 +569,8 @@
         margin-top: 3px;
         color: var(--muted);
         font-size: 12px;
-        font-weight: 750;
         line-height: 1.35;
+        font-weight: 650;
       }
 
       .switch {
@@ -638,7 +580,7 @@
         border: 0;
         border-radius: 999px;
         padding: 3px;
-        background: #d7c5a2;
+        background: #d4d4d0;
       }
 
       .switch::before {
@@ -647,12 +589,12 @@
         width: 24px;
         height: 24px;
         border-radius: 50%;
-        background: #fffaf0;
+        background: #fff;
         transition: transform 0.18s ease;
       }
 
       .switch.on {
-        background: var(--rust);
+        background: var(--ink);
       }
 
       .switch.on::before {
@@ -661,32 +603,40 @@
 
       .nav {
         position: absolute;
-        left: 18px;
-        right: 18px;
-        bottom: 16px;
-        height: 64px;
+        left: 16px;
+        right: 16px;
+        bottom: 14px;
+        height: 54px;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-        padding: 7px;
-        border: 1px solid rgba(255, 250, 240, 0.08);
-        border-radius: 8px;
-        background: var(--ink);
-        box-shadow: 0 16px 32px rgba(16, 20, 24, 0.22);
+        background: rgba(17, 17, 17, 0.88);
       }
 
       .nav button {
         border: 0;
-        border-radius: 6px;
-        color: rgba(255, 250, 240, 0.66);
+        color: rgba(255, 255, 255, 0.64);
         background: transparent;
         font-size: 13px;
-        font-weight: 950;
+        font-weight: 850;
       }
 
       .nav button.active {
+        color: #fff;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        outline: 0;
+        padding: 13px 14px;
         color: var(--ink);
-        background: var(--gold);
+        background: transparent;
+      }
+
+      textarea {
+        min-height: 116px;
+        resize: vertical;
       }
 
       .toast {
@@ -699,9 +649,9 @@
         transition: 0.22s ease;
         border-radius: 999px;
         padding: 12px 14px;
-        color: #fffaf0;
-        background: var(--ink);
-        font-weight: 950;
+        color: #fff;
+        background: #111;
+        font-weight: 900;
       }
 
       .toast.show {
@@ -733,101 +683,94 @@
   <body>
     <div class="stage">
       <div class="phone">
-        <div class="inspiration-bg" aria-hidden="true">
-          <div class="inspo-card one"></div>
-          <div class="inspo-card two"></div>
-          <div class="inspo-card three"></div>
-        </div>
-
         <main class="app">
-          <header class="topbar">
-            <div class="brand">
-              <div class="logo-mark">V</div>
-              <div>
-                <span>Visualize</span>
-                <strong id="screenTitle">Goal</strong>
+          <div class="top-actions">
+            <button class="icon-btn" id="listenBtn" aria-label="Ascolta traccia">♪</button>
+            <button class="icon-btn" id="profileBtn" aria-label="Apri profilo">×</button>
+          </div>
+
+          <section class="screen active" id="goal">
+            <div class="stoic-hero">
+              <div class="hero-copy">
+                <div>
+                  <h1>meet visualize.<br />your future self companion</h1>
+                  <p id="goalText">Ogni giorno torni all'immagine della persona che stai costruendo.</p>
+                </div>
+              </div>
+
+              <div class="figure-wrap">
+                <div class="future-figure">
+                  <div class="leg"></div>
+                  <div class="leg two"></div>
+                </div>
+              </div>
+
+              <div class="brand-strip">
+                <div class="logo-chip">V</div>
+                <strong>visualize.</strong>
+                <span id="screenTitle">Goal</span>
               </div>
             </div>
-            <div class="icon-row">
-              <button class="icon-btn" id="listenBtn" aria-label="Ascolta traccia">Play</button>
-              <button class="icon-btn" id="profileBtn" aria-label="Apri profilo">S</button>
-            </div>
-          </header>
 
-          <section class="view active" id="goal">
-            <div class="screen-kicker">Daily vision</div>
-            <h1 class="screen-title">La tua visione, in un colpo d'occhio.</h1>
+            <div class="quiet-panel">
+              <h2 id="goalTitle">La vita che sto costruendo</h2>
+              <p>Usa questa schermata come ancora: pochi secondi, una immagine chiara, una direzione.</p>
 
-            <article class="media-card" id="goalHero">
-              <span class="tag">Focus principale</span>
-              <h1 id="goalTitle">La vita che sto costruendo</h1>
-              <p id="goalText">Ogni giorno torno all'immagine della persona che sto costruendo.</p>
-            </article>
-
-            <article class="card">
-              <span class="caption">Mantra</span>
               <div class="mantra-row">
                 <p id="mantraText">Sono il tipo di persona che mantiene le promesse fatte a se stesso.</p>
                 <button class="plus-btn" id="addMantra" aria-label="Aggiungi mantra">+</button>
               </div>
-            </article>
 
-            <div class="row-list" style="margin-top: 10px;">
-              <button class="list-row home-link" data-view="vision" type="button">
-                <div class="row-icon vision"></div>
-                <div>
-                  <strong>Apri la vision</strong>
-                  <span>Guarda come cambia la tua vita quando segui la direzione giusta.</span>
-                </div>
-              </button>
-              <button class="list-row home-link" data-view="anti" type="button">
-                <div class="row-icon anti"></div>
-                <div>
-                  <strong>Guarda l'anti-vision</strong>
-                  <span>Ricorda cosa succede se continui a rimandare troppo a lungo.</span>
-                </div>
-              </button>
-            </div>
-          </section>
-
-          <section class="view" id="vision">
-            <div class="screen-kicker">Vision board</div>
-            <h1 class="screen-title">Come cambia la tua vita.</h1>
-
-            <article class="media-card small" id="visionPhoto">
-              <span class="tag">Future self</span>
-              <h1 id="visionTitle">Energia, disciplina e liberta</h1>
-            </article>
-
-            <div class="card">
-              <h2>Scenario visualizzato</h2>
-              <p id="visionText">Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.</p>
-              <div class="action-row">
-                <button class="btn primary" id="editVision">Modifica</button>
-                <button class="btn secondary" id="uploadPhoto">Foto</button>
+              <div class="route-list">
+                <button class="route" data-view="vision" type="button">
+                  <div class="route-dot"></div>
+                  <div>
+                    <strong>Apri la vision</strong>
+                    <span>Guarda come cambia la tua vita quando segui la direzione giusta.</span>
+                  </div>
+                </button>
+                <button class="route" data-view="anti" type="button">
+                  <div class="route-dot anti"></div>
+                  <div>
+                    <strong>Guarda l'anti-vision</strong>
+                    <span>Ricorda cosa succede se continui a rimandare troppo a lungo.</span>
+                  </div>
+                </button>
               </div>
-              <input id="photoInput" type="file" accept="image/*" hidden />
             </div>
-
-            <div class="row-list" id="changeList"></div>
           </section>
 
-          <section class="view" id="anti">
-            <div class="screen-kicker">Anti-vision</div>
-            <h1 class="screen-title">Il costo del rinvio.</h1>
+          <section class="screen" id="vision">
+            <div class="quiet-panel">
+              <h2>visualize.<br />the life ahead</h2>
+              <p id="visionText">Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.</p>
+            </div>
 
-            <article class="media-card danger">
-              <span class="tag">Scenario da evitare</span>
-              <h1>Se non scegli oggi</h1>
+            <article class="vision-visual" id="visionPhoto">
+              <span>Future self</span>
+              <h2 id="visionTitle">Energia, disciplina e liberta</h2>
+            </article>
+
+            <div class="action-row">
+              <button class="btn" id="editVision">Modifica</button>
+              <button class="btn secondary" id="uploadPhoto">Foto</button>
+            </div>
+            <input id="photoInput" type="file" accept="image/*" hidden />
+
+            <div class="list" id="changeList"></div>
+          </section>
+
+          <section class="screen" id="anti">
+            <div class="quiet-panel">
+              <h2>meet the cost<br />of waiting.</h2>
               <p id="antiText">Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola.</p>
-            </article>
+            </div>
 
-            <div class="row-list" id="antiList"></div>
+            <div class="anti-figure">
+              <div class="anti-shape"></div>
+            </div>
 
-            <article class="card">
-              <h2>Rientro immediato</h2>
-              <p>Guarda l'anti-vision per pochi secondi, poi torna al Goal e scegli il prossimo passo con lucidita.</p>
-            </article>
+            <div class="list" id="antiList"></div>
           </section>
         </main>
 
@@ -835,62 +778,52 @@
         <aside class="profile-drawer" id="profileDrawer" aria-hidden="true">
           <div class="drawer-head">
             <div>
-              <span class="caption">Visualize</span>
+              <p>visualize.</p>
               <h2>Profilo</h2>
             </div>
-            <button class="drawer-close" id="closeProfile" type="button" aria-label="Chiudi profilo">x</button>
+            <button class="drawer-close" id="closeProfile" type="button" aria-label="Chiudi profilo">×</button>
           </div>
 
-          <div class="card">
-            <div class="profile-head">
-              <div class="profile-avatar">S</div>
-              <div>
-                <h2>Samuele</h2>
-                <p class="body-copy">Preferenze salvate su questo dispositivo.</p>
-              </div>
-            </div>
-
+          <div class="profile-card">
+            <h2>Samuele</h2>
+            <p>Preferenze salvate su questo dispositivo.</p>
             <div class="theme-choice" aria-label="Tema app">
               <button id="themeLight" type="button">Light</button>
               <button id="themeDark" type="button">Dark</button>
             </div>
           </div>
 
-          <div class="card">
+          <div class="profile-card">
             <h2>Impostazioni</h2>
-            <div class="settings-list">
-              <div class="setting-row">
-                <div>
-                  <strong>Promemoria giornaliero</strong>
-                  <span>Richiamo leggero per aprire la vision.</span>
-                </div>
-                <button class="switch" id="dailyReminder" type="button" aria-label="Promemoria giornaliero"></button>
+            <div class="setting-row">
+              <div>
+                <strong>Promemoria giornaliero</strong>
+                <span>Richiamo leggero per aprire la vision.</span>
               </div>
-
-              <div class="setting-row">
-                <div>
-                  <strong>Audio piu lento</strong>
-                  <span>Traccia mindset con ritmo piu calmo.</span>
-                </div>
-                <button class="switch" id="slowAudio" type="button" aria-label="Audio piu lento"></button>
+              <button class="switch" id="dailyReminder" type="button" aria-label="Promemoria giornaliero"></button>
+            </div>
+            <div class="setting-row">
+              <div>
+                <strong>Audio piu lento</strong>
+                <span>Traccia mindset con ritmo piu calmo.</span>
               </div>
-
-              <div class="setting-row">
-                <div>
-                  <strong>Salvataggio locale</strong>
-                  <span>Goal, mantra e foto restano nel browser.</span>
-                </div>
-                <button class="switch on" type="button" aria-label="Salvataggio locale attivo" disabled></button>
+              <button class="switch" id="slowAudio" type="button" aria-label="Audio piu lento"></button>
+            </div>
+            <div class="setting-row">
+              <div>
+                <strong>Salvataggio locale</strong>
+                <span>Goal, mantra e foto restano nel browser.</span>
               </div>
+              <button class="switch on" type="button" aria-label="Salvataggio locale attivo" disabled></button>
             </div>
           </div>
 
-          <div class="card">
+          <div class="profile-card">
             <h2>Dati</h2>
-            <p class="body-copy">Puoi riportare il prototipo allo stato iniziale quando vuoi.</p>
+            <p>Puoi riportare il prototipo allo stato iniziale quando vuoi.</p>
             <div class="action-row">
               <button class="btn secondary" id="resetData" type="button">Reset</button>
-              <button class="btn primary" id="saveProfile" type="button">Salva</button>
+              <button class="btn" id="saveProfile" type="button">Salva</button>
             </div>
           </div>
         </aside>
@@ -908,7 +841,7 @@
     <script>
       const defaults = {
         goalTitle: "La vita che sto costruendo",
-        goalText: "Ogni giorno torno all'immagine della persona che sto costruendo.",
+        goalText: "Ogni giorno torni all'immagine della persona che stai costruendo.",
         mantra: "Sono il tipo di persona che mantiene le promesse fatte a se stesso.",
         visionTitle: "Energia, disciplina e liberta",
         visionText: "Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.",
@@ -958,7 +891,7 @@
         document.body.dataset.theme = state.settings.theme;
         document.querySelector('meta[name="theme-color"]').setAttribute(
           "content",
-          state.settings.theme === "dark" ? "#101418" : "#f3ead8"
+          state.settings.theme === "dark" ? "#101418" : "#f4f4f2"
         );
         document.getElementById("themeLight").classList.toggle("active", state.settings.theme === "light");
         document.getElementById("themeDark").classList.toggle("active", state.settings.theme === "dark");
@@ -974,9 +907,9 @@
         document.getElementById("visionText").textContent = state.visionText;
         document.getElementById("antiText").textContent = state.antiText;
 
-        document.getElementById("changeList").innerHTML = state.changes.map(([title, text]) => `
-          <div class="list-row">
-            <div class="row-icon"></div>
+        document.getElementById("changeList").innerHTML = state.changes.map(([title, text], index) => `
+          <div class="list-item">
+            <div class="square ${index === 1 ? "rust" : ""}"></div>
             <div>
               <strong>${title}</strong>
               <span>${text}</span>
@@ -984,30 +917,32 @@
           </div>
         `).join("");
 
-        document.getElementById("antiList").innerHTML = state.antiPoints.map(([title, text]) => `
-          <div class="anti-point">
-            <strong>${title}</strong>
-            <span>${text}</span>
+        document.getElementById("antiList").innerHTML = state.antiPoints.map(([title, text], index) => `
+          <div class="list-item">
+            <div class="square ${index === 1 ? "rust" : ""}"></div>
+            <div>
+              <strong>${title}</strong>
+              <span>${text}</span>
+            </div>
           </div>
         `).join("");
 
         const image = state.photo
-          ? `linear-gradient(180deg, rgba(16,20,24,.08), rgba(16,20,24,.72)), url('${state.photo}')`
+          ? `linear-gradient(180deg, rgba(17,17,17,.08), rgba(17,17,17,.72)), url('${state.photo}')`
           : "";
-        document.getElementById("goalHero").style.backgroundImage = image;
         document.getElementById("visionPhoto").style.backgroundImage = image;
         applySettings();
       }
 
       function setView(name) {
-        document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === name));
+        document.querySelectorAll(".screen").forEach((view) => view.classList.toggle("active", view.id === name));
         document.querySelectorAll(".nav button").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
         const titles = {
           goal: "Goal",
           vision: "Vision",
-          anti: "Anti-vision"
+          anti: "Anti"
         };
-        document.getElementById("screenTitle").textContent = titles[name] || "Visualize";
+        document.getElementById("screenTitle").textContent = titles[name] || "Goal";
         closeProfile();
       }
 
