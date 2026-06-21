@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#101418" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="icon" href="./icon.svg" />
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
@@ -20,18 +20,15 @@
     </script>
     <style>
       :root {
+        --ink: #101418;
+        --gold: #e8c468;
+        --rust: #da5a3a;
         --paper: #f4efe4;
         --surface: #fffaf0;
-        --ink: #101418;
-        --muted: #776f62;
-        --line: #e6d7bd;
-        --gold: #e8c468;
-        --gold-soft: #f6e5b7;
-        --gold-pale: #fbf1d2;
-        --rust: #da5a3a;
-        --rust-soft: #f2c4b6;
-        --rust-pale: #f8ded6;
-        --charcoal: #101418;
+        --line: #e5d4b5;
+        --muted: #746b5c;
+        --gold-soft: #f7e6b7;
+        --rust-soft: #f7d8cf;
       }
 
       * {
@@ -41,14 +38,13 @@
       body {
         margin: 0;
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: #cfc7b6;
         color: var(--ink);
+        background: #d4c9b4;
       }
 
       button,
       input,
-      textarea,
-      select {
+      textarea {
         font: inherit;
       }
 
@@ -58,20 +54,24 @@
 
       .stage {
         min-height: 100vh;
-        padding: 24px;
         display: grid;
         place-items: start center;
+        padding: 24px;
+        background:
+          radial-gradient(circle at 15% 10%, rgba(232, 196, 104, 0.42), transparent 30%),
+          radial-gradient(circle at 86% 22%, rgba(218, 90, 58, 0.22), transparent 28%),
+          #d4c9b4;
       }
 
-      .phone-shell {
+      .phone {
         width: min(100%, 430px);
         min-height: min(920px, calc(100vh - 48px));
+        position: relative;
+        overflow: hidden;
+        border: 8px solid #0b0e11;
         border-radius: 34px;
         background: var(--paper);
-        box-shadow: 0 24px 70px rgba(25, 25, 25, 0.2);
-        overflow: hidden;
-        position: relative;
-        border: 8px solid #111;
+        box-shadow: 0 28px 70px rgba(16, 20, 24, 0.24);
       }
 
       .app {
@@ -91,246 +91,150 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        margin-bottom: 18px;
+        margin-bottom: 16px;
       }
 
-      .profile {
+      .brand {
         display: flex;
         align-items: center;
         gap: 10px;
         min-width: 0;
       }
 
-      .avatar {
+      .logo-mark {
         width: 42px;
         height: 42px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--rust), var(--gold));
+        border-radius: 15px;
         display: grid;
         place-items: center;
-        font-weight: 900;
+        color: var(--gold);
+        background: var(--ink);
+        font-weight: 950;
       }
 
-      .hello {
-        min-width: 0;
-      }
-
-      .hello span {
+      .brand span {
         display: block;
         color: var(--muted);
         font-size: 12px;
         font-weight: 800;
       }
 
-      .hello strong {
+      .brand strong {
         display: block;
-        font-size: 20px;
-        line-height: 1.1;
+        font-size: 22px;
+        line-height: 1;
       }
 
-      .round-btn {
+      .icon-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .icon-btn {
         width: 42px;
         height: 42px;
         border: 0;
         border-radius: 50%;
-        background: var(--surface);
-        box-shadow: 0 8px 18px rgba(25, 25, 25, 0.08);
-        font-size: 18px;
-      }
-
-      .search {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        padding: 12px 14px;
-        margin-bottom: 14px;
-      }
-
-      .search input {
-        border: 0;
-        outline: 0;
-        background: transparent;
-        width: 100%;
-        color: var(--ink);
-      }
-
-      .challenge {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 84px;
-        gap: 14px;
-        min-height: 156px;
-        background: var(--gold);
-        border-radius: 24px;
-        padding: 16px;
-        margin-bottom: 16px;
+        place-items: center;
+        color: var(--ink);
+        background: var(--surface);
+        box-shadow: 0 8px 18px rgba(16, 20, 24, 0.08);
+        font-size: 18px;
+        font-weight: 950;
+      }
+
+      .hero {
+        min-height: 430px;
+        border-radius: 30px;
+        padding: 18px;
+        display: grid;
+        align-content: end;
+        color: #fff;
         overflow: hidden;
         position: relative;
+        background:
+          linear-gradient(180deg, rgba(16, 20, 24, 0.05), rgba(16, 20, 24, 0.78)),
+          linear-gradient(135deg, var(--ink), var(--rust) 52%, var(--gold));
+        background-size: cover;
+        background-position: center;
       }
 
-      .challenge h1 {
-        margin: 8px 0 8px;
-        font-size: 28px;
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 16px 16px auto auto;
+        width: 82px;
+        height: 82px;
+        border-radius: 50%;
+        background: rgba(232, 196, 104, 0.24);
+      }
+
+      .pill {
+        width: fit-content;
+        border-radius: 999px;
+        padding: 7px 11px;
+        margin-bottom: 10px;
+        color: var(--ink);
+        background: rgba(255, 250, 240, 0.9);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .hero h1 {
+        max-width: 330px;
+        font-size: 36px;
         line-height: 0.98;
         letter-spacing: 0;
       }
 
-      .challenge p {
-        margin: 0;
-        color: #4b3d18;
-        font-size: 13px;
-        line-height: 1.35;
+      .hero p {
+        max-width: 340px;
+        margin-top: 12px;
+        color: rgba(255, 255, 255, 0.82);
+        line-height: 1.45;
+        font-size: 15px;
+        font-weight: 650;
       }
 
-      .streak {
-        display: flex;
-        gap: 5px;
-        margin-top: 14px;
-      }
-
-      .dot {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.55);
-        display: grid;
-        place-items: center;
-        font-size: 11px;
-        font-weight: 900;
-      }
-
-      .dot.done {
-        background: var(--charcoal);
-        color: #fff;
-      }
-
-      .mascot {
-        align-self: center;
-        justify-self: center;
-        width: 82px;
-        height: 112px;
-        border-radius: 42px;
-        background: linear-gradient(180deg, #f8dfb1, var(--rust));
-        position: relative;
-        transform: rotate(-8deg);
-      }
-
-      .mascot::before,
-      .mascot::after {
-        content: "";
-        position: absolute;
-        border-radius: 50%;
-        background: var(--charcoal);
-      }
-
-      .mascot::before {
-        width: 18px;
-        height: 18px;
-        top: 25px;
-        left: 19px;
-        box-shadow: 30px 0 var(--charcoal);
-      }
-
-      .mascot::after {
-        width: 40px;
-        height: 16px;
-        bottom: 22px;
-        left: 21px;
-        background: rgba(255, 255, 255, 0.65);
-      }
-
-      .section-head {
+      .mantra-strip {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        margin: 18px 2px 10px;
-      }
-
-      .section-head h2 {
-        margin: 0;
-        font-size: 21px;
-      }
-
-      .section-head button {
-        border: 0;
-        background: transparent;
-        color: var(--muted);
-        font-weight: 800;
-        font-size: 13px;
-      }
-
-      .quick-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
         gap: 10px;
-      }
-
-      .quick-card {
-        border: 0;
+        margin-top: 14px;
+        padding: 12px;
+        border: 1px solid var(--line);
         border-radius: 22px;
-        padding: 14px;
-        min-height: 108px;
-        text-align: left;
-        color: var(--ink);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .quick-card strong {
-        display: block;
-        font-size: 17px;
-        margin-bottom: 6px;
-      }
-
-      .quick-card span {
-        color: rgba(16, 20, 24, 0.64);
-        font-size: 13px;
-        font-weight: 700;
-      }
-
-      .quick-card.mint {
-        background: var(--gold-soft);
-      }
-
-      .quick-card.sky {
-        background: #f1d58a;
-      }
-
-      .quick-card.lavender {
-        background: var(--rust-soft);
-      }
-
-      .quick-card.coral {
-        background: var(--rust-pale);
-      }
-
-      .tabs {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 4px;
-        scrollbar-width: none;
-      }
-
-      .tabs::-webkit-scrollbar {
-        display: none;
-      }
-
-      .tab {
-        border: 0;
-        border-radius: 999px;
-        padding: 10px 14px;
         background: var(--surface);
-        color: var(--muted);
-        font-weight: 900;
-        white-space: nowrap;
       }
 
-      .tab.active {
-        background: var(--charcoal);
-        color: #fff;
+      .mantra-strip p {
+        flex: 1;
+        min-width: 0;
+        color: #3d372e;
+        font-size: 14px;
+        line-height: 1.35;
+        font-weight: 800;
+      }
+
+      .plus-btn {
+        flex: 0 0 auto;
+        width: 36px;
+        height: 36px;
+        border: 0;
+        border-radius: 50%;
+        color: var(--surface);
+        background: var(--rust);
+        font-size: 24px;
+        line-height: 1;
+        font-weight: 700;
       }
 
       .view {
@@ -341,215 +245,165 @@
         display: block;
       }
 
-      .goal-card,
-      .panel,
-      .price-card {
-        background: var(--surface);
+      .panel {
+        margin-top: 14px;
+        padding: 16px;
         border: 1px solid var(--line);
         border-radius: 24px;
-        padding: 12px;
-        margin-top: 12px;
+        background: var(--surface);
       }
 
-      .goal-visual {
-        height: 206px;
-        border-radius: 20px;
-        padding: 14px;
-        display: grid;
-        align-content: end;
-        background:
-          linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.58)),
-          linear-gradient(135deg, #101418, #da5a3a 48%, #e8c468);
-        color: #fff;
-        background-size: cover;
-        background-position: center;
-        overflow: hidden;
+      .panel h2 {
+        font-size: 22px;
+        line-height: 1;
+        margin-bottom: 10px;
       }
 
-      .goal-visual span {
-        width: fit-content;
-        border-radius: 999px;
-        padding: 6px 10px;
-        background: rgba(255, 255, 255, 0.84);
-        color: var(--ink);
-        font-size: 12px;
-        font-weight: 900;
-        margin-bottom: 8px;
-      }
-
-      .goal-visual strong {
-        font-size: 24px;
-        line-height: 1.05;
-      }
-
-      .card-body {
-        padding: 12px 4px 2px;
-      }
-
-      .card-body h3,
-      .panel h3,
-      .price-card h3 {
-        margin: 0 0 6px;
-        font-size: 18px;
-      }
-
-      .meta,
-      .muted {
+      .panel p,
+      .field-note {
         color: var(--muted);
-        font-size: 13px;
-        font-weight: 700;
-      }
-
-      .body {
-        color: #4d4538;
         font-size: 14px;
         line-height: 1.45;
-        margin: 8px 0 0;
+        font-weight: 650;
+      }
+
+      .vision-photo {
+        min-height: 250px;
+        border-radius: 26px;
+        padding: 16px;
+        display: grid;
+        align-content: end;
+        color: #fff;
+        background:
+          linear-gradient(180deg, rgba(16, 20, 24, 0.08), rgba(16, 20, 24, 0.7)),
+          linear-gradient(135deg, var(--gold), var(--rust));
+        background-size: cover;
+        background-position: center;
+      }
+
+      .vision-photo h2 {
+        max-width: 320px;
+        font-size: 31px;
+        line-height: 1;
+      }
+
+      .anti-card {
+        min-height: 360px;
+        border-radius: 30px;
+        padding: 18px;
+        display: grid;
+        align-content: end;
+        color: var(--surface);
+        background:
+          linear-gradient(180deg, rgba(16, 20, 24, 0.2), rgba(16, 20, 24, 0.92)),
+          linear-gradient(135deg, #27211c, var(--rust));
+      }
+
+      .anti-card h2 {
+        font-size: 33px;
+        line-height: 1;
+        margin-bottom: 12px;
+      }
+
+      .anti-card p {
+        color: rgba(255, 250, 240, 0.82);
+        line-height: 1.5;
+        font-weight: 650;
       }
 
       .form {
         display: grid;
         gap: 10px;
-        margin-top: 10px;
       }
 
       input,
-      textarea,
-      select {
+      textarea {
         width: 100%;
         border: 1px solid var(--line);
-        background: var(--surface);
-        color: var(--ink);
         border-radius: 18px;
+        outline: 0;
         padding: 13px 14px;
-        outline: none;
+        color: var(--ink);
+        background: #fffdfa;
       }
 
       textarea {
-        min-height: 94px;
+        min-height: 116px;
         resize: vertical;
       }
 
-      .segmented {
+      .action-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 8px;
+        gap: 10px;
+        margin-top: 10px;
       }
 
       .btn {
         border: 0;
         border-radius: 18px;
         padding: 13px 14px;
-        font-weight: 900;
+        font-weight: 950;
       }
 
       .btn.primary {
-        background: var(--charcoal);
-        color: #fff;
+        color: var(--surface);
+        background: var(--ink);
       }
 
       .btn.secondary {
-        background: var(--surface);
         border: 1px solid var(--line);
         color: var(--ink);
-      }
-
-      .anti-card {
-        background: var(--rust-pale);
-        border-color: var(--rust-soft);
-      }
-
-      .script-box {
-        font-size: 16px;
-        line-height: 1.6;
-      }
-
-      .price {
-        font-size: 34px;
-        font-weight: 950;
-        margin: 8px 0 4px;
-      }
-
-      .feature {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .feature:last-child {
-        border-bottom: 0;
-      }
-
-      .check {
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
         background: var(--gold-soft);
-        display: grid;
-        place-items: center;
-        font-weight: 900;
       }
 
-      .bottom-nav {
+      .nav {
         position: absolute;
         left: 18px;
         right: 18px;
         bottom: 16px;
         height: 66px;
-        border-radius: 26px;
-        background: var(--charcoal);
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        align-items: center;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
         padding: 8px;
-        box-shadow: 0 18px 40px rgba(25, 25, 25, 0.24);
+        border-radius: 26px;
+        background: var(--ink);
+        box-shadow: 0 18px 40px rgba(16, 20, 24, 0.22);
       }
 
-      .nav-btn {
-        height: 50px;
+      .nav button {
         border: 0;
+        border-radius: 20px;
+        color: rgba(255, 250, 240, 0.66);
         background: transparent;
-        color: rgba(255, 255, 255, 0.62);
-        border-radius: 18px;
-        font-size: 18px;
-        display: grid;
-        place-items: center;
+        font-size: 13px;
+        font-weight: 950;
       }
 
-      .nav-btn.active {
-        background: #fff;
-        color: var(--charcoal);
+      .nav button.active {
+        color: var(--ink);
+        background: var(--gold);
       }
 
       .toast {
         position: fixed;
         left: 50%;
         bottom: 26px;
-        transform: translate(-50%, 90px);
-        background: var(--charcoal);
-        color: #fff;
-        padding: 12px 14px;
-        border-radius: 999px;
-        font-weight: 900;
+        z-index: 5;
+        transform: translate(-50%, 80px);
         opacity: 0;
         transition: 0.22s ease;
-        z-index: 4;
+        border-radius: 999px;
+        padding: 12px 14px;
+        color: var(--surface);
+        background: var(--ink);
+        font-weight: 950;
       }
 
       .toast.show {
         opacity: 1;
         transform: translate(-50%, 0);
-      }
-
-      @media (min-width: 900px) {
-        .stage {
-          background:
-            radial-gradient(circle at 15% 18%, rgba(232, 196, 104, 0.55), transparent 34%),
-            radial-gradient(circle at 80% 20%, rgba(218, 90, 58, 0.24), transparent 30%),
-            #d4c9b4;
-        }
       }
 
       @media (max-width: 520px) {
@@ -558,7 +412,7 @@
           background: var(--paper);
         }
 
-        .phone-shell {
+        .phone {
           width: 100%;
           min-height: 100vh;
           border: 0;
@@ -575,160 +429,69 @@
   </head>
   <body>
     <div class="stage">
-      <div class="phone-shell">
+      <div class="phone">
         <main class="app">
           <header class="topbar">
-            <div class="profile">
-              <div class="avatar">S</div>
-              <div class="hello">
-                <span>Buongiorno</span>
-                <strong>Samuele</strong>
+            <div class="brand">
+              <div class="logo-mark">V</div>
+              <div>
+                <span>Visualize</span>
+                <strong id="screenTitle">Goal</strong>
               </div>
             </div>
-            <button class="round-btn" id="speakHero" aria-label="Ascolta apertura">▶</button>
+            <div class="icon-row">
+              <button class="icon-btn" id="listenBtn" aria-label="Ascolta traccia">&#9654;</button>
+            </div>
           </header>
 
-          <label class="search" aria-label="Cerca obiettivi">
-            <span>⌕</span>
-            <input id="searchInput" placeholder="Cerca vision, routine, obiettivi" />
-          </label>
-
-          <section class="challenge">
-            <div>
-              <span class="meta">Daily challenge</span>
-              <h1>Visualizza il tuo prossimo livello</h1>
-              <p>Rivedi la vision, ascolta lo script e scegli una prova concreta per oggi.</p>
-              <div class="streak" aria-label="Streak settimanale">
-                <span class="dot done">L</span>
-                <span class="dot done">M</span>
-                <span class="dot">M</span>
-                <span class="dot">G</span>
-                <span class="dot">V</span>
-              </div>
-            </div>
-            <div class="mascot" aria-hidden="true"></div>
-          </section>
-
-          <section class="quick-grid">
-            <button class="quick-card mint" data-jump="vision">
-              <strong>Vision board</strong>
-              <span>Immagini e obiettivi</span>
-            </button>
-            <button class="quick-card sky" data-jump="script">
-              <strong>Mindset audio</strong>
-              <span>Routine guidata</span>
-            </button>
-            <button class="quick-card lavender" data-jump="anti">
-              <strong>Anti-vision</strong>
-              <span>Conseguenze chiare</span>
-            </button>
-            <button class="quick-card coral" data-jump="premium">
-              <strong>Pro</strong>
-              <span>Paywall demo</span>
-            </button>
-          </section>
-
-          <div class="section-head">
-            <h2>Il tuo piano</h2>
-            <button id="quickAdd">Aggiungi</button>
-          </div>
-
-          <div class="tabs" aria-label="Sezioni">
-            <button class="tab active" data-target="today">Oggi</button>
-            <button class="tab" data-target="vision">Vision</button>
-            <button class="tab" data-target="anti">Anti</button>
-            <button class="tab" data-target="script">Audio</button>
-            <button class="tab" data-target="premium">Pro</button>
-          </div>
-
-          <section id="today" class="view active">
-            <article class="goal-card">
-              <div class="goal-visual" id="heroVisual">
-                <span>Future self</span>
-                <strong id="phoneTitle">Corpo energico</strong>
-              </div>
-              <div class="card-body">
-                <h3>Focus di oggi</h3>
-                <p class="meta" id="phoneMeta">Salute / 12 mesi</p>
-                <p class="body" id="phoneText">Ti svegli con energia, ti alleni con metodo e senti il corpo come un alleato.</p>
-                <div class="segmented" style="margin-top: 12px;">
-                  <button class="btn primary" data-jump="script">Ascolta</button>
-                  <button class="btn secondary" data-jump="vision">Modifica</button>
-                </div>
-              </div>
+          <section class="view active" id="goal">
+            <article class="hero" id="goalHero">
+              <span class="pill">Schermata principale</span>
+              <h1 id="goalTitle">La vita che sto costruendo</h1>
+              <p id="goalText">Ogni giorno scelgo una piccola azione che rende reale la mia vision.</p>
             </article>
+
+            <div class="mantra-strip">
+              <p id="mantraText">Sono il tipo di persona che mantiene le promesse fatte a se stesso.</p>
+              <button class="plus-btn" id="addMantra" aria-label="Aggiungi mantra">+</button>
+            </div>
           </section>
 
-          <section id="vision" class="view">
-            <div class="form">
-              <input id="goalInput" value="Diventare disciplinato, forte e libero nelle scelte." />
-              <textarea id="goalNote">Voglio vedere ogni giorno la persona che sto costruendo e fare una scelta concreta che la confermi.</textarea>
-              <div class="segmented">
-                <select id="areaInput">
-                  <option>Salute</option>
-                  <option>Soldi</option>
-                  <option>Carriera</option>
-                  <option>Relazioni</option>
-                  <option>Mindset</option>
-                </select>
-                <select id="horizonInput">
-                  <option>30 giorni</option>
-                  <option>90 giorni</option>
-                  <option>12 mesi</option>
-                  <option>3 anni</option>
-                </select>
-              </div>
-              <div class="segmented">
-                <button class="btn primary" id="addGoal">Aggiungi obiettivo</button>
-                <button class="btn secondary" id="uploadPhoto">Carica foto</button>
+          <section class="view" id="vision">
+            <article class="vision-photo" id="visionPhoto">
+              <span class="pill">Vision</span>
+              <h2 id="visionTitle">Energia, disciplina e liberta</h2>
+            </article>
+
+            <div class="panel">
+              <h2>La tua vision</h2>
+              <p id="visionText">Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.</p>
+              <div class="action-row">
+                <button class="btn primary" id="editVision">Modifica</button>
+                <button class="btn secondary" id="uploadPhoto">Foto</button>
               </div>
               <input id="photoInput" type="file" accept="image/*" hidden />
             </div>
-            <div id="goalGrid"></div>
           </section>
 
-          <section id="anti" class="view">
-            <div class="panel anti-card">
-              <h3>Anti-vision protetta</h3>
-              <p class="body">Una simulazione del costo del rinvio. Deve essere chiara, non traumatica.</p>
-            </div>
-            <div id="antiList"></div>
-          </section>
+          <section class="view" id="anti">
+            <article class="anti-card">
+              <span class="pill">Anti-vision</span>
+              <h2>Il costo del rinvio</h2>
+              <p id="antiText">Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola. Questa immagine serve a scegliere oggi, non a punirmi.</p>
+            </article>
 
-          <section id="script" class="view">
             <div class="panel">
-              <h3>Script mindset</h3>
-              <p class="body script-box" id="scriptText"></p>
-              <div class="segmented" style="margin-top: 14px;">
-                <button class="btn primary" id="speakScript">Ascolta</button>
-                <button class="btn secondary" id="copyScript">Copia</button>
-              </div>
-            </div>
-          </section>
-
-          <section id="premium" class="view">
-            <div class="price-card">
-              <h3>Visualize Pro</h3>
-              <div class="price">9,99€</div>
-              <p class="body">Immagini AI avanzate, audio personalizzati, backup cloud e routine multiple.</p>
-              <div style="margin-top: 14px;">
-                <button class="btn primary" style="width: 100%;">Sblocca Pro</button>
-              </div>
-              <div style="margin-top: 12px;">
-                <div class="feature"><span class="check">✓</span><span>Vision board illimitate</span></div>
-                <div class="feature"><span class="check">✓</span><span>Script audio personalizzati</span></div>
-                <div class="feature"><span class="check">✓</span><span>Anti-vision guidata</span></div>
-              </div>
+              <h2>Promemoria</h2>
+              <p>Guarda l'anti-vision solo per pochi secondi, poi torna alla vision e scegli la prossima azione concreta.</p>
             </div>
           </section>
         </main>
 
-        <nav class="bottom-nav" aria-label="Navigazione">
-          <button class="nav-btn active" data-target="today" aria-label="Oggi">⌂</button>
-          <button class="nav-btn" data-target="vision" aria-label="Vision">◉</button>
-          <button class="nav-btn" data-target="anti" aria-label="Anti">△</button>
-          <button class="nav-btn" data-target="script" aria-label="Audio">▶</button>
-          <button class="nav-btn" data-target="premium" aria-label="Pro">◆</button>
+        <nav class="nav" aria-label="Navigazione principale">
+          <button class="active" data-view="goal">Goal</button>
+          <button data-view="vision">Vision</button>
+          <button data-view="anti">Anti</button>
         </nav>
       </div>
     </div>
@@ -736,186 +499,115 @@
     <div class="toast" id="toast">Fatto</div>
 
     <script>
-      const starterGoals = [
-        {
-          title: "Corpo energico",
-          area: "Salute",
-          horizon: "12 mesi",
-          text: "Ti svegli con energia, ti alleni con metodo e senti il corpo come un alleato.",
-          anti: "Se continui a rimandare, ogni settimana richiede piu forza solo per tornare al punto di partenza.",
-          photo: ""
-        },
-        {
-          title: "Liberta finanziaria",
-          area: "Soldi",
-          horizon: "3 anni",
-          text: "Hai un sistema di entrate, risparmio e scelte piu calme. Non sei piu guidato dall'urgenza.",
-          anti: "Senza un piano, il denaro continua a scegliere al posto tuo.",
-          photo: ""
-        },
-        {
-          title: "Identita disciplinata",
-          area: "Mindset",
-          horizon: "90 giorni",
-          text: "Le tue azioni quotidiane confermano una persona piu solida, presente e affidabile.",
-          anti: "Se vivi solo di motivazione, ogni calo d'umore diventa una scusa perfetta.",
-          photo: ""
-        }
-      ];
+      const defaults = {
+        goalTitle: "La vita che sto costruendo",
+        goalText: "Ogni giorno scelgo una piccola azione che rende reale la mia vision.",
+        mantra: "Sono il tipo di persona che mantiene le promesse fatte a se stesso.",
+        visionTitle: "Energia, disciplina e liberta",
+        visionText: "Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.",
+        antiText: "Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola. Questa immagine serve a scegliere oggi, non a punirmi.",
+        photo: ""
+      };
 
-      const savedGoals = localStorage.getItem("visualize-goals-v2");
-      const goals = savedGoals ? JSON.parse(savedGoals) : starterGoals;
-      const grid = document.getElementById("goalGrid");
-      const antiList = document.getElementById("antiList");
-      const scriptText = document.getElementById("scriptText");
+      const state = JSON.parse(localStorage.getItem("visualize-simple-v1") || "null") || defaults;
       const toast = document.getElementById("toast");
-      const photoInput = document.getElementById("photoInput");
-      const searchInput = document.getElementById("searchInput");
-      let activeGoalIndex = 0;
 
-      function saveGoals() {
-        localStorage.setItem("visualize-goals-v2", JSON.stringify(goals));
+      function save() {
+        localStorage.setItem("visualize-simple-v1", JSON.stringify(state));
       }
 
-      function showToast(text) {
+      function notify(text) {
         toast.textContent = text;
         toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 1800);
+        setTimeout(() => toast.classList.remove("show"), 1600);
       }
 
-      function titleFromGoal(text) {
-        const clean = text.trim().replace(/[.?!]+$/, "");
-        return clean.length > 34 ? `${clean.slice(0, 34)}...` : clean || "Nuovo obiettivo";
-      }
+      function paint() {
+        document.getElementById("goalTitle").textContent = state.goalTitle;
+        document.getElementById("goalText").textContent = state.goalText;
+        document.getElementById("mantraText").textContent = state.mantra;
+        document.getElementById("visionTitle").textContent = state.visionTitle;
+        document.getElementById("visionText").textContent = state.visionText;
+        document.getElementById("antiText").textContent = state.antiText;
 
-      function setView(id) {
-        document.querySelectorAll(".view").forEach((item) => item.classList.toggle("active", item.id === id));
-        document.querySelectorAll(".tab, .nav-btn").forEach((item) => item.classList.toggle("active", item.dataset.target === id));
-      }
-
-      function applyHero(goal) {
-        document.getElementById("phoneTitle").textContent = goal.title;
-        document.getElementById("phoneMeta").textContent = `${goal.area} / ${goal.horizon}`;
-        document.getElementById("phoneText").textContent = goal.text;
-        const visual = document.getElementById("heroVisual");
-        visual.style.backgroundImage = goal.photo
-          ? `linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.58)), url('${goal.photo}')`
+        const image = state.photo
+          ? `linear-gradient(180deg, rgba(16,20,24,.08), rgba(16,20,24,.72)), url('${state.photo}')`
           : "";
+        document.getElementById("goalHero").style.backgroundImage = image;
+        document.getElementById("visionPhoto").style.backgroundImage = image;
       }
 
-      function render() {
-        const query = searchInput.value.trim().toLowerCase();
-        const visibleGoals = goals
-          .map((goal, index) => ({ goal, index }))
-          .filter(({ goal }) => !query || `${goal.title} ${goal.area} ${goal.text}`.toLowerCase().includes(query));
+      function setView(name) {
+        document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === name));
+        document.querySelectorAll(".nav button").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
+        document.getElementById("screenTitle").textContent = name === "anti" ? "Anti-vision" : name[0].toUpperCase() + name.slice(1);
+      }
 
-        grid.innerHTML = visibleGoals.map(({ goal, index }) => `
-          <article class="goal-card">
-            <div class="goal-visual" style="${goal.photo ? `background-image:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.58)), url('${goal.photo}')` : ""}">
-              <span>${goal.area} / ${goal.horizon}</span>
-              <strong>${goal.title}</strong>
-            </div>
-            <div class="card-body">
-              <h3>${goal.title}</h3>
-              <p class="body">${goal.text}</p>
-              <button class="btn secondary" data-focus="${index}" style="width:100%; margin-top:12px;">Mostra oggi</button>
-            </div>
-          </article>
-        `).join("");
-
-        antiList.innerHTML = goals.map((goal) => `
-          <div class="panel anti-card">
-            <h3>${goal.title}</h3>
-            <p class="meta">${goal.area} / conseguenza del rinvio</p>
-            <p class="body">${goal.anti}</p>
-          </div>
-        `).join("");
-
-        const focus = goals[activeGoalIndex] || goals[0];
-        applyHero(focus);
-        scriptText.textContent = [
-          "Respira. Guarda con lucidita la persona che stai costruendo.",
-          `Il focus di oggi e ${focus.title.toLowerCase()}.`,
-          focus.text,
-          "La vision ti mostra la direzione. L'anti-vision ti ricorda il costo del rinvio.",
-          "Oggi non devi cambiare tutta la vita. Devi compiere una scelta concreta che conferma la tua nuova identita."
+      function speak() {
+        if (!("speechSynthesis" in window)) {
+          notify("Audio non supportato");
+          return;
+        }
+        const text = [
+          state.mantra,
+          state.goalTitle,
+          state.goalText,
+          state.visionText,
+          "Ora scegli una azione concreta e falla prima che la giornata finisca."
         ].join(" ");
-
-        document.querySelectorAll("[data-focus]").forEach((button) => {
-          button.addEventListener("click", () => {
-            activeGoalIndex = Number(button.dataset.focus);
-            applyHero(goals[activeGoalIndex]);
-            setView("today");
-            showToast("Focus aggiornato");
-          });
-        });
+        speechSynthesis.cancel();
+        const voice = new SpeechSynthesisUtterance(text);
+        voice.lang = "it-IT";
+        voice.rate = 0.9;
+        speechSynthesis.speak(voice);
       }
 
-      function addGoal() {
-        const text = document.getElementById("goalInput").value;
-        const note = document.getElementById("goalNote").value;
-        const area = document.getElementById("areaInput").value;
-        const horizon = document.getElementById("horizonInput").value;
-        goals.unshift({
-          title: titleFromGoal(text),
-          area,
-          horizon,
-          text: note || text,
-          anti: `Se non trasformi "${titleFromGoal(text)}" in azione visibile, tra ${horizon.toLowerCase()} avrai solo una versione piu convincente della stessa scusa.`,
-          photo: ""
-        });
-        activeGoalIndex = 0;
-        saveGoals();
-        render();
-        setView("today");
-        showToast("Obiettivo aggiunto");
-      }
+      document.querySelectorAll("[data-view]").forEach((button) => {
+        button.addEventListener("click", () => setView(button.dataset.view));
+      });
 
-      function uploadPhoto(file) {
+      document.getElementById("listenBtn").addEventListener("click", speak);
+
+      document.getElementById("addMantra").addEventListener("click", () => {
+        const mantra = prompt("Aggiungi una frase mantra", state.mantra);
+        if (!mantra || !mantra.trim()) return;
+        state.mantra = mantra.trim();
+        save();
+        paint();
+        notify("Mantra aggiunto");
+      });
+
+      document.getElementById("editVision").addEventListener("click", () => {
+        const title = prompt("Titolo della vision", state.visionTitle);
+        if (title && title.trim()) state.visionTitle = title.trim();
+        const text = prompt("Descrivi la tua vision", state.visionText);
+        if (text && text.trim()) {
+          state.visionText = text.trim();
+          state.goalText = text.trim();
+        }
+        save();
+        paint();
+        notify("Vision aggiornata");
+      });
+
+      document.getElementById("uploadPhoto").addEventListener("click", () => {
+        document.getElementById("photoInput").click();
+      });
+
+      document.getElementById("photoInput").addEventListener("change", (event) => {
+        const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = () => {
-          goals[activeGoalIndex].photo = reader.result;
-          saveGoals();
-          render();
-          showToast("Foto collegata alla vision");
+          state.photo = reader.result;
+          save();
+          paint();
+          notify("Foto aggiornata");
         };
         reader.readAsDataURL(file);
-      }
-
-      function speak(text) {
-        if (!("speechSynthesis" in window)) {
-          showToast("Audio non supportato");
-          return;
-        }
-        speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = "it-IT";
-        utterance.rate = 0.92;
-        speechSynthesis.speak(utterance);
-      }
-
-      document.querySelectorAll("[data-target]").forEach((button) => {
-        button.addEventListener("click", () => setView(button.dataset.target));
       });
 
-      document.querySelectorAll("[data-jump]").forEach((button) => {
-        button.addEventListener("click", () => setView(button.dataset.jump));
-      });
-
-      document.getElementById("addGoal").addEventListener("click", addGoal);
-      document.getElementById("quickAdd").addEventListener("click", () => setView("vision"));
-      document.getElementById("uploadPhoto").addEventListener("click", () => photoInput.click());
-      photoInput.addEventListener("change", () => uploadPhoto(photoInput.files[0]));
-      searchInput.addEventListener("input", render);
-      document.getElementById("speakScript").addEventListener("click", () => speak(scriptText.textContent));
-      document.getElementById("speakHero").addEventListener("click", () => speak("Visualize ti aiuta a vedere chi vuoi diventare e cosa succede se continui a rimandare."));
-      document.getElementById("copyScript").addEventListener("click", async () => {
-        await navigator.clipboard.writeText(scriptText.textContent);
-        showToast("Script copiato");
-      });
-
-      render();
+      paint();
     </script>
   </body>
 </html>
