@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="manifest" href="./manifest.webmanifest" />
-    <meta name="theme-color" content="#101418" />
+    <meta name="theme-color" content="#f6f3ee" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="icon" href="./icon.svg" />
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
@@ -20,16 +20,18 @@
     </script>
     <style>
       :root {
-        --ink: #101418;
-        --panel: #182126;
-        --panel-2: #1f2a30;
-        --line: #2d3b42;
-        --cream: #f5f1e8;
-        --muted: #aab4b8;
-        --gold: #e8c468;
-        --coral: #da5a3a;
-        --green: #6abf8b;
-        --blue: #6aa8bf;
+        --paper: #f6f3ee;
+        --surface: #ffffff;
+        --ink: #171717;
+        --muted: #77746e;
+        --line: #e6e0d7;
+        --mint: #d9f4df;
+        --lemon: #f7e889;
+        --sky: #ccecf8;
+        --lavender: #e5defb;
+        --coral: #ff8c73;
+        --sage: #95c6a3;
+        --charcoal: #191919;
       }
 
       * {
@@ -39,8 +41,8 @@
       body {
         margin: 0;
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: var(--ink);
-        color: var(--cream);
+        background: #d8d4cc;
+        color: var(--ink);
       }
 
       button,
@@ -50,197 +52,365 @@
         font: inherit;
       }
 
-      .app {
+      button {
+        cursor: pointer;
+      }
+
+      .stage {
         min-height: 100vh;
+        padding: 24px;
         display: grid;
-        grid-template-columns: 280px minmax(0, 1fr);
+        place-items: start center;
       }
 
-      aside {
-        border-right: 1px solid var(--line);
-        background: #12191d;
-        padding: 22px;
-        position: sticky;
-        top: 0;
-        height: 100vh;
+      .phone-shell {
+        width: min(100%, 430px);
+        min-height: min(920px, calc(100vh - 48px));
+        border-radius: 34px;
+        background: var(--paper);
+        box-shadow: 0 24px 70px rgba(25, 25, 25, 0.2);
+        overflow: hidden;
+        position: relative;
+        border: 8px solid #111;
       }
 
-      main {
-        min-width: 0;
+      .app {
+        min-height: calc(100vh - 64px);
+        max-height: 900px;
+        overflow: auto;
+        padding: 18px 16px 92px;
+        scrollbar-width: none;
       }
 
-      .brand {
+      .app::-webkit-scrollbar {
+        display: none;
+      }
+
+      .topbar {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        margin-bottom: 28px;
+        margin-bottom: 18px;
       }
 
-      .logo {
-        width: 42px;
-        height: 42px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, var(--gold), var(--coral));
-        display: grid;
-        place-items: center;
-        color: var(--ink);
-        font-weight: 900;
-      }
-
-      .brand h1 {
-        margin: 0;
-        font-size: 26px;
-        letter-spacing: 0;
-      }
-
-      .brand p,
-      .hint,
-      .muted {
-        color: var(--muted);
-      }
-
-      .brand p {
-        margin: 3px 0 0;
-        font-size: 13px;
-      }
-
-      nav {
-        display: grid;
-        gap: 8px;
-      }
-
-      .nav-btn {
-        width: 100%;
+      .profile {
         display: flex;
         align-items: center;
         gap: 10px;
-        background: transparent;
-        color: var(--muted);
-        border: 1px solid transparent;
-        border-radius: 8px;
-        padding: 12px;
-        text-align: left;
-        cursor: pointer;
+        min-width: 0;
       }
 
-      .nav-btn.active {
-        background: var(--panel);
-        border-color: var(--line);
-        color: var(--cream);
-      }
-
-      .icon {
-        width: 18px;
-        height: 18px;
-        display: inline-grid;
-        place-items: center;
-      }
-
-      .side-card {
-        margin-top: 26px;
-        padding: 14px;
-        border-radius: 8px;
-        background: #17231d;
-        border: 1px solid #315c45;
-      }
-
-      .side-card strong {
-        display: block;
-        margin-bottom: 6px;
-      }
-
-      .hero {
-        padding: 30px clamp(18px, 4vw, 54px) 22px;
-        border-bottom: 1px solid var(--line);
+      .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--coral), var(--lemon));
         display: grid;
-        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-        gap: 28px;
-        align-items: stretch;
+        place-items: center;
+        font-weight: 900;
       }
 
-      .hero h2 {
-        font-size: clamp(34px, 5vw, 64px);
-        line-height: 1;
-        margin: 0 0 14px;
+      .hello {
+        min-width: 0;
+      }
+
+      .hello span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .hello strong {
+        display: block;
+        font-size: 20px;
+        line-height: 1.1;
+      }
+
+      .round-btn {
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 50%;
+        background: var(--surface);
+        box-shadow: 0 8px 18px rgba(25, 25, 25, 0.08);
+        font-size: 18px;
+      }
+
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 12px 14px;
+        margin-bottom: 14px;
+      }
+
+      .search input {
+        border: 0;
+        outline: 0;
+        background: transparent;
+        width: 100%;
+        color: var(--ink);
+      }
+
+      .challenge {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 84px;
+        gap: 14px;
+        min-height: 156px;
+        background: var(--lemon);
+        border-radius: 24px;
+        padding: 16px;
+        margin-bottom: 16px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .challenge h1 {
+        margin: 8px 0 8px;
+        font-size: 28px;
+        line-height: 0.98;
         letter-spacing: 0;
       }
 
-      .hero p {
-        color: #d2d9dc;
-        font-size: 18px;
-        line-height: 1.55;
-        max-width: 760px;
+      .challenge p {
+        margin: 0;
+        color: #5d571b;
+        font-size: 13px;
+        line-height: 1.35;
       }
 
-      .phone {
-        background: #0c1013;
-        border: 1px solid #39464d;
-        border-radius: 28px;
-        padding: 12px;
-        min-height: 520px;
-        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      .streak {
+        display: flex;
+        gap: 5px;
+        margin-top: 14px;
       }
 
-      .phone-screen {
-        height: 100%;
-        border-radius: 20px;
-        overflow: hidden;
-        background: linear-gradient(160deg, #1d2b2f, #16191e 48%, #2a1916);
+      .dot {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.55);
         display: grid;
-        grid-template-rows: 1fr auto;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 900;
       }
 
-      .future-image {
-        padding: 22px;
+      .dot.done {
+        background: var(--charcoal);
+        color: #fff;
+      }
+
+      .mascot {
+        align-self: center;
+        justify-self: center;
+        width: 82px;
+        height: 112px;
+        border-radius: 42px;
+        background: linear-gradient(180deg, #ffe7d5, #ff8c73);
+        position: relative;
+        transform: rotate(-8deg);
+      }
+
+      .mascot::before,
+      .mascot::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        background: var(--charcoal);
+      }
+
+      .mascot::before {
+        width: 18px;
+        height: 18px;
+        top: 25px;
+        left: 19px;
+        box-shadow: 30px 0 var(--charcoal);
+      }
+
+      .mascot::after {
+        width: 40px;
+        height: 16px;
+        bottom: 22px;
+        left: 21px;
+        background: rgba(255, 255, 255, 0.65);
+      }
+
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 18px 2px 10px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: 21px;
+      }
+
+      .section-head button {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        font-weight: 800;
+        font-size: 13px;
+      }
+
+      .quick-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .quick-card {
+        border: 0;
+        border-radius: 22px;
+        padding: 14px;
+        min-height: 108px;
+        text-align: left;
+        color: var(--ink);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .quick-card strong {
+        display: block;
+        font-size: 17px;
+        margin-bottom: 6px;
+      }
+
+      .quick-card span {
+        color: rgba(23, 23, 23, 0.64);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .quick-card.mint {
+        background: var(--mint);
+      }
+
+      .quick-card.sky {
+        background: var(--sky);
+      }
+
+      .quick-card.lavender {
+        background: var(--lavender);
+      }
+
+      .quick-card.coral {
+        background: #ffd9d1;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .tab {
+        border: 0;
+        border-radius: 999px;
+        padding: 10px 14px;
+        background: var(--surface);
+        color: var(--muted);
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
+      .tab.active {
+        background: var(--charcoal);
+        color: #fff;
+      }
+
+      .view {
+        display: none;
+      }
+
+      .view.active {
+        display: block;
+      }
+
+      .goal-card,
+      .panel,
+      .price-card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 12px;
+        margin-top: 12px;
+      }
+
+      .goal-visual {
+        height: 206px;
+        border-radius: 20px;
+        padding: 14px;
         display: grid;
         align-content: end;
         background:
-          radial-gradient(circle at 72% 22%, rgba(232, 196, 104, 0.35), transparent 26%),
-          radial-gradient(circle at 24% 34%, rgba(106, 168, 191, 0.36), transparent 24%),
-          linear-gradient(145deg, rgba(255, 255, 255, 0.04), transparent 48%);
+          linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.58)),
+          linear-gradient(135deg, #90b8ff, #e6d5ff 48%, #f7d688);
+        color: #fff;
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
       }
 
-      .future-image span {
-        color: var(--gold);
-        font-size: 13px;
-        font-weight: 800;
-        text-transform: uppercase;
+      .goal-visual span {
+        width: fit-content;
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: rgba(255, 255, 255, 0.84);
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 900;
+        margin-bottom: 8px;
       }
 
-      .future-image h3 {
-        font-size: 28px;
-        margin: 6px 0;
+      .goal-visual strong {
+        font-size: 24px;
+        line-height: 1.05;
       }
 
-      .phone-actions {
-        padding: 14px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        background: rgba(12, 16, 19, 0.72);
+      .card-body {
+        padding: 12px 4px 2px;
       }
 
-      .content {
-        padding: 26px clamp(18px, 4vw, 54px) 60px;
+      .card-body h3,
+      .panel h3,
+      .price-card h3 {
+        margin: 0 0 6px;
+        font-size: 18px;
       }
 
-      .toolbar {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) repeat(2, minmax(160px, 220px));
-        gap: 12px;
-        margin-bottom: 20px;
-      }
-
-      .field {
-        display: grid;
-        gap: 7px;
-      }
-
-      label {
+      .meta,
+      .muted {
         color: var(--muted);
         font-size: 13px;
         font-weight: 700;
+      }
+
+      .body {
+        color: #4d4a45;
+        font-size: 14px;
+        line-height: 1.45;
+        margin: 8px 0 0;
+      }
+
+      .form {
+        display: grid;
+        gap: 10px;
+        margin-top: 10px;
       }
 
       input,
@@ -248,306 +418,252 @@
       select {
         width: 100%;
         border: 1px solid var(--line);
-        background: #f8f5ec;
+        background: var(--surface);
         color: var(--ink);
-        border-radius: 8px;
-        padding: 12px 13px;
+        border-radius: 18px;
+        padding: 13px 14px;
         outline: none;
       }
 
       textarea {
-        min-height: 92px;
+        min-height: 94px;
         resize: vertical;
+      }
+
+      .segmented {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
       }
 
       .btn {
         border: 0;
-        border-radius: 8px;
-        padding: 12px 14px;
-        background: var(--panel-2);
-        color: var(--cream);
-        cursor: pointer;
-        font-weight: 800;
+        border-radius: 18px;
+        padding: 13px 14px;
+        font-weight: 900;
       }
 
       .btn.primary {
-        background: var(--coral);
+        background: var(--charcoal);
+        color: #fff;
       }
 
-      .btn.gold {
-        background: var(--gold);
+      .btn.secondary {
+        background: var(--surface);
+        border: 1px solid var(--line);
         color: var(--ink);
       }
 
-      .btn.ghost {
-        border: 1px solid var(--line);
-        background: transparent;
-      }
-
-      .section {
-        display: none;
-      }
-
-      .section.active {
-        display: block;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .card {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .card-body {
-        padding: 14px;
-      }
-
-      .visual {
-        min-height: 190px;
-        padding: 14px;
-        display: grid;
-        align-content: end;
-        background:
-          linear-gradient(135deg, rgba(232, 196, 104, 0.38), transparent 32%),
-          linear-gradient(225deg, rgba(106, 191, 139, 0.26), transparent 38%),
-          #273238;
-      }
-
-      .visual.with-photo {
-        background-size: cover;
-        background-position: center;
-        position: relative;
-      }
-
-      .visual.with-photo::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, transparent 12%, rgba(16, 20, 24, 0.82) 100%);
-      }
-
-      .visual.with-photo > * {
-        position: relative;
-      }
-
-      .visual strong {
-        font-size: 20px;
-      }
-
-      .tag {
-        display: inline-flex;
-        width: fit-content;
-        border-radius: 999px;
-        padding: 5px 9px;
-        font-size: 12px;
-        font-weight: 800;
-        background: rgba(232, 196, 104, 0.16);
-        color: var(--gold);
-        margin-bottom: 10px;
-      }
-
-      .card h3,
-      .panel h3 {
-        margin: 0 0 8px;
-        font-size: 20px;
-      }
-
-      .card p,
-      .panel p {
-        margin: 0;
-        color: #cbd3d6;
-        line-height: 1.5;
-      }
-
-      .panel {
-        border: 1px solid var(--line);
-        background: var(--panel);
-        border-radius: 8px;
-        padding: 18px;
-        margin-bottom: 14px;
-      }
-
-      .split {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 14px;
-      }
-
-      .anti {
-        background: #251d1a;
-        border-color: #764333;
+      .anti-card {
+        background: #ffe8e0;
+        border-color: #ffc6b6;
       }
 
       .script-box {
-        font-size: 18px;
-        line-height: 1.65;
-      }
-
-      .pricing {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
+        font-size: 16px;
+        line-height: 1.6;
       }
 
       .price {
-        font-size: 30px;
-        font-weight: 900;
-        color: var(--gold);
-        margin: 8px 0;
+        font-size: 34px;
+        font-weight: 950;
+        margin: 8px 0 4px;
       }
 
-      .list {
-        margin: 14px 0 0;
-        padding: 0;
-        list-style: none;
+      .feature {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .feature:last-child {
+        border-bottom: 0;
+      }
+
+      .check {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--mint);
         display: grid;
-        gap: 8px;
+        place-items: center;
+        font-weight: 900;
       }
 
-      .list li {
-        color: #d2d9dc;
+      .bottom-nav {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 16px;
+        height: 66px;
+        border-radius: 26px;
+        background: var(--charcoal);
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        align-items: center;
+        padding: 8px;
+        box-shadow: 0 18px 40px rgba(25, 25, 25, 0.24);
+      }
+
+      .nav-btn {
+        height: 50px;
+        border: 0;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.62);
+        border-radius: 18px;
+        font-size: 18px;
+        display: grid;
+        place-items: center;
+      }
+
+      .nav-btn.active {
+        background: #fff;
+        color: var(--charcoal);
       }
 
       .toast {
         position: fixed;
-        right: 18px;
-        bottom: 18px;
-        background: var(--cream);
-        color: var(--ink);
+        left: 50%;
+        bottom: 26px;
+        transform: translate(-50%, 90px);
+        background: var(--charcoal);
+        color: #fff;
         padding: 12px 14px;
-        border-radius: 8px;
-        font-weight: 800;
-        transform: translateY(80px);
+        border-radius: 999px;
+        font-weight: 900;
         opacity: 0;
-        transition: 0.2s ease;
+        transition: 0.22s ease;
+        z-index: 4;
       }
 
       .toast.show {
-        transform: translateY(0);
         opacity: 1;
+        transform: translate(-50%, 0);
       }
 
-      @media (max-width: 980px) {
+      @media (min-width: 900px) {
+        .stage {
+          background:
+            radial-gradient(circle at 15% 18%, rgba(229, 222, 251, 0.8), transparent 34%),
+            radial-gradient(circle at 80% 20%, rgba(204, 236, 248, 0.8), transparent 30%),
+            #ddd8d0;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .stage {
+          padding: 0;
+          background: var(--paper);
+        }
+
+        .phone-shell {
+          width: 100%;
+          min-height: 100vh;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+        }
+
         .app {
-          grid-template-columns: 1fr;
-        }
-
-        aside {
-          position: static;
-          height: auto;
-          border-right: 0;
-          border-bottom: 1px solid var(--line);
-        }
-
-        nav {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-
-        .side-card {
-          display: none;
-        }
-
-        .hero,
-        .split,
-        .pricing {
-          grid-template-columns: 1fr;
-        }
-
-        .toolbar {
-          grid-template-columns: 1fr;
-        }
-
-        .grid {
-          grid-template-columns: 1fr 1fr;
-        }
-      }
-
-      @media (max-width: 620px) {
-        nav {
-          grid-template-columns: 1fr 1fr;
-        }
-
-        .grid {
-          grid-template-columns: 1fr;
-        }
-
-        .hero h2 {
-          font-size: 38px;
-        }
-
-        .phone {
-          min-height: 420px;
+          min-height: 100vh;
+          max-height: none;
         }
       }
     </style>
   </head>
   <body>
-    <div class="app">
-      <aside>
-        <div class="brand">
-          <div>
-            <h1>Visualize</h1>
-            <p>Vision board AI per identita e obiettivi.</p>
-          </div>
-          <div class="logo">V</div>
-        </div>
-
-        <nav aria-label="Sezioni">
-          <button class="nav-btn active" data-target="vision"><span class="icon">◎</span> Vision</button>
-          <button class="nav-btn" data-target="anti"><span class="icon">△</span> Anti-vision</button>
-          <button class="nav-btn" data-target="script"><span class="icon">▶</span> Script</button>
-          <button class="nav-btn" data-target="premium"><span class="icon">◆</span> Premium</button>
-        </nav>
-
-        <div class="side-card">
-          <strong>Demo MVP</strong>
-          <span class="muted">Le immagini sono placeholder generativi. Il prossimo passo e collegare upload foto e AI image API.</span>
-        </div>
-      </aside>
-
-      <main>
-        <section class="hero">
-          <div>
-            <h2>Vedi chi vuoi diventare prima di rimandarlo ancora.</h2>
-            <p>
-              Crea una vision personale con immagini, obiettivi, anti-vision e uno script audio quotidiano.
-              Questa e la prima versione prodotto, pensata per diventare app iOS a pagamento.
-            </p>
-            <button class="btn primary" id="quickAdd">Crea obiettivo demo</button>
-            <button class="btn ghost" id="speakHero">Ascolta apertura</button>
-          </div>
-
-          <div class="phone" aria-label="Anteprima mobile">
-            <div class="phone-screen">
-              <div class="future-image">
-                <span>Future self</span>
-                <h3 id="phoneTitle">Corpo energico, mente lucida</h3>
-                <p id="phoneText">Una scena del tuo prossimo livello, costruita da obiettivi e foto personali.</p>
-              </div>
-              <div class="phone-actions">
-                <button class="btn gold">Vision</button>
-                <button class="btn">Script</button>
+    <div class="stage">
+      <div class="phone-shell">
+        <main class="app">
+          <header class="topbar">
+            <div class="profile">
+              <div class="avatar">S</div>
+              <div class="hello">
+                <span>Buongiorno</span>
+                <strong>Samuele</strong>
               </div>
             </div>
-          </div>
-        </section>
+            <button class="round-btn" id="speakHero" aria-label="Ascolta apertura">▶</button>
+          </header>
 
-        <section class="content">
-          <div id="vision" class="section active">
-            <div class="toolbar">
-              <div class="field">
-                <label for="goalInput">Obiettivo</label>
-                <input id="goalInput" value="Diventare disciplinato, forte e libero nelle scelte." />
+          <label class="search" aria-label="Cerca obiettivi">
+            <span>⌕</span>
+            <input id="searchInput" placeholder="Cerca vision, routine, obiettivi" />
+          </label>
+
+          <section class="challenge">
+            <div>
+              <span class="meta">Daily challenge</span>
+              <h1>Visualizza il tuo prossimo livello</h1>
+              <p>Rivedi la vision, ascolta lo script e scegli una prova concreta per oggi.</p>
+              <div class="streak" aria-label="Streak settimanale">
+                <span class="dot done">L</span>
+                <span class="dot done">M</span>
+                <span class="dot">M</span>
+                <span class="dot">G</span>
+                <span class="dot">V</span>
               </div>
-              <div class="field">
-                <label for="areaInput">Area</label>
+            </div>
+            <div class="mascot" aria-hidden="true"></div>
+          </section>
+
+          <section class="quick-grid">
+            <button class="quick-card mint" data-jump="vision">
+              <strong>Vision board</strong>
+              <span>Immagini e obiettivi</span>
+            </button>
+            <button class="quick-card sky" data-jump="script">
+              <strong>Mindset audio</strong>
+              <span>Routine guidata</span>
+            </button>
+            <button class="quick-card lavender" data-jump="anti">
+              <strong>Anti-vision</strong>
+              <span>Conseguenze chiare</span>
+            </button>
+            <button class="quick-card coral" data-jump="premium">
+              <strong>Pro</strong>
+              <span>Paywall demo</span>
+            </button>
+          </section>
+
+          <div class="section-head">
+            <h2>Il tuo piano</h2>
+            <button id="quickAdd">Aggiungi</button>
+          </div>
+
+          <div class="tabs" aria-label="Sezioni">
+            <button class="tab active" data-target="today">Oggi</button>
+            <button class="tab" data-target="vision">Vision</button>
+            <button class="tab" data-target="anti">Anti</button>
+            <button class="tab" data-target="script">Audio</button>
+            <button class="tab" data-target="premium">Pro</button>
+          </div>
+
+          <section id="today" class="view active">
+            <article class="goal-card">
+              <div class="goal-visual" id="heroVisual">
+                <span>Future self</span>
+                <strong id="phoneTitle">Corpo energico</strong>
+              </div>
+              <div class="card-body">
+                <h3>Focus di oggi</h3>
+                <p class="meta" id="phoneMeta">Salute / 12 mesi</p>
+                <p class="body" id="phoneText">Ti svegli con energia, ti alleni con metodo e senti il corpo come un alleato.</p>
+                <div class="segmented" style="margin-top: 12px;">
+                  <button class="btn primary" data-jump="script">Ascolta</button>
+                  <button class="btn secondary" data-jump="vision">Modifica</button>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section id="vision" class="view">
+            <div class="form">
+              <input id="goalInput" value="Diventare disciplinato, forte e libero nelle scelte." />
+              <textarea id="goalNote">Voglio vedere ogni giorno la persona che sto costruendo e fare una scelta concreta che la confermi.</textarea>
+              <div class="segmented">
                 <select id="areaInput">
                   <option>Salute</option>
                   <option>Soldi</option>
@@ -555,88 +671,66 @@
                   <option>Relazioni</option>
                   <option>Mindset</option>
                 </select>
-              </div>
-              <div class="field">
-                <label for="horizonInput">Orizzonte</label>
                 <select id="horizonInput">
+                  <option>30 giorni</option>
                   <option>90 giorni</option>
                   <option>12 mesi</option>
                   <option>3 anni</option>
-                  <option>10 anni</option>
                 </select>
               </div>
+              <div class="segmented">
+                <button class="btn primary" id="addGoal">Aggiungi obiettivo</button>
+                <button class="btn secondary" id="uploadPhoto">Carica foto</button>
+              </div>
+              <input id="photoInput" type="file" accept="image/*" hidden />
             </div>
+            <div id="goalGrid"></div>
+          </section>
 
-            <button class="btn primary" id="addGoal">Aggiungi alla vision</button>
-            <button class="btn ghost" id="uploadPhoto">Carica foto</button>
-            <input id="photoInput" type="file" accept="image/*" hidden />
-
-            <div class="grid" id="goalGrid"></div>
-          </div>
-
-          <div id="anti" class="section">
-            <div class="split">
-              <div class="panel">
-                <h3>Anti-vision guidata</h3>
-                <p>
-                  Mostra il costo del non agire senza usare immagini scioccanti. L'utente sceglie intensita e puo uscire in qualunque momento.
-                </p>
-              </div>
-              <div class="panel anti">
-                <h3>Regole di sicurezza</h3>
-                <p>
-                  Nessun contenuto grafico, nessuna umiliazione, nessuna promessa clinica. Solo conseguenze realistiche, mature e orientate all'azione.
-                </p>
-              </div>
+          <section id="anti" class="view">
+            <div class="panel anti-card">
+              <h3>Anti-vision protetta</h3>
+              <p class="body">Una simulazione del costo del rinvio. Deve essere chiara, non traumatica.</p>
             </div>
             <div id="antiList"></div>
-          </div>
+          </section>
 
-          <div id="script" class="section">
+          <section id="script" class="view">
             <div class="panel">
-              <h3>Script mindset personalizzato</h3>
-              <p class="script-box" id="scriptText"></p>
+              <h3>Script mindset</h3>
+              <p class="body script-box" id="scriptText"></p>
+              <div class="segmented" style="margin-top: 14px;">
+                <button class="btn primary" id="speakScript">Ascolta</button>
+                <button class="btn secondary" id="copyScript">Copia</button>
+              </div>
             </div>
-            <button class="btn primary" id="speakScript">Ascolta script</button>
-            <button class="btn ghost" id="copyScript">Copia script</button>
-          </div>
+          </section>
 
-          <div id="premium" class="section">
-            <div class="pricing">
-              <div class="panel">
-                <h3>Free</h3>
-                <div class="price">0 EUR</div>
-                <p>Per provare il metodo.</p>
-                <ul class="list">
-                  <li>3 obiettivi</li>
-                  <li>Script base</li>
-                  <li>Vision board locale</li>
-                </ul>
+          <section id="premium" class="view">
+            <div class="price-card">
+              <h3>Visualize Pro</h3>
+              <div class="price">9,99€</div>
+              <p class="body">Immagini AI avanzate, audio personalizzati, backup cloud e routine multiple.</p>
+              <div style="margin-top: 14px;">
+                <button class="btn primary" style="width: 100%;">Sblocca Pro</button>
               </div>
-              <div class="panel">
-                <h3>Pro</h3>
-                <div class="price">9,99 EUR</div>
-                <p>Per usarla ogni giorno.</p>
-                <ul class="list">
-                  <li>Immagini AI avanzate</li>
-                  <li>Audio personalizzati</li>
-                  <li>Anti-vision completa</li>
-                </ul>
-              </div>
-              <div class="panel">
-                <h3>Annual</h3>
-                <div class="price">59,99 EUR</div>
-                <p>Per massimizzare retention e valore.</p>
-                <ul class="list">
-                  <li>Backup cloud</li>
-                  <li>Routine multiple</li>
-                  <li>Esportazione script</li>
-                </ul>
+              <div style="margin-top: 12px;">
+                <div class="feature"><span class="check">✓</span><span>Vision board illimitate</span></div>
+                <div class="feature"><span class="check">✓</span><span>Script audio personalizzati</span></div>
+                <div class="feature"><span class="check">✓</span><span>Anti-vision guidata</span></div>
               </div>
             </div>
-          </div>
-        </section>
-      </main>
+          </section>
+        </main>
+
+        <nav class="bottom-nav" aria-label="Navigazione">
+          <button class="nav-btn active" data-target="today" aria-label="Oggi">⌂</button>
+          <button class="nav-btn" data-target="vision" aria-label="Vision">◉</button>
+          <button class="nav-btn" data-target="anti" aria-label="Anti">△</button>
+          <button class="nav-btn" data-target="script" aria-label="Audio">▶</button>
+          <button class="nav-btn" data-target="premium" aria-label="Pro">◆</button>
+        </nav>
+      </div>
     </div>
 
     <div class="toast" id="toast">Fatto</div>
@@ -669,16 +763,18 @@
         }
       ];
 
-      const savedGoals = localStorage.getItem("visualize-goals");
+      const savedGoals = localStorage.getItem("visualize-goals-v2");
       const goals = savedGoals ? JSON.parse(savedGoals) : starterGoals;
       const grid = document.getElementById("goalGrid");
       const antiList = document.getElementById("antiList");
       const scriptText = document.getElementById("scriptText");
       const toast = document.getElementById("toast");
       const photoInput = document.getElementById("photoInput");
+      const searchInput = document.getElementById("searchInput");
+      let activeGoalIndex = 0;
 
       function saveGoals() {
-        localStorage.setItem("visualize-goals", JSON.stringify(goals));
+        localStorage.setItem("visualize-goals-v2", JSON.stringify(goals));
       }
 
       function showToast(text) {
@@ -692,30 +788,51 @@
         return clean.length > 34 ? `${clean.slice(0, 34)}...` : clean || "Nuovo obiettivo";
       }
 
+      function setView(id) {
+        document.querySelectorAll(".view").forEach((item) => item.classList.toggle("active", item.id === id));
+        document.querySelectorAll(".tab, .nav-btn").forEach((item) => item.classList.toggle("active", item.dataset.target === id));
+      }
+
+      function applyHero(goal) {
+        document.getElementById("phoneTitle").textContent = goal.title;
+        document.getElementById("phoneMeta").textContent = `${goal.area} / ${goal.horizon}`;
+        document.getElementById("phoneText").textContent = goal.text;
+        const visual = document.getElementById("heroVisual");
+        visual.style.backgroundImage = goal.photo
+          ? `linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.58)), url('${goal.photo}')`
+          : "";
+      }
+
       function render() {
-        grid.innerHTML = goals.map((goal, index) => `
-          <article class="card">
-            <div class="visual ${goal.photo ? "with-photo" : ""}" ${goal.photo ? `style="background-image:url('${goal.photo}')"` : ""}>
-              <span class="tag">${goal.area} / ${goal.horizon}</span>
+        const query = searchInput.value.trim().toLowerCase();
+        const visibleGoals = goals
+          .map((goal, index) => ({ goal, index }))
+          .filter(({ goal }) => !query || `${goal.title} ${goal.area} ${goal.text}`.toLowerCase().includes(query));
+
+        grid.innerHTML = visibleGoals.map(({ goal, index }) => `
+          <article class="goal-card">
+            <div class="goal-visual" style="${goal.photo ? `background-image:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.58)), url('${goal.photo}')` : ""}">
+              <span>${goal.area} / ${goal.horizon}</span>
               <strong>${goal.title}</strong>
             </div>
             <div class="card-body">
               <h3>${goal.title}</h3>
-              <p>${goal.text}</p>
-              <button class="btn ghost" data-focus="${index}" style="margin-top:12px;">Mostra nel telefono</button>
+              <p class="body">${goal.text}</p>
+              <button class="btn secondary" data-focus="${index}" style="width:100%; margin-top:12px;">Mostra oggi</button>
             </div>
           </article>
         `).join("");
 
         antiList.innerHTML = goals.map((goal) => `
-          <div class="panel anti">
-            <span class="tag">${goal.area}</span>
+          <div class="panel anti-card">
             <h3>${goal.title}</h3>
-            <p>${goal.anti}</p>
+            <p class="meta">${goal.area} / conseguenza del rinvio</p>
+            <p class="body">${goal.anti}</p>
           </div>
         `).join("");
 
-        const focus = goals[0];
+        const focus = goals[activeGoalIndex] || goals[0];
+        applyHero(focus);
         scriptText.textContent = [
           "Respira. Guarda con lucidita la persona che stai costruendo.",
           `Il focus di oggi e ${focus.title.toLowerCase()}.`,
@@ -726,37 +843,31 @@
 
         document.querySelectorAll("[data-focus]").forEach((button) => {
           button.addEventListener("click", () => {
-            const goal = goals[Number(button.dataset.focus)];
-            document.getElementById("phoneTitle").textContent = goal.title;
-            document.getElementById("phoneText").textContent = goal.text;
-            showToast("Anteprima aggiornata");
+            activeGoalIndex = Number(button.dataset.focus);
+            applyHero(goals[activeGoalIndex]);
+            setView("today");
+            showToast("Focus aggiornato");
           });
         });
       }
 
-      document.querySelectorAll(".nav-btn").forEach((button) => {
-        button.addEventListener("click", () => {
-          document.querySelectorAll(".nav-btn").forEach((item) => item.classList.remove("active"));
-          document.querySelectorAll(".section").forEach((item) => item.classList.remove("active"));
-          button.classList.add("active");
-          document.getElementById(button.dataset.target).classList.add("active");
-        });
-      });
-
       function addGoal() {
         const text = document.getElementById("goalInput").value;
+        const note = document.getElementById("goalNote").value;
         const area = document.getElementById("areaInput").value;
         const horizon = document.getElementById("horizonInput").value;
         goals.unshift({
           title: titleFromGoal(text),
           area,
           horizon,
-          text,
+          text: note || text,
           anti: `Se non trasformi "${titleFromGoal(text)}" in azione visibile, tra ${horizon.toLowerCase()} avrai solo una versione piu convincente della stessa scusa.`,
           photo: ""
         });
+        activeGoalIndex = 0;
         saveGoals();
         render();
+        setView("today");
         showToast("Obiettivo aggiunto");
       }
 
@@ -764,7 +875,7 @@
         if (!file) return;
         const reader = new FileReader();
         reader.onload = () => {
-          goals[0].photo = reader.result;
+          goals[activeGoalIndex].photo = reader.result;
           saveGoals();
           render();
           showToast("Foto collegata alla vision");
@@ -774,7 +885,7 @@
 
       function speak(text) {
         if (!("speechSynthesis" in window)) {
-          showToast("Audio non supportato dal browser");
+          showToast("Audio non supportato");
           return;
         }
         speechSynthesis.cancel();
@@ -784,10 +895,19 @@
         speechSynthesis.speak(utterance);
       }
 
+      document.querySelectorAll("[data-target]").forEach((button) => {
+        button.addEventListener("click", () => setView(button.dataset.target));
+      });
+
+      document.querySelectorAll("[data-jump]").forEach((button) => {
+        button.addEventListener("click", () => setView(button.dataset.jump));
+      });
+
       document.getElementById("addGoal").addEventListener("click", addGoal);
-      document.getElementById("quickAdd").addEventListener("click", addGoal);
+      document.getElementById("quickAdd").addEventListener("click", () => setView("vision"));
       document.getElementById("uploadPhoto").addEventListener("click", () => photoInput.click());
       photoInput.addEventListener("change", () => uploadPhoto(photoInput.files[0]));
+      searchInput.addEventListener("input", render);
       document.getElementById("speakScript").addEventListener("click", () => speak(scriptText.textContent));
       document.getElementById("speakHero").addEventListener("click", () => speak("Visualize ti aiuta a vedere chi vuoi diventare e cosa succede se continui a rimandare."));
       document.getElementById("copyScript").addEventListener("click", async () => {
