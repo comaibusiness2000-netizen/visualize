@@ -22,9 +22,10 @@
       :root {
         --paper: #f4f4f2;
         --ink: #111111;
-        --muted: #7a7a76;
+        --muted: #8a8a86;
         --line: #d9d9d4;
-        --panel: rgba(255, 255, 255, 0.62);
+        --panel: #ffffff;
+        --soft: #eeeeeb;
         --gold: #e8c468;
         --rust: #da5a3a;
       }
@@ -34,7 +35,8 @@
         --ink: #f5f1e8;
         --muted: #b9b0a4;
         --line: #30383e;
-        --panel: rgba(24, 31, 37, 0.72);
+        --panel: #171f25;
+        --soft: #20282e;
       }
 
       * {
@@ -91,7 +93,7 @@
         min-height: calc(100vh - 64px);
         max-height: 900px;
         overflow: auto;
-        padding: 18px 18px 96px;
+        padding: 24px 24px 116px;
         scrollbar-width: none;
       }
 
@@ -100,167 +102,210 @@
         display: none;
       }
 
-      .top-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        min-height: 44px;
-      }
-
-      .icon-btn {
-        width: 40px;
-        height: 40px;
-        border: 0;
+      .topbar {
+        min-height: 46px;
         display: grid;
-        place-items: center;
-        color: var(--muted);
-        background: transparent;
-        font-size: 20px;
-        font-weight: 800;
+        grid-template-columns: 64px 1fr 48px;
+        align-items: center;
+        gap: 8px;
       }
 
-      .top-pill {
-        height: 40px;
+      .tiny-toggle {
+        width: 58px;
+        height: 30px;
         border: 1px solid var(--line);
         border-radius: 999px;
-        padding: 0 14px;
-        color: var(--ink);
-        background: rgba(255, 255, 255, 0.46);
+        color: #cfcfca;
+        background: rgba(255, 255, 255, 0.42);
         font-size: 14px;
-        font-weight: 850;
+        font-weight: 900;
+      }
+
+      .greeting {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 950;
+        line-height: 1;
+      }
+
+      .profile-dot {
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        justify-self: end;
+        color: #fff;
+        background: var(--ink);
+        font-size: 17px;
+        font-weight: 950;
       }
 
       .screen {
         display: none;
-        min-height: 710px;
+        min-height: 700px;
       }
 
       .screen.active {
         display: block;
       }
 
-      .stoic-hero {
-        min-height: 672px;
-        position: relative;
+      .week-row {
         display: grid;
-        grid-template-rows: 1fr auto;
-        overflow: hidden;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 7px;
+        margin: 18px 0 20px;
       }
 
-      .hero-copy {
+      .day {
+        min-height: 58px;
+        border: 1px solid transparent;
+        border-radius: 9px;
         display: grid;
         place-items: center;
-        text-align: center;
-        padding: 36px 12px 0;
-      }
-
-      .hero-copy h1 {
-        max-width: 340px;
-        font-size: 39px;
-        line-height: 1.05;
-        letter-spacing: -0.5px;
-        font-weight: 900;
-      }
-
-      .hero-copy p {
-        max-width: 300px;
-        margin-top: 14px;
         color: var(--muted);
+        font-size: 14px;
+        line-height: 1.08;
+        font-weight: 750;
+      }
+
+      .day strong {
+        display: block;
+        color: inherit;
         font-size: 15px;
-        line-height: 1.45;
-        font-weight: 650;
       }
 
-      .figure-wrap {
-        position: relative;
-        height: 300px;
-        margin: 0 -18px;
-      }
-
-      .future-figure {
-        position: absolute;
-        left: -38px;
-        bottom: 0;
-        width: 274px;
-        height: 286px;
-        background: var(--ink);
-        border-radius: 58% 42% 47% 53% / 20% 70% 30% 80%;
-        transform: skewX(-13deg);
-      }
-
-      .future-figure::before {
-        content: "";
-        position: absolute;
-        right: 58px;
-        top: 64px;
-        width: 28px;
-        height: 17px;
-        border: 5px solid var(--paper);
-        border-bottom: 0;
-        border-radius: 22px 22px 0 0;
-        transform: skewX(13deg);
-      }
-
-      .future-figure::after {
-        content: "";
-        position: absolute;
-        right: -105px;
-        bottom: 0;
-        width: 196px;
-        height: 8px;
-        border-radius: 999px;
-        background: var(--ink);
-        transform: skewX(13deg);
-      }
-
-      .leg {
-        position: absolute;
-        bottom: 0;
-        left: 122px;
-        width: 8px;
-        height: 78px;
-        background: var(--ink);
-      }
-
-      .leg.two {
-        left: 174px;
-        height: 42px;
-      }
-
-      .brand-strip {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0 18px;
-        color: #fff;
-        background: rgba(17, 17, 17, 0.82);
-      }
-
-      .logo-chip {
-        width: 28px;
-        height: 28px;
-        border-radius: 7px;
-        display: grid;
-        place-items: center;
+      .day.active {
+        border-color: var(--line);
         color: var(--ink);
-        background: #fff;
+        background: rgba(255, 255, 255, 0.45);
         font-weight: 950;
       }
 
-      .brand-strip strong {
-        font-size: 16px;
+      .hero-card {
+        min-height: 414px;
+        position: relative;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 31px;
+        color: #fff;
+        background:
+          radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.07), transparent 30%),
+          linear-gradient(145deg, #121216, #070708);
+        text-align: center;
       }
 
-      .brand-strip span {
-        margin-left: auto;
-        color: rgba(255, 255, 255, 0.68);
-        font-size: 12px;
-        font-weight: 750;
+      .hero-card h1 {
+        position: relative;
+        z-index: 1;
+        max-width: 300px;
+        margin-top: 18px;
+        font-size: 30px;
+        line-height: 1.05;
+        font-weight: 950;
+      }
+
+      .pretitle {
+        position: relative;
+        z-index: 1;
+        color: rgba(255, 255, 255, 0.42);
+        font-size: 20px;
+        line-height: 1.35;
+        font-weight: 800;
+      }
+
+      .begin-btn {
+        position: relative;
+        z-index: 1;
+        min-width: 136px;
+        min-height: 66px;
+        margin-top: 132px;
+        border: 0;
+        border-radius: 999px;
+        color: #111;
+        background: #f4f4f2;
+        font-size: 22px;
+        font-weight: 900;
+      }
+
+      .hero-figure {
+        position: absolute;
+        right: -38px;
+        bottom: -72px;
+        width: 220px;
+        height: 260px;
+        border-radius: 58% 42% 47% 53% / 20% 70% 30% 80%;
+        background: rgba(255, 255, 255, 0.035);
+        transform: skewX(-11deg);
+      }
+
+      .hero-figure::before {
+        content: "";
+        position: absolute;
+        top: 66px;
+        right: 58px;
+        width: 27px;
+        height: 27px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .reflection-card {
+        margin: 54px auto 0;
+        padding: 42px 28px 34px;
+        border-radius: 31px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 20px 42px rgba(17, 17, 17, 0.08);
+      }
+
+      body[data-theme="dark"] .reflection-card {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .reflection-card h2 {
+        font-size: 26px;
+        line-height: 1.05;
+        font-weight: 950;
+      }
+
+      .day-count {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 15px;
+        font-weight: 800;
+      }
+
+      .reflection-card p {
+        max-width: 300px;
+        margin: 26px auto 0;
+        font-size: 21px;
+        line-height: 1.25;
+        font-weight: 850;
+      }
+
+      .reflect-btn {
+        min-width: 144px;
+        min-height: 64px;
+        margin-top: 28px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.5);
+        font-size: 22px;
+        font-weight: 900;
+      }
+
+      .inspired-label {
+        margin: 52px 0 12px;
+        text-align: center;
+        color: #aaa9a5;
+        font-size: 15px;
+        letter-spacing: 8px;
+        font-weight: 950;
       }
 
       .quiet-panel {
@@ -274,6 +319,14 @@
         font-weight: 900;
       }
 
+      .quiet-panel p {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.55;
+        font-weight: 650;
+      }
+
       .upgrade-link {
         margin-top: 16px;
         border: 0;
@@ -281,14 +334,6 @@
         background: transparent;
         font-size: 14px;
         font-weight: 850;
-      }
-
-      .quiet-panel p {
-        margin-top: 10px;
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.55;
-        font-weight: 650;
       }
 
       .mantra-row {
@@ -375,6 +420,110 @@
           linear-gradient(145deg, #111, #da5a3a 58%, #e8c468);
         background-size: cover;
         background-position: center;
+      }
+
+      .vision-visual h2 {
+        max-width: 340px;
+        font-size: 34px;
+        line-height: 1.02;
+      }
+
+      .vision-visual span {
+        width: fit-content;
+        margin-bottom: 9px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        color: #111;
+        background: rgba(255, 255, 255, 0.92);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .list {
+        border-top: 1px solid var(--line);
+        margin-top: 16px;
+      }
+
+      .list-item {
+        display: flex;
+        gap: 12px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .square {
+        flex: 0 0 auto;
+        width: 34px;
+        height: 34px;
+        background: var(--ink);
+      }
+
+      .square.rust {
+        background: var(--rust);
+      }
+
+      .list-item strong {
+        display: block;
+        font-size: 16px;
+      }
+
+      .list-item span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+        font-weight: 650;
+      }
+
+      .action-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .btn {
+        min-height: 46px;
+        border: 1px solid var(--ink);
+        color: var(--paper);
+        background: var(--ink);
+        font-weight: 900;
+      }
+
+      .btn.secondary {
+        color: var(--ink);
+        background: transparent;
+      }
+
+      .anti-figure {
+        position: relative;
+        height: 284px;
+        margin: 6px -24px 22px;
+        overflow: hidden;
+      }
+
+      .anti-shape {
+        position: absolute;
+        right: -46px;
+        bottom: 0;
+        width: 280px;
+        height: 284px;
+        border-radius: 54% 46% 38% 62% / 18% 72% 28% 82%;
+        background: var(--ink);
+        transform: scaleX(-1) skewX(-9deg);
+      }
+
+      .anti-shape::before {
+        content: "";
+        position: absolute;
+        right: 58px;
+        top: 70px;
+        width: 31px;
+        height: 17px;
+        border: 5px solid var(--paper);
+        border-bottom: 0;
+        border-radius: 22px 22px 0 0;
       }
 
       .paywall {
@@ -545,8 +694,8 @@
 
       .paywall-footer {
         position: absolute;
-        left: -18px;
-        right: -18px;
+        left: -24px;
+        right: -24px;
         bottom: 0;
         padding: 22px 24px 24px;
         border-top: 1px solid #d3d3d0;
@@ -575,110 +724,6 @@
         background: linear-gradient(90deg, #7d88b8, #cc6f9e);
         font-size: 26px;
         font-weight: 950;
-      }
-
-      .vision-visual h2 {
-        max-width: 340px;
-        font-size: 34px;
-        line-height: 1.02;
-      }
-
-      .vision-visual span {
-        width: fit-content;
-        margin-bottom: 9px;
-        padding: 6px 9px;
-        border-radius: 999px;
-        color: #111;
-        background: rgba(255, 255, 255, 0.92);
-        font-size: 12px;
-        font-weight: 900;
-      }
-
-      .list {
-        border-top: 1px solid var(--line);
-        margin-top: 16px;
-      }
-
-      .list-item {
-        display: flex;
-        gap: 12px;
-        padding: 14px 0;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .square {
-        flex: 0 0 auto;
-        width: 34px;
-        height: 34px;
-        background: var(--ink);
-      }
-
-      .square.rust {
-        background: var(--rust);
-      }
-
-      .list-item strong {
-        display: block;
-        font-size: 16px;
-      }
-
-      .list-item span {
-        display: block;
-        margin-top: 4px;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.45;
-        font-weight: 650;
-      }
-
-      .action-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 14px;
-      }
-
-      .btn {
-        min-height: 46px;
-        border: 1px solid var(--ink);
-        color: var(--paper);
-        background: var(--ink);
-        font-weight: 900;
-      }
-
-      .btn.secondary {
-        color: var(--ink);
-        background: transparent;
-      }
-
-      .anti-figure {
-        position: relative;
-        height: 284px;
-        margin: 6px -18px 22px;
-        overflow: hidden;
-      }
-
-      .anti-shape {
-        position: absolute;
-        right: -46px;
-        bottom: 0;
-        width: 280px;
-        height: 284px;
-        border-radius: 54% 46% 38% 62% / 18% 72% 28% 82%;
-        background: var(--ink);
-        transform: scaleX(-1) skewX(-9deg);
-      }
-
-      .anti-shape::before {
-        content: "";
-        position: absolute;
-        right: 58px;
-        top: 70px;
-        width: 31px;
-        height: 17px;
-        border: 5px solid var(--paper);
-        border-bottom: 0;
-        border-radius: 22px 22px 0 0;
       }
 
       .drawer-scrim {
@@ -823,25 +868,38 @@
 
       .nav {
         position: absolute;
-        left: 16px;
-        right: 16px;
+        left: 22px;
+        right: 22px;
         bottom: 14px;
-        height: 54px;
+        height: 72px;
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        background: rgba(17, 17, 17, 0.88);
+        grid-template-columns: 1fr 1fr 76px 1fr 1fr;
+        gap: 2px;
+        background: transparent;
       }
 
       .nav button {
         border: 0;
-        color: rgba(255, 255, 255, 0.64);
+        color: #9a9a96;
         background: transparent;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 850;
       }
 
       .nav button.active {
+        color: var(--ink);
+      }
+
+      .nav .plus-nav {
+        width: 76px;
+        height: 76px;
+        align-self: end;
+        justify-self: center;
+        border-radius: 50%;
         color: #fff;
+        background: #111;
+        font-size: 38px;
+        line-height: 1;
       }
 
       input,
@@ -904,40 +962,42 @@
     <div class="stage">
       <div class="phone">
         <main class="app">
-          <div class="top-actions">
-            <button class="top-pill" id="openProTop" type="button">Pro + AI</button>
-            <button class="icon-btn" id="listenBtn" aria-label="Ascolta traccia">♪</button>
-            <button class="icon-btn" id="profileBtn" aria-label="Apri profilo">×</button>
+          <div class="topbar">
+            <button class="tiny-toggle" id="listenBtn" aria-label="Ascolta traccia">o o</button>
+            <div class="greeting">good evening.</div>
+            <button class="profile-dot" id="profileBtn" aria-label="Apri profilo">S</button>
           </div>
 
           <section class="screen active" id="goal">
-            <div class="stoic-hero">
-              <div class="hero-copy">
-                <div>
-                  <h1>meet visualize.<br />your future self companion</h1>
-                  <p id="goalText">Ogni giorno torni all'immagine della persona che stai costruendo.</p>
-                </div>
-              </div>
-
-              <div class="figure-wrap">
-                <div class="future-figure">
-                  <div class="leg"></div>
-                  <div class="leg two"></div>
-                </div>
-              </div>
-
-              <div class="brand-strip">
-                <div class="logo-chip">V</div>
-                <strong>visualize.</strong>
-                <span id="screenTitle">Goal</span>
-              </div>
+            <div class="week-row" aria-label="Settimana">
+              <div class="day">Su<br /><strong>13</strong></div>
+              <div class="day">Mo<br /><strong>14</strong></div>
+              <div class="day">Tu<br /><strong>15</strong></div>
+              <div class="day">We<br /><strong>16</strong></div>
+              <div class="day">Th<br /><strong>17</strong></div>
+              <div class="day">Fr<br /><strong>18</strong></div>
+              <div class="day active">Sa<br /><strong>19</strong></div>
             </div>
 
-            <div class="quiet-panel">
-              <h2 id="goalTitle">La vita che sto costruendo</h2>
-              <p>Usa questa schermata come ancora: pochi secondi, una immagine chiara, una direzione.</p>
-              <button class="upgrade-link" id="openProFromGoal" type="button">Sblocca visualizzazioni AI</button>
+            <article class="hero-card" id="goalHero">
+              <div class="hero-figure" aria-hidden="true"></div>
+              <div>
+                <div class="pretitle">Future<br />Preparation</div>
+                <h1 id="goalTitle">New day, clear vision.</h1>
+                <button class="begin-btn" id="beginVision" type="button">Begin</button>
+              </div>
+            </article>
 
+            <article class="reflection-card">
+              <h2>on future self.</h2>
+              <span class="day-count">Day 6 of 7</span>
+              <p id="goalText">Ogni giorno torni all'immagine della persona che stai costruendo.</p>
+              <button class="reflect-btn" id="reflectBtn" type="button">Reflect</button>
+            </article>
+
+            <div class="inspired-label">GET INSPIRED</div>
+
+            <div class="quiet-panel">
               <div class="mantra-row">
                 <p id="mantraText">Sono il tipo di persona che mantiene le promesse fatte a se stesso.</p>
                 <button class="plus-btn" id="addMantra" aria-label="Aggiungi mantra">+</button>
@@ -959,6 +1019,7 @@
                   </div>
                 </button>
               </div>
+              <button class="upgrade-link" id="openProFromGoal" type="button">Sblocca visualizzazioni AI</button>
             </div>
           </section>
 
@@ -997,7 +1058,7 @@
 
           <section class="screen" id="pro">
             <div class="paywall">
-              <button class="paywall-close" id="closePro" type="button" aria-label="Chiudi Pro">×</button>
+              <button class="paywall-close" id="closePro" type="button" aria-label="Chiudi Pro">x</button>
               <div class="paywall-tabs" aria-label="Piani">
                 <button type="button">Premium</button>
                 <button class="active" type="button">Premium + AI</button>
@@ -1011,7 +1072,7 @@
 
               <div class="feature-card">
                 <div class="feature-row">
-                  <div class="feature-icon">✎</div>
+                  <div class="feature-icon">P</div>
                   <div>
                     <strong>Vision personalizzate</strong>
                     <span>Prompt su misura per vedere la vita che vuoi costruire.</span>
@@ -1019,7 +1080,7 @@
                   <div class="ai-badge">AI</div>
                 </div>
                 <div class="feature-row">
-                  <div class="feature-icon">◌</div>
+                  <div class="feature-icon">A</div>
                   <div>
                     <strong>Analisi riflessiva</strong>
                     <span>Trova pattern tra mantra, rinvii e obiettivi ricorrenti.</span>
@@ -1027,7 +1088,7 @@
                   <div class="ai-badge">AI</div>
                 </div>
                 <div class="feature-row">
-                  <div class="feature-icon">☁</div>
+                  <div class="feature-icon">S</div>
                   <div>
                     <strong>Script audio smart</strong>
                     <span>Tracce mindset adattate al tuo obiettivo principale.</span>
@@ -1037,7 +1098,7 @@
               </div>
 
               <div class="paywall-footer">
-                <strong>Yearly + AI<br />€99.99 annually (€8.33/month)<br />Cancel anytime</strong>
+                <strong>Yearly + AI<br />EUR 99.99 annually (EUR 8.33/month)<br />Cancel anytime</strong>
                 <button class="trial-btn" type="button">Try 3 days free</button>
               </div>
             </div>
@@ -1051,7 +1112,7 @@
               <p>visualize.</p>
               <h2>Profilo</h2>
             </div>
-            <button class="drawer-close" id="closeProfile" type="button" aria-label="Chiudi profilo">×</button>
+            <button class="drawer-close" id="closeProfile" type="button" aria-label="Chiudi profilo">x</button>
           </div>
 
           <div class="profile-card">
@@ -1107,7 +1168,9 @@
         </aside>
 
         <nav class="nav" aria-label="Navigazione principale">
-          <button class="active" data-view="goal">Goal</button>
+          <button class="active" data-view="goal">Today</button>
+          <button id="openProTop" type="button">AI</button>
+          <button class="plus-nav" id="addMantraNav" type="button" aria-label="Aggiungi mantra">+</button>
           <button data-view="vision">Vision</button>
           <button data-view="anti">Anti</button>
         </nav>
@@ -1118,7 +1181,7 @@
 
     <script>
       const defaults = {
-        goalTitle: "La vita che sto costruendo",
+        goalTitle: "New day, clear vision.",
         goalText: "Ogni giorno torni all'immagine della persona che stai costruendo.",
         mantra: "Sono il tipo di persona che mantiene le promesse fatte a se stesso.",
         visionTitle: "Energia, disciplina e liberta",
@@ -1214,14 +1277,9 @@
 
       function setView(name) {
         document.querySelectorAll(".screen").forEach((view) => view.classList.toggle("active", view.id === name));
-        document.querySelectorAll(".nav button").forEach((button) => button.classList.toggle("active", button.dataset.view === name));
-        const titles = {
-          goal: "Goal",
-          vision: "Vision",
-          anti: "Anti",
-          pro: "Pro + AI"
-        };
-        document.getElementById("screenTitle").textContent = titles[name] || "Goal";
+        document.querySelectorAll(".nav button[data-view]").forEach((button) => {
+          button.classList.toggle("active", button.dataset.view === name);
+        });
         closeProfile();
       }
 
@@ -1256,6 +1314,15 @@
         speechSynthesis.speak(voice);
       }
 
+      function addMantra() {
+        const mantra = prompt("Aggiungi una frase mantra", state.mantra);
+        if (!mantra || !mantra.trim()) return;
+        state.mantra = mantra.trim();
+        save();
+        paint();
+        notify("Mantra aggiunto");
+      }
+
       document.querySelectorAll("[data-view]").forEach((button) => {
         button.addEventListener("click", () => setView(button.dataset.view));
       });
@@ -1264,6 +1331,10 @@
       document.getElementById("profileBtn").addEventListener("click", openProfile);
       document.getElementById("closeProfile").addEventListener("click", closeProfile);
       document.getElementById("profileScrim").addEventListener("click", closeProfile);
+      document.getElementById("beginVision").addEventListener("click", () => setView("vision"));
+      document.getElementById("reflectBtn").addEventListener("click", addMantra);
+      document.getElementById("addMantra").addEventListener("click", addMantra);
+      document.getElementById("addMantraNav").addEventListener("click", addMantra);
       document.getElementById("openProTop").addEventListener("click", () => setView("pro"));
       document.getElementById("openProFromGoal").addEventListener("click", () => setView("pro"));
       document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
@@ -1307,15 +1378,6 @@
         if (!confirm("Vuoi riportare il prototipo allo stato iniziale?")) return;
         localStorage.removeItem("visualize-simple-v1");
         window.location.reload();
-      });
-
-      document.getElementById("addMantra").addEventListener("click", () => {
-        const mantra = prompt("Aggiungi una frase mantra", state.mantra);
-        if (!mantra || !mantra.trim()) return;
-        state.mantra = mantra.trim();
-        save();
-        paint();
-        notify("Mantra aggiunto");
       });
 
       document.getElementById("editVision").addEventListener("click", () => {
