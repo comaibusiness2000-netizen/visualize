@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#101418" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Visualize" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" href="./icon.svg" />
+    <link rel="apple-touch-icon" href="./icon.svg" />
+    <title>Visualize</title>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+        });
+      }
+    </script>
+    <style>
+      :root {
+        --ink: #101418;
+        --panel: #182126;
+        --panel-2: #1f2a30;
+        --line: #2d3b42;
+        --cream: #f5f1e8;
+        --muted: #aab4b8;
+        --gold: #e8c468;
+        --coral: #da5a3a;
+        --green: #6abf8b;
+        --blue: #6aa8bf;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--ink);
+        color: var(--cream);
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      .app {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+      }
+
+      aside {
+        border-right: 1px solid var(--line);
+        background: #12191d;
+        padding: 22px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+      }
+
+      main {
+        min-width: 0;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+
+      .logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--gold), var(--coral));
+        display: grid;
+        place-items: center;
+        color: var(--ink);
+        font-weight: 900;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 26px;
+        letter-spacing: 0;
+      }
+
+      .brand p,
+      .hint,
+      .muted {
+        color: var(--muted);
+      }
+
+      .brand p {
+        margin: 3px 0 0;
+        font-size: 13px;
+      }
+
+      nav {
+        display: grid;
+        gap: 8px;
+      }
+
+      .nav-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .nav-btn.active {
+        background: var(--panel);
+        border-color: var(--line);
+        color: var(--cream);
+      }
+
+      .icon {
+        width: 18px;
+        height: 18px;
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .side-card {
+        margin-top: 26px;
+        padding: 14px;
+        border-radius: 8px;
+        background: #17231d;
+        border: 1px solid #315c45;
+      }
+
+      .side-card strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .hero {
+        padding: 30px clamp(18px, 4vw, 54px) 22px;
+        border-bottom: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 28px;
+        align-items: stretch;
+      }
+
+      .hero h2 {
+        font-size: clamp(34px, 5vw, 64px);
+        line-height: 1;
+        margin: 0 0 14px;
+        letter-spacing: 0;
+      }
+
+      .hero p {
+        color: #d2d9dc;
+        font-size: 18px;
+        line-height: 1.55;
+        max-width: 760px;
+      }
+
+      .phone {
+        background: #0c1013;
+        border: 1px solid #39464d;
+        border-radius: 28px;
+        padding: 12px;
+        min-height: 520px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      }
+
+      .phone-screen {
+        height: 100%;
+        border-radius: 20px;
+        overflow: hidden;
+        background: linear-gradient(160deg, #1d2b2f, #16191e 48%, #2a1916);
+        display: grid;
+        grid-template-rows: 1fr auto;
+      }
+
+      .future-image {
+        padding: 22px;
+        display: grid;
+        align-content: end;
+        background:
+          radial-gradient(circle at 72% 22%, rgba(232, 196, 104, 0.35), transparent 26%),
+          radial-gradient(circle at 24% 34%, rgba(106, 168, 191, 0.36), transparent 24%),
+          linear-gradient(145deg, rgba(255, 255, 255, 0.04), transparent 48%);
+      }
+
+      .future-image span {
+        color: var(--gold);
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .future-image h3 {
+        font-size: 28px;
+        margin: 6px 0;
+      }
+
+      .phone-actions {
+        padding: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        background: rgba(12, 16, 19, 0.72);
+      }
+
+      .content {
+        padding: 26px clamp(18px, 4vw, 54px) 60px;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) repeat(2, minmax(160px, 220px));
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .field {
+        display: grid;
+        gap: 7px;
+      }
+
+      label {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: #f8f5ec;
+        color: var(--ink);
+        border-radius: 8px;
+        padding: 12px 13px;
+        outline: none;
+      }
+
+      textarea {
+        min-height: 92px;
+        resize: vertical;
+      }
+
+      .btn {
+        border: 0;
+        border-radius: 8px;
+        padding: 12px 14px;
+        background: var(--panel-2);
+        color: var(--cream);
+        cursor: pointer;
+        font-weight: 800;
+      }
+
+      .btn.primary {
+        background: var(--coral);
+      }
+
+      .btn.gold {
+        background: var(--gold);
+        color: var(--ink);
+      }
+
+      .btn.ghost {
+        border: 1px solid var(--line);
+        background: transparent;
+      }
+
+      .section {
+        display: none;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .card-body {
+        padding: 14px;
+      }
+
+      .visual {
+        min-height: 190px;
+        padding: 14px;
+        display: grid;
+        align-content: end;
+        background:
+          linear-gradient(135deg, rgba(232, 196, 104, 0.38), transparent 32%),
+          linear-gradient(225deg, rgba(106, 191, 139, 0.26), transparent 38%),
+          #273238;
+      }
+
+      .visual.with-photo {
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+
+      .visual.with-photo::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 12%, rgba(16, 20, 24, 0.82) 100%);
+      }
+
+      .visual.with-photo > * {
+        position: relative;
+      }
+
+      .visual strong {
+        font-size: 20px;
+      }
+
+      .tag {
+        display: inline-flex;
+        width: fit-content;
+        border-radius: 999px;
+        padding: 5px 9px;
+        font-size: 12px;
+        font-weight: 800;
+        background: rgba(232, 196, 104, 0.16);
+        color: var(--gold);
+        margin-bottom: 10px;
+      }
+
+      .card h3,
+      .panel h3 {
+        margin: 0 0 8px;
+        font-size: 20px;
+      }
+
+      .card p,
+      .panel p {
+        margin: 0;
+        color: #cbd3d6;
+        line-height: 1.5;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        border-radius: 8px;
+        padding: 18px;
+        margin-bottom: 14px;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 14px;
+      }
+
+      .anti {
+        background: #251d1a;
+        border-color: #764333;
+      }
+
+      .script-box {
+        font-size: 18px;
+        line-height: 1.65;
+      }
+
+      .pricing {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .price {
+        font-size: 30px;
+        font-weight: 900;
+        color: var(--gold);
+        margin: 8px 0;
+      }
+
+      .list {
+        margin: 14px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 8px;
+      }
+
+      .list li {
+        color: #d2d9dc;
+      }
+
+      .toast {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        background: var(--cream);
+        color: var(--ink);
+        padding: 12px 14px;
+        border-radius: 8px;
+        font-weight: 800;
+        transform: translateY(80px);
+        opacity: 0;
+        transition: 0.2s ease;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      @media (max-width: 980px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        aside {
+          position: static;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        nav {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .side-card {
+          display: none;
+        }
+
+        .hero,
+        .split,
+        .pricing {
+          grid-template-columns: 1fr;
+        }
+
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 620px) {
+        nav {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero h2 {
+          font-size: 38px;
+        }
+
+        .phone {
+          min-height: 420px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside>
+        <div class="brand">
+          <div>
+            <h1>Visualize</h1>
+            <p>Vision board AI per identita e obiettivi.</p>
+          </div>
+          <div class="logo">V</div>
+        </div>
+
+        <nav aria-label="Sezioni">
+          <button class="nav-btn active" data-target="vision"><span class="icon">◎</span> Vision</button>
+          <button class="nav-btn" data-target="anti"><span class="icon">△</span> Anti-vision</button>
+          <button class="nav-btn" data-target="script"><span class="icon">▶</span> Script</button>
+          <button class="nav-btn" data-target="premium"><span class="icon">◆</span> Premium</button>
+        </nav>
+
+        <div class="side-card">
+          <strong>Demo MVP</strong>
+          <span class="muted">Le immagini sono placeholder generativi. Il prossimo passo e collegare upload foto e AI image API.</span>
+        </div>
+      </aside>
+
+      <main>
+        <section class="hero">
+          <div>
+            <h2>Vedi chi vuoi diventare prima di rimandarlo ancora.</h2>
+            <p>
+              Crea una vision personale con immagini, obiettivi, anti-vision e uno script audio quotidiano.
+              Questa e la prima versione prodotto, pensata per diventare app iOS a pagamento.
+            </p>
+            <button class="btn primary" id="quickAdd">Crea obiettivo demo</button>
+            <button class="btn ghost" id="speakHero">Ascolta apertura</button>
+          </div>
+
+          <div class="phone" aria-label="Anteprima mobile">
+            <div class="phone-screen">
+              <div class="future-image">
+                <span>Future self</span>
+                <h3 id="phoneTitle">Corpo energico, mente lucida</h3>
+                <p id="phoneText">Una scena del tuo prossimo livello, costruita da obiettivi e foto personali.</p>
+              </div>
+              <div class="phone-actions">
+                <button class="btn gold">Vision</button>
+                <button class="btn">Script</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content">
+          <div id="vision" class="section active">
+            <div class="toolbar">
+              <div class="field">
+                <label for="goalInput">Obiettivo</label>
+                <input id="goalInput" value="Diventare disciplinato, forte e libero nelle scelte." />
+              </div>
+              <div class="field">
+                <label for="areaInput">Area</label>
+                <select id="areaInput">
+                  <option>Salute</option>
+                  <option>Soldi</option>
+                  <option>Carriera</option>
+                  <option>Relazioni</option>
+                  <option>Mindset</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="horizonInput">Orizzonte</label>
+                <select id="horizonInput">
+                  <option>90 giorni</option>
+                  <option>12 mesi</option>
+                  <option>3 anni</option>
+                  <option>10 anni</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="btn primary" id="addGoal">Aggiungi alla vision</button>
+            <button class="btn ghost" id="uploadPhoto">Carica foto</button>
+            <input id="photoInput" type="file" accept="image/*" hidden />
+
+            <div class="grid" id="goalGrid"></div>
+          </div>
+
+          <div id="anti" class="section">
+            <div class="split">
+              <div class="panel">
+                <h3>Anti-vision guidata</h3>
+                <p>
+                  Mostra il costo del non agire senza usare immagini scioccanti. L'utente sceglie intensita e puo uscire in qualunque momento.
+                </p>
+              </div>
+              <div class="panel anti">
+                <h3>Regole di sicurezza</h3>
+                <p>
+                  Nessun contenuto grafico, nessuna umiliazione, nessuna promessa clinica. Solo conseguenze realistiche, mature e orientate all'azione.
+                </p>
+              </div>
+            </div>
+            <div id="antiList"></div>
+          </div>
+
+          <div id="script" class="section">
+            <div class="panel">
+              <h3>Script mindset personalizzato</h3>
+              <p class="script-box" id="scriptText"></p>
+            </div>
+            <button class="btn primary" id="speakScript">Ascolta script</button>
+            <button class="btn ghost" id="copyScript">Copia script</button>
+          </div>
+
+          <div id="premium" class="section">
+            <div class="pricing">
+              <div class="panel">
+                <h3>Free</h3>
+                <div class="price">0 EUR</div>
+                <p>Per provare il metodo.</p>
+                <ul class="list">
+                  <li>3 obiettivi</li>
+                  <li>Script base</li>
+                  <li>Vision board locale</li>
+                </ul>
+              </div>
+              <div class="panel">
+                <h3>Pro</h3>
+                <div class="price">9,99 EUR</div>
+                <p>Per usarla ogni giorno.</p>
+                <ul class="list">
+                  <li>Immagini AI avanzate</li>
+                  <li>Audio personalizzati</li>
+                  <li>Anti-vision completa</li>
+                </ul>
+              </div>
+              <div class="panel">
+                <h3>Annual</h3>
+                <div class="price">59,99 EUR</div>
+                <p>Per massimizzare retention e valore.</p>
+                <ul class="list">
+                  <li>Backup cloud</li>
+                  <li>Routine multiple</li>
+                  <li>Esportazione script</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast">Fatto</div>
+
+    <script>
+      const starterGoals = [
+        {
+          title: "Corpo energico",
+          area: "Salute",
+          horizon: "12 mesi",
+          text: "Ti svegli con energia, ti alleni con metodo e senti il corpo come un alleato.",
+          anti: "Se continui a rimandare, ogni settimana richiede piu forza solo per tornare al punto di partenza.",
+          photo: ""
+        },
+        {
+          title: "Liberta finanziaria",
+          area: "Soldi",
+          horizon: "3 anni",
+          text: "Hai un sistema di entrate, risparmio e scelte piu calme. Non sei piu guidato dall'urgenza.",
+          anti: "Senza un piano, il denaro continua a scegliere al posto tuo.",
+          photo: ""
+        },
+        {
+          title: "Identita disciplinata",
+          area: "Mindset",
+          horizon: "90 giorni",
+          text: "Le tue azioni quotidiane confermano una persona piu solida, presente e affidabile.",
+          anti: "Se vivi solo di motivazione, ogni calo d'umore diventa una scusa perfetta.",
+          photo: ""
+        }
+      ];
+
+      const savedGoals = localStorage.getItem("visualize-goals");
+      const goals = savedGoals ? JSON.parse(savedGoals) : starterGoals;
+      const grid = document.getElementById("goalGrid");
+      const antiList = document.getElementById("antiList");
+      const scriptText = document.getElementById("scriptText");
+      const toast = document.getElementById("toast");
+      const photoInput = document.getElementById("photoInput");
+
+      function saveGoals() {
+        localStorage.setItem("visualize-goals", JSON.stringify(goals));
+      }
+
+      function showToast(text) {
+        toast.textContent = text;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1800);
+      }
+
+      function titleFromGoal(text) {
+        const clean = text.trim().replace(/[.?!]+$/, "");
+        return clean.length > 34 ? `${clean.slice(0, 34)}...` : clean || "Nuovo obiettivo";
+      }
+
+      function render() {
+        grid.innerHTML = goals.map((goal, index) => `
+          <article class="card">
+            <div class="visual ${goal.photo ? "with-photo" : ""}" ${goal.photo ? `style="background-image:url('${goal.photo}')"` : ""}>
+              <span class="tag">${goal.area} / ${goal.horizon}</span>
+              <strong>${goal.title}</strong>
+            </div>
+            <div class="card-body">
+              <h3>${goal.title}</h3>
+              <p>${goal.text}</p>
+              <button class="btn ghost" data-focus="${index}" style="margin-top:12px;">Mostra nel telefono</button>
+            </div>
+          </article>
+        `).join("");
+
+        antiList.innerHTML = goals.map((goal) => `
+          <div class="panel anti">
+            <span class="tag">${goal.area}</span>
+            <h3>${goal.title}</h3>
+            <p>${goal.anti}</p>
+          </div>
+        `).join("");
+
+        const focus = goals[0];
+        scriptText.textContent = [
+          "Respira. Guarda con lucidita la persona che stai costruendo.",
+          `Il focus di oggi e ${focus.title.toLowerCase()}.`,
+          focus.text,
+          "La vision ti mostra la direzione. L'anti-vision ti ricorda il costo del rinvio.",
+          "Oggi non devi cambiare tutta la vita. Devi compiere una scelta concreta che conferma la tua nuova identita."
+        ].join(" ");
+
+        document.querySelectorAll("[data-focus]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const goal = goals[Number(button.dataset.focus)];
+            document.getElementById("phoneTitle").textContent = goal.title;
+            document.getElementById("phoneText").textContent = goal.text;
+            showToast("Anteprima aggiornata");
+          });
+        });
+      }
+
+      document.querySelectorAll(".nav-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".nav-btn").forEach((item) => item.classList.remove("active"));
+          document.querySelectorAll(".section").forEach((item) => item.classList.remove("active"));
+          button.classList.add("active");
+          document.getElementById(button.dataset.target).classList.add("active");
+        });
+      });
+
+      function addGoal() {
+        const text = document.getElementById("goalInput").value;
+        const area = document.getElementById("areaInput").value;
+        const horizon = document.getElementById("horizonInput").value;
+        goals.unshift({
+          title: titleFromGoal(text),
+          area,
+          horizon,
+          text,
+          anti: `Se non trasformi "${titleFromGoal(text)}" in azione visibile, tra ${horizon.toLowerCase()} avrai solo una versione piu convincente della stessa scusa.`,
+          photo: ""
+        });
+        saveGoals();
+        render();
+        showToast("Obiettivo aggiunto");
+      }
+
+      function uploadPhoto(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          goals[0].photo = reader.result;
+          saveGoals();
+          render();
+          showToast("Foto collegata alla vision");
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function speak(text) {
+        if (!("speechSynthesis" in window)) {
+          showToast("Audio non supportato dal browser");
+          return;
+        }
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "it-IT";
+        utterance.rate = 0.92;
+        speechSynthesis.speak(utterance);
+      }
+
+      document.getElementById("addGoal").addEventListener("click", addGoal);
+      document.getElementById("quickAdd").addEventListener("click", addGoal);
+      document.getElementById("uploadPhoto").addEventListener("click", () => photoInput.click());
+      photoInput.addEventListener("change", () => uploadPhoto(photoInput.files[0]));
+      document.getElementById("speakScript").addEventListener("click", () => speak(scriptText.textContent));
+      document.getElementById("speakHero").addEventListener("click", () => speak("Visualize ti aiuta a vedere chi vuoi diventare e cosa succede se continui a rimandare."));
+      document.getElementById("copyScript").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(scriptText.textContent);
+        showToast("Script copiato");
+      });
+
+      render();
+    </script>
+  </body>
+</html>

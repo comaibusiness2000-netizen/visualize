@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Visualize",
+    "slug": "visualize",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "visualize",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.visualize.app",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Visualize uses selected photos to create personal goal scenes.",
+        "NSCameraUsageDescription": "Visualize can use your camera to capture a new reference photo.",
+        "NSSpeechRecognitionUsageDescription": "Visualize may use voice features for guided mindset sessions."
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "replace-after-eas-init"
+      }
+    }
+  }
+}

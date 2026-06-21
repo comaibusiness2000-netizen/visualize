@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Visualize - Link stabile</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #101418;
+        color: #f5f1e8;
+        line-height: 1.5;
+      }
+      main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 32px 20px 60px;
+      }
+      h1 {
+        font-size: 34px;
+        margin: 0 0 10px;
+      }
+      h2 {
+        margin-top: 32px;
+      }
+      a {
+        color: #e8c468;
+        font-weight: 700;
+      }
+      code {
+        background: #1b2228;
+        border: 1px solid #2d3b42;
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+      .box {
+        background: #182126;
+        border: 1px solid #2d3b42;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 18px 0;
+      }
+      li {
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Visualize: link stabile per iPhone</h1>
+      <p>Questa guida serve per ottenere un link permanente apribile da telefono e aggiornabile automaticamente.</p>
+
+      <div class="box">
+        <strong>Parti da qui:</strong>
+        <p>Apri <code>START_HERE_STABLE_LINK.bat</code>. Ti apre GitHub e poi ti guida nel collegare il repository.</p>
+      </div>
+
+      <div class="box">
+        <strong>Cartella pronta da caricare:</strong>
+        <p><code>UPLOAD_TO_GITHUB</code></p>
+        <p>Carica il contenuto di questa cartella su GitHub. Non caricare <code>node_modules</code>.</p>
+      </div>
+
+      <div class="box">
+        <strong>Metodo ancora piu semplice se vuoi usare Git dal PC:</strong>
+        <ol>
+          <li>Crea il repository su GitHub.</li>
+          <li>Copia l'URL del repository, tipo <code>https://github.com/TUO-UTENTE/visualize-app.git</code>.</li>
+          <li>Apri <code>3-publish-stable-link.bat</code>.</li>
+          <li>Incolla l'URL quando richiesto e completa il login GitHub.</li>
+          <li>Per aggiornare il sito in futuro, apri <code>update-live-site.bat</code>.</li>
+        </ol>
+      </div>
+
+      <h2>Metodo consigliato: GitHub Pages</h2>
+      <ol>
+        <li>Apri <a href="https://github.com/new" target="_blank" rel="noreferrer">github.com/new</a>.</li>
+        <li>Crea un repository chiamato <code>visualize-app</code>.</li>
+        <li>Nel repository, usa <strong>Add file</strong> -> <strong>Upload files</strong>.</li>
+        <li>Trascina dentro tutti i file e cartelle contenuti in <code>UPLOAD_TO_GITHUB</code>.</li>
+        <li>Premi <strong>Commit changes</strong>.</li>
+        <li>Vai su <strong>Settings</strong> -> <strong>Pages</strong>.</li>
+        <li>In <strong>Build and deployment</strong>, scegli <strong>GitHub Actions</strong>.</li>
+        <li>Vai su <strong>Actions</strong> e attendi il deploy <strong>Deploy Visualize Preview</strong>.</li>
+      </ol>
+
+      <div class="box">
+        <strong>Il link finale sara simile a:</strong>
+        <p><code>https://TUO-NOME.github.io/visualize-app/</code></p>
+      </div>
+
+      <h2>Aggiungerla alla schermata Home</h2>
+      <ol>
+        <li>Apri il link finale in Safari su iPhone.</li>
+        <li>Tocca <strong>Condividi</strong>.</li>
+        <li>Tocca <strong>Aggiungi alla schermata Home</strong>.</li>
+        <li>Conferma <strong>Aggiungi</strong>.</li>
+      </ol>
+
+      <h2>Aggiornamenti automatici</h2>
+      <p>Quando modifichiamo l'app, basta caricare le nuove modifiche nello stesso repository GitHub. GitHub Pages aggiornera automaticamente lo stesso link.</p>
+
+      <h2>Alternativa Netlify</h2>
+      <p>Puoi anche usare Netlify collegato a GitHub. In quel caso imposta:</p>
+      <ul>
+        <li><strong>Build command:</strong> lascia vuoto</li>
+        <li><strong>Publish directory:</strong> <code>preview</code></li>
+      </ul>
+    </main>
+  </body>
+</html>

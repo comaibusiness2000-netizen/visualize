@@ -1,0 +1,266 @@
+{
+  "asOf": "2026-06-21",
+  "sources": {
+    "gseStats": "https://www.gse.it/dati-e-scenari/statistiche",
+    "gseXlsx": "https://www.gse.it/documenti_site/Documenti%20GSE/Rapporti%20statistici/GSE%20-%20Solare%20fotovoltaico%202024%20-%20Allegato.xlsx",
+    "coingecko": "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,eur",
+    "mempoolHashrate": "https://mempool.space/api/v1/mining/hashrate/3d",
+    "mempoolDifficulty": "https://mempool.space/api/v1/difficulty-adjustment",
+    "heatbitTrio": "https://heatbit.com/products/heatbit-trio",
+    "heatbitMaxiPro": "https://heatbit.com/products/heatbit-maxi-pro",
+    "energy21Ofen2": "https://21energy.com/products/ofen-2",
+    "energy21Ofen2Pro": "https://21energy.com/products/ofen-2-pro",
+    "energy21S21": "https://21energy.com/products/bitcoin-antminer-s21",
+    "energy21Hydro": "https://21energy.com/products/bitmain-antminer-s21-xp-hydro",
+    "ry3t": "https://ry3t.com/",
+    "ce": "https://europa.eu/youreurope/business/product-requirements/labels-markings/ce-marking/index_en.htm",
+    "arera": "https://www.arera.it/"
+  },
+  "data": {
+    "btc": {
+      "priceUsd": 64118,
+      "priceEur": 55889,
+      "networkHashrateEHs": 937.4973784462047,
+      "difficulty": 124932866006548.2,
+      "blockSubsidyBtc": 3.125,
+      "blocksPerDay": 144,
+      "feeUplift": 0.015,
+      "poolFee": 0.02
+    },
+    "gsePv2024": {
+      "italyTotalPlants": 1875870,
+      "italyResidentialPlants": 1604513,
+      "italyStorageSystems": 734187,
+      "taaTotalPlants": 50297,
+      "taaResidentialPlants": 38772,
+      "bolzanoTotalPlants": 17780,
+      "trentoTotalPlants": 32517,
+      "bolzanoResidentialPlants": 10671,
+      "trentoResidentialPlants": 28101
+    },
+    "asic": {
+      "model": "Bitmain Antminer S21 200 TH/s",
+      "hashrateTHs": 200,
+      "powerKW": 3.56,
+      "marketPriceEur": 1950,
+      "energyEfficiencyJPerTH": 17.8
+    },
+    "household": {
+      "persons": 3,
+      "litresPerPersonDay": 45,
+      "coldWaterC": 10,
+      "hotWaterC": 45,
+      "usefulDhwKWhYear": 2300,
+      "heatRecoveryEfficiency": 0.85
+    }
+  },
+  "fullMining": {
+    "btcDay": 0.0000974402724745772,
+    "revenueDay": 5.336922600565012,
+    "revenueYear": 1947.9767492062294
+  },
+  "fullYearElectricityKWh": 31185.6,
+  "miningRevenuePerKWh": 0.06246398174818601,
+  "electricityForDhwKWh": 2705.8823529411766,
+  "minerHoursForDhw": 760.079312623926,
+  "alwaysOnGrid": {
+    "electricityKWh": 31185.6,
+    "electricityCost": 8731.968,
+    "btcRevenue": 1947.9767492062294,
+    "usefulHeatValue": 644.0000000000001,
+    "netAnnual": -6139.9912507937715
+  },
+  "customerScenarios": [
+    {
+      "name": "Pessimistico",
+      "installedCost": 9000,
+      "electricityCost": 0.32,
+      "alternativeHeatValue": 0.11,
+      "hashpriceFactor": 0.65,
+      "note": "Casa senza FV utile, calore alternativo economico (gas/PDC), BTC o difficulty sfavorevoli.",
+      "minerHours": 760.079312623926,
+      "electricityKWh": 2705.8823529411766,
+      "usefulHeatKWh": 2300,
+      "btcRevenue": 109.86312083945657,
+      "heatSavings": 253,
+      "energyCost": 865.8823529411766,
+      "netAnnual": -503.01923210172004,
+      "paybackYears": null
+    },
+    {
+      "name": "Realistico",
+      "installedCost": 7900,
+      "electricityCost": 0.18,
+      "alternativeHeatValue": 0.22,
+      "hashpriceFactor": 1,
+      "note": "Mix FV autoconsumato/surplus e rete, sostituzione parziale di ACS elettrica.",
+      "minerHours": 760.079312623926,
+      "electricityKWh": 2705.8823529411766,
+      "usefulHeatKWh": 2300,
+      "btcRevenue": 169.02018590685626,
+      "heatSavings": 506,
+      "energyCost": 487.05882352941177,
+      "netAnnual": 187.96136237744446,
+      "paybackYears": 42.02991455305608
+    },
+    {
+      "name": "Ottimistico",
+      "installedCost": 6500,
+      "electricityCost": 0.08,
+      "alternativeHeatValue": 0.28,
+      "hashpriceFactor": 1.75,
+      "note": "FV surplus reale, baseline boiler elettrico, prezzo/difficulty favorevoli e costo impianto basso.",
+      "minerHours": 760.079312623926,
+      "electricityKWh": 2705.8823529411766,
+      "usefulHeatKWh": 2300,
+      "btcRevenue": 295.7853253369984,
+      "heatSavings": 644.0000000000001,
+      "energyCost": 216.47058823529414,
+      "netAnnual": 723.3147371017044,
+      "paybackYears": 8.986406147405846
+    }
+  ],
+  "companyUnit": {
+    "installedPrice": 8900,
+    "materials": {
+      "asic": 1950,
+      "heatRecoveryKit": 750,
+      "heatExchangerAndHydraulics": 650,
+      "bufferTankAndControls": 1050,
+      "pumpsValvesSensors": 550,
+      "electricalPanelSafety": 650,
+      "controllerAndMonitoring": 250,
+      "logisticsWarrantyConsumables": 450
+    },
+    "installationLabor": 850,
+    "engineeringCommissioning": 450,
+    "assistanceReserve": 250,
+    "materialsTotal": 6300,
+    "directCost": 7850,
+    "grossProfit": 1050,
+    "grossMargin": 0.11797752808988764
+  },
+  "companyScenarios": [
+    {
+      "installs": 10,
+      "fixedOpex": 220000,
+      "serviceRevenue": 1500,
+      "revenue": 90500,
+      "grossProfit": 11325,
+      "ebit": -208675,
+      "ebitMargin": -2.305801104972376
+    },
+    {
+      "installs": 50,
+      "fixedOpex": 285000,
+      "serviceRevenue": 10000,
+      "revenue": 455000,
+      "grossProfit": 58000,
+      "ebit": -227000,
+      "ebitMargin": -0.4989010989010989
+    },
+    {
+      "installs": 100,
+      "fixedOpex": 360000,
+      "serviceRevenue": 25000,
+      "revenue": 915000,
+      "grossProfit": 118750,
+      "ebit": -241250,
+      "ebitMargin": -0.26366120218579236
+    }
+  ],
+  "tamSamSom": [
+    {
+      "area": "Italia",
+      "tam": 6500000,
+      "samLow": 80000,
+      "samHigh": 180000,
+      "som3yLow": 300,
+      "som3yHigh": 1000,
+      "basis": "TAM stimato: case con impianto ACS individuale e spazio tecnico; SAM derivato da 1,60M FV residenziali GSE filtrati per casa indipendente, surplus FV, quadro elettrico e interesse BTC."
+    },
+    {
+      "area": "Trentino-Alto Adige",
+      "tam": 140000,
+      "samLow": 1000,
+      "samHigh": 2500,
+      "som3yLow": 20,
+      "som3yHigh": 60,
+      "basis": "SAM derivato da 38.772 impianti FV residenziali GSE nelle province di Bolzano e Trento, con filtro severo su compatibilita tecnica e disponibilita ad acquistare."
+    }
+  ],
+  "segmentRows": [
+    [
+      "Possessori FV",
+      "Molto alta",
+      "Media-alta",
+      "Media",
+      "Miglior filtro iniziale, ma solo se esiste surplus o autoconsumo non valorizzato."
+    ],
+    [
+      "Bitcoiner",
+      "Bassa-media",
+      "Alta",
+      "Media-alta",
+      "Comprano la narrativa, ma spesso preferiscono miner puro o DIY."
+    ],
+    [
+      "Case indipendenti",
+      "Alta",
+      "Media",
+      "Bassa-media",
+      "Necessarie per spazio, rumore, canna/ventilazione e quadro elettrico."
+    ],
+    [
+      "Early adopter tecnologici",
+      "Media",
+      "Alta",
+      "Media",
+      "Buoni piloti, ma CAC alto e aspettative di prodotto elevate."
+    ],
+    [
+      "Agriturismi/piccole strutture",
+      "Media",
+      "Alta",
+      "Media-alta",
+      "Target migliore se hanno ACS continuativa, lavanderia, piscina/spa o accumuli maggiori."
+    ]
+  ],
+  "competitors": [
+    [
+      "Heatbit Trio",
+      "USD 849",
+      "10 TH/s, 400 W mining + 1.100 W resistenza; aria, purificatore",
+      "Prodotto consumer semplice, app e brand",
+      "Non recupera calore in ACS; hashrate basso; stagionale"
+    ],
+    [
+      "Heatbit Maxi Pro",
+      "USD 1.499",
+      "Fino a 60 TH/s, 1.500 W calore mining; aria, purificatore",
+      "Buon benchmark consumer plug-in",
+      "Solo riscaldamento ambiente, non idraulico"
+    ],
+    [
+      "21Energy Ofen 2",
+      "EUR 1.780-1.940",
+      "Fino a 40 TH/s, 1.000 W, <45 dB",
+      "Prodotto UE, silenzioso, app, prezzo chiaro",
+      "Non ACS; rendimento economico limitato"
+    ],
+    [
+      "21Energy Ofen 2 Pro",
+      "EUR 2.240-2.410",
+      "Fino a 60 TH/s, 1.100 W, <45 dB",
+      "Segmento premium europeo",
+      "Resta un heater ambiente"
+    ],
+    [
+      "RY3T ONE",
+      "Non pubblicato",
+      "Modulo in impianto termico esistente, 7-14 kW termici dichiarati",
+      "Competitor piu vicino al concept idronico",
+      "Alta potenza: piu adatto a case grandi/strutture; rischio installazione e CAPEX"
+    ]
+  ]
+}

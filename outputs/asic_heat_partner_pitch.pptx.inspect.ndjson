@@ -1,0 +1,343 @@
+{"kind":"deck","id":"pr/3gz0gq","name":"Deck"}
+{"kind":"layout","layoutId":"3831d231-27bc-437a-8dc9-58120cc3acba","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"98662383-c0ab-4f86-9213-7befdf5b4bb5","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/od7mkd","slide":1,"title":"Reality check business","textShapes":5}
+{"kind":"textbox","id":"sh/2x4nap4r","slide":1,"text":"Reality check business","textPreview":"Reality check business","textChars":22,"textLines":1,"bbox":[42,58,360,34]}
+{"kind":"textbox","id":"sh/donyd0z6","slide":1,"text":"Recupero calore da ASIC Bitcoin per acqua calda sanitaria","textPreview":"Recupero calore da ASIC Bitcoin per acqua calda sanitaria","textChars":57,"textLines":1,"bbox":[42,210,970,154]}
+{"kind":"textbox","id":"sh/k3q5o7qp","slide":1,"text":"La domanda non e: funziona tecnicamente? La domanda e: puo diventare un business profittevole e scalabile?","textPreview":"La domanda non e: funziona tecnicamente? La domanda e: puo diventare un business profittevole e scalabile?","textChars":106,"textLines":1,"bbox":[42,468,880,70]}
+{"kind":"textbox","id":"sh/val87ed8","slide":1,"text":"Preparato per discussione con potenziale business partner","textPreview":"Preparato per discussione con potenziale business partner","textChars":57,"textLines":1,"bbox":[42,616,660,28]}
+{"kind":"textbox","id":"sh/6psfil0r","slide":1,"text":"2026-06-21","textPreview":"2026-06-21","textChars":10,"textLines":1,"bbox":[1060,616,180,28]}
+{"kind":"notes","id":"nt/od7mkd","slide":1,"text":"Apri con franchezza: non e una presentazione commerciale, e una decisione di fattibilita.\nLa tesi iniziale: tecnologia possibile, business domestico generalista debole, nicchia potenzialmente testabile."}
+{"kind":"slide","id":"sl/0crybs","slide":2,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":13}
+{"kind":"textbox","id":"sh/vmtwra5g","slide":2,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/o7qpg3ex","slide":2,"text":"Verdetto: non e ancora una startup domestica scalabile","textPreview":"Verdetto: non e ancora una startup domestica scalabile","textChars":54,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"textbox","id":"sh/dsji5sne","slide":2,"text":"L'idea diventa interessante solo se restringiamo molto il target, ottimizziamo costi/energia e misuriamo un pilota pagante.","textPreview":"L'idea diventa interessante solo se restringiamo molto il target, ottimizziamo costi/energia e misuriamo un pilota pagante.","textChars":123,"textLines":1,"bbox":[42,166,1120,46]}
+{"kind":"shape","id":"sh/6dcbulwv","slide":2,"bbox":[42,236,270,250]}
+{"kind":"textbox","id":"sh/vy90je9c","slide":2,"text":"28/100","textPreview":"28/100","textChars":6,"textLines":1,"bbox":[68,264,218,54]}
+{"kind":"textbox","id":"sh/oj2t83it","slide":2,"text":"Probabilita B2C ACS-only: troppo fragile per famiglia media","textPreview":"Probabilita B2C ACS-only: troppo fragile per famiglia media","textChars":59,"textLines":1,"bbox":[68,328,218,138]}
+{"kind":"shape","id":"sh/d4vmtwra","slide":2,"bbox":[350,236,270,250]}
+{"kind":"textbox","id":"sh/6hcrmhk3","slide":2,"text":"45/100","textPreview":"45/100","textChars":6,"textLines":1,"bbox":[376,264,218,54]}
+{"kind":"textbox","id":"sh/z25kb6xk","slide":2,"text":"Probabilita nicchia: agriturismi, B&B, case grandi con FV","textPreview":"Probabilita nicchia: agriturismi, B&B, case grandi con FV","textChars":57,"textLines":1,"bbox":[376,328,218,138]}
+{"kind":"shape","id":"sh/vy90je9c","slide":2,"bbox":[658,236,270,250]}
+{"kind":"textbox","id":"sh/6dcbulwv","slide":2,"text":"EUR 250-400k","textPreview":"EUR 250-400k","textChars":12,"textLines":1,"bbox":[684,264,218,54]}
+{"kind":"textbox","id":"sh/d4vmtwra","slide":2,"text":"Capitale minimo per 5-10 piloti seri, non per industrializzare","textPreview":"Capitale minimo per 5-10 piloti seri, non per industrializzare","textChars":62,"textLines":1,"bbox":[684,328,218,138]}
+{"kind":"shape","id":"sh/oj2t83it","slide":2,"bbox":[966,236,270,250]}
+{"kind":"textbox","id":"sh/vmtwra5g","slide":2,"text":"No HW","textPreview":"No HW","textChars":5,"textLines":1,"bbox":[992,264,218,54]}
+{"kind":"textbox","id":"sh/61032lsz","slide":2,"text":"Non sviluppare hardware proprietario prima della domanda pagante","textPreview":"Non sviluppare hardware proprietario prima della domanda pagante","textChars":64,"textLines":1,"bbox":[992,328,218,138]}
+{"kind":"textbox","id":"sh/dsji5sne","slide":2,"text":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textPreview":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textChars":80,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/o7qpg3ex","slide":2,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/0crybs","slide":2,"text":"Questa e la slide piu importante: se il partner vuole sentire solo entusiasmo, il progetto e gia a rischio.\nLa tesi investibile e pilota integrato, non prodotto hardware proprietario.\nDichiara subito che BTC upside e ottimizzazione costi sono stati considerati: migliorano il pilota, ma non trasformano la famiglia media in mercato scalabile."}
+{"kind":"slide","id":"sl/d623y7","slide":3,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":20}
+{"kind":"textbox","id":"sh/1kre1w7m","slide":3,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/uxc3ylc7","slide":3,"text":"Il sistema, spiegato da zero","textPreview":"Il sistema, spiegato da zero","textChars":28,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"textbox","id":"sh/ji5snelo","slide":3,"text":"Un ASIC trasforma elettricita in calcolo Bitcoin e quasi tutto il consumo diventa calore. Il business prova a catturare quel calore e usarlo per ACS.","textPreview":"Un ASIC trasforma elettricita in calcolo Bitcoin e quasi tutto il consumo diventa calore. Il business prova a catturare quel calore e usa...","textChars":149,"textLines":1,"bbox":[42,154,1120,58]}
+{"kind":"shape","id":"sh/crmhk3q5","slide":3,"bbox":[46,292,190,182]}
+{"kind":"textbox","id":"sh/1cfa9w3m","slide":3,"text":"ASIC","textPreview":"ASIC","textChars":4,"textLines":1,"bbox":[72,320,138,54]}
+{"kind":"textbox","id":"sh/ulwval87","slide":3,"text":"Genera hash SHA-256 e calore","textPreview":"Genera hash SHA-256 e calore","textChars":28,"textLines":1,"bbox":[72,374,138,70]}
+{"kind":"textbox","id":"sh/j6tovaho","slide":3,"text":"->","textPreview":"->","textChars":2,"textLines":1,"bbox":[244,356,36,34]}
+{"kind":"shape","id":"sh/8nqxs72x","slide":3,"bbox":[284,292,190,182]}
+{"kind":"textbox","id":"sh/18jqh0fe","slide":3,"text":"Recupero","textPreview":"Recupero","textChars":8,"textLines":1,"bbox":[310,320,138,54]}
+{"kind":"textbox","id":"sh/psfil0rq","slide":3,"text":"Air-to-water, hydro o immersione","textPreview":"Air-to-water, hydro o immersione","textChars":32,"textLines":1,"bbox":[310,374,138,70]}
+{"kind":"textbox","id":"sh/w7mp0bi9","slide":3,"text":"->","textPreview":"->","textChars":2,"textLines":1,"bbox":[482,356,36,34]}
+{"kind":"shape","id":"sh/7mp0bi9s","slide":3,"bbox":[522,292,190,182]}
+{"kind":"textbox","id":"sh/e1w7mp0b","slide":3,"text":"Scambio","textPreview":"Scambio","textChars":7,"textLines":1,"bbox":[548,320,138,54]}
+{"kind":"textbox","id":"sh/pg3ex0nu","slide":3,"text":"Separa circuito miner e ACS","textPreview":"Separa circuito miner e ACS","textChars":27,"textLines":1,"bbox":[548,374,138,70]}
+{"kind":"textbox","id":"sh/wval87ed","slide":3,"text":"->","textPreview":"->","textChars":2,"textLines":1,"bbox":[720,356,36,34]}
+{"kind":"shape","id":"sh/7adsji5s","slide":3,"bbox":[760,292,190,182]}
+{"kind":"textbox","id":"sh/epkzupwb","slide":3,"text":"Accumulo","textPreview":"Accumulo","textChars":8,"textLines":1,"bbox":[786,320,138,54]}
+{"kind":"textbox","id":"sh/lc7u54zi","slide":3,"text":"Boiler/puffer per stoccare calore","textPreview":"Boiler/puffer per stoccare calore","textChars":33,"textLines":1,"bbox":[786,374,138,70]}
+{"kind":"textbox","id":"sh/wra5gbq1","slide":3,"text":"->","textPreview":"->","textChars":2,"textLines":1,"bbox":[958,356,36,34]}
+{"kind":"shape","id":"sh/s36hcrmh","slide":3,"bbox":[998,292,190,182]}
+{"kind":"textbox","id":"sh/hoza1gvy","slide":3,"text":"Software","textPreview":"Software","textChars":8,"textLines":1,"bbox":[1024,320,138,54]}
+{"kind":"textbox","id":"sh/a1gvy90j","slide":3,"text":"Accende solo quando ha senso","textPreview":"Accende solo quando ha senso","textChars":28,"textLines":1,"bbox":[1024,374,138,70]}
+{"kind":"textbox","id":"sh/zidonyd0","slide":3,"text":"La parte difficile non e recuperare calore: e accendere abbastanza ore utili senza comprare elettricita retail per minare in perdita.","textPreview":"La parte difficile non e recuperare calore: e accendere abbastanza ore utili senza comprare elettricita retail per minare in perdita.","textChars":133,"textLines":1,"bbox":[76,548,1060,44]}
+{"kind":"textbox","id":"sh/svu9knih","slide":3,"text":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textPreview":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textChars":80,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/hgn29gr2","slide":3,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/d623y7","slide":3,"text":"Spiega prima l'energia: un miner e una resistenza elettrica intelligente, non una pompa di calore.\nIl software deve ottimizzare: temperatura accumulo, FV disponibile, costo energia, pool mining, sicurezza."}
+{"kind":"slide","id":"sl/2hq8hz","slide":4,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":10}
+{"kind":"textbox","id":"sh/xkf6dcbu","slide":4,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/mtwra5gb","slide":4,"text":"Il collo di bottiglia: ACS media usa poche ore equivalenti","textPreview":"Il collo di bottiglia: ACS media usa poche ore equivalenti","textChars":58,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"textbox","id":"sh/fepkzupw","slide":4,"text":"Una famiglia media non assorbe abbastanza calore per giustificare un ASIC moderno acceso spesso.","textPreview":"Una famiglia media non assorbe abbastanza calore per giustificare un ASIC moderno acceso spesso.","textChars":96,"textLines":1,"bbox":[658,166,540,78]}
+{"kind":"shape","id":"sh/xc3ylc7u","slide":4,"bbox":[658,282,250,180]}
+{"kind":"textbox","id":"sh/mlkjm1cf","slide":4,"text":"760 h/anno","textPreview":"760 h/anno","textChars":10,"textLines":1,"bbox":[684,310,198,54]}
+{"kind":"textbox","id":"sh/f6dcbulw","slide":4,"text":"Ore ASIC necessarie per coprire solo ACS familiare","textPreview":"Ore ASIC necessarie per coprire solo ACS familiare","textChars":50,"textLines":1,"bbox":[684,374,198,68]}
+{"kind":"shape","id":"sh/4fu18jqh","slide":4,"bbox":[946,282,250,180]}
+{"kind":"textbox","id":"sh/x0nuxc3y","slide":4,"text":"31.186 kWh","textPreview":"31.186 kWh","textChars":10,"textLines":1,"bbox":[972,310,198,54]}
+{"kind":"textbox","id":"sh/lkjm1cfa","slide":4,"text":"Consumo annuo se resta acceso 24/7","textPreview":"Consumo annuo se resta acceso 24/7","textChars":34,"textLines":1,"bbox":[972,374,198,68]}
+{"kind":"textbox","id":"sh/szqtcj6t","slide":4,"text":"Se lo spegni spesso mini poco. Se lo tieni acceso sprechi calore o compri energia cara.","textPreview":"Se lo spegni spesso mini poco. Se lo tieni acceso sprechi calore o compri energia cara.","textChars":87,"textLines":1,"bbox":[658,510,540,56]}
+{"kind":"textbox","id":"sh/3ex0nuxc","slide":4,"text":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textPreview":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textChars":80,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/at47y1kr","slide":4,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"chart","id":"ch/sneloj2t","slide":4,"name":"","chartType":"bar","bbox":[42,154,560,400]}
+{"kind":"notes","id":"nt/2hq8hz","slide":4,"text":"Questo e il cuore tecnico-economico: ACS-only non e un carico abbastanza continuo.\nIl target deve avere carichi termici maggiori: ospitalita, lavanderia, spa, piscina, riscaldamento integrativo."}
+{"kind":"slide","id":"sl/c36wmn","slide":5,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":13}
+{"kind":"textbox","id":"sh/wb2hwfyx","slide":5,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/3q5o7qpg","slide":5,"text":"Economia cliente: scenario realistico non vende da solo","textPreview":"Economia cliente: scenario realistico non vende da solo","textChars":55,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"textbox","id":"sh/e9cvixcz","slide":5,"text":"Famiglia media italiana, impianto installato, ASIC S21 200 TH/s, BTC e hashrate al 2026-06-21.","textPreview":"Famiglia media italiana, impianto installato, ASIC S21 200 TH/s, BTC e hashrate al 2026-06-21.","textChars":94,"textLines":1,"bbox":[42,154,1040,34]}
+{"kind":"shape","id":"sh/loj2t83i","slide":5,"bbox":[42,238,270,260]}
+{"kind":"textbox","id":"sh/w3m94fu1","slide":5,"text":"Pessimistico","textPreview":"Pessimistico","textChars":12,"textLines":1,"bbox":[68,266,218,54]}
+{"kind":"textbox","id":"sh/3itgfmlk","slide":5,"text":"EUR -503 / anno netto\nPayback: mai\nCosto installato: EUR 9000","textPreview":"EUR -503 / anno netto | Payback: mai | Costo installato: EUR 9000","textChars":61,"textLines":3,"bbox":[68,328,218,148]}
+{"kind":"shape","id":"sh/ex0nuxc3","slide":5,"bbox":[350,238,270,260]}
+{"kind":"textbox","id":"sh/lkjm1cfa","slide":5,"text":"Realistico","textPreview":"Realistico","textChars":10,"textLines":1,"bbox":[376,266,218,54]}
+{"kind":"textbox","id":"sh/szqtcj6t","slide":5,"text":"EUR 188 / anno netto\nPayback: 42 anni\nCosto installato: EUR 7900","textPreview":"EUR 188 / anno netto | Payback: 42 anni | Costo installato: EUR 7900","textChars":64,"textLines":3,"bbox":[376,328,218,148]}
+{"kind":"shape","id":"sh/il0rqd4v","slide":5,"bbox":[658,238,270,260]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":5,"text":"Ottimistico","textPreview":"Ottimistico","textChars":11,"textLines":1,"bbox":[684,266,218,54]}
+{"kind":"textbox","id":"sh/0rqd4vmt","slide":5,"text":"EUR 723 / anno netto\nPayback: 9 anni\nCosto installato: EUR 6500","textPreview":"EUR 723 / anno netto | Payback: 9 anni | Costo installato: EUR 6500","textChars":63,"textLines":3,"bbox":[684,328,218,148]}
+{"kind":"shape","id":"sh/tcj6tova","slide":5,"bbox":[966,238,270,260]}
+{"kind":"textbox","id":"sh/idonyd0z","slide":5,"text":"Messaggio","textPreview":"Messaggio","textChars":9,"textLines":1,"bbox":[992,266,218,54]}
+{"kind":"textbox","id":"sh/byhgn29g","slide":5,"text":"Il ROI familiare e debole. Il cliente compra solo se ha FV, ACS costosa e interesse Bitcoin.","textPreview":"Il ROI familiare e debole. Il cliente compra solo se ha FV, ACS costosa e interesse Bitcoin.","textChars":92,"textLines":1,"bbox":[992,328,218,148]}
+{"kind":"textbox","id":"sh/0je9cvix","slide":5,"text":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textPreview":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textChars":80,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":5,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/c36wmn","slide":5,"text":"Non vendere la media: scenario realistico payback circa 42 anni.\nL'unico scenario bello richiede troppe condizioni simultanee per essere mercato largo."}
+{"kind":"slide","id":"sl/28ho2s","slide":6,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":37}
+{"kind":"textbox","id":"sh/ahoza1gv","slide":6,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/l87ed8ba","slide":6,"text":"Scenari cliente: il payback dipende da assunzioni molto forti","textPreview":"Scenari cliente: il payback dipende da assunzioni molto forti","textChars":61,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"shape","id":"sh/sneloj2t","slide":6,"bbox":[42,190,160,360]}
+{"kind":"shape","id":"sh/3ex0nuxc","slide":6,"bbox":[202,190,150,360]}
+{"kind":"shape","id":"sh/at47y1kr","slide":6,"bbox":[352,190,150,360]}
+{"kind":"shape","id":"sh/lkjm1cfa","slide":6,"bbox":[502,190,145,360]}
+{"kind":"shape","id":"sh/szqtcj6t","slide":6,"bbox":[647,190,120,360]}
+{"kind":"shape","id":"sh/3itgfmlk","slide":6,"bbox":[767,190,135,360]}
+{"kind":"shape","id":"sh/ex0nuxc3","slide":6,"bbox":[902,190,125,360]}
+{"kind":"shape","id":"sh/wfyxobm5","slide":6,"bbox":[1027,190,120,360]}
+{"kind":"shape","id":"sh/l0rqd4vm","slide":6,"bbox":[42,190,1196,90]}
+{"kind":"textbox","id":"sh/ed8bat47","slide":6,"text":"Scenario","textPreview":"Scenario","textChars":8,"textLines":1,"bbox":[50,198,144,78]}
+{"kind":"textbox","id":"sh/7u54zido","slide":6,"text":"Costo impianto","textPreview":"Costo impianto","textChars":14,"textLines":1,"bbox":[210,198,134,78]}
+{"kind":"textbox","id":"sh/wra5gbq1","slide":6,"text":"Energia miner","textPreview":"Energia miner","textChars":13,"textLines":1,"bbox":[360,198,134,78]}
+{"kind":"textbox","id":"sh/lc7u54zi","slide":6,"text":"Costo energia","textPreview":"Costo energia","textChars":13,"textLines":1,"bbox":[510,198,129,78]}
+{"kind":"textbox","id":"sh/eloj2t83","slide":6,"text":"BTC","textPreview":"BTC","textChars":3,"textLines":1,"bbox":[655,198,104,78]}
+{"kind":"textbox","id":"sh/36hcrmhk","slide":6,"text":"Risparmio","textPreview":"Risparmio","textChars":9,"textLines":1,"bbox":[775,198,119,78]}
+{"kind":"textbox","id":"sh/wval87ed","slide":6,"text":"Netto","textPreview":"Netto","textChars":5,"textLines":1,"bbox":[910,198,109,78]}
+{"kind":"textbox","id":"sh/pg3ex0nu","slide":6,"text":"Payback","textPreview":"Payback","textChars":7,"textLines":1,"bbox":[1035,198,104,78]}
+{"kind":"shape","id":"sh/9knih4by","slide":6,"bbox":[42,280,1196,90]}
+{"kind":"textbox","id":"sh/kzupwb2h","slide":6,"text":"Pessimistico","textPreview":"Pessimistico","textChars":12,"textLines":1,"bbox":[50,288,144,78]}
+{"kind":"textbox","id":"sh/re1w7mp0","slide":6,"text":"EUR 9.000","textPreview":"EUR 9.000","textChars":9,"textLines":1,"bbox":[210,288,134,78]}
+{"kind":"textbox","id":"sh/2t83itgf","slide":6,"text":"2.706 kWh","textPreview":"2.706 kWh","textChars":9,"textLines":1,"bbox":[360,288,134,78]}
+{"kind":"textbox","id":"sh/9w3m94fu","slide":6,"text":"EUR 866","textPreview":"EUR 866","textChars":7,"textLines":1,"bbox":[510,288,129,78]}
+{"kind":"textbox","id":"sh/kb6xkf6d","slide":6,"text":"EUR 110","textPreview":"EUR 110","textChars":7,"textLines":1,"bbox":[655,288,104,78]}
+{"kind":"textbox","id":"sh/rqd4vmtw","slide":6,"text":"EUR 253","textPreview":"EUR 253","textChars":7,"textLines":1,"bbox":[775,288,119,78]}
+{"kind":"textbox","id":"sh/25kb6xkf","slide":6,"text":"EUR -503","textPreview":"EUR -503","textChars":8,"textLines":1,"bbox":[910,288,109,78]}
+{"kind":"textbox","id":"sh/94fu18jq","slide":6,"text":"Mai","textPreview":"Mai","textChars":3,"textLines":1,"bbox":[1035,288,104,78]}
+{"kind":"shape","id":"sh/kjm1cfa9","slide":6,"bbox":[42,370,1196,90]}
+{"kind":"textbox","id":"sh/udg7adsj","slide":6,"text":"Realistico","textPreview":"Realistico","textChars":10,"textLines":1,"bbox":[50,378,144,78]}
+{"kind":"textbox","id":"sh/nyd0z610","slide":6,"text":"EUR 7.900","textPreview":"EUR 7.900","textChars":9,"textLines":1,"bbox":[210,378,134,78]}
+{"kind":"textbox","id":"sh/cj6tovah","slide":6,"text":"2.706 kWh","textPreview":"2.706 kWh","textChars":9,"textLines":1,"bbox":[360,378,134,78]}
+{"kind":"textbox","id":"sh/54zidony","slide":6,"text":"EUR 487","textPreview":"EUR 487","textChars":7,"textLines":1,"bbox":[510,378,129,78]}
+{"kind":"textbox","id":"sh/upwb2hwf","slide":6,"text":"EUR 169","textPreview":"EUR 169","textChars":7,"textLines":1,"bbox":[655,378,104,78]}
+{"kind":"textbox","id":"sh/nap4r65w","slide":6,"text":"EUR 506","textPreview":"EUR 506","textChars":7,"textLines":1,"bbox":[775,378,119,78]}
+{"kind":"textbox","id":"sh/cvixczed","slide":6,"text":"EUR 188","textPreview":"EUR 188","textChars":7,"textLines":1,"bbox":[910,378,109,78]}
+{"kind":"textbox","id":"sh/5gbq1ory","slide":6,"text":"42 anni","textPreview":"42 anni","textChars":7,"textLines":1,"bbox":[1035,378,104,78]}
+{"kind":"shape","id":"sh/u18jqh0f","slide":6,"bbox":[42,460,1196,90]}
+{"kind":"textbox","id":"sh/jm1cfa9w","slide":6,"text":"Ottimistico","textPreview":"Ottimistico","textChars":11,"textLines":1,"bbox":[50,468,144,78]}
+{"kind":"textbox","id":"sh/neloj2t8","slide":6,"text":"EUR 6.500","textPreview":"EUR 6.500","textChars":9,"textLines":1,"bbox":[210,468,134,78]}
+{"kind":"textbox","id":"sh/ytsvu9kn","slide":6,"text":"2.706 kWh","textPreview":"2.706 kWh","textChars":9,"textLines":1,"bbox":[360,468,134,78]}
+{"kind":"textbox","id":"sh/5kb6xkf6","slide":6,"text":"EUR 216","textPreview":"EUR 216","textChars":7,"textLines":1,"bbox":[510,468,129,78]}
+{"kind":"textbox","id":"sh/czed8v6p","slide":6,"text":"EUR 296","textPreview":"EUR 296","textChars":7,"textLines":1,"bbox":[655,468,104,78]}
+{"kind":"textbox","id":"sh/nqxs72x4","slide":6,"text":"EUR 644","textPreview":"EUR 644","textChars":7,"textLines":1,"bbox":[775,468,119,78]}
+{"kind":"textbox","id":"sh/u54zidon","slide":6,"text":"EUR 723","textPreview":"EUR 723","textChars":7,"textLines":1,"bbox":[910,468,109,78]}
+{"kind":"textbox","id":"sh/5sneloj2","slide":6,"text":"9 anni","textPreview":"9 anni","textChars":6,"textLines":1,"bbox":[1035,468,104,78]}
+{"kind":"textbox","id":"sh/cbulwval","slide":6,"text":"Interpretazione: il modello ACS-only non puo reggersi su una promessa di payback. Deve essere venduto come pilota di nicchia o spostato su carichi termici piu alti.","textPreview":"Interpretazione: il modello ACS-only non puo reggersi su una promessa di payback. Deve essere venduto come pilota di nicchia o spostato s...","textChars":164,"textLines":1,"bbox":[64,590,1120,42]}
+{"kind":"textbox","id":"sh/nuxc3ylc","slide":6,"text":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textPreview":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textChars":80,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/y90je9cv","slide":6,"text":"6","textPreview":"6","textChars":1,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/28ho2s","slide":6,"text":"Questa tabella rende esplicito dove si rompe la narrativa commerciale.\nIl partner deve vedere che non stiamo nascondendo l'elettricita consumata."}
+{"kind":"slide","id":"sl/gdadwc","slide":7,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":30}
+{"kind":"textbox","id":"sh/i5sneloj","slide":7,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/pwb2hwfy","slide":7,"text":"Sensitivity: BTC e costi possono salvare il pilota?","textPreview":"Sensitivity: BTC e costi possono salvare il pilota?","textChars":51,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"textbox","id":"sh/0bi9s36h","slide":7,"text":"Sì, migliorano molto il caso. Ma BTC da solo non basta: serve anche tagliare CAPEX, usare energia economica/FV e aumentare le ore termiche utili.","textPreview":"Sì, migliorano molto il caso. Ma BTC da solo non basta: serve anche tagliare CAPEX, usare energia economica/FV e aumentare le ore termich...","textChars":145,"textLines":1,"bbox":[42,154,1130,54]}
+{"kind":"shape","id":"sh/7y1kre1w","slide":7,"bbox":[42,230,275,320]}
+{"kind":"shape","id":"sh/ed8v6psf","slide":7,"bbox":[317,230,210,320]}
+{"kind":"shape","id":"sh/p4r65wju","slide":7,"bbox":[527,230,150,320]}
+{"kind":"shape","id":"sh/wjudg7ad","slide":7,"bbox":[677,230,561,320]}
+{"kind":"shape","id":"sh/72x4nap4","slide":7,"bbox":[42,230,1196,53.33]}
+{"kind":"textbox","id":"sh/ih4byhgn","slide":7,"text":"Caso","textPreview":"Caso","textChars":4,"textLines":1,"bbox":[50,238,259,41.33]}
+{"kind":"textbox","id":"sh/032lszqt","slide":7,"text":"Netto cliente","textPreview":"Netto cliente","textChars":13,"textLines":1,"bbox":[325,238,194,41.33]}
+{"kind":"textbox","id":"sh/tovahoza","slide":7,"text":"Payback","textPreview":"Payback","textChars":7,"textLines":1,"bbox":[535,238,134,41.33]}
+{"kind":"textbox","id":"sh/ixczed8v","slide":7,"text":"Lettura brutale","textPreview":"Lettura brutale","textChars":15,"textLines":1,"bbox":[685,238,545,41.33]}
+{"kind":"shape","id":"sh/bi9s36hc","slide":7,"bbox":[42,283.33,1196,53.33]}
+{"kind":"textbox","id":"sh/0fepkzup","slide":7,"text":"Base realistico","textPreview":"Base realistico","textChars":15,"textLines":1,"bbox":[50,291.33,259,41.33]}
+{"kind":"textbox","id":"sh/p0bi9s36","slide":7,"text":"EUR 188 / anno","textPreview":"EUR 188 / anno","textChars":14,"textLines":1,"bbox":[325,291.33,194,41.33]}
+{"kind":"textbox","id":"sh/i9s36hcr","slide":7,"text":"42 anni","textPreview":"42 anni","textChars":7,"textLines":1,"bbox":[535,291.33,134,41.33]}
+{"kind":"textbox","id":"sh/bulwval8","slide":7,"text":"Non vendibile come ROI","textPreview":"Non vendibile come ROI","textChars":22,"textLines":1,"bbox":[685,291.33,545,41.33]}
+{"kind":"shape","id":"sh/0je9cvix","slide":7,"bbox":[42,336.67,1196,53.33]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":7,"text":"BTC/hashprice +100%","textPreview":"BTC/hashprice +100%","textChars":19,"textLines":1,"bbox":[50,344.67,259,41.33]}
+{"kind":"textbox","id":"sh/xobm58z2","slide":7,"text":"EUR 357 / anno","textPreview":"EUR 357 / anno","textChars":14,"textLines":1,"bbox":[325,344.67,194,41.33]}
+{"kind":"textbox","id":"sh/83itgfml","slide":7,"text":"22 anni","textPreview":"22 anni","textChars":7,"textLines":1,"bbox":[535,344.67,134,41.33]}
+{"kind":"textbox","id":"sh/fil0rqd4","slide":7,"text":"Meglio, ma ancora troppo lungo","textPreview":"Meglio, ma ancora troppo lungo","textChars":30,"textLines":1,"bbox":[685,344.67,545,41.33]}
+{"kind":"shape","id":"sh/qxs72x4n","slide":7,"bbox":[42,390,1196,53.33]}
+{"kind":"textbox","id":"sh/x0nuxc3y","slide":7,"text":"Costi ottimizzati","textPreview":"Costi ottimizzati","textChars":17,"textLines":1,"bbox":[50,398,259,41.33]}
+{"kind":"textbox","id":"sh/4fu18jqh","slide":7,"text":"EUR 350 / anno","textPreview":"EUR 350 / anno","textChars":14,"textLines":1,"bbox":[325,398,194,41.33]}
+{"kind":"textbox","id":"sh/fu18jqh0","slide":7,"text":"17 anni","textPreview":"17 anni","textChars":7,"textLines":1,"bbox":[535,398,134,41.33]}
+{"kind":"textbox","id":"sh/m94fu18j","slide":7,"text":"CAPEX -25%, energia piu economica","textPreview":"CAPEX -25%, energia piu economica","textChars":33,"textLines":1,"bbox":[685,398,545,41.33]}
+{"kind":"shape","id":"sh/xc3ylc7u","slide":7,"bbox":[42,443.33,1196,53.33]}
+{"kind":"textbox","id":"sh/4r65wjud","slide":7,"text":"Costi + BTC +100%","textPreview":"Costi + BTC +100%","textChars":17,"textLines":1,"bbox":[50,451.33,259,41.33]}
+{"kind":"textbox","id":"sh/ih4byhgn","slide":7,"text":"EUR 519 / anno","textPreview":"EUR 519 / anno","textChars":14,"textLines":1,"bbox":[325,451.33,194,41.33]}
+{"kind":"textbox","id":"sh/72x4nap4","slide":7,"text":"11 anni","textPreview":"11 anni","textChars":7,"textLines":1,"bbox":[535,451.33,134,41.33]}
+{"kind":"textbox","id":"sh/0nuxc3yl","slide":7,"text":"Diventa un pilota difendibile","textPreview":"Diventa un pilota difendibile","textChars":29,"textLines":1,"bbox":[685,451.33,545,41.33]}
+{"kind":"shape","id":"sh/p8nqxs72","slide":7,"bbox":[42,496.67,1196,53.33]}
+{"kind":"textbox","id":"sh/itgfmlkj","slide":7,"text":"Stretch case","textPreview":"Stretch case","textChars":12,"textLines":1,"bbox":[50,504.67,259,41.33]}
+{"kind":"textbox","id":"sh/7ed8bat4","slide":7,"text":"EUR 766 / anno","textPreview":"EUR 766 / anno","textChars":14,"textLines":1,"bbox":[325,504.67,194,41.33]}
+{"kind":"textbox","id":"sh/0z61032l","slide":7,"text":"7 anni","textPreview":"7 anni","textChars":6,"textLines":1,"bbox":[535,504.67,134,41.33]}
+{"kind":"textbox","id":"sh/pkzupwb2","slide":7,"text":"Serve FV forte o ACS molto costosa","textPreview":"Serve FV forte o ACS molto costosa","textChars":34,"textLines":1,"bbox":[685,504.67,545,41.33]}
+{"kind":"textbox","id":"sh/i5sneloj","slide":7,"text":"Nota: BTC +100% qui assume che difficulty e fee non assorbano tutto l'upside. Nel lungo periodo conta l'hashprice, non solo il prezzo BTC.","textPreview":"Nota: BTC +100% qui assume che difficulty e fee non assorbano tutto l'upside. Nel lungo periodo conta l'hashprice, non solo il prezzo BTC.","textChars":138,"textLines":1,"bbox":[72,590,1060,44]}
+{"kind":"textbox","id":"sh/7qpg3ex0","slide":7,"text":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textPreview":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textChars":80,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/r2p8nqxs","slide":7,"text":"7","textPreview":"7","textChars":1,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/gdadwc","slide":7,"text":"Questa e la risposta alla domanda naturale del partner: e se BTC sale?\nRisposta onesta: il prezzo BTC aiuta molto, ma non puo essere la base del business plan perche difficulty e hashrate di rete tendono ad adattarsi.\nIl vero miglioramento e combinare standardizzazione installativa, CAPEX piu basso, energia FV/surplus e clienti con piu ore termiche della famiglia media."}
+{"kind":"slide","id":"sl/b9vt7j","slide":8,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":13}
+{"kind":"textbox","id":"sh/sfil0rqd","slide":8,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/zupwb2hw","slide":8,"text":"Mercato: grande in teoria, piccolo se filtrato correttamente","textPreview":"Mercato: grande in teoria, piccolo se filtrato correttamente","textChars":60,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"textbox","id":"sh/a9w3m94f","slide":8,"text":"Il TAM e ampio, ma il vero SAM richiede casa/spazio tecnico, FV, surplus, quadro adeguato e apertura al mining.","textPreview":"Il TAM e ampio, ma il vero SAM richiede casa/spazio tecnico, FV, surplus, quadro adeguato e apertura al mining.","textChars":111,"textLines":1,"bbox":[42,154,1120,48]}
+{"kind":"shape","id":"sh/hcrmhk3q","slide":8,"bbox":[42,238,270,238]}
+{"kind":"textbox","id":"sh/orytsvu9","slide":8,"text":"1,60M","textPreview":"1,60M","textChars":5,"textLines":1,"bbox":[68,266,218,54]}
+{"kind":"textbox","id":"sh/z61032ls","slide":8,"text":"Impianti FV residenziali in Italia (GSE 2024)","textPreview":"Impianti FV residenziali in Italia (GSE 2024)","textChars":45,"textLines":1,"bbox":[68,330,218,126]}
+{"kind":"shape","id":"sh/al87ed8b","slide":8,"bbox":[350,238,270,238]}
+{"kind":"textbox","id":"sh/hk3q5o7q","slide":8,"text":"38.772","textPreview":"38.772","textChars":6,"textLines":1,"bbox":[376,266,218,54]}
+{"kind":"textbox","id":"sh/oza1gvy9","slide":8,"text":"Impianti FV residenziali in Trentino-Alto Adige","textPreview":"Impianti FV residenziali in Trentino-Alto Adige","textChars":47,"textLines":1,"bbox":[376,330,218,126]}
+{"kind":"shape","id":"sh/29gr2p8n","slide":8,"bbox":[658,238,270,238]}
+{"kind":"textbox","id":"sh/vu9knih4","slide":8,"text":"80k-180k","textPreview":"80k-180k","textChars":8,"textLines":1,"bbox":[684,266,218,54]}
+{"kind":"textbox","id":"sh/kf6dcbul","slide":8,"text":"SAM Italia stimato dopo filtri tecnici e commerciali","textPreview":"SAM Italia stimato dopo filtri tecnici e commerciali","textChars":52,"textLines":1,"bbox":[684,330,218,126]}
+{"kind":"shape","id":"sh/d0z61032","slide":8,"bbox":[966,238,270,238]}
+{"kind":"textbox","id":"sh/2lszqtcj","slide":8,"text":"20-60","textPreview":"20-60","textChars":5,"textLines":1,"bbox":[992,266,218,54]}
+{"kind":"textbox","id":"sh/v6psfil0","slide":8,"text":"SOM TAA realistico nei primi 3 anni","textPreview":"SOM TAA realistico nei primi 3 anni","textChars":35,"textLines":1,"bbox":[992,330,218,126]}
+{"kind":"textbox","id":"sh/knih4byh","slide":8,"text":"Fonte: GSE Solare Fotovoltaico 2024, allegato XLSX; stime SAM/SOM derivate.","textPreview":"Fonte: GSE Solare Fotovoltaico 2024, allegato XLSX; stime SAM/SOM derivate.","textChars":75,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/d8bat47y","slide":8,"text":"8","textPreview":"8","textChars":1,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/b9vt7j","slide":8,"text":"Il mercato non si dimensiona partendo dai boiler, ma dai siti dove il calore puo essere usato e il cliente accetta mining.\nIl focus Trentino-Alto Adige e utile per piloti, non per scalare da solo."}
+{"kind":"slide","id":"sl/80mkw2","slide":9,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":29}
+{"kind":"textbox","id":"sh/18jqh0fe","slide":9,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/qh0fepkz","slide":9,"text":"Migliori clienti: non famiglia media, ma carichi termici continui","textPreview":"Migliori clienti: non famiglia media, ma carichi termici continui","textChars":65,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"shape","id":"sh/j2t83itg","slide":9,"bbox":[42,178,70,400]}
+{"kind":"shape","id":"sh/8bat47y1","slide":9,"bbox":[112,178,250,400]}
+{"kind":"shape","id":"sh/1w7mp0bi","slide":9,"bbox":[362,178,480,400]}
+{"kind":"shape","id":"sh/q5o7qpg3","slide":9,"bbox":[842,178,396,400]}
+{"kind":"shape","id":"sh/jqh0fepk","slide":9,"bbox":[42,178,1196,66.67]}
+{"kind":"textbox","id":"sh/c3ylc7u5","slide":9,"text":"Rank","textPreview":"Rank","textChars":4,"textLines":1,"bbox":[50,186,54,54.67]}
+{"kind":"textbox","id":"sh/1kre1w7m","slide":9,"text":"Segmento","textPreview":"Segmento","textChars":8,"textLines":1,"bbox":[120,186,234,54.67]}
+{"kind":"textbox","id":"sh/5o7qpg3e","slide":9,"text":"Perche puo comprare","textPreview":"Perche puo comprare","textChars":19,"textLines":1,"bbox":[370,186,464,54.67]}
+{"kind":"textbox","id":"sh/g3ex0nux","slide":9,"text":"Rischio","textPreview":"Rischio","textChars":7,"textLines":1,"bbox":[850,186,380,54.67]}
+{"kind":"shape","id":"sh/nih4byhg","slide":9,"bbox":[42,244.67,1196,66.67]}
+{"kind":"textbox","id":"sh/yxobm58z","slide":9,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[50,252.67,54,54.67]}
+{"kind":"textbox","id":"sh/9cvixcze","slide":9,"text":"Agriturismi / B&B con FV","textPreview":"Agriturismi / B&B con FV","textChars":24,"textLines":1,"bbox":[120,252.67,234,54.67]}
+{"kind":"textbox","id":"sh/gr2p8nqx","slide":9,"text":"ACS, lavanderia, spa o piscina aumentano ore utili","textPreview":"ACS, lavanderia, spa o piscina aumentano ore utili","textChars":50,"textLines":1,"bbox":[370,252.67,464,54.67]}
+{"kind":"textbox","id":"sh/r65wjudg","slide":9,"text":"Installazioni diverse sito per sito","textPreview":"Installazioni diverse sito per sito","textChars":35,"textLines":1,"bbox":[850,252.67,380,54.67]}
+{"kind":"shape","id":"sh/ylc7u54z","slide":9,"bbox":[42,311.33,1196,66.67]}
+{"kind":"textbox","id":"sh/90je9cvi","slide":9,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[50,319.33,54,54.67]}
+{"kind":"textbox","id":"sh/gfmlkjm1","slide":9,"text":"Bitcoiner con casa grande","textPreview":"Bitcoiner con casa grande","textChars":25,"textLines":1,"bbox":[120,319.33,234,54.67]}
+{"kind":"textbox","id":"sh/gn29gr2p","slide":9,"text":"Capisce narrativa e accetta volatilita","textPreview":"Capisce narrativa e accetta volatilita","textChars":38,"textLines":1,"bbox":[370,319.33,464,54.67]}
+{"kind":"textbox","id":"sh/58z25kb6","slide":9,"text":"Mercato piccolo, spesso DIY","textPreview":"Mercato piccolo, spesso DIY","textChars":27,"textLines":1,"bbox":[850,319.33,380,54.67]}
+{"kind":"shape","id":"sh/yhgn29gr","slide":9,"bbox":[42,378,1196,66.67]}
+{"kind":"textbox","id":"sh/n29gr2p8","slide":9,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[50,386,54,54.67]}
+{"kind":"textbox","id":"sh/gbq1oryt","slide":9,"text":"Case indipendenti con FV","textPreview":"Case indipendenti con FV","textChars":24,"textLines":1,"bbox":[120,386,234,54.67]}
+{"kind":"textbox","id":"sh/5wjudg7a","slide":9,"text":"Spazio tecnico e possibile surplus","textPreview":"Spazio tecnico e possibile surplus","textChars":34,"textLines":1,"bbox":[370,386,464,54.67]}
+{"kind":"textbox","id":"sh/y90je9cv","slide":9,"text":"Payback debole senza ACS elettrica","textPreview":"Payback debole senza ACS elettrica","textChars":34,"textLines":1,"bbox":[850,386,380,54.67]}
+{"kind":"shape","id":"sh/nuxc3ylc","slide":9,"bbox":[42,444.67,1196,66.67]}
+{"kind":"textbox","id":"sh/cbulwval","slide":9,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[50,452.67,54,54.67]}
+{"kind":"textbox","id":"sh/5sneloj2","slide":9,"text":"Early adopter","textPreview":"Early adopter","textChars":13,"textLines":1,"bbox":[120,452.67,234,54.67]}
+{"kind":"textbox","id":"sh/vu9knih4","slide":9,"text":"Buoni piloti e feedback","textPreview":"Buoni piloti e feedback","textChars":23,"textLines":1,"bbox":[370,452.67,464,54.67]}
+{"kind":"textbox","id":"sh/29gr2p8n","slide":9,"text":"CAC alto, non scala da solo","textPreview":"CAC alto, non scala da solo","textChars":27,"textLines":1,"bbox":[850,452.67,380,54.67]}
+{"kind":"shape","id":"sh/d0z61032","slide":9,"bbox":[42,511.33,1196,66.67]}
+{"kind":"textbox","id":"sh/kf6dcbul","slide":9,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[50,519.33,54,54.67]}
+{"kind":"textbox","id":"sh/v6psfil0","slide":9,"text":"Famiglia media","textPreview":"Famiglia media","textChars":14,"textLines":1,"bbox":[120,519.33,234,54.67]}
+{"kind":"textbox","id":"sh/2lszqtcj","slide":9,"text":"Mercato grande sulla carta","textPreview":"Mercato grande sulla carta","textChars":26,"textLines":1,"bbox":[370,519.33,464,54.67]}
+{"kind":"textbox","id":"sh/d8bat47y","slide":9,"text":"Da evitare: ROI insufficiente","textPreview":"Da evitare: ROI insufficiente","textChars":29,"textLines":1,"bbox":[850,519.33,380,54.67]}
+{"kind":"textbox","id":"sh/knih4byh","slide":9,"text":"Target iniziale consigliato: ospitalita piccola/premium in TAA con FV e bisogno termico misurabile.","textPreview":"Target iniziale consigliato: ospitalita piccola/premium in TAA con FV e bisogno termico misurabile.","textChars":99,"textLines":1,"bbox":[70,608,1060,34]}
+{"kind":"textbox","id":"sh/val87ed8","slide":9,"text":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textPreview":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textChars":80,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/6psfil0r","slide":9,"text":"9","textPreview":"9","textChars":1,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/80mkw2","slide":9,"text":"Qui va chiarito il posizionamento: non vendiamo un gadget a tutti, cerchiamo pochi siti dove il carico termico giustifica l'esperimento."}
+{"kind":"slide","id":"sl/ngj3tj","slide":10,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":25}
+{"kind":"textbox","id":"sh/kre1w7mp","slide":10,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/val87ed8","slide":10,"text":"Concorrenza: validano il tema, ma non risolvono ACS domestica","textPreview":"Concorrenza: validano il tema, ma non risolvono ACS domestica","textChars":61,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"shape","id":"sh/6psfil0r","slide":10,"bbox":[42,176,190,390]}
+{"kind":"shape","id":"sh/donyd0z6","slide":10,"bbox":[232,176,170,390]}
+{"kind":"shape","id":"sh/k3q5o7qp","slide":10,"bbox":[402,176,410,390]}
+{"kind":"shape","id":"sh/vixczed8","slide":10,"bbox":[812,176,426,390]}
+{"kind":"shape","id":"sh/2x4nap4r","slide":10,"bbox":[42,176,1196,78]}
+{"kind":"textbox","id":"sh/d0z61032","slide":10,"text":"Competitor","textPreview":"Competitor","textChars":10,"textLines":1,"bbox":[50,184,174,66]}
+{"kind":"textbox","id":"sh/kf6dcbul","slide":10,"text":"Prezzo","textPreview":"Prezzo","textChars":6,"textLines":1,"bbox":[240,184,154,66]}
+{"kind":"textbox","id":"sh/ylc7u54z","slide":10,"text":"Cosa fa","textPreview":"Cosa fa","textChars":7,"textLines":1,"bbox":[410,184,394,66]}
+{"kind":"textbox","id":"sh/r65wjudg","slide":10,"text":"Punto debole per noi","textPreview":"Punto debole per noi","textChars":20,"textLines":1,"bbox":[820,184,410,66]}
+{"kind":"shape","id":"sh/gr2p8nqx","slide":10,"bbox":[42,254,1196,78]}
+{"kind":"textbox","id":"sh/9cvixcze","slide":10,"text":"Heatbit Trio","textPreview":"Heatbit Trio","textChars":12,"textLines":1,"bbox":[50,262,174,66]}
+{"kind":"textbox","id":"sh/yxobm58z","slide":10,"text":"USD 849","textPreview":"USD 849","textChars":7,"textLines":1,"bbox":[240,262,154,66]}
+{"kind":"textbox","id":"sh/nih4byhg","slide":10,"text":"10 TH/s, heater aria + purificatore","textPreview":"10 TH/s, heater aria + purificatore","textChars":35,"textLines":1,"bbox":[410,262,394,66]}
+{"kind":"textbox","id":"sh/g3ex0nux","slide":10,"text":"Non ACS; hashrate basso","textPreview":"Non ACS; hashrate basso","textChars":23,"textLines":1,"bbox":[820,262,410,66]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":10,"bbox":[42,332,1196,78]}
+{"kind":"textbox","id":"sh/y1kre1w7","slide":10,"text":"Heatbit Maxi Pro","textPreview":"Heatbit Maxi Pro","textChars":16,"textLines":1,"bbox":[50,340,174,66]}
+{"kind":"textbox","id":"sh/rmhk3q5o","slide":10,"text":"USD 1.499","textPreview":"USD 1.499","textChars":9,"textLines":1,"bbox":[240,340,154,66]}
+{"kind":"textbox","id":"sh/3ylc7u54","slide":10,"text":"Fino a 60 TH/s, 1,5 kW mining heat","textPreview":"Fino a 60 TH/s, 1,5 kW mining heat","textChars":34,"textLines":1,"bbox":[410,340,394,66]}
+{"kind":"textbox","id":"sh/adsji5sn","slide":10,"text":"Riscaldamento ambiente","textPreview":"Riscaldamento ambiente","textChars":22,"textLines":1,"bbox":[820,340,410,66]}
+{"kind":"shape","id":"sh/h4byhgn2","slide":10,"bbox":[42,410,1196,78]}
+{"kind":"textbox","id":"sh/sji5snel","slide":10,"text":"21Energy Ofen 2/Pro","textPreview":"21Energy Ofen 2/Pro","textChars":19,"textLines":1,"bbox":[50,418,174,66]}
+{"kind":"textbox","id":"sh/3m94fu18","slide":10,"text":"EUR 1.780-2.410","textPreview":"EUR 1.780-2.410","textChars":15,"textLines":1,"bbox":[240,418,154,66]}
+{"kind":"textbox","id":"sh/a5gbq1or","slide":10,"text":"40-60 TH/s, heater aria UE","textPreview":"40-60 TH/s, heater aria UE","textChars":26,"textLines":1,"bbox":[410,418,394,66]}
+{"kind":"textbox","id":"sh/lszqtcj6","slide":10,"text":"Non idronico, ROI limitato","textPreview":"Non idronico, ROI limitato","textChars":26,"textLines":1,"bbox":[820,418,410,66]}
+{"kind":"shape","id":"sh/s72x4nap","slide":10,"bbox":[42,488,1196,78]}
+{"kind":"textbox","id":"sh/zidonyd0","slide":10,"text":"RY3T ONE","textPreview":"RY3T ONE","textChars":8,"textLines":1,"bbox":[50,496,174,66]}
+{"kind":"textbox","id":"sh/a1gvy90j","slide":10,"text":"Non pubblicato","textPreview":"Non pubblicato","textChars":14,"textLines":1,"bbox":[240,496,154,66]}
+{"kind":"textbox","id":"sh/kre1w7mp","slide":10,"text":"Modulo idronico 7-14 kW","textPreview":"Modulo idronico 7-14 kW","textChars":23,"textLines":1,"bbox":[410,496,394,66]}
+{"kind":"textbox","id":"sh/dcbulwva","slide":10,"text":"Piu vicino, ma alta potenza/CAPEX","textPreview":"Piu vicino, ma alta potenza/CAPEX","textChars":33,"textLines":1,"bbox":[820,496,410,66]}
+{"kind":"textbox","id":"sh/6psfil0r","slide":10,"text":"Spazio competitivo plausibile: integrazione locale, termotecnica, monitoraggio e target con vero carico termico.","textPreview":"Spazio competitivo plausibile: integrazione locale, termotecnica, monitoraggio e target con vero carico termico.","textChars":112,"textLines":1,"bbox":[72,608,1060,34]}
+{"kind":"textbox","id":"sh/val87ed8","slide":10,"text":"Fonti competitor: Heatbit, 21Energy, RY3T, pagine prodotto consultate il 2026-06-21.","textPreview":"Fonti competitor: Heatbit, 21Energy, RY3T, pagine prodotto consultate il 2026-06-21.","textChars":84,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/k3q5o7qp","slide":10,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/ngj3tj","slide":10,"text":"Heatbit e 21Energy dimostrano che la narrativa esiste. RY3T dimostra che il vero campo e idronico/impiantistico.\nIl nostro vantaggio non sarebbe il miner, ma l'integrazione locale e la scelta siti."}
+{"kind":"slide","id":"sl/s58mxj","slide":11,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":16}
+{"kind":"textbox","id":"sh/xkf6dcbu","slide":11,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/mtwra5gb","slide":11,"text":"Economia azienda: margine basso, assistenza alta, break-even lontano","textPreview":"Economia azienda: margine basso, assistenza alta, break-even lontano","textChars":68,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"shape","id":"sh/fepkzupw","slide":11,"bbox":[42,363,560,0]}
+{"kind":"shape","id":"sh/4r65wjud","slide":11,"bbox":[42,363,170.67,100.08]}
+{"kind":"textbox","id":"sh/xc3ylc7u","slide":11,"text":"EUR -208.675","textPreview":"EUR -208.675","textChars":12,"textLines":1,"bbox":[34,471.08,186.67,24]}
+{"kind":"textbox","id":"sh/mlkjm1cf","slide":11,"text":"10/anno","textPreview":"10/anno","textChars":7,"textLines":1,"bbox":[34,520,186.67,44]}
+{"kind":"shape","id":"sh/f6dcbulw","slide":11,"bbox":[236.67,363,170.67,108.87]}
+{"kind":"textbox","id":"sh/4fu18jqh","slide":11,"text":"EUR -227.000","textPreview":"EUR -227.000","textChars":12,"textLines":1,"bbox":[228.67,479.87,186.67,24]}
+{"kind":"textbox","id":"sh/x0nuxc3y","slide":11,"text":"50/anno","textPreview":"50/anno","textChars":7,"textLines":1,"bbox":[228.67,520,186.67,44]}
+{"kind":"shape","id":"sh/lkjm1cfa","slide":11,"bbox":[431.33,363,170.67,115.71]}
+{"kind":"textbox","id":"sh/szqtcj6t","slide":11,"text":"EUR -241.250","textPreview":"EUR -241.250","textChars":12,"textLines":1,"bbox":[423.33,486.71,186.67,24]}
+{"kind":"textbox","id":"sh/3ex0nuxc","slide":11,"text":"100/anno","textPreview":"100/anno","textChars":8,"textLines":1,"bbox":[423.33,520,186.67,44]}
+{"kind":"textbox","id":"sh/at47y1kr","slide":11,"text":"EBIT stimato","textPreview":"EBIT stimato","textChars":12,"textLines":1,"bbox":[42,172,360,34]}
+{"kind":"shape","id":"sh/l87ed8ba","slide":11,"bbox":[658,204,250,180]}
+{"kind":"textbox","id":"sh/sneloj2t","slide":11,"text":"11,8%","textPreview":"11,8%","textChars":5,"textLines":1,"bbox":[684,232,198,54]}
+{"kind":"textbox","id":"sh/32lszqtc","slide":11,"text":"Margine lordo unitario stimato su EUR 8.900 prezzo installato","textPreview":"Margine lordo unitario stimato su EUR 8.900 prezzo installato","textChars":61,"textLines":1,"bbox":[684,296,198,68]}
+{"kind":"shape","id":"sh/ahoza1gv","slide":11,"bbox":[946,204,250,180]}
+{"kind":"textbox","id":"sh/lwval87e","slide":11,"text":">300","textPreview":">300","textChars":4,"textLines":1,"bbox":[972,232,198,54]}
+{"kind":"textbox","id":"sh/wb2hwfyx","slide":11,"text":"Installazioni/anno per break-even con margine unitario attuale","textPreview":"Installazioni/anno per break-even con margine unitario attuale","textChars":62,"textLines":1,"bbox":[972,296,198,68]}
+{"kind":"textbox","id":"sh/sji5snel","slide":11,"text":"Il business non scala bene se ogni installazione resta custom e richiede progettazione + assistenza ad alto contatto.","textPreview":"Il business non scala bene se ogni installazione resta custom e richiede progettazione + assistenza ad alto contatto.","textChars":117,"textLines":1,"bbox":[658,456,540,66]}
+{"kind":"textbox","id":"sh/h4byhgn2","slide":11,"text":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textPreview":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textChars":80,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/adsji5sn","slide":11,"text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/s58mxj","slide":11,"text":"Questa slide serve a evitare l'illusione: anche se trovi clienti, l'azienda deve avere margine abbastanza alto da pagare team e responsabilita.\nIl modello integratore e piu realistico dell'hardware, ma non e venture-grade senza standardizzazione forte.\nL'ottimizzazione costi va cercata soprattutto qui: kit standard, installatori partner, commissioning remoto, meno ore custom."}
+{"kind":"slide","id":"sl/8wun6i","slide":12,"title":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textShapes":21}
+{"kind":"textbox","id":"sh/3itgfmlk","slide":12,"text":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textPreview":"ASIC HEAT RECOVERY / BUSINESS PARTNER DECK","textChars":42,"textLines":1,"bbox":[42,36,760,30]}
+{"kind":"textbox","id":"sh/w3m94fu1","slide":12,"text":"Go-to-market: un pilota con kill criteria, non un lancio largo","textPreview":"Go-to-market: un pilota con kill criteria, non un lancio largo","textChars":62,"textLines":1,"bbox":[42,78,1040,88]}
+{"kind":"textbox","id":"sh/loj2t83i","slide":12,"text":"0-3 mesi","textPreview":"0-3 mesi","textChars":8,"textLines":1,"bbox":[60,196,150,36]}
+{"kind":"textbox","id":"sh/e9cvixcz","slide":12,"text":"Prototipo","textPreview":"Prototipo","textChars":9,"textLines":1,"bbox":[250,196,190,34]}
+{"kind":"textbox","id":"sh/3q5o7qpg","slide":12,"text":"EUR 20-40k","textPreview":"EUR 20-40k","textChars":10,"textLines":1,"bbox":[478,196,180,34]}
+{"kind":"textbox","id":"sh/wb2hwfyx","slide":12,"text":"Recupero >80%, telemetria 30 giorni","textPreview":"Recupero >80%, telemetria 30 giorni","textChars":35,"textLines":1,"bbox":[700,196,480,42]}
+{"kind":"shape","id":"sh/lwval87e","slide":12,"bbox":[42,256,1196,0]}
+{"kind":"textbox","id":"sh/ahoza1gv","slide":12,"text":"3-6 mesi","textPreview":"3-6 mesi","textChars":8,"textLines":1,"bbox":[60,286,150,36]}
+{"kind":"textbox","id":"sh/32lszqtc","slide":12,"text":"1-3 piloti","textPreview":"1-3 piloti","textChars":10,"textLines":1,"bbox":[250,286,190,34]}
+{"kind":"textbox","id":"sh/rqd4vmtw","slide":12,"text":"EUR 30-70k","textPreview":"EUR 30-70k","textChars":10,"textLines":1,"bbox":[478,286,180,34]}
+{"kind":"textbox","id":"sh/25kb6xkf","slide":12,"text":"Zero incidenti, ore utili >700/anno","textPreview":"Zero incidenti, ore utili >700/anno","textChars":35,"textLines":1,"bbox":[700,286,480,42]}
+{"kind":"shape","id":"sh/9w3m94fu","slide":12,"bbox":[42,346,1196,0]}
+{"kind":"textbox","id":"sh/kb6xkf6d","slide":12,"text":"6-12 mesi","textPreview":"6-12 mesi","textChars":9,"textLines":1,"bbox":[60,376,150,36]}
+{"kind":"textbox","id":"sh/re1w7mp0","slide":12,"text":"Primi 10 clienti","textPreview":"Primi 10 clienti","textChars":16,"textLines":1,"bbox":[250,376,190,34]}
+{"kind":"textbox","id":"sh/2t83itgf","slide":12,"text":"EUR 120-220k","textPreview":"EUR 120-220k","textChars":12,"textLines":1,"bbox":[478,376,180,34]}
+{"kind":"textbox","id":"sh/9knih4by","slide":12,"text":"CAC < EUR 1.500, installazione <2 giorni","textPreview":"CAC < EUR 1.500, installazione <2 giorni","textChars":40,"textLines":1,"bbox":[700,376,480,42]}
+{"kind":"shape","id":"sh/kzupwb2h","slide":12,"bbox":[42,436,1196,0]}
+{"kind":"textbox","id":"sh/ra5gbq1o","slide":12,"text":"12-24 mesi","textPreview":"12-24 mesi","textChars":10,"textLines":1,"bbox":[60,466,150,36]}
+{"kind":"textbox","id":"sh/2p8nqxs7","slide":12,"text":"Espansione","textPreview":"Espansione","textChars":10,"textLines":1,"bbox":[250,466,190,34]}
+{"kind":"textbox","id":"sh/qd4vmtwr","slide":12,"text":"EUR 250-500k","textPreview":"EUR 250-500k","textChars":12,"textLines":1,"bbox":[478,466,180,34]}
+{"kind":"textbox","id":"sh/fyxobm58","slide":12,"text":"50 installazioni cumulative, partner installatori","textPreview":"50 installazioni cumulative, partner installatori","textChars":49,"textLines":1,"bbox":[700,466,480,42]}
+{"kind":"shape","id":"sh/8jqh0fep","slide":12,"bbox":[42,526,1196,0]}
+{"kind":"textbox","id":"sh/x4nap4r6","slide":12,"text":"Kill criteria: fermarsi se 5 clienti paganti non dimostrano EUR 600-1.000/anno di beneficio netto reale o willingness-to-pay extra-ROI.","textPreview":"Kill criteria: fermarsi se 5 clienti paganti non dimostrano EUR 600-1.000/anno di beneficio netto reale o willingness-to-pay extra-ROI.","textChars":135,"textLines":1,"bbox":[76,594,1070,54]}
+{"kind":"textbox","id":"sh/qpg3ex0n","slide":12,"text":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textPreview":"Fonte: modello interno su dati GSE 2024, CoinGecko e mempool.space al 2026-06-21","textChars":80,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/fa9w3m94","slide":12,"text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/8wun6i","slide":12,"text":"La roadmap deve rassicurare il partner: non bruciamo capitale per dimostrare una tesi fragile.\nIl primo investimento compra apprendimento, non scala."}
+{"kind":"slide","id":"sl/8gsyon","slide":13,"title":"Decisione proposta","textShapes":9}
+{"kind":"textbox","id":"sh/qh0fepkz","slide":13,"text":"Decisione proposta","textPreview":"Decisione proposta","textChars":18,"textLines":1,"bbox":[42,48,760,46]}
+{"kind":"textbox","id":"sh/18jqh0fe","slide":13,"text":"Procedere solo se il partner accetta un esperimento stretto e falsificabile","textPreview":"Procedere solo se il partner accetta un esperimento stretto e falsificabile","textChars":75,"textLines":1,"bbox":[42,112,850,86]}
+{"kind":"shape","id":"sh/8nqxs72x","slide":13,"bbox":[452,292,375,240]}
+{"kind":"textbox","id":"sh/jqh0fepk","slide":13,"text":"Fare","textPreview":"Fare","textChars":4,"textLines":1,"bbox":[478,320,323,54]}
+{"kind":"textbox","id":"sh/q5o7qpg3","slide":13,"text":"5-10 piloti paganti in TAA, target hospitality/FV, componenti esistenti, dashboard misure reali","textPreview":"5-10 piloti paganti in TAA, target hospitality/FV, componenti esistenti, dashboard misure reali","textChars":95,"textLines":1,"bbox":[478,384,323,128]}
+{"kind":"shape","id":"sh/1w7mp0bi","slide":13,"bbox":[864,292,375,240]}
+{"kind":"textbox","id":"sh/8bat47y1","slide":13,"text":"Non fare","textPreview":"Non fare","textChars":8,"textLines":1,"bbox":[890,320,323,54]}
+{"kind":"textbox","id":"sh/ji5snelo","slide":13,"text":"Hardware proprietario, campagna B2C larga, promessa di acqua calda gratis, business plan su famiglia media","textPreview":"Hardware proprietario, campagna B2C larga, promessa di acqua calda gratis, business plan su famiglia media","textChars":106,"textLines":1,"bbox":[890,384,323,128]}
+{"kind":"textbox","id":"sh/uxc3ylc7","slide":13,"text":"Ask al partner: accesso a installatori/clienti pilota + budget EUR 250-400k + disciplina di stop/go.","textPreview":"Ask al partner: accesso a installatori/clienti pilota + budget EUR 250-400k + disciplina di stop/go.","textChars":100,"textLines":1,"bbox":[62,610,1080,34]}
+{"kind":"textbox","id":"sh/gn29gr2p","slide":13,"text":"Appendice completa: research/output/asic_heat_recovery_startup_report.html","textPreview":"Appendice completa: research/output/asic_heat_recovery_startup_report.html","textChars":74,"textLines":1,"bbox":[42,674,980,22]}
+{"kind":"textbox","id":"sh/58z25kb6","slide":13,"text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1178,674,64,22]}
+{"kind":"notes","id":"nt/8gsyon","slide":13,"text":"Chiudi con una richiesta concreta: non serve consenso generico, serve decidere se il partner puo portare canale, installazione o capitale.\nLa frase finale: e un pilota di nicchia, non ancora una startup scalabile.\nSe il partner e bullish su BTC, bene: trattiamolo come upside di scenario, non come fondazione del piano."}

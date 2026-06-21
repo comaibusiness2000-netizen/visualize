@@ -1,0 +1,4 @@
+scenario,installed_cost_eur,electricity_kwh,energy_cost_eur,btc_revenue_eur,heat_savings_eur,net_annual_eur,payback_years
+Pessimistico,9000,2706,866,110,253,-503,never
+Realistico,7900,2706,487,169,506,188,42.0
+Ottimistico,6500,2706,216,296,644,723,9.0
