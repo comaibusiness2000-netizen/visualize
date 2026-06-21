@@ -119,6 +119,17 @@
         font-weight: 800;
       }
 
+      .top-pill {
+        height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0 14px;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.46);
+        font-size: 14px;
+        font-weight: 850;
+      }
+
       .screen {
         display: none;
         min-height: 710px;
@@ -263,6 +274,15 @@
         font-weight: 900;
       }
 
+      .upgrade-link {
+        margin-top: 16px;
+        border: 0;
+        color: var(--muted);
+        background: transparent;
+        font-size: 14px;
+        font-weight: 850;
+      }
+
       .quiet-panel p {
         margin-top: 10px;
         color: var(--muted);
@@ -355,6 +375,206 @@
           linear-gradient(145deg, #111, #da5a3a 58%, #e8c468);
         background-size: cover;
         background-position: center;
+      }
+
+      .paywall {
+        min-height: 760px;
+        position: relative;
+        padding-bottom: 152px;
+      }
+
+      .paywall-tabs {
+        width: min(100%, 338px);
+        height: 48px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3px;
+        margin: 46px auto 44px;
+        padding: 4px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.7);
+      }
+
+      body[data-theme="dark"] .paywall-tabs {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .paywall-tabs button {
+        border: 0;
+        border-radius: 999px;
+        color: var(--ink);
+        background: transparent;
+        font-size: 16px;
+        font-weight: 850;
+      }
+
+      .paywall-tabs button.active {
+        color: #fff;
+        background: linear-gradient(90deg, #7d88b8, #c46a9b);
+      }
+
+      .paywall-close {
+        position: absolute;
+        top: 2px;
+        right: 0;
+        width: 42px;
+        height: 42px;
+        border: 0;
+        color: var(--ink);
+        background: transparent;
+        font-size: 30px;
+        line-height: 1;
+      }
+
+      .paywall-head {
+        position: relative;
+        min-height: 236px;
+      }
+
+      .paywall-head h1 {
+        max-width: 310px;
+        font-size: 39px;
+        line-height: 1.08;
+        font-weight: 950;
+      }
+
+      .paywall-head p {
+        max-width: 285px;
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 21px;
+        line-height: 1.38;
+        font-weight: 760;
+      }
+
+      .paywall-head em {
+        color: #9b72a8;
+        font-style: normal;
+      }
+
+      .ghost-bird {
+        position: absolute;
+        right: -18px;
+        top: 8px;
+        width: 170px;
+        height: 236px;
+        border-radius: 70% 30% 48% 52% / 22% 72% 28% 78%;
+        background: rgba(17, 17, 17, 0.035);
+        transform: skewX(-12deg);
+      }
+
+      body[data-theme="dark"] .ghost-bird {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .ghost-bird::before {
+        content: "";
+        position: absolute;
+        top: 58px;
+        right: 50px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.24);
+      }
+
+      .feature-card {
+        overflow: hidden;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.86);
+      }
+
+      body[data-theme="dark"] .feature-card {
+        background: rgba(24, 31, 37, 0.88);
+      }
+
+      .feature-row {
+        display: grid;
+        grid-template-columns: 78px 1fr auto;
+        gap: 14px;
+        align-items: center;
+        min-height: 112px;
+        padding: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .feature-row:last-child {
+        border-bottom: 0;
+      }
+
+      .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        color: #000;
+        font-size: 33px;
+        font-weight: 950;
+      }
+
+      .feature-row strong {
+        display: block;
+        font-size: 18px;
+        line-height: 1.1;
+      }
+
+      .feature-row span {
+        display: block;
+        margin-top: 6px;
+        color: #8a8a86;
+        font-size: 16px;
+        line-height: 1.35;
+        font-weight: 650;
+      }
+
+      body[data-theme="dark"] .feature-row span {
+        color: #b9b0a4;
+      }
+
+      .ai-badge {
+        min-width: 70px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #fff;
+        background: #9861a8;
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .paywall-footer {
+        position: absolute;
+        left: -18px;
+        right: -18px;
+        bottom: 0;
+        padding: 22px 24px 24px;
+        border-top: 1px solid #d3d3d0;
+        text-align: center;
+        background: rgba(244, 244, 242, 0.94);
+      }
+
+      body[data-theme="dark"] .paywall-footer {
+        border-top-color: var(--line);
+        background: rgba(16, 20, 24, 0.96);
+      }
+
+      .paywall-footer strong {
+        display: block;
+        font-size: 19px;
+        line-height: 1.35;
+      }
+
+      .trial-btn {
+        width: min(100%, 270px);
+        min-height: 68px;
+        margin-top: 20px;
+        border: 0;
+        border-radius: 999px;
+        color: #fff;
+        background: linear-gradient(90deg, #7d88b8, #cc6f9e);
+        font-size: 26px;
+        font-weight: 950;
       }
 
       .vision-visual h2 {
@@ -685,6 +905,7 @@
       <div class="phone">
         <main class="app">
           <div class="top-actions">
+            <button class="top-pill" id="openProTop" type="button">Pro + AI</button>
             <button class="icon-btn" id="listenBtn" aria-label="Ascolta traccia">♪</button>
             <button class="icon-btn" id="profileBtn" aria-label="Apri profilo">×</button>
           </div>
@@ -715,6 +936,7 @@
             <div class="quiet-panel">
               <h2 id="goalTitle">La vita che sto costruendo</h2>
               <p>Usa questa schermata come ancora: pochi secondi, una immagine chiara, una direzione.</p>
+              <button class="upgrade-link" id="openProFromGoal" type="button">Sblocca visualizzazioni AI</button>
 
               <div class="mantra-row">
                 <p id="mantraText">Sono il tipo di persona che mantiene le promesse fatte a se stesso.</p>
@@ -772,6 +994,54 @@
 
             <div class="list" id="antiList"></div>
           </section>
+
+          <section class="screen" id="pro">
+            <div class="paywall">
+              <button class="paywall-close" id="closePro" type="button" aria-label="Chiudi Pro">×</button>
+              <div class="paywall-tabs" aria-label="Piani">
+                <button type="button">Premium</button>
+                <button class="active" type="button">Premium + AI</button>
+              </div>
+
+              <div class="paywall-head">
+                <div class="ghost-bird" aria-hidden="true"></div>
+                <h1>Visualizza meglio con Visualize.</h1>
+                <p>con <em>AI guidata</em> per obiettivi, immagini e script.</p>
+              </div>
+
+              <div class="feature-card">
+                <div class="feature-row">
+                  <div class="feature-icon">✎</div>
+                  <div>
+                    <strong>Vision personalizzate</strong>
+                    <span>Prompt su misura per vedere la vita che vuoi costruire.</span>
+                  </div>
+                  <div class="ai-badge">AI</div>
+                </div>
+                <div class="feature-row">
+                  <div class="feature-icon">◌</div>
+                  <div>
+                    <strong>Analisi riflessiva</strong>
+                    <span>Trova pattern tra mantra, rinvii e obiettivi ricorrenti.</span>
+                  </div>
+                  <div class="ai-badge">AI</div>
+                </div>
+                <div class="feature-row">
+                  <div class="feature-icon">☁</div>
+                  <div>
+                    <strong>Script audio smart</strong>
+                    <span>Tracce mindset adattate al tuo obiettivo principale.</span>
+                  </div>
+                  <div class="ai-badge">AI</div>
+                </div>
+              </div>
+
+              <div class="paywall-footer">
+                <strong>Yearly + AI<br />€99.99 annually (€8.33/month)<br />Cancel anytime</strong>
+                <button class="trial-btn" type="button">Try 3 days free</button>
+              </div>
+            </div>
+          </section>
         </main>
 
         <div class="drawer-scrim" id="profileScrim"></div>
@@ -824,6 +1094,14 @@
             <div class="action-row">
               <button class="btn secondary" id="resetData" type="button">Reset</button>
               <button class="btn" id="saveProfile" type="button">Salva</button>
+            </div>
+          </div>
+
+          <div class="profile-card">
+            <h2>Upgrade</h2>
+            <p>Apri la schermata Pro + AI ispirata al paywall che hai selezionato.</p>
+            <div class="action-row">
+              <button class="btn" id="openProFromProfile" type="button">Pro + AI</button>
             </div>
           </div>
         </aside>
@@ -940,7 +1218,8 @@
         const titles = {
           goal: "Goal",
           vision: "Vision",
-          anti: "Anti"
+          anti: "Anti",
+          pro: "Pro + AI"
         };
         document.getElementById("screenTitle").textContent = titles[name] || "Goal";
         closeProfile();
@@ -985,6 +1264,10 @@
       document.getElementById("profileBtn").addEventListener("click", openProfile);
       document.getElementById("closeProfile").addEventListener("click", closeProfile);
       document.getElementById("profileScrim").addEventListener("click", closeProfile);
+      document.getElementById("openProTop").addEventListener("click", () => setView("pro"));
+      document.getElementById("openProFromGoal").addEventListener("click", () => setView("pro"));
+      document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
+      document.getElementById("closePro").addEventListener("click", () => setView("goal"));
 
       document.getElementById("themeLight").addEventListener("click", () => {
         state.settings.theme = "light";
