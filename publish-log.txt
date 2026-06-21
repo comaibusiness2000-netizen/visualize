@@ -1,0 +1,25 @@
+﻿**********************
+Inizio trascrizione Windows PowerShell
+Ora di inizio: 20260621173805
+Nome utente: SAMCOMP\comai
+Esegui come utente: SAMCOMP\comai
+Nome configurazione: 
+Computer SAMCOMP (Microsoft Windows NT 10.0.26200.0)
+Applicazione host: powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\comai\OneDrive\Documenti\VISUALISATION APP\3-publish-stable-link.ps1
+ID processo: 25380
+PSVersion: 5.1.26100.8655
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8655
+BuildVersion: 10.0.26100.8655
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+
+Prima crea un repository GitHub chiamato visualize-app:
+https://github.com/new
+
+Poi copia l'URL HTTPS del repository, tipo:
+https://github.com/TUO-UTENTE/visualize-app.git
+
