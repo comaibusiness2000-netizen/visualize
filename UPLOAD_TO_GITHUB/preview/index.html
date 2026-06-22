@@ -28,6 +28,7 @@
         --soft: #eeeeeb;
         --gold: #e8c468;
         --rust: #da5a3a;
+        --warm: #fff7df;
         --control: #ffffff;
       }
 
@@ -38,6 +39,7 @@
         --line: #30383e;
         --panel: #171f25;
         --soft: #20282e;
+        --warm: #241f16;
         --control: #1a2229;
       }
 
@@ -459,15 +461,16 @@
         align-items: center;
         gap: 10px;
         padding: 8px 10px;
-        border: 1px solid var(--line);
+        border: 1px solid rgba(232, 196, 104, 0.72);
         border-radius: 16px;
         color: var(--ink);
-        background: var(--control);
+        background: var(--warm);
         text-align: left;
       }
 
       body[data-theme="dark"] .goal-item {
-        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(232, 196, 104, 0.36);
+        background: #211d15;
       }
 
       .goal-index {
@@ -476,8 +479,8 @@
         display: grid;
         place-items: center;
         border-radius: 50%;
-        color: #fff;
-        background: var(--ink);
+        color: #111;
+        background: var(--gold);
         font-size: 12px;
         font-weight: 950;
       }
@@ -489,9 +492,25 @@
       }
 
       .goal-item span {
-        color: var(--muted);
+        color: #4b4030;
         font-size: 12px;
         font-weight: 750;
+      }
+
+      body[data-theme="dark"] .goal-item span {
+        color: #e8c468;
+      }
+
+      .goal-edit {
+        min-height: 26px;
+        display: grid;
+        place-items: center;
+        padding: 0 8px;
+        border-radius: 999px;
+        color: #111;
+        background: rgba(232, 196, 104, 0.58);
+        font-size: 11px;
+        font-weight: 950;
       }
 
       .mini-link {
@@ -906,7 +925,7 @@
 
       .paywall-tabs button.active {
         color: #fff;
-        background: linear-gradient(90deg, #7d88b8, #c46a9b);
+        background: linear-gradient(90deg, #111, #da5a3a);
       }
 
       .paywall-close {
@@ -944,7 +963,7 @@
       }
 
       .paywall-head em {
-        color: #9b72a8;
+        color: var(--rust);
         font-style: normal;
       }
 
@@ -1023,7 +1042,7 @@
         place-items: center;
         border-radius: 999px;
         color: #fff;
-        background: #9861a8;
+        background: var(--rust);
         font-size: 18px;
         font-weight: 900;
       }
@@ -1057,7 +1076,7 @@
         border: 0;
         border-radius: 999px;
         color: #fff;
-        background: linear-gradient(90deg, #7d88b8, #cc6f9e);
+        background: linear-gradient(90deg, #111, #da5a3a);
         font-size: 26px;
         font-weight: 950;
       }
@@ -1587,7 +1606,7 @@
         const vision = [
           "linear-gradient(145deg, #111, #da5a3a 58%, #e8c468)",
           "linear-gradient(145deg, #17201b, #6d8b62 56%, #e8c468)",
-          "linear-gradient(145deg, #101418, #7d88b8 56%, #da5a3a)"
+          "linear-gradient(145deg, #101418, #b85f35 56%, #e8c468)"
         ];
         const anti = [
           "linear-gradient(145deg, #050505, #4b2724 62%, #111)",
@@ -1602,7 +1621,7 @@
           <button class="goal-item" type="button" data-goal-index="${index}">
             <span class="goal-index">${index + 1}</span>
             <strong>${escapeHtml(goal)}</strong>
-            <span>edit</span>
+            <span class="goal-edit">edit</span>
           </button>
         `).join("");
       }
