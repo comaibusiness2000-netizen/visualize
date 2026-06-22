@@ -22,8 +22,8 @@
       :root {
         --paper: #f4f4f2;
         --ink: #111111;
-        --muted: #8a8a86;
-        --line: #d9d9d4;
+        --muted: #8b8b87;
+        --line: #deded9;
         --panel: #ffffff;
         --soft: #eeeeeb;
         --gold: #e8c468;
@@ -62,6 +62,7 @@
 
       h1,
       h2,
+      h3,
       p {
         margin: 0;
       }
@@ -102,6 +103,15 @@
         display: none;
       }
 
+      .screen {
+        display: none;
+        min-height: 700px;
+      }
+
+      .screen.active {
+        display: block;
+      }
+
       .topbar {
         min-height: 46px;
         display: grid;
@@ -117,7 +127,7 @@
         border-radius: 999px;
         color: #cfcfca;
         background: rgba(255, 255, 255, 0.42);
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 900;
       }
 
@@ -140,15 +150,6 @@
         background: var(--ink);
         font-size: 17px;
         font-weight: 950;
-      }
-
-      .screen {
-        display: none;
-        min-height: 700px;
-      }
-
-      .screen.active {
-        display: block;
       }
 
       .week-row {
@@ -216,18 +217,22 @@
         font-weight: 800;
       }
 
-      .begin-btn {
-        position: relative;
-        z-index: 1;
+      .begin-btn,
+      .reflect-btn {
         min-width: 136px;
-        min-height: 66px;
-        margin-top: 132px;
-        border: 0;
+        min-height: 64px;
+        border: 1px solid var(--line);
         border-radius: 999px;
-        color: #111;
+        color: var(--ink);
         background: #f4f4f2;
         font-size: 22px;
         font-weight: 900;
+      }
+
+      .begin-btn {
+        position: relative;
+        z-index: 1;
+        margin-top: 132px;
       }
 
       .hero-figure {
@@ -239,17 +244,6 @@
         border-radius: 58% 42% 47% 53% / 20% 70% 30% 80%;
         background: rgba(255, 255, 255, 0.035);
         transform: skewX(-11deg);
-      }
-
-      .hero-figure::before {
-        content: "";
-        position: absolute;
-        top: 66px;
-        right: 58px;
-        width: 27px;
-        height: 27px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
       }
 
       .reflection-card {
@@ -288,15 +282,8 @@
       }
 
       .reflect-btn {
-        min-width: 144px;
-        min-height: 64px;
         margin-top: 28px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        color: var(--ink);
         background: rgba(255, 255, 255, 0.5);
-        font-size: 22px;
-        font-weight: 900;
       }
 
       .inspired-label {
@@ -407,6 +394,146 @@
         font-size: 13px;
         line-height: 1.35;
         font-weight: 650;
+      }
+
+      .for-you-row {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 64px 0 12px;
+      }
+
+      .for-you-pill {
+        width: fit-content;
+        justify-self: center;
+        min-width: 134px;
+        min-height: 54px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: #5f5f5c;
+        background: rgba(255, 255, 255, 0.44);
+        font-size: 22px;
+        font-weight: 850;
+      }
+
+      .round-mini {
+        position: absolute;
+        top: 3px;
+        right: 0;
+        width: 48px;
+        height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: #8a8a86;
+        background: transparent;
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .round-mini:first-of-type {
+        right: 58px;
+      }
+
+      .inspiration-card {
+        min-height: 664px;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: 76px;
+        margin: 12px -8px 0;
+        padding: 42px 32px 24px;
+        border-radius: 28px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 20px 46px rgba(17, 17, 17, 0.08);
+      }
+
+      body[data-theme="dark"] .inspiration-card {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .sun-dot {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #b9b9b5;
+        box-shadow: 0 -16px 0 -10px #b9b9b5, 0 16px 0 -10px #b9b9b5, 16px 0 0 -10px #b9b9b5, -16px 0 0 -10px #b9b9b5;
+      }
+
+      .inspiration-text {
+        max-width: 330px;
+        color: #b6b6b2;
+        font-size: 27px;
+        line-height: 1.35;
+        font-weight: 950;
+      }
+
+      .inspiration-orb {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #a9a9a6;
+      }
+
+      .scroll-hint {
+        color: #4c4c4a;
+        font-size: 22px;
+        line-height: 1.3;
+        font-weight: 950;
+      }
+
+      .embrace-btn {
+        width: min(100%, 286px);
+        min-height: 74px;
+        border: 0;
+        border-radius: 999px;
+        color: #fff;
+        background: #bdbdc0;
+        font-size: 21px;
+        font-weight: 900;
+      }
+
+      .article-head {
+        padding-top: 42px;
+      }
+
+      .back-btn {
+        width: 38px;
+        height: 38px;
+        border: 0;
+        color: var(--ink);
+        background: transparent;
+        font-size: 28px;
+        text-align: left;
+      }
+
+      .article-title {
+        max-width: 340px;
+        margin-top: 78px;
+        font-size: 38px;
+        line-height: 1.12;
+        font-weight: 950;
+      }
+
+      .article-body {
+        margin-top: 62px;
+        padding-bottom: 34px;
+      }
+
+      .article-body p {
+        margin-bottom: 22px;
+        font-size: 24px;
+        line-height: 1.52;
+        font-weight: 500;
+      }
+
+      .article-body p.lead {
+        font-weight: 950;
       }
 
       .vision-visual {
@@ -616,17 +743,6 @@
         background: rgba(255, 255, 255, 0.05);
       }
 
-      .ghost-bird::before {
-        content: "";
-        position: absolute;
-        top: 58px;
-        right: 50px;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.24);
-      }
-
       .feature-card {
         overflow: hidden;
         border-radius: 22px;
@@ -657,7 +773,7 @@
         display: grid;
         place-items: center;
         color: #000;
-        font-size: 33px;
+        font-size: 28px;
         font-weight: 950;
       }
 
@@ -968,7 +1084,7 @@
             <button class="profile-dot" id="profileBtn" aria-label="Apri profilo">S</button>
           </div>
 
-          <section class="screen active" id="goal">
+          <section class="screen active" id="today">
             <div class="week-row" aria-label="Settimana">
               <div class="day">Su<br /><strong>13</strong></div>
               <div class="day">Mo<br /><strong>14</strong></div>
@@ -979,7 +1095,7 @@
               <div class="day active">Sa<br /><strong>19</strong></div>
             </div>
 
-            <article class="hero-card" id="goalHero">
+            <article class="hero-card">
               <div class="hero-figure" aria-hidden="true"></div>
               <div>
                 <div class="pretitle">Future<br />Preparation</div>
@@ -1004,18 +1120,18 @@
               </div>
 
               <div class="route-list">
-                <button class="route" data-view="vision" type="button">
+                <button class="route" data-view="journey" type="button">
                   <div class="route-dot"></div>
                   <div>
-                    <strong>Apri la vision</strong>
-                    <span>Guarda come cambia la tua vita quando segui la direzione giusta.</span>
+                    <strong>Apri la journey</strong>
+                    <span>Vision, anti-vision e cambiamenti principali in un percorso unico.</span>
                   </div>
                 </button>
-                <button class="route" data-view="anti" type="button">
+                <button class="route" data-view="inspirations" type="button">
                   <div class="route-dot anti"></div>
                   <div>
-                    <strong>Guarda l'anti-vision</strong>
-                    <span>Ricorda cosa succede se continui a rimandare troppo a lungo.</span>
+                    <strong>Vai alle inspirations</strong>
+                    <span>Una frase visuale da assorbire e trasformare in mantra.</span>
                   </div>
                 </button>
               </div>
@@ -1023,7 +1139,38 @@
             </div>
           </section>
 
-          <section class="screen" id="vision">
+          <section class="screen" id="inspirations">
+            <div class="for-you-row">
+              <div class="for-you-pill">For You</div>
+              <button class="round-mini" id="editInspiration" type="button">edit</button>
+              <button class="round-mini" id="playInspiration" type="button">play</button>
+            </div>
+
+            <article class="inspiration-card">
+              <div class="sun-dot"></div>
+              <h1 class="inspiration-text" id="inspirationText">I am becoming the person I have been visualizing.</h1>
+              <div class="inspiration-orb"></div>
+              <div class="scroll-hint">scroll up for<br />more inspirations</div>
+              <button class="embrace-btn" id="embraceThought" type="button">Embrace the Thought</button>
+            </article>
+          </section>
+
+          <section class="screen" id="library">
+            <div class="article-head">
+              <button class="back-btn" data-view="today" type="button">‹</button>
+              <h1 class="article-title">Why Visualization Exercises Work?</h1>
+            </div>
+
+            <article class="article-body">
+              <p class="lead">Visualization exercises influence how you act by changing the relationship between your present identity and your future self.</p>
+              <p>When you repeatedly imagine a clear future scenario, your brain starts treating that outcome as more familiar. Familiar goals feel less abstract, and less abstract goals are easier to approach.</p>
+              <p>A strong visualization is not just a picture. It includes the environment, the sensations, the choices you make, and the kind of person you are becoming.</p>
+              <p>Anti-vision works in the opposite direction. It makes the cost of waiting visible, so you can return to the direction you actually want.</p>
+              <p>Use Visualize for a few quiet minutes: see the future, feel the contrast, then choose the next aligned step.</p>
+            </article>
+          </section>
+
+          <section class="screen" id="journey">
             <div class="quiet-panel">
               <h2>visualize.<br />the life ahead</h2>
               <p id="visionText">Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.</p>
@@ -1041,9 +1188,7 @@
             <input id="photoInput" type="file" accept="image/*" hidden />
 
             <div class="list" id="changeList"></div>
-          </section>
 
-          <section class="screen" id="anti">
             <div class="quiet-panel">
               <h2>meet the cost<br />of waiting.</h2>
               <p id="antiText">Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola.</p>
@@ -1168,11 +1313,11 @@
         </aside>
 
         <nav class="nav" aria-label="Navigazione principale">
-          <button class="active" data-view="goal">Today</button>
-          <button id="openProTop" type="button">AI</button>
+          <button class="active" data-view="today">Today</button>
+          <button data-view="inspirations">Inspirations</button>
           <button class="plus-nav" id="addMantraNav" type="button" aria-label="Aggiungi mantra">+</button>
-          <button data-view="vision">Vision</button>
-          <button data-view="anti">Anti</button>
+          <button data-view="library">Library</button>
+          <button data-view="journey">Journey</button>
         </nav>
       </div>
     </div>
@@ -1184,6 +1329,7 @@
         goalTitle: "New day, clear vision.",
         goalText: "Ogni giorno torni all'immagine della persona che stai costruendo.",
         mantra: "Sono il tipo di persona che mantiene le promesse fatte a se stesso.",
+        inspiration: "I am becoming the person I have been visualizing.",
         visionTitle: "Energia, disciplina e liberta",
         visionText: "Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.",
         changes: [
@@ -1244,6 +1390,7 @@
         document.getElementById("goalTitle").textContent = state.goalTitle;
         document.getElementById("goalText").textContent = state.goalText;
         document.getElementById("mantraText").textContent = state.mantra;
+        document.getElementById("inspirationText").textContent = state.inspiration;
         document.getElementById("visionTitle").textContent = state.visionTitle;
         document.getElementById("visionText").textContent = state.visionText;
         document.getElementById("antiText").textContent = state.antiText;
@@ -1295,18 +1442,11 @@
         document.getElementById("profileDrawer").setAttribute("aria-hidden", "true");
       }
 
-      function speak() {
+      function speak(text) {
         if (!("speechSynthesis" in window)) {
           notify("Audio non supportato");
           return;
         }
-        const text = [
-          state.mantra,
-          state.goalTitle,
-          state.goalText,
-          state.visionText,
-          "Resta qualche secondo dentro questa immagine e lascia che guidi la prossima scelta."
-        ].join(" ");
         speechSynthesis.cancel();
         const voice = new SpeechSynthesisUtterance(text);
         voice.lang = "it-IT";
@@ -1314,10 +1454,15 @@
         speechSynthesis.speak(voice);
       }
 
+      function speakMain() {
+        speak([state.mantra, state.goalTitle, state.goalText, state.visionText].join(" "));
+      }
+
       function addMantra() {
         const mantra = prompt("Aggiungi una frase mantra", state.mantra);
         if (!mantra || !mantra.trim()) return;
         state.mantra = mantra.trim();
+        state.inspiration = mantra.trim();
         save();
         paint();
         notify("Mantra aggiunto");
@@ -1327,18 +1472,25 @@
         button.addEventListener("click", () => setView(button.dataset.view));
       });
 
-      document.getElementById("listenBtn").addEventListener("click", speak);
+      document.getElementById("listenBtn").addEventListener("click", speakMain);
       document.getElementById("profileBtn").addEventListener("click", openProfile);
       document.getElementById("closeProfile").addEventListener("click", closeProfile);
       document.getElementById("profileScrim").addEventListener("click", closeProfile);
-      document.getElementById("beginVision").addEventListener("click", () => setView("vision"));
-      document.getElementById("reflectBtn").addEventListener("click", addMantra);
+      document.getElementById("beginVision").addEventListener("click", () => setView("journey"));
+      document.getElementById("reflectBtn").addEventListener("click", () => setView("inspirations"));
       document.getElementById("addMantra").addEventListener("click", addMantra);
       document.getElementById("addMantraNav").addEventListener("click", addMantra);
-      document.getElementById("openProTop").addEventListener("click", () => setView("pro"));
+      document.getElementById("embraceThought").addEventListener("click", () => {
+        state.mantra = state.inspiration;
+        save();
+        paint();
+        notify("Pensiero salvato");
+      });
+      document.getElementById("editInspiration").addEventListener("click", addMantra);
+      document.getElementById("playInspiration").addEventListener("click", () => speak(state.inspiration));
       document.getElementById("openProFromGoal").addEventListener("click", () => setView("pro"));
       document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
-      document.getElementById("closePro").addEventListener("click", () => setView("goal"));
+      document.getElementById("closePro").addEventListener("click", () => setView("today"));
 
       document.getElementById("themeLight").addEventListener("click", () => {
         state.settings.theme = "light";
