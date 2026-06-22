@@ -22,21 +22,23 @@
       :root {
         --paper: #f4f4f2;
         --ink: #111111;
-        --muted: #8b8b87;
+        --muted: #5f625d;
         --line: #deded9;
         --panel: #ffffff;
         --soft: #eeeeeb;
         --gold: #e8c468;
         --rust: #da5a3a;
+        --control: #ffffff;
       }
 
       body[data-theme="dark"] {
         --paper: #101418;
         --ink: #f5f1e8;
-        --muted: #b9b0a4;
+        --muted: #d5cbbf;
         --line: #30383e;
         --panel: #171f25;
         --soft: #20282e;
+        --control: #1a2229;
       }
 
       * {
@@ -137,8 +139,8 @@
         height: 30px;
         border: 1px solid var(--line);
         border-radius: 999px;
-        color: #cfcfca;
-        background: rgba(255, 255, 255, 0.42);
+        color: var(--ink);
+        background: var(--control);
         font-size: 13px;
         font-weight: 900;
       }
@@ -224,7 +226,7 @@
       .pretitle {
         position: relative;
         z-index: 1;
-        color: rgba(255, 255, 255, 0.42);
+        color: rgba(255, 255, 255, 0.72);
         font-size: 20px;
         line-height: 1.35;
         font-weight: 800;
@@ -263,8 +265,9 @@
         margin: 0 auto;
         padding: 24px 24px 22px;
         border-radius: 28px;
+        color: var(--ink);
         text-align: center;
-        background: rgba(255, 255, 255, 0.78);
+        background: var(--control);
         box-shadow: 0 20px 42px rgba(17, 17, 17, 0.08);
       }
 
@@ -302,7 +305,7 @@
       .inspired-label {
         margin: 2px 0 -2px;
         text-align: center;
-        color: #aaa9a5;
+        color: var(--muted);
         font-size: 15px;
         letter-spacing: 8px;
         font-weight: 950;
@@ -440,7 +443,7 @@
 
       .goal-hero span,
       .deck-kicker {
-        color: rgba(255, 255, 255, 0.68);
+        color: var(--muted);
         font-size: 12px;
         letter-spacing: 3px;
         text-transform: uppercase;
@@ -452,6 +455,10 @@
         font-size: 30px;
         line-height: 1.06;
         font-weight: 950;
+      }
+
+      .goal-hero span {
+        color: rgba(255, 255, 255, 0.78);
       }
 
       .goal-list {
@@ -468,7 +475,8 @@
         padding: 8px 10px;
         border: 1px solid var(--line);
         border-radius: 16px;
-        background: rgba(255, 255, 255, 0.44);
+        color: var(--ink);
+        background: var(--control);
         text-align: left;
       }
 
@@ -544,8 +552,9 @@
       }
 
       .deck-stage.positive {
+        color: #111111;
         background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.66)),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.88)),
           linear-gradient(145deg, rgba(232, 196, 104, 0.34), rgba(218, 90, 58, 0.16));
       }
 
@@ -562,7 +571,7 @@
 
       .deck-stage.negative .deck-kicker,
       .deck-stage.negative .deck-card span {
-        color: rgba(255, 255, 255, 0.66);
+        color: rgba(255, 255, 255, 0.82);
       }
 
       .deck-head h2 {
@@ -651,7 +660,7 @@
         border-radius: 50%;
         display: grid;
         place-items: center;
-        color: #8a8a86;
+        color: var(--muted);
         background: transparent;
         font-size: 14px;
         font-weight: 900;
@@ -689,7 +698,7 @@
 
       .inspiration-text {
         max-width: 330px;
-        color: #b6b6b2;
+        color: var(--muted);
         font-size: 27px;
         line-height: 1.35;
         font-weight: 950;
@@ -1011,7 +1020,7 @@
       .feature-row span {
         display: block;
         margin-top: 6px;
-        color: #8a8a86;
+        color: var(--muted);
         font-size: 16px;
         line-height: 1.35;
         font-weight: 650;
@@ -1146,15 +1155,24 @@
         margin-top: 12px;
       }
 
-      .theme-choice button {
+      .language-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .theme-choice button,
+      .language-grid button {
         min-height: 44px;
         border: 1px solid var(--line);
         color: var(--ink);
-        background: transparent;
+        background: var(--control);
         font-weight: 900;
       }
 
-      .theme-choice button.active {
+      .theme-choice button.active,
+      .language-grid button.active {
         border-color: var(--ink);
         background: var(--ink);
         color: var(--paper);
@@ -1305,21 +1323,21 @@
       <div class="phone">
         <main class="app">
           <div class="topbar">
-            <button class="tiny-toggle" id="listenBtn" aria-label="Ascolta traccia">&gt;</button>
+            <button class="tiny-toggle" id="listenBtn" aria-label="Play audio">&gt;</button>
             <img class="brand-logo" src="./icon.svg" alt="Visualize" />
-            <button class="profile-dot" id="profileBtn" aria-label="Apri profilo">S</button>
+            <button class="profile-dot" id="profileBtn" aria-label="Open profile">S</button>
           </div>
 
           <section class="screen active" id="today">
             <article class="goal-hero">
               <span>Goal board</span>
-              <h1 id="goalTitle">Scrivi cosa vuoi vedere prima di viverlo.</h1>
+              <h1 id="goalTitle">Write what you want to see before you live it.</h1>
               <button class="begin-btn" id="addGoal" type="button">+ Goal</button>
             </article>
 
             <article class="reflection-card">
-              <h2>obiettivi scritti.</h2>
-              <p id="goalText">Tieni in vista pochi obiettivi chiari. Vision e Anti-vision useranno questa lista per creare le presentazioni.</p>
+              <h2>written goals.</h2>
+              <p id="goalText">Keep a few clear goals in sight. Vision and Anti-vision use this list to build your presentations.</p>
             </article>
 
             <div class="goal-list" id="goalList"></div>
@@ -1327,82 +1345,82 @@
 
           <section class="screen" id="vision">
             <div class="helper-copy">
-              <span id="visionHint">Genera una catena di immagini positive dai tuoi goal. Poi modifichi ogni slide come una mini presentazione.</span>
+              <span id="visionHint">Generate a positive image chain from your goals. Then edit every slide like a mini presentation.</span>
             </div>
 
             <article class="deck-stage positive">
               <div class="deck-head">
                 <span class="deck-kicker">Vision AI deck</span>
-                <h2 id="visionTitle">La versione che stai costruendo</h2>
+                <h2 id="visionTitle">The version you are building</h2>
               </div>
               <div class="deck-strip" id="visionDeck"></div>
             </article>
 
             <div class="deck-actions">
-              <button class="btn" id="generateVision" type="button">Genera AI</button>
-              <button class="btn secondary" id="uploadVisionPhoto" type="button">Foto</button>
-              <button class="btn secondary" id="editVisionDeck" type="button">Modifica</button>
+              <button class="btn" id="generateVision" type="button">Generate AI</button>
+              <button class="btn secondary" id="uploadVisionPhoto" type="button">Photo</button>
+              <button class="btn secondary" id="editVisionDeck" type="button">Edit</button>
             </div>
             <input id="visionPhotoInput" type="file" accept="image/*" hidden />
           </section>
 
           <section class="screen" id="anti">
             <div class="helper-copy">
-              <span id="antiHint">Genera la visione opposta: non per spaventarti, ma per rendere visibile il costo del rimandare.</span>
+              <span id="antiHint">Generate the opposite vision: not to scare you, but to make the cost of delay visible.</span>
             </div>
 
             <article class="deck-stage negative">
               <div class="deck-head">
                 <span class="deck-kicker">Anti-vision AI deck</span>
-                <h2 id="antiTitle">La vita che non vuoi scegliere</h2>
+                <h2 id="antiTitle">The life you do not want to choose</h2>
               </div>
               <div class="deck-strip" id="antiDeck"></div>
             </article>
 
             <div class="deck-actions">
-              <button class="btn" id="generateAnti" type="button">Genera AI</button>
-              <button class="btn secondary" id="uploadAntiPhoto" type="button">Foto</button>
-              <button class="btn secondary" id="editAntiDeck" type="button">Modifica</button>
+              <button class="btn" id="generateAnti" type="button">Generate AI</button>
+              <button class="btn secondary" id="uploadAntiPhoto" type="button">Photo</button>
+              <button class="btn secondary" id="editAntiDeck" type="button">Edit</button>
             </div>
             <input id="antiPhotoInput" type="file" accept="image/*" hidden />
           </section>
 
           <section class="screen" id="pro">
             <div class="paywall">
-              <button class="paywall-close" id="closePro" type="button" aria-label="Chiudi Pro">x</button>
-              <div class="paywall-tabs" aria-label="Piani">
+              <button class="paywall-close" id="closePro" type="button" aria-label="Close Pro">x</button>
+              <div class="paywall-tabs" aria-label="Plans">
                 <button type="button">Premium</button>
                 <button class="active" type="button">Premium + AI</button>
               </div>
 
               <div class="paywall-head">
                 <div class="ghost-bird" aria-hidden="true"></div>
-                <h1>Visualizza meglio con Visualize.</h1>
-                <p>con <em>AI guidata</em> per obiettivi, immagini e script.</p>
+                <h1>Visualize better with Visualize.</h1>
+                <p>with <em>guided AI</em> for goals, images, and scripts.</p>
               </div>
 
               <div class="feature-card">
                 <div class="feature-row">
                   <div class="feature-icon">P</div>
                   <div>
-                    <strong>Vision personalizzate</strong>
-                    <span>Prompt su misura per vedere la vita che vuoi costruire.</span>
+                    <strong>Personalized visions</strong>
+                    <span>Custom prompts to see the life you want to build.</span>
                   </div>
                   <div class="ai-badge">AI</div>
                 </div>
                 <div class="feature-row">
                   <div class="feature-icon">A</div>
                   <div>
-                    <strong>Analisi riflessiva</strong>
-                    <span>Trova pattern tra mantra, rinvii e obiettivi ricorrenti.</span>
+                    <strong>Reflective analysis</strong>
+                    <span>Find patterns across mantras, delays, and recurring goals.</span>
                   </div>
                   <div class="ai-badge">AI</div>
                 </div>
                 <div class="feature-row">
                   <div class="feature-icon">S</div>
                   <div>
-                    <strong>Script audio smart</strong>
-                    <span>Tracce mindset adattate al tuo obiettivo principale.</span>
+                    <strong>Smart audio scripts</strong>
+                    <span>Mindset tracks adapted to your main objective.</span>
                   </div>
                   <div class="ai-badge">AI</div>
                 </div>
@@ -1421,57 +1439,69 @@
           <div class="drawer-head">
             <div>
               <p>Visualize</p>
-              <h2>Profilo</h2>
+              <h2>Profile</h2>
             </div>
-            <button class="drawer-close" id="closeProfile" type="button" aria-label="Chiudi profilo">x</button>
+            <button class="drawer-close" id="closeProfile" type="button" aria-label="Close profile">x</button>
           </div>
 
           <div class="profile-card">
             <h2>Samuele</h2>
-            <p>Preferenze salvate su questo dispositivo.</p>
-            <div class="theme-choice" aria-label="Tema app">
+            <p>Preferences saved on this device.</p>
+            <div class="theme-choice" aria-label="App theme">
               <button id="themeLight" type="button">Light</button>
               <button id="themeDark" type="button">Dark</button>
             </div>
           </div>
 
           <div class="profile-card">
-            <h2>Impostazioni</h2>
+            <h2>Settings</h2>
             <div class="setting-row">
               <div>
-                <strong>Promemoria giornaliero</strong>
-                <span>Richiamo leggero per aprire la vision.</span>
+                <strong>Daily reminder</strong>
+                <span>A gentle nudge to open your vision.</span>
               </div>
-              <button class="switch" id="dailyReminder" type="button" aria-label="Promemoria giornaliero"></button>
+              <button class="switch" id="dailyReminder" type="button" aria-label="Daily reminder"></button>
             </div>
             <div class="setting-row">
               <div>
-                <strong>Audio piu lento</strong>
-                <span>Traccia mindset con ritmo piu calmo.</span>
+                <strong>Slower audio</strong>
+                <span>Mindset track with a calmer rhythm.</span>
               </div>
-              <button class="switch" id="slowAudio" type="button" aria-label="Audio piu lento"></button>
+              <button class="switch" id="slowAudio" type="button" aria-label="Slower audio"></button>
             </div>
             <div class="setting-row">
               <div>
-                <strong>Salvataggio locale</strong>
-                <span>Goal, mantra e foto restano nel browser.</span>
+                <strong>Local saving</strong>
+                <span>Goals, decks, and photos stay in this browser.</span>
               </div>
-              <button class="switch on" type="button" aria-label="Salvataggio locale attivo" disabled></button>
+              <button class="switch on" type="button" aria-label="Local saving enabled" disabled></button>
             </div>
           </div>
 
           <div class="profile-card">
-            <h2>Dati</h2>
-            <p>Puoi riportare il prototipo allo stato iniziale quando vuoi.</p>
+            <h2>Language</h2>
+            <p>Interface language for the full app. English is active for this prototype.</p>
+            <div class="language-grid" aria-label="App language">
+              <button data-lang="en" type="button">English</button>
+              <button data-lang="es" type="button">Spanish</button>
+              <button data-lang="fr" type="button">French</button>
+              <button data-lang="pt" type="button">Portuguese</button>
+              <button data-lang="zh" type="button">Chinese</button>
+            </div>
+          </div>
+
+          <div class="profile-card">
+            <h2>Data</h2>
+            <p>You can return the prototype to its initial state whenever you want.</p>
             <div class="action-row">
               <button class="btn secondary" id="resetData" type="button">Reset</button>
-              <button class="btn" id="saveProfile" type="button">Salva</button>
+              <button class="btn" id="saveProfile" type="button">Save</button>
             </div>
           </div>
 
           <div class="profile-card">
             <h2>Upgrade</h2>
-            <p>Apri le opzioni Pro + AI per immagini, script e visualizzazioni generate.</p>
+            <p>Open Pro + AI options for generated images, scripts, and visualizations.</p>
             <div class="action-row">
               <button class="btn" id="openProFromProfile" type="button">Pro + AI</button>
             </div>
@@ -1481,41 +1511,44 @@
         <nav class="nav" aria-label="Navigazione principale">
           <button class="active" data-view="today">Goal</button>
           <button data-view="vision">Vision</button>
-          <button class="plus-nav" id="addGoalNav" type="button" aria-label="Aggiungi goal">+</button>
+          <button class="plus-nav" id="addGoalNav" type="button" aria-label="Add goal">+</button>
           <button data-view="anti">Anti</button>
-          <button id="profileNav" type="button">Profilo</button>
+          <button id="profileNav" type="button">Profile</button>
         </nav>
       </div>
     </div>
 
-    <div class="toast" id="toast">Fatto</div>
+    <div class="toast" id="toast">Done</div>
 
     <script>
       const defaults = {
-        goalTitle: "Scrivi cosa vuoi vedere prima di viverlo.",
-        goalText: "Tieni in vista pochi obiettivi chiari. Vision e Anti-vision useranno questa lista per creare le presentazioni.",
-        goals: ["Fisico forte e sano", "Business stabile", "Casa e relazioni migliori"],
-        mantra: "Sono il tipo di persona che mantiene le promesse fatte a se stesso.",
-        visionTitle: "La versione che stai costruendo",
-        antiTitle: "La vita che non vuoi scegliere",
+        appVersion: "en-v1",
+        goalTitle: "Write what you want to see before you live it.",
+        goalText: "Keep a few clear goals in sight. Vision and Anti-vision use this list to build your presentations.",
+        goals: ["Strong healthy body", "Stable business", "Better home and relationships"],
+        mantra: "I am the kind of person who keeps promises to myself.",
+        visionTitle: "The version you are building",
+        antiTitle: "The life you do not want to choose",
         visionSlides: [
-          { title: "Identita", caption: "Ti muovi come chi ha gia deciso.", image: "" },
-          { title: "Ambiente", caption: "La giornata riflette i tuoi standard.", image: "" },
-          { title: "Risultato", caption: "I goal diventano prove visibili.", image: "" }
+          { title: "Identity", caption: "You move like someone who has already decided.", image: "" },
+          { title: "Environment", caption: "Your day reflects your standards.", image: "" },
+          { title: "Result", caption: "Your goals become visible proof.", image: "" }
         ],
         antiSlides: [
-          { title: "Rinvio", caption: "Ogni settimana uguale alla precedente.", image: "" },
-          { title: "Costo", caption: "Energia dispersa e meno fiducia.", image: "" },
-          { title: "Segnale", caption: "La scena ti riporta alla scelta giusta.", image: "" }
+          { title: "Delay", caption: "Every week looks like the one before.", image: "" },
+          { title: "Cost", caption: "Energy scattered and confidence reduced.", image: "" },
+          { title: "Signal", caption: "The scene pulls you back to the right choice.", image: "" }
         ],
         settings: {
           theme: "light",
           dailyReminder: true,
-          slowAudio: true
+          slowAudio: true,
+          language: "en"
         }
       };
 
-      const savedState = JSON.parse(localStorage.getItem("visualize-simple-v1") || "null");
+      const storedState = JSON.parse(localStorage.getItem("visualize-simple-v1") || "null");
+      const savedState = storedState && storedState.appVersion === defaults.appVersion ? storedState : null;
       const state = {
         ...defaults,
         ...(savedState || {}),
@@ -1559,6 +1592,9 @@
         document.getElementById("themeDark").classList.toggle("active", state.settings.theme === "dark");
         document.getElementById("dailyReminder").classList.toggle("on", state.settings.dailyReminder);
         document.getElementById("slowAudio").classList.toggle("on", state.settings.slowAudio);
+        document.querySelectorAll("[data-lang]").forEach((button) => {
+          button.classList.toggle("active", button.dataset.lang === state.settings.language);
+        });
       }
 
       function slideBackground(kind, index, image) {
@@ -1630,12 +1666,19 @@
 
       function speak(text) {
         if (!("speechSynthesis" in window)) {
-          notify("Audio non supportato");
+          notify("Audio not supported");
           return;
         }
+        const voiceLang = {
+          en: "en-US",
+          es: "es-ES",
+          fr: "fr-FR",
+          pt: "pt-PT",
+          zh: "zh-CN"
+        }[state.settings.language] || "en-US";
         speechSynthesis.cancel();
         const voice = new SpeechSynthesisUtterance(text);
-        voice.lang = "it-IT";
+        voice.lang = voiceLang;
         voice.rate = state.settings.slowAudio ? 0.82 : 0.94;
         speechSynthesis.speak(voice);
       }
@@ -1643,28 +1686,28 @@
       function speakMain() {
         const script = [
           state.mantra,
-          "I tuoi goal principali sono:",
+          "Your main goals are:",
           state.goals.join(". "),
-          "Visualizza la scena positiva e poi guarda con lucidita cosa succede se rimandi."
+          "Visualize the positive scene, then look clearly at what happens if you delay."
         ].join(" ");
         speak(script);
       }
 
       function addGoal() {
         if (state.goals.length >= 4) {
-          notify("Massimo 4 goal in questa vista");
+          notify("Maximum 4 goals in this view");
           return;
         }
-        const goal = prompt("Scrivi un goal", "");
+        const goal = prompt("Write a goal", "");
         if (!goal || !goal.trim()) return;
         state.goals.push(goal.trim());
         save();
         paint();
-        notify("Goal aggiunto");
+        notify("Goal added");
       }
 
       function editGoal(index) {
-        const next = prompt("Modifica goal. Lascia vuoto per eliminarlo.", state.goals[index]);
+        const next = prompt("Edit goal. Leave empty to delete it.", state.goals[index]);
         if (next === null) return;
         if (!next.trim()) {
           state.goals.splice(index, 1);
@@ -1673,25 +1716,25 @@
         }
         save();
         paint();
-        notify("Goal aggiornato");
+        notify("Goal updated");
       }
 
       function generateDeck(kind) {
         const source = state.goals.length ? state.goals : defaults.goals;
         if (kind === "vision") {
           state.visionSlides = [
-            { title: source[0] || "Identita", caption: "L'immagine della persona che agisce con standard piu alti.", image: "" },
-            { title: source[1] || "Ambiente", caption: "Una scena concreta della vita che vuoi costruire.", image: "" },
-            { title: source[2] || "Risultato", caption: "Il momento in cui il goal diventa visibile e quotidiano.", image: "" }
+            { title: source[0] || "Identity", caption: "The image of a person acting from higher standards.", image: "" },
+            { title: source[1] || "Environment", caption: "A concrete scene from the life you want to build.", image: "" },
+            { title: source[2] || "Result", caption: "The moment your goal becomes visible and daily.", image: "" }
           ];
-          notify("Vision deck generato");
+          notify("Vision deck generated");
         } else {
           state.antiSlides = [
-            { title: source[0] || "Rinvio", caption: "La versione spenta se questo goal resta sempre domani.", image: "" },
-            { title: source[1] || "Costo", caption: "L'ambiente che si crea quando non scegli davvero.", image: "" },
-            { title: source[2] || "Conseguenza", caption: "Una scena scomoda che ti rimette nella direzione giusta.", image: "" }
+            { title: source[0] || "Delay", caption: "The faded version if this goal always stays tomorrow.", image: "" },
+            { title: source[1] || "Cost", caption: "The environment created when you never truly choose.", image: "" },
+            { title: source[2] || "Consequence", caption: "An uncomfortable scene that pulls you back to the right direction.", image: "" }
           ];
-          notify("Anti-vision deck generato");
+          notify("Anti-vision deck generated");
         }
         save();
         paint();
@@ -1699,15 +1742,15 @@
 
       function editDeck(kind) {
         const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
-        const selected = Number(prompt("Quale slide vuoi modificare? 1, 2 o 3", "1")) - 1;
+        const selected = Number(prompt("Which slide do you want to edit? 1, 2, or 3", "1")) - 1;
         if (!Number.isInteger(selected) || selected < 0 || selected > 2) return;
-        const title = prompt("Titolo slide", deck[selected].title);
+        const title = prompt("Slide title", deck[selected].title);
         if (title && title.trim()) deck[selected].title = title.trim();
-        const caption = prompt("Testo slide", deck[selected].caption);
+        const caption = prompt("Slide text", deck[selected].caption);
         if (caption && caption.trim()) deck[selected].caption = caption.trim();
         save();
         paint();
-        notify("Slide aggiornata");
+        notify("Slide updated");
       }
 
       function uploadDeckPhoto(kind) {
@@ -1723,7 +1766,7 @@
           deck[0].image = reader.result;
           save();
           paint();
-          notify("Foto aggiunta alla prima slide");
+          notify("Photo added to the first slide");
         };
         reader.readAsDataURL(file);
       }
@@ -1759,38 +1802,47 @@
         state.settings.theme = "light";
         save();
         applySettings();
-        notify("Tema light");
+        notify("Light mode");
       });
 
       document.getElementById("themeDark").addEventListener("click", () => {
         state.settings.theme = "dark";
         save();
         applySettings();
-        notify("Tema dark");
+        notify("Dark mode");
+      });
+
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.settings.language = button.dataset.lang;
+          save();
+          applySettings();
+          notify(`${button.textContent} selected`);
+        });
       });
 
       document.getElementById("dailyReminder").addEventListener("click", () => {
         state.settings.dailyReminder = !state.settings.dailyReminder;
         save();
         applySettings();
-        notify(state.settings.dailyReminder ? "Promemoria attivo" : "Promemoria spento");
+        notify(state.settings.dailyReminder ? "Reminder on" : "Reminder off");
       });
 
       document.getElementById("slowAudio").addEventListener("click", () => {
         state.settings.slowAudio = !state.settings.slowAudio;
         save();
         applySettings();
-        notify(state.settings.slowAudio ? "Audio lento" : "Audio normale");
+        notify(state.settings.slowAudio ? "Slow audio" : "Normal audio");
       });
 
       document.getElementById("saveProfile").addEventListener("click", () => {
         save();
         closeProfile();
-        notify("Profilo salvato");
+        notify("Profile saved");
       });
 
       document.getElementById("resetData").addEventListener("click", () => {
-        if (!confirm("Vuoi riportare il prototipo allo stato iniziale?")) return;
+        if (!confirm("Do you want to reset the prototype to its initial state?")) return;
         localStorage.removeItem("visualize-simple-v1");
         window.location.reload();
       });
