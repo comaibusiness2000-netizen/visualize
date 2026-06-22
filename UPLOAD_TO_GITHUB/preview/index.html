@@ -131,20 +131,27 @@
       .topbar {
         min-height: 44px;
         display: grid;
-        grid-template-columns: 64px 1fr 48px;
+        grid-template-columns: 64px 1fr 64px;
         align-items: center;
         gap: 8px;
       }
 
       .tiny-toggle {
-        width: 58px;
-        height: 30px;
+        width: 44px;
+        height: 44px;
         border: 1px solid var(--line);
-        border-radius: 999px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
         color: var(--ink);
         background: var(--control);
-        font-size: 13px;
-        font-weight: 900;
+        box-shadow: 0 8px 18px rgba(17, 17, 17, 0.08);
+      }
+
+      .tiny-toggle svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
       }
 
       .brand-logo {
@@ -1328,7 +1335,13 @@
       <div class="phone">
         <main class="app">
           <div class="topbar">
-            <button class="tiny-toggle" id="listenBtn" aria-label="Play audio">&gt;</button>
+            <button class="tiny-toggle" id="listenBtn" type="button" aria-label="Audio guide" title="Audio guide">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 10v4h4l5 4V6l-5 4H4Z"></path>
+                <path d="M16 9.5a4 4 0 0 1 0 5"></path>
+                <path d="M18.5 7a7 7 0 0 1 0 10"></path>
+              </svg>
+            </button>
             <img class="brand-logo" src="./icon.svg" alt="Visualize" />
           </div>
 
