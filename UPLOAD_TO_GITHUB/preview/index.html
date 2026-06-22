@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="manifest" href="./manifest.webmanifest?v=12" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,9 +12,50 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
+      const VISUALIZE_APP_VERSION = "2026-06-22-v12";
+
+      if ("caches" in window) {
+        try {
+          const savedVersion = localStorage.getItem("visualizeAppVersion");
+          if (savedVersion !== VISUALIZE_APP_VERSION) {
+            caches.keys().then((keys) => {
+              keys
+                .filter((key) => key.startsWith("visualize-preview-"))
+                .forEach((key) => caches.delete(key));
+            });
+            localStorage.setItem("visualizeAppVersion", VISUALIZE_APP_VERSION);
+          }
+        } catch (error) {}
+      }
+
       if ("serviceWorker" in navigator) {
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+
         window.addEventListener("load", () => {
-          navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+          navigator.serviceWorker
+            .register("./service-worker.js?v=12")
+            .then((registration) => {
+              registration.update();
+              if (registration.waiting) {
+                registration.waiting.postMessage({ type: "SKIP_WAITING" });
+              }
+
+              registration.addEventListener("updatefound", () => {
+                const worker = registration.installing;
+                if (!worker) return;
+                worker.addEventListener("statechange", () => {
+                  if (worker.state === "installed" && navigator.serviceWorker.controller) {
+                    worker.postMessage({ type: "SKIP_WAITING" });
+                  }
+                });
+              });
+            })
+            .catch(() => {});
         });
       }
     </script>
