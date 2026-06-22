@@ -153,20 +153,6 @@
         box-shadow: 0 8px 18px rgba(17, 17, 17, 0.12);
       }
 
-      .profile-dot {
-        width: 42px;
-        height: 42px;
-        border: 0;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        justify-self: end;
-        color: #fff;
-        background: var(--ink);
-        font-size: 17px;
-        font-weight: 950;
-      }
-
       .week-row {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
@@ -1325,7 +1311,6 @@
           <div class="topbar">
             <button class="tiny-toggle" id="listenBtn" aria-label="Play audio">&gt;</button>
             <img class="brand-logo" src="./icon.svg" alt="Visualize" />
-            <button class="profile-dot" id="profileBtn" aria-label="Open profile">S</button>
           </div>
 
           <section class="screen active" id="today">
@@ -1776,7 +1761,6 @@
       });
 
       document.getElementById("listenBtn").addEventListener("click", speakMain);
-      document.getElementById("profileBtn").addEventListener("click", openProfile);
       document.getElementById("profileNav").addEventListener("click", openProfile);
       document.getElementById("closeProfile").addEventListener("click", closeProfile);
       document.getElementById("profileScrim").addEventListener("click", closeProfile);
