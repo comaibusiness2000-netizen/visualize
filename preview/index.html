@@ -1079,39 +1079,28 @@
       <div class="phone">
         <main class="app">
           <div class="topbar">
-            <button class="tiny-toggle" id="listenBtn" aria-label="Ascolta traccia">o o</button>
-            <div class="greeting">good evening.</div>
+            <button class="tiny-toggle" id="listenBtn" aria-label="Ascolta traccia">&gt;</button>
+            <div class="greeting">visualize.</div>
             <button class="profile-dot" id="profileBtn" aria-label="Apri profilo">S</button>
           </div>
 
           <section class="screen active" id="today">
-            <div class="week-row" aria-label="Settimana">
-              <div class="day">Su<br /><strong>13</strong></div>
-              <div class="day">Mo<br /><strong>14</strong></div>
-              <div class="day">Tu<br /><strong>15</strong></div>
-              <div class="day">We<br /><strong>16</strong></div>
-              <div class="day">Th<br /><strong>17</strong></div>
-              <div class="day">Fr<br /><strong>18</strong></div>
-              <div class="day active">Sa<br /><strong>19</strong></div>
-            </div>
-
             <article class="hero-card">
               <div class="hero-figure" aria-hidden="true"></div>
               <div>
-                <div class="pretitle">Future<br />Preparation</div>
-                <h1 id="goalTitle">New day, clear vision.</h1>
-                <button class="begin-btn" id="beginVision" type="button">Begin</button>
+                <div class="pretitle">Goal<br />Visualization</div>
+                <h1 id="goalTitle">La tua prossima vita, vista prima.</h1>
+                <button class="begin-btn" id="beginVision" type="button">Vision</button>
               </div>
             </article>
 
             <article class="reflection-card">
-              <h2>on future self.</h2>
-              <span class="day-count">Day 6 of 7</span>
+              <h2>visualizzazione goal.</h2>
               <p id="goalText">Ogni giorno torni all'immagine della persona che stai costruendo.</p>
-              <button class="reflect-btn" id="reflectBtn" type="button">Reflect</button>
+              <button class="reflect-btn" id="reflectBtn" type="button">Apri Vision</button>
             </article>
 
-            <div class="inspired-label">GET INSPIRED</div>
+            <div class="inspired-label">MANTRA</div>
 
             <div class="quiet-panel">
               <div class="mantra-row">
@@ -1120,18 +1109,18 @@
               </div>
 
               <div class="route-list">
-                <button class="route" data-view="journey" type="button">
+                <button class="route" data-view="vision" type="button">
                   <div class="route-dot"></div>
                   <div>
-                    <strong>Apri la journey</strong>
-                    <span>Vision, anti-vision e cambiamenti principali in un percorso unico.</span>
+                    <strong>Vision</strong>
+                    <span>Guarda come cambia la tua vita se segui la direzione giusta.</span>
                   </div>
                 </button>
-                <button class="route" data-view="inspirations" type="button">
+                <button class="route" data-view="anti" type="button">
                   <div class="route-dot anti"></div>
                   <div>
-                    <strong>Vai alle inspirations</strong>
-                    <span>Una frase visuale da assorbire e trasformare in mantra.</span>
+                    <strong>Anti-vision</strong>
+                    <span>Vedi il costo di rimandare e torna alla scelta migliore.</span>
                   </div>
                 </button>
               </div>
@@ -1139,23 +1128,7 @@
             </div>
           </section>
 
-          <section class="screen" id="inspirations">
-            <div class="for-you-row">
-              <div class="for-you-pill">For You</div>
-              <button class="round-mini" id="editInspiration" type="button">edit</button>
-              <button class="round-mini" id="playInspiration" type="button">play</button>
-            </div>
-
-            <article class="inspiration-card">
-              <div class="sun-dot"></div>
-              <h1 class="inspiration-text" id="inspirationText">I am becoming the person I have been visualizing.</h1>
-              <div class="inspiration-orb"></div>
-              <div class="scroll-hint">scroll up for<br />more inspirations</div>
-              <button class="embrace-btn" id="embraceThought" type="button">Embrace the Thought</button>
-            </article>
-          </section>
-
-          <section class="screen" id="library">
+          <section class="legacy-screen" id="unused-library" hidden>
             <div class="article-head">
               <button class="back-btn" data-view="today" type="button">‹</button>
               <h1 class="article-title">Why Visualization Exercises Work?</h1>
@@ -1170,7 +1143,7 @@
             </article>
           </section>
 
-          <section class="screen" id="journey">
+          <section class="screen" id="vision">
             <div class="quiet-panel">
               <h2>visualize.<br />the life ahead</h2>
               <p id="visionText">Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.</p>
@@ -1188,7 +1161,9 @@
             <input id="photoInput" type="file" accept="image/*" hidden />
 
             <div class="list" id="changeList"></div>
+          </section>
 
+          <section class="screen" id="anti">
             <div class="quiet-panel">
               <h2>meet the cost<br />of waiting.</h2>
               <p id="antiText">Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola.</p>
@@ -1305,7 +1280,7 @@
 
           <div class="profile-card">
             <h2>Upgrade</h2>
-            <p>Apri la schermata Pro + AI ispirata al paywall che hai selezionato.</p>
+            <p>Apri le opzioni Pro + AI per immagini, script e visualizzazioni generate.</p>
             <div class="action-row">
               <button class="btn" id="openProFromProfile" type="button">Pro + AI</button>
             </div>
@@ -1313,11 +1288,11 @@
         </aside>
 
         <nav class="nav" aria-label="Navigazione principale">
-          <button class="active" data-view="today">Today</button>
-          <button data-view="inspirations">Inspirations</button>
+          <button class="active" data-view="today">Goal</button>
+          <button data-view="vision">Vision</button>
           <button class="plus-nav" id="addMantraNav" type="button" aria-label="Aggiungi mantra">+</button>
-          <button data-view="library">Library</button>
-          <button data-view="journey">Journey</button>
+          <button data-view="anti">Anti</button>
+          <button id="profileNav" type="button">Profilo</button>
         </nav>
       </div>
     </div>
@@ -1326,10 +1301,9 @@
 
     <script>
       const defaults = {
-        goalTitle: "New day, clear vision.",
+        goalTitle: "La tua prossima vita, vista prima.",
         goalText: "Ogni giorno torni all'immagine della persona che stai costruendo.",
         mantra: "Sono il tipo di persona che mantiene le promesse fatte a se stesso.",
-        inspiration: "I am becoming the person I have been visualizing.",
         visionTitle: "Energia, disciplina e liberta",
         visionText: "Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.",
         changes: [
@@ -1390,7 +1364,6 @@
         document.getElementById("goalTitle").textContent = state.goalTitle;
         document.getElementById("goalText").textContent = state.goalText;
         document.getElementById("mantraText").textContent = state.mantra;
-        document.getElementById("inspirationText").textContent = state.inspiration;
         document.getElementById("visionTitle").textContent = state.visionTitle;
         document.getElementById("visionText").textContent = state.visionText;
         document.getElementById("antiText").textContent = state.antiText;
@@ -1462,7 +1435,6 @@
         const mantra = prompt("Aggiungi una frase mantra", state.mantra);
         if (!mantra || !mantra.trim()) return;
         state.mantra = mantra.trim();
-        state.inspiration = mantra.trim();
         save();
         paint();
         notify("Mantra aggiunto");
@@ -1474,20 +1446,13 @@
 
       document.getElementById("listenBtn").addEventListener("click", speakMain);
       document.getElementById("profileBtn").addEventListener("click", openProfile);
+      document.getElementById("profileNav").addEventListener("click", openProfile);
       document.getElementById("closeProfile").addEventListener("click", closeProfile);
       document.getElementById("profileScrim").addEventListener("click", closeProfile);
-      document.getElementById("beginVision").addEventListener("click", () => setView("journey"));
-      document.getElementById("reflectBtn").addEventListener("click", () => setView("inspirations"));
+      document.getElementById("beginVision").addEventListener("click", () => setView("vision"));
+      document.getElementById("reflectBtn").addEventListener("click", () => setView("vision"));
       document.getElementById("addMantra").addEventListener("click", addMantra);
       document.getElementById("addMantraNav").addEventListener("click", addMantra);
-      document.getElementById("embraceThought").addEventListener("click", () => {
-        state.mantra = state.inspiration;
-        save();
-        paint();
-        notify("Pensiero salvato");
-      });
-      document.getElementById("editInspiration").addEventListener("click", addMantra);
-      document.getElementById("playInspiration").addEventListener("click", () => speak(state.inspiration));
       document.getElementById("openProFromGoal").addEventListener("click", () => setView("pro"));
       document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
       document.getElementById("closePro").addEventListener("click", () => setView("today"));
