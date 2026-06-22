@@ -411,6 +411,213 @@
         font-weight: 650;
       }
 
+      .goal-hero,
+      .deck-stage {
+        overflow: hidden;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 18px 38px rgba(17, 17, 17, 0.08);
+      }
+
+      body[data-theme="dark"] .goal-hero,
+      body[data-theme="dark"] .deck-stage {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .goal-hero {
+        min-height: 214px;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: 16px;
+        padding: 26px 24px;
+        color: #fff;
+        background:
+          linear-gradient(180deg, rgba(17, 17, 17, 0.12), rgba(17, 17, 17, 0.76)),
+          linear-gradient(145deg, #111, #da5a3a 62%, #e8c468);
+        text-align: center;
+      }
+
+      .goal-hero span,
+      .deck-kicker {
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 12px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+
+      .goal-hero h1 {
+        max-width: 310px;
+        font-size: 30px;
+        line-height: 1.06;
+        font-weight: 950;
+      }
+
+      .goal-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .goal-item {
+        min-height: 48px;
+        display: grid;
+        grid-template-columns: 28px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.44);
+        text-align: left;
+      }
+
+      body[data-theme="dark"] .goal-item {
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .goal-index {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: #fff;
+        background: var(--ink);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .goal-item strong {
+        display: block;
+        font-size: 15px;
+        line-height: 1.15;
+      }
+
+      .goal-item span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .mini-link {
+        border: 0;
+        color: var(--muted);
+        background: transparent;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .helper-copy {
+        min-height: 56px;
+        display: grid;
+        place-items: center;
+        padding: 0 18px;
+        text-align: center;
+      }
+
+      .helper-copy span {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.35;
+        font-weight: 850;
+        animation: helperPulse 4.8s ease-in-out infinite;
+      }
+
+      @keyframes helperPulse {
+        0%, 100% {
+          opacity: 0.34;
+          transform: translateY(3px);
+        }
+        45%, 65% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .deck-stage {
+        min-height: 390px;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 12px;
+        padding: 18px;
+      }
+
+      .deck-stage.positive {
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.66)),
+          linear-gradient(145deg, rgba(232, 196, 104, 0.34), rgba(218, 90, 58, 0.16));
+      }
+
+      .deck-stage.negative {
+        color: #fff;
+        background:
+          linear-gradient(180deg, rgba(17, 17, 17, 0.28), rgba(17, 17, 17, 0.82)),
+          linear-gradient(145deg, #171717, #3a2020 64%, #111);
+      }
+
+      .deck-head {
+        text-align: center;
+      }
+
+      .deck-stage.negative .deck-kicker,
+      .deck-stage.negative .deck-card span {
+        color: rgba(255, 255, 255, 0.66);
+      }
+
+      .deck-head h2 {
+        margin-top: 5px;
+        font-size: 25px;
+        line-height: 1.08;
+        font-weight: 950;
+      }
+
+      .deck-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        min-height: 0;
+      }
+
+      .deck-card {
+        min-width: 0;
+        min-height: 228px;
+        display: grid;
+        align-content: end;
+        gap: 5px;
+        overflow: hidden;
+        border-radius: 18px;
+        padding: 10px;
+        color: #fff;
+        background:
+          linear-gradient(180deg, rgba(17, 17, 17, 0.02), rgba(17, 17, 17, 0.76)),
+          var(--slide-bg, linear-gradient(145deg, #111, #da5a3a));
+        background-size: cover;
+        background-position: center;
+      }
+
+      .deck-card strong {
+        font-size: 14px;
+        line-height: 1.06;
+      }
+
+      .deck-card span {
+        font-size: 11px;
+        line-height: 1.25;
+        font-weight: 750;
+      }
+
+      .deck-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+      }
+
+      .deck-actions .btn {
+        min-height: 42px;
+        font-size: 13px;
+      }
+
       .for-you-row {
         position: relative;
         display: flex;
@@ -1104,80 +1311,60 @@
           </div>
 
           <section class="screen active" id="today">
-            <article class="hero-card">
-              <div class="hero-figure" aria-hidden="true"></div>
-              <div>
-                <div class="pretitle">Goal<br />Visualization</div>
-                <h1 id="goalTitle">La tua prossima vita, vista prima.</h1>
-                <button class="begin-btn" id="beginVision" type="button">Vision</button>
-              </div>
+            <article class="goal-hero">
+              <span>Goal board</span>
+              <h1 id="goalTitle">Scrivi cosa vuoi vedere prima di viverlo.</h1>
+              <button class="begin-btn" id="addGoal" type="button">+ Goal</button>
             </article>
 
             <article class="reflection-card">
-              <h2>visualizzazione goal.</h2>
-              <p id="goalText">Ogni giorno torni all'immagine della persona che stai costruendo.</p>
-              <button class="reflect-btn" id="reflectBtn" type="button">Apri Vision</button>
+              <h2>obiettivi scritti.</h2>
+              <p id="goalText">Tieni in vista pochi obiettivi chiari. Vision e Anti-vision useranno questa lista per creare le presentazioni.</p>
             </article>
 
-            <div class="inspired-label">MANTRA</div>
-
-            <div class="quiet-panel">
-              <div class="mantra-row">
-                <p id="mantraText">Sono il tipo di persona che mantiene le promesse fatte a se stesso.</p>
-                <button class="plus-btn" id="addMantra" aria-label="Aggiungi mantra">+</button>
-              </div>
-
-              <div class="route-list">
-                <button class="route" data-view="vision" type="button">
-                  <div class="route-dot"></div>
-                  <div>
-                    <strong>Vision</strong>
-                    <span>Guarda come cambia la tua vita se segui la direzione giusta.</span>
-                  </div>
-                </button>
-                <button class="route" data-view="anti" type="button">
-                  <div class="route-dot anti"></div>
-                  <div>
-                    <strong>Anti-vision</strong>
-                    <span>Vedi il costo di rimandare e torna alla scelta migliore.</span>
-                  </div>
-                </button>
-              </div>
-              <button class="upgrade-link" id="openProFromGoal" type="button">Sblocca visualizzazioni AI</button>
-            </div>
+            <div class="goal-list" id="goalList"></div>
           </section>
 
           <section class="screen" id="vision">
-            <div class="quiet-panel">
-              <h2>Vision<br />future self</h2>
-              <p id="visionText">Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.</p>
+            <div class="helper-copy">
+              <span id="visionHint">Genera una catena di immagini positive dai tuoi goal. Poi modifichi ogni slide come una mini presentazione.</span>
             </div>
 
-            <article class="vision-visual" id="visionPhoto">
-              <span>Future self</span>
-              <h2 id="visionTitle">Energia, disciplina e liberta</h2>
+            <article class="deck-stage positive">
+              <div class="deck-head">
+                <span class="deck-kicker">Vision AI deck</span>
+                <h2 id="visionTitle">La versione che stai costruendo</h2>
+              </div>
+              <div class="deck-strip" id="visionDeck"></div>
             </article>
 
-            <div class="action-row">
-              <button class="btn" id="editVision">Modifica</button>
-              <button class="btn secondary" id="uploadPhoto">Foto</button>
+            <div class="deck-actions">
+              <button class="btn" id="generateVision" type="button">Genera AI</button>
+              <button class="btn secondary" id="uploadVisionPhoto" type="button">Foto</button>
+              <button class="btn secondary" id="editVisionDeck" type="button">Modifica</button>
             </div>
-            <input id="photoInput" type="file" accept="image/*" hidden />
-
-            <div class="list" id="changeList"></div>
+            <input id="visionPhotoInput" type="file" accept="image/*" hidden />
           </section>
 
           <section class="screen" id="anti">
-            <div class="quiet-panel">
-              <h2>meet the cost<br />of waiting.</h2>
-              <p id="antiText">Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola.</p>
+            <div class="helper-copy">
+              <span id="antiHint">Genera la visione opposta: non per spaventarti, ma per rendere visibile il costo del rimandare.</span>
             </div>
 
-            <div class="anti-figure">
-              <div class="anti-shape"></div>
-            </div>
+            <article class="deck-stage negative">
+              <div class="deck-head">
+                <span class="deck-kicker">Anti-vision AI deck</span>
+                <h2 id="antiTitle">La vita che non vuoi scegliere</h2>
+              </div>
+              <div class="deck-strip" id="antiDeck"></div>
+            </article>
 
-            <div class="list" id="antiList"></div>
+            <div class="deck-actions">
+              <button class="btn" id="generateAnti" type="button">Genera AI</button>
+              <button class="btn secondary" id="uploadAntiPhoto" type="button">Foto</button>
+              <button class="btn secondary" id="editAntiDeck" type="button">Modifica</button>
+            </div>
+            <input id="antiPhotoInput" type="file" accept="image/*" hidden />
           </section>
 
           <section class="screen" id="pro">
@@ -1294,7 +1481,7 @@
         <nav class="nav" aria-label="Navigazione principale">
           <button class="active" data-view="today">Goal</button>
           <button data-view="vision">Vision</button>
-          <button class="plus-nav" id="addMantraNav" type="button" aria-label="Aggiungi mantra">+</button>
+          <button class="plus-nav" id="addGoalNav" type="button" aria-label="Aggiungi goal">+</button>
           <button data-view="anti">Anti</button>
           <button id="profileNav" type="button">Profilo</button>
         </nav>
@@ -1305,23 +1492,22 @@
 
     <script>
       const defaults = {
-        goalTitle: "La tua prossima vita, vista prima.",
-        goalText: "Ogni giorno torni all'immagine della persona che stai costruendo.",
+        goalTitle: "Scrivi cosa vuoi vedere prima di viverlo.",
+        goalText: "Tieni in vista pochi obiettivi chiari. Vision e Anti-vision useranno questa lista per creare le presentazioni.",
+        goals: ["Fisico forte e sano", "Business stabile", "Casa e relazioni migliori"],
         mantra: "Sono il tipo di persona che mantiene le promesse fatte a se stesso.",
-        visionTitle: "Energia, disciplina e liberta",
-        visionText: "Visualizza il risultato come se fosse gia vicino: ambiente, corpo, abitudini, relazioni e ritmo della giornata.",
-        changes: [
-          ["Energia", "Routine piu stabile, corpo piu presente."],
-          ["Ambiente", "Spazi e persone allineati ai tuoi obiettivi."],
-          ["Identita", "Meno promesse vuote, piu prove concrete."]
+        visionTitle: "La versione che stai costruendo",
+        antiTitle: "La vita che non vuoi scegliere",
+        visionSlides: [
+          { title: "Identita", caption: "Ti muovi come chi ha gia deciso.", image: "" },
+          { title: "Ambiente", caption: "La giornata riflette i tuoi standard.", image: "" },
+          { title: "Risultato", caption: "I goal diventano prove visibili.", image: "" }
         ],
-        antiText: "Se rimando ancora, tra un anno avro piu prove della mia esitazione e meno fiducia nella mia parola.",
-        antiPoints: [
-          ["Costo emotivo", "Ti abitui a non credere alle tue intenzioni."],
-          ["Costo pratico", "Le stesse scelte diventano piu difficili da recuperare."],
-          ["Costo identitario", "Rinvii abbastanza volte da confondere pausa e resa."]
+        antiSlides: [
+          { title: "Rinvio", caption: "Ogni settimana uguale alla precedente.", image: "" },
+          { title: "Costo", caption: "Energia dispersa e meno fiducia.", image: "" },
+          { title: "Segnale", caption: "La scena ti riporta alla scelta giusta.", image: "" }
         ],
-        photo: "",
         settings: {
           theme: "light",
           dailyReminder: true,
@@ -1337,8 +1523,9 @@
           ...defaults.settings,
           ...((savedState && savedState.settings) || {})
         },
-        changes: (savedState && savedState.changes) || defaults.changes,
-        antiPoints: (savedState && savedState.antiPoints) || defaults.antiPoints
+        goals: Array.isArray(savedState && savedState.goals) ? savedState.goals : defaults.goals,
+        visionSlides: Array.isArray(savedState && savedState.visionSlides) ? savedState.visionSlides : defaults.visionSlides,
+        antiSlides: Array.isArray(savedState && savedState.antiSlides) ? savedState.antiSlides : defaults.antiSlides
       };
       const toast = document.getElementById("toast");
 
@@ -1350,6 +1537,16 @@
         toast.textContent = text;
         toast.classList.add("show");
         setTimeout(() => toast.classList.remove("show"), 1600);
+      }
+
+      function escapeHtml(text) {
+        return String(text).replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[char]));
       }
 
       function applySettings() {
@@ -1364,38 +1561,50 @@
         document.getElementById("slowAudio").classList.toggle("on", state.settings.slowAudio);
       }
 
+      function slideBackground(kind, index, image) {
+        if (image) return `--slide-bg: url('${image}')`;
+        const vision = [
+          "linear-gradient(145deg, #111, #da5a3a 58%, #e8c468)",
+          "linear-gradient(145deg, #17201b, #6d8b62 56%, #e8c468)",
+          "linear-gradient(145deg, #101418, #7d88b8 56%, #da5a3a)"
+        ];
+        const anti = [
+          "linear-gradient(145deg, #050505, #4b2724 62%, #111)",
+          "linear-gradient(145deg, #111, #2d3338 58%, #5a392f)",
+          "linear-gradient(145deg, #070707, #22191a 58%, #6b2f25)"
+        ];
+        return `--slide-bg: ${(kind === "vision" ? vision : anti)[index % 3]}`;
+      }
+
+      function renderGoalList() {
+        document.getElementById("goalList").innerHTML = state.goals.slice(0, 4).map((goal, index) => `
+          <button class="goal-item" type="button" data-goal-index="${index}">
+            <span class="goal-index">${index + 1}</span>
+            <strong>${escapeHtml(goal)}</strong>
+            <span>edit</span>
+          </button>
+        `).join("");
+      }
+
+      function renderDeck(kind) {
+        const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
+        const id = kind === "vision" ? "visionDeck" : "antiDeck";
+        document.getElementById(id).innerHTML = deck.slice(0, 3).map((slide, index) => `
+          <div class="deck-card" style="${slideBackground(kind, index, slide.image)}">
+            <strong>${escapeHtml(slide.title)}</strong>
+            <span>${escapeHtml(slide.caption)}</span>
+          </div>
+        `).join("");
+      }
+
       function paint() {
         document.getElementById("goalTitle").textContent = state.goalTitle;
         document.getElementById("goalText").textContent = state.goalText;
-        document.getElementById("mantraText").textContent = state.mantra;
         document.getElementById("visionTitle").textContent = state.visionTitle;
-        document.getElementById("visionText").textContent = state.visionText;
-        document.getElementById("antiText").textContent = state.antiText;
-
-        document.getElementById("changeList").innerHTML = state.changes.map(([title, text], index) => `
-          <div class="list-item">
-            <div class="square ${index === 1 ? "rust" : ""}"></div>
-            <div>
-              <strong>${title}</strong>
-              <span>${text}</span>
-            </div>
-          </div>
-        `).join("");
-
-        document.getElementById("antiList").innerHTML = state.antiPoints.map(([title, text], index) => `
-          <div class="list-item">
-            <div class="square ${index === 1 ? "rust" : ""}"></div>
-            <div>
-              <strong>${title}</strong>
-              <span>${text}</span>
-            </div>
-          </div>
-        `).join("");
-
-        const image = state.photo
-          ? `linear-gradient(180deg, rgba(17,17,17,.08), rgba(17,17,17,.72)), url('${state.photo}')`
-          : "";
-        document.getElementById("visionPhoto").style.backgroundImage = image;
+        document.getElementById("antiTitle").textContent = state.antiTitle;
+        renderGoalList();
+        renderDeck("vision");
+        renderDeck("anti");
         applySettings();
       }
 
@@ -1432,16 +1641,91 @@
       }
 
       function speakMain() {
-        speak([state.mantra, state.goalTitle, state.goalText, state.visionText].join(" "));
+        const script = [
+          state.mantra,
+          "I tuoi goal principali sono:",
+          state.goals.join(". "),
+          "Visualizza la scena positiva e poi guarda con lucidita cosa succede se rimandi."
+        ].join(" ");
+        speak(script);
       }
 
-      function addMantra() {
-        const mantra = prompt("Aggiungi una frase mantra", state.mantra);
-        if (!mantra || !mantra.trim()) return;
-        state.mantra = mantra.trim();
+      function addGoal() {
+        if (state.goals.length >= 4) {
+          notify("Massimo 4 goal in questa vista");
+          return;
+        }
+        const goal = prompt("Scrivi un goal", "");
+        if (!goal || !goal.trim()) return;
+        state.goals.push(goal.trim());
         save();
         paint();
-        notify("Mantra aggiunto");
+        notify("Goal aggiunto");
+      }
+
+      function editGoal(index) {
+        const next = prompt("Modifica goal. Lascia vuoto per eliminarlo.", state.goals[index]);
+        if (next === null) return;
+        if (!next.trim()) {
+          state.goals.splice(index, 1);
+        } else {
+          state.goals[index] = next.trim();
+        }
+        save();
+        paint();
+        notify("Goal aggiornato");
+      }
+
+      function generateDeck(kind) {
+        const source = state.goals.length ? state.goals : defaults.goals;
+        if (kind === "vision") {
+          state.visionSlides = [
+            { title: source[0] || "Identita", caption: "L'immagine della persona che agisce con standard piu alti.", image: "" },
+            { title: source[1] || "Ambiente", caption: "Una scena concreta della vita che vuoi costruire.", image: "" },
+            { title: source[2] || "Risultato", caption: "Il momento in cui il goal diventa visibile e quotidiano.", image: "" }
+          ];
+          notify("Vision deck generato");
+        } else {
+          state.antiSlides = [
+            { title: source[0] || "Rinvio", caption: "La versione spenta se questo goal resta sempre domani.", image: "" },
+            { title: source[1] || "Costo", caption: "L'ambiente che si crea quando non scegli davvero.", image: "" },
+            { title: source[2] || "Conseguenza", caption: "Una scena scomoda che ti rimette nella direzione giusta.", image: "" }
+          ];
+          notify("Anti-vision deck generato");
+        }
+        save();
+        paint();
+      }
+
+      function editDeck(kind) {
+        const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
+        const selected = Number(prompt("Quale slide vuoi modificare? 1, 2 o 3", "1")) - 1;
+        if (!Number.isInteger(selected) || selected < 0 || selected > 2) return;
+        const title = prompt("Titolo slide", deck[selected].title);
+        if (title && title.trim()) deck[selected].title = title.trim();
+        const caption = prompt("Testo slide", deck[selected].caption);
+        if (caption && caption.trim()) deck[selected].caption = caption.trim();
+        save();
+        paint();
+        notify("Slide aggiornata");
+      }
+
+      function uploadDeckPhoto(kind) {
+        document.getElementById(kind === "vision" ? "visionPhotoInput" : "antiPhotoInput").click();
+      }
+
+      function handleDeckPhoto(kind, event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
+          deck[0].image = reader.result;
+          save();
+          paint();
+          notify("Foto aggiunta alla prima slide");
+        };
+        reader.readAsDataURL(file);
       }
 
       document.querySelectorAll("[data-view]").forEach((button) => {
@@ -1453,11 +1737,21 @@
       document.getElementById("profileNav").addEventListener("click", openProfile);
       document.getElementById("closeProfile").addEventListener("click", closeProfile);
       document.getElementById("profileScrim").addEventListener("click", closeProfile);
-      document.getElementById("beginVision").addEventListener("click", () => setView("vision"));
-      document.getElementById("reflectBtn").addEventListener("click", () => setView("vision"));
-      document.getElementById("addMantra").addEventListener("click", addMantra);
-      document.getElementById("addMantraNav").addEventListener("click", addMantra);
-      document.getElementById("openProFromGoal").addEventListener("click", () => setView("pro"));
+      document.getElementById("addGoal").addEventListener("click", addGoal);
+      document.getElementById("addGoalNav").addEventListener("click", addGoal);
+      document.getElementById("goalList").addEventListener("click", (event) => {
+        const item = event.target.closest("[data-goal-index]");
+        if (!item) return;
+        editGoal(Number(item.dataset.goalIndex));
+      });
+      document.getElementById("generateVision").addEventListener("click", () => generateDeck("vision"));
+      document.getElementById("generateAnti").addEventListener("click", () => generateDeck("anti"));
+      document.getElementById("uploadVisionPhoto").addEventListener("click", () => uploadDeckPhoto("vision"));
+      document.getElementById("uploadAntiPhoto").addEventListener("click", () => uploadDeckPhoto("anti"));
+      document.getElementById("editVisionDeck").addEventListener("click", () => editDeck("vision"));
+      document.getElementById("editAntiDeck").addEventListener("click", () => editDeck("anti"));
+      document.getElementById("visionPhotoInput").addEventListener("change", (event) => handleDeckPhoto("vision", event));
+      document.getElementById("antiPhotoInput").addEventListener("change", (event) => handleDeckPhoto("anti", event));
       document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
       document.getElementById("closePro").addEventListener("click", () => setView("today"));
 
@@ -1499,36 +1793,6 @@
         if (!confirm("Vuoi riportare il prototipo allo stato iniziale?")) return;
         localStorage.removeItem("visualize-simple-v1");
         window.location.reload();
-      });
-
-      document.getElementById("editVision").addEventListener("click", () => {
-        const title = prompt("Titolo della vision", state.visionTitle);
-        if (title && title.trim()) state.visionTitle = title.trim();
-        const text = prompt("Descrivi la tua vision", state.visionText);
-        if (text && text.trim()) {
-          state.visionText = text.trim();
-          state.goalText = text.trim();
-        }
-        save();
-        paint();
-        notify("Vision aggiornata");
-      });
-
-      document.getElementById("uploadPhoto").addEventListener("click", () => {
-        document.getElementById("photoInput").click();
-      });
-
-      document.getElementById("photoInput").addEventListener("change", (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          state.photo = reader.result;
-          save();
-          paint();
-          notify("Foto aggiornata");
-        };
-        reader.readAsDataURL(file);
       });
 
       paint();
