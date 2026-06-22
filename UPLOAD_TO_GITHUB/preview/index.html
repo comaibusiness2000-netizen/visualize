@@ -106,6 +106,7 @@
         height: 100%;
         display: grid;
         grid-template-rows: 48px minmax(0, 1fr);
+        row-gap: 18px;
         overflow: hidden;
         padding: 20px 22px 104px;
       }
@@ -124,12 +125,12 @@
 
       .screen.active {
         display: grid;
-        align-content: center;
-        gap: 14px;
+        align-content: start;
+        gap: 12px;
       }
 
       .topbar {
-        min-height: 44px;
+        min-height: 48px;
         display: grid;
         grid-template-columns: 64px 1fr 64px;
         align-items: center;
@@ -258,7 +259,7 @@
 
       .reflection-card {
         margin: 0 auto;
-        padding: 24px 24px 22px;
+        padding: 22px 24px 20px;
         border-radius: 28px;
         color: var(--ink);
         text-align: center;
@@ -286,7 +287,7 @@
 
       .reflection-card p {
         max-width: 300px;
-        margin: 16px auto 0;
+        margin: 14px auto 0;
         font-size: 18px;
         line-height: 1.25;
         font-weight: 850;
@@ -423,12 +424,12 @@
       }
 
       .goal-hero {
-        min-height: 214px;
+        min-height: 206px;
         display: grid;
         align-content: center;
         justify-items: center;
-        gap: 16px;
-        padding: 26px 24px;
+        gap: 14px;
+        padding: 24px 24px;
         color: #fff;
         background:
           linear-gradient(180deg, rgba(17, 17, 17, 0.12), rgba(17, 17, 17, 0.76)),
@@ -1339,7 +1340,8 @@
 
         .app {
           height: 100dvh;
-          padding: 16px 20px 98px;
+          row-gap: 16px;
+          padding: 18px 20px 98px;
         }
       }
     </style>
