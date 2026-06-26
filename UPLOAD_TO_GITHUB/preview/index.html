@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=12" />
+    <link rel="manifest" href="./manifest.webmanifest?v=13" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-22-v12";
+      const VISUALIZE_APP_VERSION = "2026-06-26-v13";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=12")
+            .register("./service-worker.js?v=13")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -622,6 +622,66 @@
         padding: 18px;
       }
 
+      .hidden {
+        display: none !important;
+      }
+
+      .vision-empty {
+        min-height: 482px;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: 18px;
+        padding: 30px 24px;
+        border-radius: 28px;
+        color: #111;
+        text-align: center;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),
+          radial-gradient(circle at 50% 0%, rgba(232, 196, 104, 0.38), transparent 42%),
+          linear-gradient(145deg, rgba(218, 90, 58, 0.14), rgba(232, 196, 104, 0.24));
+        box-shadow: 0 18px 38px rgba(17, 17, 17, 0.08);
+      }
+
+      body[data-theme="dark"] .vision-empty {
+        color: #fff7df;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.035)),
+          radial-gradient(circle at 50% 0%, rgba(232, 196, 104, 0.2), transparent 46%),
+          #151b20;
+      }
+
+      .vision-empty .deck-kicker {
+        color: rgba(17, 17, 17, 0.46);
+      }
+
+      body[data-theme="dark"] .vision-empty .deck-kicker {
+        color: rgba(255, 247, 223, 0.56);
+      }
+
+      .vision-empty h2 {
+        max-width: 300px;
+        font-size: 31px;
+        line-height: 1.05;
+        font-weight: 950;
+      }
+
+      .vision-empty p {
+        max-width: 310px;
+        color: #5f625d;
+        font-size: 14px;
+        line-height: 1.4;
+        font-weight: 780;
+      }
+
+      body[data-theme="dark"] .vision-empty p {
+        color: #d5cbbf;
+      }
+
+      .vision-empty .btn {
+        width: min(100%, 188px);
+      }
+
       .deck-stage.positive {
         color: #111111;
         background:
@@ -689,13 +749,102 @@
 
       .deck-actions {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(var(--action-count, 4), minmax(0, 1fr));
         gap: 8px;
       }
 
       .deck-actions .btn {
         min-height: 42px;
+        padding: 0 7px;
+        font-size: 12px;
+      }
+
+      .player {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: none;
+        color: #fff;
+        background: #050607;
+      }
+
+      .player.open {
+        display: grid;
+      }
+
+      .player-slide {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        align-content: end;
+        gap: 12px;
+        padding: 82px 26px 122px;
+        background:
+          linear-gradient(180deg, rgba(5, 6, 7, 0.05), rgba(5, 6, 7, 0.82)),
+          var(--slide-bg, linear-gradient(145deg, #111, #da5a3a 58%, #e8c468));
+        background-size: cover;
+        background-position: center;
+      }
+
+      .player-slide h2 {
+        max-width: 360px;
+        font-size: 42px;
+        line-height: 0.98;
+        font-weight: 950;
+      }
+
+      .player-slide p {
+        max-width: 340px;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 17px;
+        line-height: 1.35;
+        font-weight: 800;
+      }
+
+      .player-top,
+      .player-controls {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 24px;
+      }
+
+      .player-top {
+        align-self: start;
+      }
+
+      .player-controls {
+        align-self: end;
+        gap: 10px;
+      }
+
+      .player-close,
+      .player-controls button {
+        min-height: 44px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.11);
         font-size: 13px;
+        font-weight: 900;
+        backdrop-filter: blur(14px);
+      }
+
+      .player-close {
+        width: 44px;
+      }
+
+      .player-count {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .player-controls button {
+        flex: 1;
+        padding: 0 14px;
       }
 
       .for-you-row {
@@ -1426,20 +1575,28 @@
 
           <section class="screen" id="vision">
             <div class="helper-copy">
-              <span id="visionHint">Generate a positive image chain from your goals. Then edit every slide like a mini presentation.</span>
+              <span id="visionHint">Build a daily visual sequence from your goals.</span>
             </div>
 
-            <article class="deck-stage positive">
+            <article class="vision-empty" id="visionEmpty">
+              <span class="deck-kicker">Vision setup</span>
+              <h2>Create the future scene first.</h2>
+              <p>Add your own photos, or create AI images from your goals, then turn them into a short daily visualization presentation.</p>
+              <button class="btn" id="createVision" type="button">Create vision</button>
+            </article>
+
+            <article class="deck-stage positive hidden" id="visionStage">
               <div class="deck-head">
-                <span class="deck-kicker">Vision AI deck</span>
+                <span class="deck-kicker">Vision deck</span>
                 <h2 id="visionTitle">The version you are building</h2>
               </div>
               <div class="deck-strip" id="visionDeck"></div>
             </article>
 
-            <div class="deck-actions">
-              <button class="btn" id="generateVision" type="button">Generate AI</button>
+            <div class="deck-actions hidden" id="visionActions">
+              <button class="btn" id="playVisionDeck" type="button">Play</button>
               <button class="btn secondary" id="uploadVisionPhoto" type="button">Photo</button>
+              <button class="btn secondary" id="generateVision" type="button">AI</button>
               <button class="btn secondary" id="editVisionDeck" type="button">Edit</button>
             </div>
             <input id="visionPhotoInput" type="file" accept="image/*" hidden />
@@ -1458,7 +1615,7 @@
               <div class="deck-strip" id="antiDeck"></div>
             </article>
 
-            <div class="deck-actions">
+            <div class="deck-actions" style="--action-count: 3">
               <button class="btn" id="generateAnti" type="button">Generate AI</button>
               <button class="btn secondary" id="uploadAntiPhoto" type="button">Photo</button>
               <button class="btn secondary" id="editAntiDeck" type="button">Edit</button>
@@ -1601,6 +1758,21 @@
 
     <div class="toast" id="toast">Done</div>
 
+    <div class="player" id="deckPlayer" aria-hidden="true">
+      <div class="player-slide" id="playerSlide">
+        <h2 id="playerTitle">Identity</h2>
+        <p id="playerCaption">You move like someone who has already decided.</p>
+      </div>
+      <div class="player-top">
+        <button class="player-close" id="closePlayer" type="button" aria-label="Close presentation">x</button>
+        <span class="player-count" id="playerCount">1 / 3</span>
+      </div>
+      <div class="player-controls">
+        <button id="togglePlayer" type="button">Pause</button>
+        <button id="nextPlayerSlide" type="button">Next</button>
+      </div>
+    </div>
+
     <script>
       const defaults = {
         appVersion: "en-v1",
@@ -1609,6 +1781,7 @@
         goals: ["Strong healthy body", "Stable business", "Better home and relationships"],
         mantra: "I am the kind of person who keeps promises to myself.",
         visionTitle: "The version you are building",
+        visionCreated: false,
         antiTitle: "The life you do not want to choose",
         visionSlides: [
           { title: "Identity", caption: "You move like someone who has already decided.", image: "" },
@@ -1638,10 +1811,15 @@
           ...((savedState && savedState.settings) || {})
         },
         goals: Array.isArray(savedState && savedState.goals) ? savedState.goals : defaults.goals,
+        visionCreated: Boolean(savedState && savedState.visionCreated),
         visionSlides: Array.isArray(savedState && savedState.visionSlides) ? savedState.visionSlides : defaults.visionSlides,
         antiSlides: Array.isArray(savedState && savedState.antiSlides) ? savedState.antiSlides : defaults.antiSlides
       };
       const toast = document.getElementById("toast");
+      let playerTimer = null;
+      let playerIndex = 0;
+      let playerKind = "vision";
+      let playerPaused = false;
 
       function save() {
         localStorage.setItem("visualize-simple-v1", JSON.stringify(state));
@@ -1714,6 +1892,15 @@
         `).join("");
       }
 
+      function renderVisionState() {
+        document.getElementById("visionEmpty").classList.toggle("hidden", state.visionCreated);
+        document.getElementById("visionStage").classList.toggle("hidden", !state.visionCreated);
+        document.getElementById("visionActions").classList.toggle("hidden", !state.visionCreated);
+        document.getElementById("visionHint").textContent = state.visionCreated
+          ? "Play it full screen, then update photos, text, or AI scenes whenever your goal evolves."
+          : "Build a daily visual sequence from your goals.";
+      }
+
       function paint() {
         document.getElementById("goalTitle").textContent = state.goalTitle;
         document.getElementById("goalText").textContent = state.goalText;
@@ -1722,6 +1909,7 @@
         renderGoalList();
         renderDeck("vision");
         renderDeck("anti");
+        renderVisionState();
         applySettings();
       }
 
@@ -1800,7 +1988,7 @@
         notify("Goal updated");
       }
 
-      function generateDeck(kind) {
+      function generateDeck(kind, message) {
         const source = state.goals.length ? state.goals : defaults.goals;
         if (kind === "vision") {
           state.visionSlides = [
@@ -1808,7 +1996,8 @@
             { title: source[1] || "Environment", caption: "A concrete scene from the life you want to build.", image: "" },
             { title: source[2] || "Result", caption: "The moment your goal becomes visible and daily.", image: "" }
           ];
-          notify("Vision deck generated");
+          state.visionCreated = true;
+          notify(message || "Vision updated");
         } else {
           state.antiSlides = [
             { title: source[0] || "Delay", caption: "The faded version if this goal always stays tomorrow.", image: "" },
@@ -1821,10 +2010,18 @@
         paint();
       }
 
+      function createVision() {
+        generateDeck("vision", "Vision created");
+      }
+
       function editDeck(kind) {
+        if (kind === "vision" && !state.visionCreated) {
+          notify("Create your vision first");
+          return;
+        }
         const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
         const selected = Number(prompt("Which slide do you want to edit? 1, 2, or 3", "1")) - 1;
-        if (!Number.isInteger(selected) || selected < 0 || selected > 2) return;
+        if (!Number.isInteger(selected) || selected < 0 || selected > 2 || !deck[selected]) return;
         const title = prompt("Slide title", deck[selected].title);
         if (title && title.trim()) deck[selected].title = title.trim();
         const caption = prompt("Slide text", deck[selected].caption);
@@ -1843,13 +2040,65 @@
         if (!file) return;
         const reader = new FileReader();
         reader.onload = () => {
+          if (!(kind === "vision" ? state.visionSlides : state.antiSlides).length) {
+            generateDeck(kind, kind === "vision" ? "Vision created" : "Deck created");
+          }
           const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
-          deck[0].image = reader.result;
+          const selected = Number(prompt("Add photo to slide: 1, 2, or 3", "1")) - 1;
+          if (!Number.isInteger(selected) || selected < 0 || selected > 2 || !deck[selected]) return;
+          if (kind === "vision") state.visionCreated = true;
+          deck[selected].image = reader.result;
           save();
           paint();
-          notify("Photo added to the first slide");
+          notify("Photo added");
         };
         reader.readAsDataURL(file);
+      }
+
+      function renderPlayerSlide() {
+        const deck = playerKind === "vision" ? state.visionSlides : state.antiSlides;
+        const slide = deck[playerIndex % deck.length];
+        const playerSlide = document.getElementById("playerSlide");
+        playerSlide.setAttribute("style", slideBackground(playerKind, playerIndex, slide.image));
+        document.getElementById("playerTitle").textContent = slide.title;
+        document.getElementById("playerCaption").textContent = slide.caption;
+        document.getElementById("playerCount").textContent = `${playerIndex + 1} / ${deck.length}`;
+      }
+
+      function advancePlayer() {
+        const deck = playerKind === "vision" ? state.visionSlides : state.antiSlides;
+        playerIndex = (playerIndex + 1) % deck.length;
+        renderPlayerSlide();
+      }
+
+      function startDeckPlayer(kind) {
+        const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
+        if (kind === "vision" && !state.visionCreated) {
+          notify("Create your vision first");
+          return;
+        }
+        if (!deck.length) return;
+        playerKind = kind;
+        playerIndex = 0;
+        playerPaused = false;
+        document.getElementById("togglePlayer").textContent = "Pause";
+        document.getElementById("deckPlayer").classList.add("open");
+        document.getElementById("deckPlayer").setAttribute("aria-hidden", "false");
+        renderPlayerSlide();
+        clearInterval(playerTimer);
+        playerTimer = setInterval(() => {
+          if (!playerPaused) advancePlayer();
+        }, 3200);
+        const fullscreenRequest = document.getElementById("deckPlayer").requestFullscreen?.();
+        if (fullscreenRequest && fullscreenRequest.catch) fullscreenRequest.catch(() => {});
+      }
+
+      function closeDeckPlayer() {
+        clearInterval(playerTimer);
+        playerTimer = null;
+        document.getElementById("deckPlayer").classList.remove("open");
+        document.getElementById("deckPlayer").setAttribute("aria-hidden", "true");
+        if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
       }
 
       document.querySelectorAll("[data-view]").forEach((button) => {
@@ -1867,14 +2116,22 @@
         if (!item) return;
         editGoal(Number(item.dataset.goalIndex));
       });
+      document.getElementById("createVision").addEventListener("click", createVision);
       document.getElementById("generateVision").addEventListener("click", () => generateDeck("vision"));
       document.getElementById("generateAnti").addEventListener("click", () => generateDeck("anti"));
+      document.getElementById("playVisionDeck").addEventListener("click", () => startDeckPlayer("vision"));
       document.getElementById("uploadVisionPhoto").addEventListener("click", () => uploadDeckPhoto("vision"));
       document.getElementById("uploadAntiPhoto").addEventListener("click", () => uploadDeckPhoto("anti"));
       document.getElementById("editVisionDeck").addEventListener("click", () => editDeck("vision"));
       document.getElementById("editAntiDeck").addEventListener("click", () => editDeck("anti"));
       document.getElementById("visionPhotoInput").addEventListener("change", (event) => handleDeckPhoto("vision", event));
       document.getElementById("antiPhotoInput").addEventListener("change", (event) => handleDeckPhoto("anti", event));
+      document.getElementById("closePlayer").addEventListener("click", closeDeckPlayer);
+      document.getElementById("nextPlayerSlide").addEventListener("click", advancePlayer);
+      document.getElementById("togglePlayer").addEventListener("click", () => {
+        playerPaused = !playerPaused;
+        document.getElementById("togglePlayer").textContent = playerPaused ? "Resume" : "Pause";
+      });
       document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
       document.getElementById("closePro").addEventListener("click", () => setView("today"));
 
