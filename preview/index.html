@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=14" />
+    <link rel="manifest" href="./manifest.webmanifest?v=15" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-26-v14";
+      const VISUALIZE_APP_VERSION = "2026-06-26-v15";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=14")
+            .register("./service-worker.js?v=15")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -628,7 +628,8 @@
         display: none !important;
       }
 
-      .vision-empty {
+      .vision-empty,
+      .anti-empty {
         min-height: 482px;
         display: grid;
         align-content: center;
@@ -644,29 +645,48 @@
         box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
       }
 
-      body[data-theme="dark"] .vision-empty {
+      .anti-empty {
+        color: #fff;
+        background:
+          radial-gradient(circle at 50% 18%, rgba(218, 90, 58, 0.13), transparent 34%),
+          linear-gradient(145deg, #181818, #050505);
+      }
+
+      body[data-theme="dark"] .vision-empty,
+      body[data-theme="dark"] .anti-empty {
         color: #f4f4f1;
         background:
           radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.05), transparent 32%),
           #181c1e;
       }
 
-      .vision-empty .deck-kicker {
+      body[data-theme="dark"] .anti-empty {
+        background:
+          radial-gradient(circle at 50% 18%, rgba(218, 90, 58, 0.12), transparent 34%),
+          linear-gradient(145deg, #171717, #050505);
+      }
+
+      .vision-empty .deck-kicker,
+      .anti-empty .deck-kicker {
         color: rgba(17, 17, 17, 0.46);
       }
 
-      body[data-theme="dark"] .vision-empty .deck-kicker {
+      .anti-empty .deck-kicker,
+      body[data-theme="dark"] .vision-empty .deck-kicker,
+      body[data-theme="dark"] .anti-empty .deck-kicker {
         color: rgba(255, 247, 223, 0.56);
       }
 
-      .vision-empty h2 {
+      .vision-empty h2,
+      .anti-empty h2 {
         max-width: 300px;
         font-size: 31px;
         line-height: 1.05;
         font-weight: 950;
       }
 
-      .vision-empty p {
+      .vision-empty p,
+      .anti-empty p {
         max-width: 310px;
         color: #5f625d;
         font-size: 14px;
@@ -674,12 +694,21 @@
         font-weight: 780;
       }
 
-      body[data-theme="dark"] .vision-empty p {
+      .anti-empty p,
+      body[data-theme="dark"] .vision-empty p,
+      body[data-theme="dark"] .anti-empty p {
         color: #d5cbbf;
       }
 
-      .vision-empty .btn {
+      .vision-empty .btn,
+      .anti-empty .btn {
         width: min(100%, 188px);
+      }
+
+      .anti-empty .btn {
+        border-color: #f4f4f1;
+        color: #111;
+        background: #f4f4f1;
       }
 
       .deck-stage.positive {
@@ -1622,20 +1651,28 @@
 
           <section class="screen" id="anti">
             <div class="helper-copy">
-              <span id="antiHint">Generate the opposite vision: not to scare you, but to make the cost of delay visible.</span>
+              <span id="antiHint">Build the scene that makes the cost of delay visible.</span>
             </div>
 
-            <article class="deck-stage negative">
+            <article class="anti-empty" id="antiEmpty">
+              <span class="deck-kicker">Anti-vision setup</span>
+              <h2>Create the scene you refuse to live.</h2>
+              <p>Add photos, or create AI images from your goals, then turn them into a short presentation that makes the cost of inaction impossible to ignore.</p>
+              <button class="btn" id="createAnti" type="button">Create anti-vision</button>
+            </article>
+
+            <article class="deck-stage negative hidden" id="antiStage">
               <div class="deck-head">
-                <span class="deck-kicker">Anti-vision AI deck</span>
+                <span class="deck-kicker">Anti-vision deck</span>
                 <h2 id="antiTitle">The life you do not want to choose</h2>
               </div>
               <div class="deck-strip" id="antiDeck"></div>
             </article>
 
-            <div class="deck-actions" style="--action-count: 3">
-              <button class="btn" id="generateAnti" type="button">Generate AI</button>
+            <div class="deck-actions hidden" id="antiActions">
+              <button class="btn" id="playAntiDeck" type="button">Play</button>
               <button class="btn secondary" id="uploadAntiPhoto" type="button">Photo</button>
+              <button class="btn secondary" id="generateAnti" type="button">AI</button>
               <button class="btn secondary" id="editAntiDeck" type="button">Edit</button>
             </div>
             <input id="antiPhotoInput" type="file" accept="image/*" hidden />
@@ -1801,6 +1838,7 @@
         visionTitle: "The version you are building",
         visionCreated: false,
         antiTitle: "The life you do not want to choose",
+        antiCreated: false,
         visionSlides: [
           { title: "Identity", caption: "You move like someone who has already decided.", image: "" },
           { title: "Environment", caption: "Your day reflects your standards.", image: "" },
@@ -1830,6 +1868,7 @@
         },
         goals: Array.isArray(savedState && savedState.goals) ? savedState.goals : defaults.goals,
         visionCreated: Boolean(savedState && savedState.visionCreated),
+        antiCreated: Boolean(savedState && savedState.antiCreated),
         visionSlides: Array.isArray(savedState && savedState.visionSlides) ? savedState.visionSlides : defaults.visionSlides,
         antiSlides: Array.isArray(savedState && savedState.antiSlides) ? savedState.antiSlides : defaults.antiSlides
       };
@@ -1919,6 +1958,15 @@
           : "Build a daily visual sequence from your goals.";
       }
 
+      function renderAntiState() {
+        document.getElementById("antiEmpty").classList.toggle("hidden", state.antiCreated);
+        document.getElementById("antiStage").classList.toggle("hidden", !state.antiCreated);
+        document.getElementById("antiActions").classList.toggle("hidden", !state.antiCreated);
+        document.getElementById("antiHint").textContent = state.antiCreated
+          ? "Play it full screen, then update the uncomfortable scenes when your goals become clearer."
+          : "Build the scene that makes the cost of delay visible.";
+      }
+
       function paint() {
         document.getElementById("goalTitle").textContent = state.goalTitle;
         document.getElementById("goalText").textContent = state.goalText;
@@ -1928,6 +1976,7 @@
         renderDeck("vision");
         renderDeck("anti");
         renderVisionState();
+        renderAntiState();
         applySettings();
       }
 
@@ -2022,7 +2071,8 @@
             { title: source[1] || "Cost", caption: "The environment created when you never truly choose.", image: "" },
             { title: source[2] || "Consequence", caption: "An uncomfortable scene that pulls you back to the right direction.", image: "" }
           ];
-          notify("Anti-vision deck generated");
+          state.antiCreated = true;
+          notify(message || "Anti-vision updated");
         }
         save();
         paint();
@@ -2032,9 +2082,17 @@
         generateDeck("vision", "Vision created");
       }
 
+      function createAnti() {
+        generateDeck("anti", "Anti-vision created");
+      }
+
       function editDeck(kind) {
         if (kind === "vision" && !state.visionCreated) {
           notify("Create your vision first");
+          return;
+        }
+        if (kind === "anti" && !state.antiCreated) {
+          notify("Create your anti-vision first");
           return;
         }
         const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
@@ -2065,6 +2123,7 @@
           const selected = Number(prompt("Add photo to slide: 1, 2, or 3", "1")) - 1;
           if (!Number.isInteger(selected) || selected < 0 || selected > 2 || !deck[selected]) return;
           if (kind === "vision") state.visionCreated = true;
+          if (kind === "anti") state.antiCreated = true;
           deck[selected].image = reader.result;
           save();
           paint();
@@ -2093,6 +2152,10 @@
         const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
         if (kind === "vision" && !state.visionCreated) {
           notify("Create your vision first");
+          return;
+        }
+        if (kind === "anti" && !state.antiCreated) {
+          notify("Create your anti-vision first");
           return;
         }
         if (!deck.length) return;
@@ -2135,9 +2198,11 @@
         editGoal(Number(item.dataset.goalIndex));
       });
       document.getElementById("createVision").addEventListener("click", createVision);
+      document.getElementById("createAnti").addEventListener("click", createAnti);
       document.getElementById("generateVision").addEventListener("click", () => generateDeck("vision"));
       document.getElementById("generateAnti").addEventListener("click", () => generateDeck("anti"));
       document.getElementById("playVisionDeck").addEventListener("click", () => startDeckPlayer("vision"));
+      document.getElementById("playAntiDeck").addEventListener("click", () => startDeckPlayer("anti"));
       document.getElementById("uploadVisionPhoto").addEventListener("click", () => uploadDeckPhoto("vision"));
       document.getElementById("uploadAntiPhoto").addEventListener("click", () => uploadDeckPhoto("anti"));
       document.getElementById("editVisionDeck").addEventListener("click", () => editDeck("vision"));
