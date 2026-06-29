@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=19" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v19";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v20";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=19")
+            .register("./service-worker.js?v=20")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -772,6 +772,124 @@
         grid-template-columns: 1fr 1fr;
         gap: 8px;
         margin-top: 2px;
+      }
+
+      .goal-workbench {
+        min-height: 530px;
+        display: grid;
+        align-content: start;
+        gap: 14px;
+        padding: 20px;
+        border-radius: 28px;
+        color: var(--ink);
+        background: #fff;
+        box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
+      }
+
+      body[data-theme="dark"] .goal-workbench {
+        background: #181c1e;
+      }
+
+      .goal-mode {
+        height: 46px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        padding: 4px;
+        border-radius: 999px;
+        background: var(--soft);
+      }
+
+      .goal-mode button {
+        border: 0;
+        border-radius: 999px;
+        color: var(--muted);
+        background: transparent;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .goal-mode button.active {
+        color: var(--ink);
+        background: var(--control);
+      }
+
+      .goal-workbench-head {
+        text-align: center;
+      }
+
+      .goal-workbench-head h2 {
+        margin-top: 6px;
+        font-size: 30px;
+        line-height: 1.05;
+        font-weight: 950;
+      }
+
+      .goal-workbench-head p {
+        max-width: 310px;
+        margin: 8px auto 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.35;
+        font-weight: 760;
+      }
+
+      .progress-goal-list {
+        display: grid;
+        gap: 9px;
+      }
+
+      .progress-goal {
+        display: grid;
+        gap: 8px;
+        padding: 12px;
+        border-radius: 18px;
+        background: var(--soft);
+      }
+
+      .progress-goal-head {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .progress-goal strong {
+        min-width: 0;
+        font-size: 15px;
+        line-height: 1.15;
+        font-weight: 950;
+      }
+
+      .progress-goal output {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .progress-goal input[type="range"] {
+        padding: 0;
+        border: 0;
+        accent-color: var(--ink);
+      }
+
+      .progress-goal-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .progress-goal-foot span,
+      .progress-edit {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .progress-edit {
+        border: 0;
+        background: transparent;
       }
 
       @keyframes helperPulse {
@@ -1663,7 +1781,7 @@
         bottom: 14px;
         height: 72px;
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 8px;
         background: transparent;
       }
@@ -1798,6 +1916,28 @@
                 <button class="btn" id="reviewVisionFromLife" type="button">Vision</button>
                 <button class="btn secondary" id="editLifeInfo" type="button">Edit info</button>
               </div>
+            </article>
+          </section>
+
+          <section class="screen" id="goals">
+            <div class="helper-copy">
+              <span id="goalHint">Daily execution stays here. Vision stays for long-term goals.</span>
+            </div>
+
+            <article class="goal-workbench">
+              <div class="goal-mode" aria-label="Goal mode">
+                <button class="active" id="goalModeDaily" type="button">Daily tasks</button>
+                <button id="goalModeShort" type="button">Short-term goals</button>
+              </div>
+
+              <div class="goal-workbench-head">
+                <span class="deck-kicker" id="goalModeKicker">Daily tasks</span>
+                <h2 id="goalPanelTitle">Move today forward.</h2>
+                <p id="goalPanelText">Keep a short list of what makes today count, then move the progress bar manually.</p>
+              </div>
+
+              <div class="progress-goal-list" id="progressGoalList"></div>
+              <button class="btn" id="addProgressGoal" type="button">Add task</button>
             </article>
           </section>
 
@@ -1984,6 +2124,7 @@
 
         <nav class="nav" aria-label="Navigazione principale">
           <button class="active" data-view="today">Life</button>
+          <button data-view="goals">Goal</button>
           <button data-view="vision">Vision</button>
           <button data-view="anti">Anti</button>
         </nav>
@@ -2013,6 +2154,17 @@
         goalTitle: "Write what you want to see before you live it.",
         goalText: "Keep a few clear goals in sight. Vision and Anti-vision use this list to build your presentations.",
         goals: ["Strong healthy body", "Stable business", "Better home and relationships"],
+        goalMode: "daily",
+        dailyTasks: [
+          { title: "10 minute visualization", progress: 20 },
+          { title: "One focused work block", progress: 45 },
+          { title: "Train or walk today", progress: 0 }
+        ],
+        shortTermGoals: [
+          { title: "Build a visible routine", progress: 35 },
+          { title: "Ship the first version", progress: 60 },
+          { title: "Improve body composition", progress: 25 }
+        ],
         mantra: "I am the kind of person who keeps promises to myself.",
         lifeProfile: {
           complete: false,
@@ -2051,6 +2203,9 @@
           ...((savedState && savedState.settings) || {})
         },
         goals: Array.isArray(savedState && savedState.goals) ? savedState.goals : defaults.goals,
+        goalMode: savedState && ["daily", "short"].includes(savedState.goalMode) ? savedState.goalMode : defaults.goalMode,
+        dailyTasks: Array.isArray(savedState && savedState.dailyTasks) ? savedState.dailyTasks : defaults.dailyTasks,
+        shortTermGoals: Array.isArray(savedState && savedState.shortTermGoals) ? savedState.shortTermGoals : defaults.shortTermGoals,
         lifeProfile: {
           ...defaults.lifeProfile,
           ...((savedState && savedState.lifeProfile) || {})
@@ -2179,6 +2334,66 @@
         `).join("");
       }
 
+      function activeProgressGoals() {
+        return state.goalMode === "daily" ? state.dailyTasks : state.shortTermGoals;
+      }
+
+      function goalModeCopy() {
+        return state.goalMode === "daily"
+          ? {
+              kicker: "Daily tasks",
+              title: "Move today forward.",
+              text: "Keep a short list of what makes today count, then move the progress bar manually.",
+              add: "Add task",
+              empty: "Add one task that would make today count."
+            }
+          : {
+              kicker: "Short-term goals",
+              title: "Track the next win.",
+              text: "Use this for goals close enough to act on, but bigger than a single day.",
+              add: "Add goal",
+              empty: "Add one short-term goal you can realistically move this week."
+            };
+      }
+
+      function renderProgressGoals() {
+        const list = document.getElementById("progressGoalList");
+        const goals = activeProgressGoals();
+        const copy = goalModeCopy();
+        document.getElementById("goalModeDaily").classList.toggle("active", state.goalMode === "daily");
+        document.getElementById("goalModeShort").classList.toggle("active", state.goalMode === "short");
+        document.getElementById("goalModeKicker").textContent = copy.kicker;
+        document.getElementById("goalPanelTitle").textContent = copy.title;
+        document.getElementById("goalPanelText").textContent = copy.text;
+        document.getElementById("goalHint").textContent =
+          state.goalMode === "daily"
+            ? "Daily tasks are for execution today. Vision stays for long-term goals."
+            : "Short-term goals bridge today and your long-term Vision.";
+        document.getElementById("addProgressGoal").textContent = copy.add;
+
+        if (!goals.length) {
+          list.innerHTML = `<div class="progress-goal"><strong>${copy.empty}</strong></div>`;
+          return;
+        }
+
+        list.innerHTML = goals.slice(0, 4).map((goal, index) => {
+          const progress = clampNumber(goal.progress, 0, 100);
+          return `
+            <div class="progress-goal" data-progress-index="${index}">
+              <div class="progress-goal-head">
+                <strong>${escapeHtml(goal.title)}</strong>
+                <output>${progress}%</output>
+              </div>
+              <input type="range" min="0" max="100" value="${progress}" aria-label="${escapeHtml(goal.title)} progress" />
+              <div class="progress-goal-foot">
+                <span>${progress < 100 ? "manual estimate" : "complete"}</span>
+                <button class="progress-edit" type="button" data-edit-progress="${index}">edit</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
       function renderDeck(kind) {
         const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
         const id = kind === "vision" ? "visionDeck" : "antiDeck";
@@ -2212,7 +2427,7 @@
         document.getElementById("visionTitle").textContent = state.visionTitle;
         document.getElementById("antiTitle").textContent = state.antiTitle;
         renderLifeClock();
-        renderGoalList();
+        renderProgressGoals();
         renderDeck("vision");
         renderDeck("anti");
         renderVisionState();
@@ -2292,6 +2507,51 @@
       function editLifeInfo() {
         state.lifeProfile.complete = false;
         paint();
+      }
+
+      function setGoalMode(mode) {
+        state.goalMode = mode;
+        save();
+        renderProgressGoals();
+      }
+
+      function addProgressGoal() {
+        const goals = activeProgressGoals();
+        const label = state.goalMode === "daily" ? "daily task" : "short-term goal";
+        if (goals.length >= 4) {
+          notify("Maximum 4 items here");
+          return;
+        }
+        const title = prompt(`Add ${label}`, "");
+        if (!title || !title.trim()) return;
+        goals.push({ title: title.trim(), progress: 0 });
+        save();
+        renderProgressGoals();
+        notify(state.goalMode === "daily" ? "Task added" : "Goal added");
+      }
+
+      function editProgressGoal(index) {
+        const goals = activeProgressGoals();
+        const current = goals[index];
+        if (!current) return;
+        const next = prompt("Edit title. Leave empty to delete it.", current.title);
+        if (next === null) return;
+        if (!next.trim()) {
+          goals.splice(index, 1);
+        } else {
+          current.title = next.trim();
+        }
+        save();
+        renderProgressGoals();
+        notify("Updated");
+      }
+
+      function updateProgressGoal(index, value) {
+        const goals = activeProgressGoals();
+        if (!goals[index]) return;
+        goals[index].progress = clampNumber(value, 0, 100);
+        save();
+        renderProgressGoals();
       }
 
       function addGoal() {
@@ -2457,6 +2717,26 @@
       document.getElementById("saveLifeProfile").addEventListener("click", saveLifeProfile);
       document.getElementById("editLifeInfo").addEventListener("click", editLifeInfo);
       document.getElementById("reviewVisionFromLife").addEventListener("click", () => setView("vision"));
+      document.getElementById("goalModeDaily").addEventListener("click", () => setGoalMode("daily"));
+      document.getElementById("goalModeShort").addEventListener("click", () => setGoalMode("short"));
+      document.getElementById("addProgressGoal").addEventListener("click", addProgressGoal);
+      document.getElementById("progressGoalList").addEventListener("input", (event) => {
+        if (event.target.type !== "range") return;
+        const row = event.target.closest("[data-progress-index]");
+        if (!row) return;
+        row.querySelector("output").textContent = `${event.target.value}%`;
+      });
+      document.getElementById("progressGoalList").addEventListener("change", (event) => {
+        if (event.target.type !== "range") return;
+        const row = event.target.closest("[data-progress-index]");
+        if (!row) return;
+        updateProgressGoal(Number(row.dataset.progressIndex), event.target.value);
+      });
+      document.getElementById("progressGoalList").addEventListener("click", (event) => {
+        const editButton = event.target.closest("[data-edit-progress]");
+        if (!editButton) return;
+        editProgressGoal(Number(editButton.dataset.editProgress));
+      });
       document.getElementById("createVision").addEventListener("click", createVision);
       document.getElementById("createAnti").addEventListener("click", createAnti);
       document.getElementById("generateVision").addEventListener("click", () => generateDeck("vision"));
