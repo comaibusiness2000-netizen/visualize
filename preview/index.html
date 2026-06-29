@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=27" />
+    <link rel="manifest" href="./manifest.webmanifest?v=28" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v27";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v28";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=27")
+            .register("./service-worker.js?v=28")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -715,6 +715,7 @@
         height: 100%;
         border-radius: inherit;
         background: var(--ink);
+        transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
       }
 
       .life-stats {
@@ -740,6 +741,11 @@
         font-weight: 950;
       }
 
+      .life-head strong.updating,
+      .life-stat strong.updating {
+        animation: numberTick 0.7s ease both;
+      }
+
       .life-stat span {
         color: var(--muted);
         font-size: 11px;
@@ -763,6 +769,10 @@
         background: #111;
       }
 
+      .life-dot.just-spent {
+        animation: monthDotArrives 1.1s ease both;
+      }
+
       body[data-theme="dark"] .life-dot {
         background: #33383a;
       }
@@ -776,6 +786,36 @@
         grid-template-columns: 1fr 1fr;
         gap: 8px;
         margin-top: 2px;
+      }
+
+      @keyframes numberTick {
+        0% {
+          opacity: 0.28;
+          transform: translateY(6px) scale(0.98);
+        }
+        55% {
+          opacity: 1;
+          transform: translateY(-2px) scale(1.02);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes monthDotArrives {
+        0% {
+          transform: scale(0.4);
+          box-shadow: 0 0 0 0 rgba(232, 196, 104, 0);
+        }
+        48% {
+          transform: scale(1.55);
+          box-shadow: 0 0 0 8px rgba(232, 196, 104, 0.22);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(232, 196, 104, 0);
+        }
       }
 
       .goal-workbench {
@@ -2559,7 +2599,10 @@
         lifeProfile: {
           complete: false,
           age: "",
-          expectancy: 85
+          expectancy: 85,
+          startedAt: "",
+          lastAnimatedDate: "",
+          lastSnapshot: null
         },
         visionTitle: "The version you are building",
         visionCreated: false,
@@ -2869,6 +2912,7 @@
         await hydrateStoredImages();
         paint();
         updateBackButton();
+        setTimeout(showLifeClockForPendingUpdate, 360);
       }
 
       function notify(text) {
@@ -2897,17 +2941,47 @@
         return Math.round(value).toLocaleString("en-US");
       }
 
+      function todayKey() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      }
+
+      function localDayTime(value = new Date()) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return null;
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+      }
+
+      function daysBetween(start, end = new Date()) {
+        const startTime = localDayTime(start);
+        const endTime = localDayTime(end);
+        if (startTime === null || endTime === null) return 0;
+        return Math.max(0, Math.floor((endTime - startTime) / 86400000));
+      }
+
+      function getLifeStartDate() {
+        if (state.lifeProfile.startedAt) return state.lifeProfile.startedAt;
+        state.lifeProfile.startedAt = new Date().toISOString();
+        saveWithoutSyncBump();
+        return state.lifeProfile.startedAt;
+      }
+
       function getLifeStats() {
         const age = clampNumber(state.lifeProfile.age, 0, 120);
         const expectancy = Math.max(clampNumber(state.lifeProfile.expectancy, 50, 120), age + 1);
-        const yearsLeft = Math.max(expectancy - age, 0);
+        const elapsedDays = state.lifeProfile.complete ? daysBetween(getLifeStartDate()) : 0;
+        const currentAge = age + (elapsedDays / 365.25);
+        const yearsLeft = Math.max(expectancy - currentAge, 0);
         const daysLeft = Math.round(yearsLeft * 365.25);
         const weeksLeft = Math.round(yearsLeft * 52.1775);
         const totalMonths = Math.round(expectancy * 12);
-        const spentMonths = Math.min(totalMonths, Math.max(0, Math.round(age * 12)));
+        const spentMonths = Math.min(totalMonths, Math.max(0, Math.floor(currentAge * 12)));
         const monthsLeft = Math.max(totalMonths - spentMonths, 0);
-        const usedPercent = Math.min(100, Math.max(0, (age / expectancy) * 100));
-        return { age, expectancy, yearsLeft, daysLeft, weeksLeft, totalMonths, spentMonths, monthsLeft, usedPercent };
+        const usedPercent = Math.min(100, Math.max(0, (currentAge / expectancy) * 100));
+        return { age, currentAge, expectancy, elapsedDays, yearsLeft, daysLeft, weeksLeft, totalMonths, spentMonths, monthsLeft, usedPercent };
       }
 
       function applySettings() {
@@ -2948,6 +3022,115 @@
         return `--slide-bg: ${(kind === "vision" ? vision : anti)[index % 3]}`;
       }
 
+      function lifeSnapshot(stats) {
+        return {
+          daysLeft: stats.daysLeft,
+          weeksLeft: stats.weeksLeft,
+          monthsLeft: stats.monthsLeft,
+          usedPercent: stats.usedPercent,
+          spentMonths: stats.spentMonths,
+          totalMonths: stats.totalMonths
+        };
+      }
+
+      function renderLifeStatsValues(stats, options = {}) {
+        document.getElementById("lifeDaysLeft").textContent = formatNumber(stats.daysLeft);
+        document.getElementById("lifeWeeksLeft").textContent = formatNumber(stats.weeksLeft);
+        document.getElementById("lifeMonthsLeft").textContent = formatNumber(stats.monthsLeft);
+        document.getElementById("lifeUsedPercent").textContent = `${Math.round(stats.usedPercent)}%`;
+        document.getElementById("lifeSummary").textContent =
+          `Estimated from age ${stats.age} to ${stats.expectancy}. That is about ${formatNumber(stats.monthsLeft)} months, or ${formatNumber(stats.weeksLeft)} weeks, left.`;
+        document.getElementById("lifeProgressBar").style.width = `${stats.usedPercent}%`;
+
+        document.getElementById("lifeMap").innerHTML = Array.from({ length: stats.totalMonths }, (_, index) => {
+          const isSpent = index < stats.spentMonths;
+          const justSpent = options.animateMonth && index === stats.spentMonths - 1;
+          return `<span class="life-dot ${isSpent ? "spent" : ""} ${justSpent ? "just-spent" : ""}" aria-hidden="true"></span>`;
+        }).join("");
+        document.getElementById("lifeLegend").textContent =
+          "Each dot is one month. Dark months are already spent; light months are still yours to use.";
+      }
+
+      function animateNumberValue(element, fromValue, toValue, formatter = formatNumber) {
+        const start = Number(fromValue);
+        const end = Number(toValue);
+        if (!Number.isFinite(start) || !Number.isFinite(end) || start === end) {
+          element.textContent = formatter(end);
+          return;
+        }
+        const startTime = performance.now();
+        const duration = 950;
+        element.classList.remove("updating");
+        void element.offsetWidth;
+        element.classList.add("updating");
+
+        function frame(now) {
+          const progress = Math.min(1, (now - startTime) / duration);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const value = start + ((end - start) * eased);
+          element.textContent = formatter(value);
+          if (progress < 1) {
+            requestAnimationFrame(frame);
+            return;
+          }
+          element.textContent = formatter(end);
+          setTimeout(() => element.classList.remove("updating"), 120);
+        }
+
+        requestAnimationFrame(frame);
+      }
+
+      function hasPendingDailyLifeUpdate() {
+        return state.lifeProfile.complete && state.lifeProfile.lastAnimatedDate !== todayKey();
+      }
+
+      function showLifeClockForPendingUpdate() {
+        if (!hasPendingDailyLifeUpdate()) return;
+        if (currentView !== "today") setView("today", { replace: true });
+        setTimeout(animateLifeClockIfNeeded, 180);
+      }
+
+      function animateLifeClockIfNeeded() {
+        if (!state.lifeProfile.complete || currentView !== "today") return;
+        const dateKey = todayKey();
+        if (state.lifeProfile.lastAnimatedDate === dateKey) return;
+
+        const currentStats = getLifeStats();
+        const previous = state.lifeProfile.lastSnapshot || lifeSnapshot(currentStats);
+        const monthChanged = previous.spentMonths !== currentStats.spentMonths;
+        const dayChanged = previous.daysLeft !== currentStats.daysLeft;
+        const weekChanged = previous.weeksLeft !== currentStats.weeksLeft;
+        const monthValueChanged = previous.monthsLeft !== currentStats.monthsLeft;
+        const percentChanged = Math.round(previous.usedPercent) !== Math.round(currentStats.usedPercent);
+
+        if (!dayChanged && !weekChanged && !monthValueChanged && !percentChanged && !monthChanged) {
+          state.lifeProfile.lastAnimatedDate = dateKey;
+          state.lifeProfile.lastSnapshot = lifeSnapshot(currentStats);
+          saveWithoutSyncBump();
+          return;
+        }
+
+        renderLifeStatsValues({ ...currentStats, ...previous }, { animateMonth: false });
+        requestAnimationFrame(() => {
+          document.getElementById("lifeProgressBar").style.width = `${currentStats.usedPercent}%`;
+          animateNumberValue(document.getElementById("lifeDaysLeft"), previous.daysLeft, currentStats.daysLeft);
+          animateNumberValue(document.getElementById("lifeWeeksLeft"), previous.weeksLeft, currentStats.weeksLeft);
+          animateNumberValue(document.getElementById("lifeMonthsLeft"), previous.monthsLeft, currentStats.monthsLeft);
+          animateNumberValue(document.getElementById("lifeUsedPercent"), Math.round(previous.usedPercent), Math.round(currentStats.usedPercent), (value) => `${Math.round(value)}%`);
+          document.getElementById("lifeSummary").textContent =
+            `Updated today. About ${formatNumber(currentStats.daysLeft)} days, ${formatNumber(currentStats.weeksLeft)} weeks, and ${formatNumber(currentStats.monthsLeft)} months remain.`;
+          document.getElementById("lifeMap").innerHTML = Array.from({ length: currentStats.totalMonths }, (_, index) => {
+            const isSpent = index < currentStats.spentMonths;
+            const justSpent = monthChanged && index === currentStats.spentMonths - 1;
+            return `<span class="life-dot ${isSpent ? "spent" : ""} ${justSpent ? "just-spent" : ""}" aria-hidden="true"></span>`;
+          }).join("");
+        });
+
+        state.lifeProfile.lastAnimatedDate = dateKey;
+        state.lifeProfile.lastSnapshot = lifeSnapshot(currentStats);
+        saveWithoutSyncBump();
+      }
+
       function renderLifeClock() {
         const onboarding = document.getElementById("lifeOnboarding");
         const dashboard = document.getElementById("lifeDashboard");
@@ -2961,19 +3144,7 @@
         if (!isComplete) return;
 
         const stats = getLifeStats();
-        document.getElementById("lifeDaysLeft").textContent = formatNumber(stats.daysLeft);
-        document.getElementById("lifeWeeksLeft").textContent = formatNumber(stats.weeksLeft);
-        document.getElementById("lifeMonthsLeft").textContent = formatNumber(stats.monthsLeft);
-        document.getElementById("lifeUsedPercent").textContent = `${Math.round(stats.usedPercent)}%`;
-        document.getElementById("lifeSummary").textContent =
-          `Estimated from age ${stats.age} to ${stats.expectancy}. That is about ${formatNumber(stats.monthsLeft)} months, or ${formatNumber(stats.weeksLeft)} weeks, left.`;
-        document.getElementById("lifeProgressBar").style.width = `${stats.usedPercent}%`;
-
-        document.getElementById("lifeMap").innerHTML = Array.from({ length: stats.totalMonths }, (_, index) =>
-          `<span class="life-dot ${index < stats.spentMonths ? "spent" : ""}" aria-hidden="true"></span>`
-        ).join("");
-        document.getElementById("lifeLegend").textContent =
-          "Each dot is one month. Dark months are already spent; light months are still yours to use.";
+        renderLifeStatsValues(stats);
       }
 
       function renderGoalList() {
@@ -3126,6 +3297,7 @@
         });
         closeProfile();
         updateBackButton();
+        if (name === "today") setTimeout(animateLifeClockIfNeeded, 180);
       }
 
       function goBack() {
@@ -3187,8 +3359,12 @@
         state.lifeProfile = {
           complete: true,
           age,
-          expectancy: Math.max(expectancy, age + 1)
+          expectancy: Math.max(expectancy, age + 1),
+          startedAt: new Date().toISOString(),
+          lastAnimatedDate: todayKey(),
+          lastSnapshot: null
         };
+        state.lifeProfile.lastSnapshot = lifeSnapshot(getLifeStats());
 
         save();
         paint();
@@ -3714,6 +3890,12 @@
         await deleteImageDb();
         window.location.reload();
       });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") showLifeClockForPendingUpdate();
+      });
+      window.addEventListener("pageshow", showLifeClockForPendingUpdate);
+      window.addEventListener("focus", showLifeClockForPendingUpdate);
 
       bootApp();
     </script>
