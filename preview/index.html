@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=28" />
+    <link rel="manifest" href="./manifest.webmanifest?v=29" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v28";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v29";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=28")
+            .register("./service-worker.js?v=29")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1374,8 +1374,9 @@
       .deck-editor-list {
         min-height: 0;
         display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         align-content: start;
-        gap: 10px;
+        gap: 12px;
         overflow-y: auto;
         overscroll-behavior: contain;
         scrollbar-width: none;
@@ -1386,26 +1387,35 @@
       }
 
       .deck-editor-item {
-        min-height: 94px;
-        display: grid;
-        grid-template-columns: 76px 1fr auto;
-        gap: 12px;
-        align-items: center;
-        padding: 10px;
+        min-height: 0;
+        position: relative;
+        aspect-ratio: 1 / 1.22;
+        overflow: hidden;
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: 22px;
         background: var(--control);
       }
 
+      .deck-editor-item.empty {
+        grid-column: 1 / -1;
+        min-height: 210px;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: 10px;
+        padding: 20px;
+        text-align: center;
+      }
+
       .deck-editor-thumb {
-        width: 76px;
-        height: 76px;
+        width: 100%;
+        height: 100%;
         position: relative;
         overflow: hidden;
-        border-radius: 14px;
+        border-radius: inherit;
         color: #fff;
         background:
-          linear-gradient(180deg, rgba(17, 17, 17, 0.02), rgba(17, 17, 17, 0.72)),
+          linear-gradient(180deg, rgba(17, 17, 17, 0.02), rgba(17, 17, 17, 0.68)),
           var(--slide-bg, linear-gradient(145deg, #111, #565853));
         background-size: cover;
         background-position: center;
@@ -1413,14 +1423,18 @@
 
       .deck-editor-thumb span {
         position: absolute;
-        left: 8px;
-        bottom: 7px;
+        left: 10px;
+        bottom: 9px;
         font-size: 11px;
         font-weight: 950;
       }
 
       .deck-editor-copy {
         min-width: 0;
+      }
+
+      .deck-editor-item:not(.empty) .deck-editor-copy {
+        display: none;
       }
 
       .deck-editor-copy strong {
@@ -1439,35 +1453,49 @@
       }
 
       .deck-editor-actions {
-        display: grid;
-        gap: 8px;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
       }
 
       .deck-editor-actions button {
+        position: absolute;
         width: 38px;
         height: 38px;
         border: 0;
         border-radius: 50%;
-        color: var(--ink);
-        background: var(--soft);
+        color: #111;
+        background: rgba(255, 255, 255, 0.88);
         font-size: 16px;
         font-weight: 950;
+        pointer-events: auto;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+      }
+
+      .deck-editor-actions [data-edit-slide] {
+        right: 10px;
+        bottom: 10px;
       }
 
       .deck-editor-actions .delete-slide {
+        top: 10px;
+        right: 10px;
         color: #fff;
         background: var(--red);
       }
 
       .deck-editor-foot {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
       }
 
       .deck-editor-foot .btn {
         min-height: 44px;
-        font-size: 13px;
+        padding: 0 8px;
+        font-size: 12px;
+        line-height: 1.05;
+        white-space: normal;
       }
 
       .for-you-row {
@@ -2572,7 +2600,9 @@
         </div>
         <div class="deck-editor-list" id="deckEditorList"></div>
         <div class="deck-editor-foot">
-          <button class="btn secondary" id="editorAddPhoto" type="button">Add photos</button>
+          <button class="btn secondary" id="editorAddPhoto" type="button">+ Photos</button>
+          <button class="btn secondary" id="editorGenerateImage" type="button">AI image</button>
+          <button class="btn secondary" id="editorAiEditPhoto" type="button">AI edit</button>
           <button class="btn" id="editorDone" type="button">Done</button>
         </div>
       </div>
@@ -2608,16 +2638,8 @@
         visionCreated: false,
         antiTitle: "The life you do not want to choose",
         antiCreated: false,
-        visionSlides: [
-          { title: "Identity", caption: "You move like someone who has already decided.", image: "" },
-          { title: "Environment", caption: "Your day reflects your standards.", image: "" },
-          { title: "Result", caption: "Your goals become visible proof.", image: "" }
-        ],
-        antiSlides: [
-          { title: "Delay", caption: "Every week looks like the one before.", image: "" },
-          { title: "Cost", caption: "Energy scattered and confidence reduced.", image: "" },
-          { title: "Signal", caption: "The scene pulls you back to the right choice.", image: "" }
-        ],
+        visionSlides: [],
+        antiSlides: [],
         settings: {
           theme: "light",
           dailyReminder: true,
@@ -2829,6 +2851,30 @@
         return slide.image;
       }
 
+      function isStarterTextSlide(kind, slide) {
+        if (!slide || slide.image || slide.source || slide.aiPrompt || slide.aiStatus) return false;
+        const starters = kind === "vision"
+          ? [
+              ["Identity", "You move like someone who has already decided."],
+              ["Environment", "Your day reflects your standards."],
+              ["Result", "Your goals become visible proof."]
+            ]
+          : [
+              ["Delay", "Every week looks like the one before."],
+              ["Cost", "Energy scattered and confidence reduced."],
+              ["Signal", "The scene pulls you back to the right choice."]
+            ];
+        return starters.some(([title, caption]) => slide.title === title && slide.caption === caption);
+      }
+
+      function removeStarterTextSlides() {
+        const beforeVision = state.visionSlides.length;
+        const beforeAnti = state.antiSlides.length;
+        state.visionSlides = state.visionSlides.filter((slide) => !isStarterTextSlide("vision", slide));
+        state.antiSlides = state.antiSlides.filter((slide) => !isStarterTextSlide("anti", slide));
+        return beforeVision !== state.visionSlides.length || beforeAnti !== state.antiSlides.length;
+      }
+
       function collectStoredImageKeys() {
         return [...state.visionSlides, ...state.antiSlides]
           .map((slide) => slide.image)
@@ -2906,6 +2952,7 @@
       }
 
       async function bootApp() {
+        if (removeStarterTextSlides()) saveWithoutSyncBump();
         paint();
         updateBackButton();
         await migrateInlineSlideImages();
@@ -3502,6 +3549,7 @@
         })) return;
         save();
         paint();
+        if (document.getElementById("deckEditor").classList.contains("open")) renderDeckEditor();
         notify(backendReady() ? (message || "AI image queued") : "AI backend needed");
       }
 
@@ -3509,12 +3557,14 @@
         ensureDeckCreated("vision", "Vision created");
         save();
         paint();
+        openDeckEditor("vision");
       }
 
       function createAnti() {
         ensureDeckCreated("anti", "Anti-vision created");
         save();
         paint();
+        openDeckEditor("anti");
       }
 
       async function signInWithApple() {
@@ -3572,13 +3622,11 @@
 
         if (!deck.length) {
           document.getElementById("deckEditorList").innerHTML = `
-            <div class="deck-editor-item">
-              <div class="deck-editor-thumb"><span>0</span></div>
+            <div class="deck-editor-item empty">
               <div class="deck-editor-copy">
-                <strong>No slides yet.</strong>
-                <span>Add up to ${MAX_DECK_SLIDES} photos or AI images to build this presentation.</span>
+                <strong>No images yet.</strong>
+                <span>Use + Photos, AI image, or AI edit to build this presentation.</span>
               </div>
-              <div class="deck-editor-actions"></div>
             </div>
           `;
           return;
@@ -3594,8 +3642,8 @@
               <span>${escapeHtml(slide.caption)}</span>
             </div>
             <div class="deck-editor-actions">
-              <button type="button" data-edit-slide="${index}" aria-label="Edit slide text">T</button>
-              <button class="delete-slide" type="button" data-delete-slide="${index}" aria-label="Delete slide">x</button>
+              <button type="button" data-edit-slide="${index}" aria-label="Edit slide text">Aa</button>
+              <button class="delete-slide" type="button" data-delete-slide="${index}" aria-label="Delete image">x</button>
             </div>
           </div>
         `).join("");
@@ -3815,6 +3863,8 @@
       document.getElementById("closeDeckEditor").addEventListener("click", closeDeckEditor);
       document.getElementById("editorDone").addEventListener("click", closeDeckEditor);
       document.getElementById("editorAddPhoto").addEventListener("click", () => uploadDeckPhoto(editorKind, "upload"));
+      document.getElementById("editorGenerateImage").addEventListener("click", () => generateDeck(editorKind));
+      document.getElementById("editorAiEditPhoto").addEventListener("click", () => uploadDeckPhoto(editorKind, "ai-edit"));
       document.getElementById("deckEditor").addEventListener("click", (event) => {
         if (event.target.id === "deckEditor") closeDeckEditor();
       });
