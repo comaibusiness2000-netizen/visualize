@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=18" />
+    <link rel="manifest" href="./manifest.webmanifest?v=19" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v18";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v19";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=18")
+            .register("./service-worker.js?v=19")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -744,8 +744,8 @@
 
       .life-map {
         display: grid;
-        grid-template-columns: repeat(60, 1fr);
-        gap: 2px;
+        grid-template-columns: repeat(48, 1fr);
+        gap: 3px;
         padding: 10px 0 2px;
       }
 
@@ -1774,10 +1774,6 @@
                   <span>Life estimate</span>
                   <input id="lifeExpectancy" type="number" min="50" max="120" inputmode="numeric" value="85" />
                 </label>
-                <label class="field">
-                  <span>Main focus</span>
-                  <input id="lifeFocus" type="text" maxlength="80" placeholder="Example: build my body and business" />
-                </label>
               </div>
               <button class="btn" id="saveLifeProfile" type="button">Create life clock</button>
             </article>
@@ -2021,8 +2017,7 @@
         lifeProfile: {
           complete: false,
           age: "",
-          expectancy: 85,
-          focus: ""
+          expectancy: 85
         },
         visionTitle: "The version you are building",
         visionCreated: false,
@@ -2153,18 +2148,16 @@
 
         document.getElementById("lifeAge").value = state.lifeProfile.age || "";
         document.getElementById("lifeExpectancy").value = state.lifeProfile.expectancy || 85;
-        document.getElementById("lifeFocus").value = state.lifeProfile.focus || "";
 
         if (!isComplete) return;
 
         const stats = getLifeStats();
-        const focus = state.lifeProfile.focus ? ` Focus: ${state.lifeProfile.focus}.` : "";
         document.getElementById("lifeDaysLeft").textContent = formatNumber(stats.daysLeft);
         document.getElementById("lifeWeeksLeft").textContent = formatNumber(stats.weeksLeft);
         document.getElementById("lifeMonthsLeft").textContent = formatNumber(stats.monthsLeft);
         document.getElementById("lifeUsedPercent").textContent = `${Math.round(stats.usedPercent)}%`;
         document.getElementById("lifeSummary").textContent =
-          `Estimated from age ${stats.age} to ${stats.expectancy}. That is about ${formatNumber(stats.monthsLeft)} months, or ${formatNumber(stats.weeksLeft)} weeks, left.${focus}`;
+          `Estimated from age ${stats.age} to ${stats.expectancy}. That is about ${formatNumber(stats.monthsLeft)} months, or ${formatNumber(stats.weeksLeft)} weeks, left.`;
         document.getElementById("lifeProgressBar").style.width = `${stats.usedPercent}%`;
 
         document.getElementById("lifeMap").innerHTML = Array.from({ length: stats.totalMonths }, (_, index) =>
@@ -2279,7 +2272,6 @@
       function saveLifeProfile() {
         const age = clampNumber(document.getElementById("lifeAge").value, 0, 120);
         const expectancy = clampNumber(document.getElementById("lifeExpectancy").value || 85, 50, 120);
-        const focus = document.getElementById("lifeFocus").value.trim();
 
         if (age < 1) {
           notify("Add your age first");
@@ -2289,16 +2281,8 @@
         state.lifeProfile = {
           complete: true,
           age,
-          expectancy: Math.max(expectancy, age + 1),
-          focus
+          expectancy: Math.max(expectancy, age + 1)
         };
-
-        if (focus) {
-          state.goals = [
-            focus,
-            ...state.goals.filter((goal) => goal.toLowerCase() !== focus.toLowerCase())
-          ].slice(0, 4);
-        }
 
         save();
         paint();
