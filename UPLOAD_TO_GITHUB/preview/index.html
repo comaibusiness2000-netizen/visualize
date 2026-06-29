@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=20" />
+    <link rel="manifest" href="./manifest.webmanifest?v=21" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v20";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v21";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=20")
+            .register("./service-worker.js?v=21")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -194,6 +194,10 @@
         width: 22px;
         height: 22px;
         stroke: currentColor;
+      }
+
+      .back-toggle {
+        justify-self: end;
       }
 
       .brand-logo {
@@ -1876,6 +1880,11 @@
               </svg>
             </button>
             <img class="brand-logo" src="./icon.svg" alt="Visualize" />
+            <button class="tiny-toggle back-toggle hidden" id="backBtn" type="button" aria-label="Go back" title="Back">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6"></path>
+              </svg>
+            </button>
           </div>
 
           <section class="screen active" id="today">
@@ -2220,6 +2229,8 @@
       let playerIndex = 0;
       let playerKind = "vision";
       let playerPaused = false;
+      let currentView = "today";
+      const viewHistory = [];
 
       function save() {
         localStorage.setItem("visualize-simple-v1", JSON.stringify(state));
@@ -2435,12 +2446,38 @@
         applySettings();
       }
 
-      function setView(name) {
+      function updateBackButton() {
+        const backBtn = document.getElementById("backBtn");
+        const canGoBack = viewHistory.length > 0;
+        backBtn.classList.toggle("hidden", !canGoBack);
+        backBtn.disabled = !canGoBack;
+      }
+
+      function setView(name, options = {}) {
+        if (name === currentView) {
+          closeProfile();
+          updateBackButton();
+          return;
+        }
+
+        if (!options.fromHistory && !options.replace) {
+          viewHistory.push(currentView);
+          if (viewHistory.length > 8) viewHistory.shift();
+        }
+
+        currentView = name;
         document.querySelectorAll(".screen").forEach((view) => view.classList.toggle("active", view.id === name));
         document.querySelectorAll(".nav button[data-view]").forEach((button) => {
           button.classList.toggle("active", button.dataset.view === name);
         });
         closeProfile();
+        updateBackButton();
+      }
+
+      function goBack() {
+        const previous = viewHistory.pop();
+        if (!previous) return;
+        setView(previous, { fromHistory: true });
       }
 
       function openProfile() {
@@ -2712,6 +2749,7 @@
       });
 
       document.getElementById("profileTop").addEventListener("click", openProfile);
+      document.getElementById("backBtn").addEventListener("click", goBack);
       document.getElementById("closeProfile").addEventListener("click", closeProfile);
       document.getElementById("profileScrim").addEventListener("click", closeProfile);
       document.getElementById("saveLifeProfile").addEventListener("click", saveLifeProfile);
@@ -2756,7 +2794,13 @@
         document.getElementById("togglePlayer").textContent = playerPaused ? "Resume" : "Pause";
       });
       document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
-      document.getElementById("closePro").addEventListener("click", () => setView("today"));
+      document.getElementById("closePro").addEventListener("click", () => {
+        if (viewHistory.length) {
+          goBack();
+          return;
+        }
+        setView("today", { replace: true });
+      });
 
       document.getElementById("themeLight").addEventListener("click", () => {
         state.settings.theme = "light";
@@ -2808,6 +2852,7 @@
       });
 
       paint();
+      updateBackButton();
     </script>
   </body>
 </html>
