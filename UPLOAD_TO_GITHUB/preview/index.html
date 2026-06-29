@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=22" />
+    <link rel="manifest" href="./manifest.webmanifest?v=23" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v22";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v23";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=22")
+            .register("./service-worker.js?v=23")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1126,6 +1126,7 @@
         align-content: end;
         gap: 12px;
         padding: 82px 26px 122px;
+        isolation: isolate;
         background:
           linear-gradient(180deg, rgba(5, 6, 7, 0.05), rgba(5, 6, 7, 0.82)),
           var(--slide-bg, linear-gradient(145deg, #111, #565853 58%, #d9d9d6));
@@ -1133,11 +1134,22 @@
         background-position: center;
       }
 
+      .player-slide::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+          radial-gradient(circle at 50% 34%, transparent 0 26%, rgba(0, 0, 0, 0.18) 58%),
+          linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.68));
+      }
+
       .player-slide h2 {
         max-width: 360px;
         font-size: 42px;
         line-height: 0.98;
         font-weight: 950;
+        text-shadow: 0 14px 34px rgba(0, 0, 0, 0.46);
       }
 
       .player-slide p {
@@ -1146,6 +1158,7 @@
         font-size: 17px;
         line-height: 1.35;
         font-weight: 800;
+        text-shadow: 0 10px 28px rgba(0, 0, 0, 0.44);
       }
 
       .player-top,
@@ -1192,6 +1205,27 @@
       .player-controls button {
         flex: 1;
         padding: 0 14px;
+      }
+
+      .player-progress {
+        position: absolute;
+        left: 24px;
+        right: 24px;
+        bottom: 92px;
+        z-index: 2;
+        height: 4px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .player-progress span {
+        display: block;
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: #f4f4f1;
+        transition: width 0.28s ease;
       }
 
       .for-you-row {
@@ -2184,6 +2218,7 @@
         <button id="togglePlayer" type="button">Pause</button>
         <button id="nextPlayerSlide" type="button">Next</button>
       </div>
+      <div class="player-progress" aria-hidden="true"><span id="playerProgress"></span></div>
     </div>
 
     <script>
@@ -2260,9 +2295,186 @@
       let playerPaused = false;
       let currentView = "today";
       const viewHistory = [];
+      const imageCache = {};
+      const IMAGE_DB_NAME = "visualize-image-store";
+      const IMAGE_STORE_NAME = "images";
+      const STORED_IMAGE_PREFIX = "stored:";
 
       function save() {
-        localStorage.setItem("visualize-simple-v1", JSON.stringify(state));
+        try {
+          localStorage.setItem("visualize-simple-v1", JSON.stringify(state));
+        } catch (error) {
+          notify("Storage is full");
+        }
+      }
+
+      function openImageDb() {
+        return new Promise((resolve) => {
+          if (!("indexedDB" in window)) {
+            resolve(null);
+            return;
+          }
+          const request = indexedDB.open(IMAGE_DB_NAME, 1);
+          request.onupgradeneeded = () => {
+            if (!request.result.objectStoreNames.contains(IMAGE_STORE_NAME)) {
+              request.result.createObjectStore(IMAGE_STORE_NAME);
+            }
+          };
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => resolve(null);
+        });
+      }
+
+      function deleteImageDb() {
+        return new Promise((resolve) => {
+          if (!("indexedDB" in window)) {
+            resolve();
+            return;
+          }
+          const request = indexedDB.deleteDatabase(IMAGE_DB_NAME);
+          request.onsuccess = () => resolve();
+          request.onerror = () => resolve();
+          request.onblocked = () => resolve();
+        });
+      }
+
+      async function writeStoredImage(key, dataUrl) {
+        const db = await openImageDb();
+        if (!db) return false;
+        return new Promise((resolve) => {
+          const transaction = db.transaction(IMAGE_STORE_NAME, "readwrite");
+          transaction.objectStore(IMAGE_STORE_NAME).put(dataUrl, key);
+          transaction.oncomplete = () => {
+            db.close();
+            resolve(true);
+          };
+          transaction.onerror = () => {
+            db.close();
+            resolve(false);
+          };
+          transaction.onabort = () => {
+            db.close();
+            resolve(false);
+          };
+        });
+      }
+
+      async function readStoredImage(key) {
+        const db = await openImageDb();
+        if (!db) return "";
+        return new Promise((resolve) => {
+          const transaction = db.transaction(IMAGE_STORE_NAME, "readonly");
+          const request = transaction.objectStore(IMAGE_STORE_NAME).get(key);
+          request.onsuccess = () => resolve(request.result || "");
+          request.onerror = () => resolve("");
+          transaction.oncomplete = () => db.close();
+          transaction.onerror = () => db.close();
+          transaction.onabort = () => db.close();
+        });
+      }
+
+      function isStoredImageRef(value) {
+        return typeof value === "string" && value.startsWith(STORED_IMAGE_PREFIX);
+      }
+
+      function storedImageKey(value) {
+        return String(value).slice(STORED_IMAGE_PREFIX.length);
+      }
+
+      function makeImageKey(kind, index) {
+        const random = Math.random().toString(36).slice(2, 9);
+        return `${kind}-${index}-${Date.now()}-${random}`;
+      }
+
+      function slideImageUrl(slide) {
+        if (!slide || !slide.image) return "";
+        if (isStoredImageRef(slide.image)) return imageCache[storedImageKey(slide.image)] || "";
+        return slide.image;
+      }
+
+      function collectStoredImageKeys() {
+        return [...state.visionSlides, ...state.antiSlides]
+          .map((slide) => slide.image)
+          .filter(isStoredImageRef)
+          .map(storedImageKey);
+      }
+
+      async function hydrateStoredImages() {
+        const keys = [...new Set(collectStoredImageKeys())];
+        await Promise.all(keys.map(async (key) => {
+          if (imageCache[key]) return;
+          const dataUrl = await readStoredImage(key);
+          if (dataUrl) imageCache[key] = dataUrl;
+        }));
+      }
+
+      function readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function loadImage(dataUrl) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => resolve(image);
+          image.onerror = reject;
+          image.src = dataUrl;
+        });
+      }
+
+      async function compressImageFile(file) {
+        const dataUrl = await readFileAsDataUrl(file);
+        try {
+          const image = await loadImage(dataUrl);
+          const maxSide = 1600;
+          const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+          canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+          const context = canvas.getContext("2d");
+          context.fillStyle = "#111111";
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
+          return canvas.toDataURL("image/jpeg", 0.84);
+        } catch (error) {
+          return dataUrl;
+        }
+      }
+
+      async function migrateInlineSlideImages() {
+        let changed = false;
+        const decks = [
+          ["vision", state.visionSlides],
+          ["anti", state.antiSlides]
+        ];
+
+        for (const [kind, deck] of decks) {
+          for (let index = 0; index < deck.length; index += 1) {
+            const slide = deck[index];
+            if (!slide || typeof slide.image !== "string" || !slide.image.startsWith("data:")) continue;
+            const key = makeImageKey(kind, index);
+            const saved = await writeStoredImage(key, slide.image);
+            if (!saved) continue;
+            imageCache[key] = slide.image;
+            slide.image = `${STORED_IMAGE_PREFIX}${key}`;
+            changed = true;
+          }
+        }
+
+        if (changed) save();
+      }
+
+      async function bootApp() {
+        paint();
+        updateBackButton();
+        await migrateInlineSlideImages();
+        await hydrateStoredImages();
+        paint();
+        updateBackButton();
       }
 
       function notify(text) {
@@ -2438,7 +2650,7 @@
         const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
         const id = kind === "vision" ? "visionDeck" : "antiDeck";
         document.getElementById(id).innerHTML = deck.slice(0, 3).map((slide, index) => `
-          <div class="deck-card" style="${slideBackground(kind, index, slide.image)}">
+          <div class="deck-card" style="${slideBackground(kind, index, slideImageUrl(slide))}">
             <strong>${escapeHtml(slide.title)}</strong>
             <span>${escapeHtml(slide.caption)}</span>
           </div>
@@ -2702,35 +2914,47 @@
         document.getElementById(kind === "vision" ? "visionPhotoInput" : "antiPhotoInput").click();
       }
 
-      function handleDeckPhoto(kind, event) {
+      async function handleDeckPhoto(kind, event) {
         const file = event.target.files[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
+        try {
           if (!(kind === "vision" ? state.visionSlides : state.antiSlides).length) {
             generateDeck(kind, kind === "vision" ? "Vision created" : "Deck created");
           }
           const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
           const selected = Number(prompt("Add photo to slide: 1, 2, or 3", "1")) - 1;
           if (!Number.isInteger(selected) || selected < 0 || selected > 2 || !deck[selected]) return;
+          notify("Saving photo...");
+          const dataUrl = await compressImageFile(file);
+          const imageKey = makeImageKey(kind, selected);
+          const saved = await writeStoredImage(imageKey, dataUrl);
           if (kind === "vision") state.visionCreated = true;
           if (kind === "anti") state.antiCreated = true;
-          deck[selected].image = reader.result;
+          if (saved) {
+            imageCache[imageKey] = dataUrl;
+            deck[selected].image = `${STORED_IMAGE_PREFIX}${imageKey}`;
+          } else {
+            deck[selected].image = dataUrl;
+          }
           save();
           paint();
-          notify("Photo added");
-        };
-        reader.readAsDataURL(file);
+          notify(saved ? "Photo saved" : "Photo added");
+        } catch (error) {
+          notify("Photo could not be saved");
+        } finally {
+          event.target.value = "";
+        }
       }
 
       function renderPlayerSlide() {
         const deck = playerKind === "vision" ? state.visionSlides : state.antiSlides;
         const slide = deck[playerIndex % deck.length];
         const playerSlide = document.getElementById("playerSlide");
-        playerSlide.setAttribute("style", slideBackground(playerKind, playerIndex, slide.image));
+        playerSlide.setAttribute("style", slideBackground(playerKind, playerIndex, slideImageUrl(slide)));
         document.getElementById("playerTitle").textContent = slide.title;
         document.getElementById("playerCaption").textContent = slide.caption;
         document.getElementById("playerCount").textContent = `${playerIndex + 1} / ${deck.length}`;
+        document.getElementById("playerProgress").style.width = `${((playerIndex + 1) / deck.length) * 100}%`;
       }
 
       function advancePlayer() {
@@ -2874,14 +3098,14 @@
         notify("Profile saved");
       });
 
-      document.getElementById("resetData").addEventListener("click", () => {
+      document.getElementById("resetData").addEventListener("click", async () => {
         if (!confirm("Do you want to reset the prototype to its initial state?")) return;
         localStorage.removeItem("visualize-simple-v1");
+        await deleteImageDb();
         window.location.reload();
       });
 
-      paint();
-      updateBackButton();
+      bootApp();
     </script>
   </body>
 </html>
