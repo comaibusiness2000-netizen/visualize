@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=21" />
+    <link rel="manifest" href="./manifest.webmanifest?v=22" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v21";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v22";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=21")
+            .register("./service-worker.js?v=22")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -779,11 +779,14 @@
       }
 
       .goal-workbench {
-        min-height: 530px;
+        min-height: 0;
+        height: 100%;
         display: grid;
-        align-content: start;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        align-content: stretch;
         gap: 14px;
         padding: 20px;
+        overflow: hidden;
         border-radius: 28px;
         color: var(--ink);
         background: #fff;
@@ -839,8 +842,18 @@
       }
 
       .progress-goal-list {
+        min-height: 0;
         display: grid;
+        align-content: start;
         gap: 9px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-right: 2px;
+        scrollbar-width: none;
+      }
+
+      .progress-goal-list::-webkit-scrollbar {
+        display: none;
       }
 
       .progress-goal {
@@ -894,6 +907,22 @@
       .progress-edit {
         border: 0;
         background: transparent;
+      }
+
+      #goals.screen.active {
+        grid-template-rows: auto minmax(0, 1fr);
+        align-content: stretch;
+      }
+
+      #addProgressGoal {
+        width: 100%;
+        min-width: 0;
+        display: grid;
+        place-items: center;
+        justify-self: stretch;
+        padding: 0 22px;
+        white-space: nowrap;
+        line-height: 1.1;
       }
 
       @keyframes helperPulse {
@@ -2387,7 +2416,7 @@
           return;
         }
 
-        list.innerHTML = goals.slice(0, 4).map((goal, index) => {
+        list.innerHTML = goals.slice(0, 5).map((goal, index) => {
           const progress = clampNumber(goal.progress, 0, 100);
           return `
             <div class="progress-goal" data-progress-index="${index}">
@@ -2555,8 +2584,8 @@
       function addProgressGoal() {
         const goals = activeProgressGoals();
         const label = state.goalMode === "daily" ? "daily task" : "short-term goal";
-        if (goals.length >= 4) {
-          notify("Maximum 4 items here");
+        if (goals.length >= 5) {
+          notify("Maximum 5 items here");
           return;
         }
         const title = prompt(`Add ${label}`, "");
