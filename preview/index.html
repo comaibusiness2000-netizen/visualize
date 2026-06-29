@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=17" />
+    <link rel="manifest" href="./manifest.webmanifest?v=18" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v17";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v18";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=17")
+            .register("./service-worker.js?v=18")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -744,8 +744,8 @@
 
       .life-map {
         display: grid;
-        grid-template-columns: repeat(20, 1fr);
-        gap: 3px;
+        grid-template-columns: repeat(60, 1fr);
+        gap: 2px;
         padding: 10px 0 2px;
       }
 
@@ -1793,7 +1793,7 @@
               </div>
               <div class="life-stats">
                 <div class="life-stat"><strong id="lifeWeeksLeft">0</strong><span>weeks left</span></div>
-                <div class="life-stat"><strong id="lifeYearsLeft">0</strong><span>years left</span></div>
+                <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
                 <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
               </div>
               <div class="life-map" id="lifeMap" aria-label="Estimated life map"></div>
@@ -2107,8 +2107,11 @@
         const yearsLeft = Math.max(expectancy - age, 0);
         const daysLeft = Math.round(yearsLeft * 365.25);
         const weeksLeft = Math.round(yearsLeft * 52.1775);
+        const totalMonths = Math.round(expectancy * 12);
+        const spentMonths = Math.min(totalMonths, Math.max(0, Math.round(age * 12)));
+        const monthsLeft = Math.max(totalMonths - spentMonths, 0);
         const usedPercent = Math.min(100, Math.max(0, (age / expectancy) * 100));
-        return { age, expectancy, yearsLeft, daysLeft, weeksLeft, usedPercent };
+        return { age, expectancy, yearsLeft, daysLeft, weeksLeft, totalMonths, spentMonths, monthsLeft, usedPercent };
       }
 
       function applySettings() {
@@ -2158,19 +2161,17 @@
         const focus = state.lifeProfile.focus ? ` Focus: ${state.lifeProfile.focus}.` : "";
         document.getElementById("lifeDaysLeft").textContent = formatNumber(stats.daysLeft);
         document.getElementById("lifeWeeksLeft").textContent = formatNumber(stats.weeksLeft);
-        document.getElementById("lifeYearsLeft").textContent = stats.yearsLeft.toFixed(1);
+        document.getElementById("lifeMonthsLeft").textContent = formatNumber(stats.monthsLeft);
         document.getElementById("lifeUsedPercent").textContent = `${Math.round(stats.usedPercent)}%`;
         document.getElementById("lifeSummary").textContent =
-          `Estimated from age ${stats.age} to ${stats.expectancy}. That is about ${formatNumber(stats.weeksLeft)} weeks left.${focus}`;
+          `Estimated from age ${stats.age} to ${stats.expectancy}. That is about ${formatNumber(stats.monthsLeft)} months, or ${formatNumber(stats.weeksLeft)} weeks, left.${focus}`;
         document.getElementById("lifeProgressBar").style.width = `${stats.usedPercent}%`;
 
-        const totalDots = 120;
-        const spentDots = Math.round((stats.usedPercent / 100) * totalDots);
-        document.getElementById("lifeMap").innerHTML = Array.from({ length: totalDots }, (_, index) =>
-          `<span class="life-dot ${index < spentDots ? "spent" : ""}"></span>`
+        document.getElementById("lifeMap").innerHTML = Array.from({ length: stats.totalMonths }, (_, index) =>
+          `<span class="life-dot ${index < stats.spentMonths ? "spent" : ""}" aria-hidden="true"></span>`
         ).join("");
         document.getElementById("lifeLegend").textContent =
-          "The map compresses an average life into 120 dots. Dark dots are already spent; light dots are still yours to use.";
+          "Each dot is one month. Dark months are already spent; light months are still yours to use.";
       }
 
       function renderGoalList() {
