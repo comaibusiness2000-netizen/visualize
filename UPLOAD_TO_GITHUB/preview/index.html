@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=26" />
+    <link rel="manifest" href="./manifest.webmanifest?v=27" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v26";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v27";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=26")
+            .register("./service-worker.js?v=27")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2512,7 +2512,7 @@
       </div>
       <div class="player-top">
         <button class="player-close" id="closePlayer" type="button" aria-label="Close presentation">x</button>
-        <span class="player-count" id="playerCount">1 / 3</span>
+        <span class="player-count" id="playerCount">0 / 0</span>
       </div>
       <div class="player-controls">
         <button id="togglePlayer" type="button">Pause</button>
@@ -2646,7 +2646,7 @@
       const IMAGE_DB_NAME = "visualize-image-store";
       const IMAGE_STORE_NAME = "images";
       const STORED_IMAGE_PREFIX = "stored:";
-      const MAX_DECK_SLIDES = 12;
+      const MAX_DECK_SLIDES = 10;
       const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
       const MAX_LOCAL_IMAGE_SIDE = 1600;
       const PRODUCTION_BACKEND = {
@@ -3389,7 +3389,10 @@
       function renderDeckEditor() {
         const deck = deckFor(editorKind);
         document.getElementById("deckEditorKicker").textContent = editorKind === "vision" ? "Vision editor" : "Anti-vision editor";
-        document.getElementById("deckEditorTitle").textContent = editorKind === "vision" ? "Edit Vision slides" : "Edit Anti-vision slides";
+        document.getElementById("deckEditorTitle").textContent =
+          editorKind === "vision"
+            ? `Edit Vision slides (${deck.length}/${MAX_DECK_SLIDES})`
+            : `Edit Anti-vision slides (${deck.length}/${MAX_DECK_SLIDES})`;
 
         if (!deck.length) {
           document.getElementById("deckEditorList").innerHTML = `
@@ -3397,7 +3400,7 @@
               <div class="deck-editor-thumb"><span>0</span></div>
               <div class="deck-editor-copy">
                 <strong>No slides yet.</strong>
-                <span>Add photos or AI images to build this presentation.</span>
+                <span>Add up to ${MAX_DECK_SLIDES} photos or AI images to build this presentation.</span>
               </div>
               <div class="deck-editor-actions"></div>
             </div>
