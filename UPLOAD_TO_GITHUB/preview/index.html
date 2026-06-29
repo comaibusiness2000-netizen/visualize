@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=24" />
+    <link rel="manifest" href="./manifest.webmanifest?v=25" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v24";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v25";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=24")
+            .register("./service-worker.js?v=25")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1808,6 +1808,67 @@
         line-height: 1.45;
       }
 
+      .account-row {
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        gap: 12px;
+        align-items: center;
+        margin-top: 12px;
+      }
+
+      .account-avatar {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--paper);
+        background: var(--ink);
+        font-size: 15px;
+        font-weight: 950;
+      }
+
+      .status-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .status-pill {
+        min-height: 38px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 11px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        background: var(--control);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .status-pill strong {
+        color: var(--ink);
+        font-size: 12px;
+      }
+
+      .status-pill.warning strong {
+        color: var(--red);
+      }
+
+      .text-link {
+        border: 0;
+        padding: 0;
+        color: var(--ink);
+        background: transparent;
+        font-size: 14px;
+        font-weight: 900;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+
       .theme-choice {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -2159,8 +2220,8 @@
               </div>
 
               <div class="paywall-footer">
-                <strong>Yearly + AI<br />EUR 99.99 annually (EUR 8.33/month)<br />Cancel anytime</strong>
-                <button class="trial-btn" type="button">Try 3 days free</button>
+                <strong>Yearly + AI<br />EUR 99.99 annually (EUR 8.33/month)<br />Apple In-App Purchase</strong>
+                <button class="trial-btn" id="startTrial" type="button">Try 3 days free</button>
               </div>
             </div>
           </section>
@@ -2178,7 +2239,18 @@
 
           <div class="profile-card">
             <h2>Samuele</h2>
-            <p>Preferences saved on this device.</p>
+            <p id="accountSummary">Prototype account. App Store builds will use Sign in with Apple and secure cloud sync.</p>
+            <div class="account-row">
+              <div class="account-avatar">S</div>
+              <div>
+                <strong id="accountStatus">Local prototype</strong>
+                <p id="syncSummary">Saved on this device. Cloud sync is waiting for the production backend.</p>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="btn secondary" id="signInApple" type="button">Sign in</button>
+              <button class="btn" id="syncNow" type="button">Sync</button>
+            </div>
             <div class="theme-choice" aria-label="App theme">
               <button id="themeLight" type="button">Light</button>
               <button id="themeDark" type="button">Dark</button>
@@ -2204,9 +2276,27 @@
             <div class="setting-row">
               <div>
                 <strong>Local saving</strong>
-                <span>Goals, decks, and photos stay in this browser.</span>
+                <span>Prototype fallback. Production saves encrypted data and image references to the cloud.</span>
               </div>
               <button class="switch on" type="button" aria-label="Local saving enabled" disabled></button>
+            </div>
+            <div class="setting-row">
+              <div>
+                <strong>Cloud sync</strong>
+                <span>Account, goals, decks, AI jobs, and image files sync across iPhone and iPad.</span>
+              </div>
+              <button class="switch" id="cloudSyncSwitch" type="button" aria-label="Cloud sync pending"></button>
+            </div>
+          </div>
+
+          <div class="profile-card">
+            <h2>Cloud readiness</h2>
+            <p>Designed for 10,000+ users with account auth, database rows, object storage, AI jobs, and Apple subscription entitlements.</p>
+            <div class="status-list">
+              <div class="status-pill"><span>Auth</span><strong>Sign in with Apple</strong></div>
+              <div class="status-pill"><span>Images</span><strong>Cloud storage</strong></div>
+              <div class="status-pill"><span>Payments</span><strong>Apple IAP</strong></div>
+              <div class="status-pill warning"><span>Prototype</span><strong>Local only</strong></div>
             </div>
           </div>
 
@@ -2224,11 +2314,17 @@
 
           <div class="profile-card">
             <h2>Data</h2>
-            <p>You can return the prototype to its initial state whenever you want.</p>
+            <p>Production will separate account data, private images, AI prompts, and subscription status. The prototype can still be reset here.</p>
             <div class="action-row">
               <button class="btn secondary" id="resetData" type="button">Reset</button>
               <button class="btn" id="saveProfile" type="button">Save</button>
             </div>
+          </div>
+
+          <div class="profile-card">
+            <h2>Privacy</h2>
+            <p>Images, goals, anti-visions, AI prompts, and audio scripts are sensitive. Production requires explicit consent, deletion, and a clear privacy policy.</p>
+            <button class="text-link" id="openPrivacy" type="button">Open privacy policy draft</button>
           </div>
 
           <div class="profile-card">
@@ -2309,6 +2405,23 @@
           dailyReminder: true,
           slowAudio: true,
           language: "en"
+        },
+        account: {
+          signedIn: false,
+          email: "",
+          provider: "apple",
+          userId: ""
+        },
+        sync: {
+          mode: "local",
+          status: "pending-backend",
+          lastSyncedAt: "",
+          pendingChanges: 0
+        },
+        subscription: {
+          plan: "free",
+          proAI: false,
+          entitlementSource: "apple-iap"
         }
       };
 
@@ -2320,6 +2433,18 @@
         settings: {
           ...defaults.settings,
           ...((savedState && savedState.settings) || {})
+        },
+        account: {
+          ...defaults.account,
+          ...((savedState && savedState.account) || {})
+        },
+        sync: {
+          ...defaults.sync,
+          ...((savedState && savedState.sync) || {})
+        },
+        subscription: {
+          ...defaults.subscription,
+          ...((savedState && savedState.subscription) || {})
         },
         goals: Array.isArray(savedState && savedState.goals) ? savedState.goals : defaults.goals,
         goalMode: savedState && ["daily", "short"].includes(savedState.goalMode) ? savedState.goalMode : defaults.goalMode,
@@ -2346,14 +2471,38 @@
       const IMAGE_STORE_NAME = "images";
       const STORED_IMAGE_PREFIX = "stored:";
       const MAX_DECK_SLIDES = 12;
+      const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+      const MAX_LOCAL_IMAGE_SIDE = 1600;
+      const PRODUCTION_BACKEND = {
+        auth: "sign-in-with-apple",
+        database: "supabase-postgres",
+        storage: "object-storage",
+        ai: "server-side-generation",
+        payments: "apple-in-app-purchase"
+      };
       const pendingPhotoMode = { vision: "upload", anti: "upload" };
 
       function save() {
         try {
+          state.sync.pendingChanges = Math.min(999, (Number(state.sync.pendingChanges) || 0) + 1);
           localStorage.setItem("visualize-simple-v1", JSON.stringify(state));
         } catch (error) {
           notify("Storage is full");
         }
+      }
+
+      function saveWithoutSyncBump() {
+        try {
+          localStorage.setItem("visualize-simple-v1", JSON.stringify(state));
+        } catch (error) {}
+      }
+
+      function backendReady() {
+        return Boolean(window.VisualizeBackend && typeof window.VisualizeBackend.syncState === "function");
+      }
+
+      function cloudUnavailable(feature) {
+        notify(`${feature} needs the production backend`);
       }
 
       function openImageDb() {
@@ -2478,7 +2627,7 @@
         const dataUrl = await readFileAsDataUrl(file);
         try {
           const image = await loadImage(dataUrl);
-          const maxSide = 1600;
+          const maxSide = MAX_LOCAL_IMAGE_SIDE;
           const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
           const canvas = document.createElement("canvas");
           canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
@@ -2577,6 +2726,14 @@
         document.querySelectorAll("[data-lang]").forEach((button) => {
           button.classList.toggle("active", button.dataset.lang === state.settings.language);
         });
+        document.getElementById("accountStatus").textContent = state.account.signedIn ? "Cloud account" : "Local prototype";
+        document.getElementById("accountSummary").textContent = state.account.signedIn
+          ? "Signed in. Production builds sync through the backend."
+          : "Prototype account. App Store builds will use Sign in with Apple and secure cloud sync.";
+        document.getElementById("syncSummary").textContent = state.sync.mode === "cloud"
+          ? `Cloud sync ready. Pending changes: ${state.sync.pendingChanges || 0}.`
+          : "Saved on this device. Cloud sync is waiting for the production backend.";
+        document.getElementById("cloudSyncSwitch").classList.toggle("on", state.sync.mode === "cloud");
       }
 
       function slideBackground(kind, index, image) {
@@ -2961,10 +3118,18 @@
         if (!promptText || !promptText.trim()) return;
         const title = kind === "vision" ? "AI vision scene" : "AI anti-vision scene";
         const caption = promptText.trim();
-        if (!appendSlide(kind, { title, caption, image: "", source: "ai-generated", aiPrompt: caption })) return;
+        if (!appendSlide(kind, {
+          title,
+          caption,
+          image: "",
+          source: "ai-generated",
+          aiPrompt: caption,
+          aiStatus: backendReady() ? "queued" : "pending-backend",
+          aiProvider: PRODUCTION_BACKEND.ai
+        })) return;
         save();
         paint();
-        notify(message || "AI image added");
+        notify(backendReady() ? (message || "AI image queued") : "AI backend needed");
       }
 
       function createVision() {
@@ -2977,6 +3142,51 @@
         ensureDeckCreated("anti", "Anti-vision created");
         save();
         paint();
+      }
+
+      async function signInWithApple() {
+        if (!window.VisualizeNativeAuth || typeof window.VisualizeNativeAuth.signInWithApple !== "function") {
+          cloudUnavailable("Sign in with Apple");
+          return;
+        }
+        const account = await window.VisualizeNativeAuth.signInWithApple();
+        state.account.signedIn = true;
+        state.account.email = account.email || "";
+        state.account.userId = account.userId || "";
+        state.sync.mode = backendReady() ? "cloud" : "local";
+        state.sync.status = backendReady() ? "ready" : "pending-backend";
+        save();
+        paint();
+        notify("Signed in");
+      }
+
+      async function syncNow() {
+        if (!backendReady()) {
+          state.sync.status = "pending-backend";
+          saveWithoutSyncBump();
+          paint();
+          cloudUnavailable("Cloud sync");
+          return;
+        }
+        await window.VisualizeBackend.syncState(state);
+        state.sync.mode = "cloud";
+        state.sync.status = "synced";
+        state.sync.pendingChanges = 0;
+        state.sync.lastSyncedAt = new Date().toISOString();
+        saveWithoutSyncBump();
+        paint();
+        notify("Synced");
+      }
+
+      function startAppleTrial() {
+        state.subscription.plan = "pro-ai-pending";
+        state.subscription.proAI = false;
+        save();
+        notify("Apple IAP required in native app");
+      }
+
+      function openPrivacyDraft() {
+        window.open("./privacy.html", "_blank", "noopener");
       }
 
       function editDeck(kind) {
@@ -3030,6 +3240,10 @@
           notify("Saving photo...");
 
           for (const file of files) {
+            if (file.size > MAX_IMAGE_BYTES) {
+              notify("Photo too large");
+              continue;
+            }
             const deck = deckFor(kind);
             if (deck.length >= MAX_DECK_SLIDES) break;
             const dataUrl = await compressImageFile(file);
@@ -3042,7 +3256,8 @@
               title: mode === "ai-edit" ? (kind === "vision" ? "AI edited vision" : "AI edited anti-vision") : copy.title,
               caption: mode === "ai-edit" ? editPrompt.trim() : copy.caption,
               image: imageRef,
-              source: mode
+              source: mode,
+              aiStatus: mode === "ai-edit" ? (backendReady() ? "queued" : "pending-backend") : ""
             };
             appendSlide(kind, slide);
           }
@@ -3164,6 +3379,11 @@
         document.getElementById("togglePlayer").textContent = playerPaused ? "Resume" : "Pause";
       });
       document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
+      document.getElementById("startTrial").addEventListener("click", startAppleTrial);
+      document.getElementById("signInApple").addEventListener("click", signInWithApple);
+      document.getElementById("syncNow").addEventListener("click", syncNow);
+      document.getElementById("cloudSyncSwitch").addEventListener("click", syncNow);
+      document.getElementById("openPrivacy").addEventListener("click", openPrivacyDraft);
       document.getElementById("closePro").addEventListener("click", () => {
         if (viewHistory.length) {
           goBack();

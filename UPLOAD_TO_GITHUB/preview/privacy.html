@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Visualize Privacy Policy Draft</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --paper: #f4f4f2;
+        --ink: #111111;
+        --muted: #6f726d;
+        --line: #deded9;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(100% - 36px, 760px);
+        margin: 0 auto;
+        padding: 48px 0 64px;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(34px, 7vw, 58px);
+        line-height: 0.98;
+      }
+
+      h2 {
+        margin: 34px 0 10px;
+        font-size: 22px;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .notice {
+        margin-top: 22px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.55);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #101418;
+          --ink: #f4f4f1;
+          --muted: #c4beb3;
+          --line: #2c3236;
+        }
+
+        .notice {
+          background: rgba(255, 255, 255, 0.06);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Visualize privacy policy draft.</h1>
+      <p>This draft describes the production privacy model planned for the App Store version. It is not legal advice and should be reviewed before launch.</p>
+
+      <div class="notice">
+        <strong>Prototype status</strong>
+        <p>The current preview saves data locally on the device/browser. The production app is designed to use account-based cloud sync, secure image storage, and server-side AI generation.</p>
+      </div>
+
+      <h2>Data we expect to store</h2>
+      <ul>
+        <li>Account identifier from Sign in with Apple.</li>
+        <li>Goals, daily tasks, short-term goals, Vision decks, Anti-vision decks, and audio script settings.</li>
+        <li>Photos uploaded by the user and AI-generated or AI-edited images.</li>
+        <li>AI prompts needed to generate or edit images and scripts.</li>
+        <li>Subscription entitlement status from Apple In-App Purchase.</li>
+      </ul>
+
+      <h2>How data should be used</h2>
+      <p>User content should be used only to provide visualization, anti-vision, audio, AI generation, sync, account recovery, and subscription features.</p>
+
+      <h2>Storage and sync</h2>
+      <p>Images should be compressed before upload and stored in private object storage. Database rows should store metadata and storage references, not raw image data.</p>
+
+      <h2>AI processing</h2>
+      <p>AI generation and image editing should run on the server, not directly from the app. API keys must never be embedded in the client.</p>
+
+      <h2>Deletion</h2>
+      <p>Production users should be able to delete their account, goals, decks, images, prompts, generated content, and audio scripts.</p>
+
+      <h2>Payments</h2>
+      <p>Subscriptions should use Apple In-App Purchase. The backend should validate receipts/server notifications and store entitlement state.</p>
+    </main>
+  </body>
+</html>
