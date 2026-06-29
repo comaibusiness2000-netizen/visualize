@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=25" />
+    <link rel="manifest" href="./manifest.webmanifest?v=26" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v25";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v26";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=25")
+            .register("./service-worker.js?v=26")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1272,6 +1272,164 @@
         transition: width 0.28s ease;
       }
 
+      .deck-editor {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: none;
+        align-items: end;
+        color: var(--ink);
+        background: rgba(17, 17, 17, 0.42);
+      }
+
+      .deck-editor.open {
+        display: grid;
+      }
+
+      .deck-editor-panel {
+        width: min(100%, 430px);
+        max-height: 86dvh;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        gap: 14px;
+        justify-self: center;
+        overflow: hidden;
+        border-radius: 28px 28px 0 0;
+        padding: 18px 18px 22px;
+        background: var(--paper);
+        box-shadow: 0 -24px 70px rgba(0, 0, 0, 0.22);
+      }
+
+      .deck-editor-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .deck-editor-head p {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+        font-weight: 800;
+      }
+
+      .deck-editor-head h2 {
+        font-size: 25px;
+        line-height: 1.05;
+      }
+
+      .deck-editor-close {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 auto;
+        border: 0;
+        border-radius: 50%;
+        color: var(--ink);
+        background: var(--control);
+        font-size: 22px;
+        font-weight: 900;
+      }
+
+      .deck-editor-list {
+        min-height: 0;
+        display: grid;
+        align-content: start;
+        gap: 10px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+
+      .deck-editor-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      .deck-editor-item {
+        min-height: 94px;
+        display: grid;
+        grid-template-columns: 76px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--control);
+      }
+
+      .deck-editor-thumb {
+        width: 76px;
+        height: 76px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 14px;
+        color: #fff;
+        background:
+          linear-gradient(180deg, rgba(17, 17, 17, 0.02), rgba(17, 17, 17, 0.72)),
+          var(--slide-bg, linear-gradient(145deg, #111, #565853));
+        background-size: cover;
+        background-position: center;
+      }
+
+      .deck-editor-thumb span {
+        position: absolute;
+        left: 8px;
+        bottom: 7px;
+        font-size: 11px;
+        font-weight: 950;
+      }
+
+      .deck-editor-copy {
+        min-width: 0;
+      }
+
+      .deck-editor-copy strong {
+        display: block;
+        font-size: 15px;
+        line-height: 1.16;
+      }
+
+      .deck-editor-copy span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.3;
+        font-weight: 750;
+      }
+
+      .deck-editor-actions {
+        display: grid;
+        gap: 8px;
+      }
+
+      .deck-editor-actions button {
+        width: 38px;
+        height: 38px;
+        border: 0;
+        border-radius: 50%;
+        color: var(--ink);
+        background: var(--soft);
+        font-size: 16px;
+        font-weight: 950;
+      }
+
+      .deck-editor-actions .delete-slide {
+        color: #fff;
+        background: var(--red);
+      }
+
+      .deck-editor-foot {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .deck-editor-foot .btn {
+        min-height: 44px;
+        font-size: 13px;
+      }
+
       .for-you-row {
         position: relative;
         display: flex;
@@ -2363,6 +2521,23 @@
       <div class="player-progress" aria-hidden="true"><span id="playerProgress"></span></div>
     </div>
 
+    <div class="deck-editor" id="deckEditor" aria-hidden="true">
+      <div class="deck-editor-panel" role="dialog" aria-modal="true" aria-labelledby="deckEditorTitle">
+        <div class="deck-editor-head">
+          <div>
+            <p id="deckEditorKicker">Presentation editor</p>
+            <h2 id="deckEditorTitle">Edit slides</h2>
+          </div>
+          <button class="deck-editor-close" id="closeDeckEditor" type="button" aria-label="Close editor">x</button>
+        </div>
+        <div class="deck-editor-list" id="deckEditorList"></div>
+        <div class="deck-editor-foot">
+          <button class="btn secondary" id="editorAddPhoto" type="button">Add photos</button>
+          <button class="btn" id="editorDone" type="button">Done</button>
+        </div>
+      </div>
+    </div>
+
     <script>
       const defaults = {
         appVersion: "en-v1",
@@ -2465,6 +2640,7 @@
       let playerKind = "vision";
       let playerPaused = false;
       let currentView = "today";
+      let editorKind = "vision";
       const viewHistory = [];
       const imageCache = {};
       const IMAGE_DB_NAME = "visualize-image-store";
@@ -2567,6 +2743,27 @@
           transaction.oncomplete = () => db.close();
           transaction.onerror = () => db.close();
           transaction.onabort = () => db.close();
+        });
+      }
+
+      async function deleteStoredImage(key) {
+        const db = await openImageDb();
+        if (!db) return false;
+        return new Promise((resolve) => {
+          const transaction = db.transaction(IMAGE_STORE_NAME, "readwrite");
+          transaction.objectStore(IMAGE_STORE_NAME).delete(key);
+          transaction.oncomplete = () => {
+            db.close();
+            resolve(true);
+          };
+          transaction.onerror = () => {
+            db.close();
+            resolve(false);
+          };
+          transaction.onabort = () => {
+            db.close();
+            resolve(false);
+          };
         });
       }
 
@@ -3189,7 +3386,43 @@
         window.open("./privacy.html", "_blank", "noopener");
       }
 
-      function editDeck(kind) {
+      function renderDeckEditor() {
+        const deck = deckFor(editorKind);
+        document.getElementById("deckEditorKicker").textContent = editorKind === "vision" ? "Vision editor" : "Anti-vision editor";
+        document.getElementById("deckEditorTitle").textContent = editorKind === "vision" ? "Edit Vision slides" : "Edit Anti-vision slides";
+
+        if (!deck.length) {
+          document.getElementById("deckEditorList").innerHTML = `
+            <div class="deck-editor-item">
+              <div class="deck-editor-thumb"><span>0</span></div>
+              <div class="deck-editor-copy">
+                <strong>No slides yet.</strong>
+                <span>Add photos or AI images to build this presentation.</span>
+              </div>
+              <div class="deck-editor-actions"></div>
+            </div>
+          `;
+          return;
+        }
+
+        document.getElementById("deckEditorList").innerHTML = deck.map((slide, index) => `
+          <div class="deck-editor-item" data-editor-index="${index}">
+            <div class="deck-editor-thumb" style="${slideBackground(editorKind, index, slideImageUrl(slide))}">
+              <span>${index + 1}</span>
+            </div>
+            <div class="deck-editor-copy">
+              <strong>${escapeHtml(slide.title)}</strong>
+              <span>${escapeHtml(slide.caption)}</span>
+            </div>
+            <div class="deck-editor-actions">
+              <button type="button" data-edit-slide="${index}" aria-label="Edit slide text">T</button>
+              <button class="delete-slide" type="button" data-delete-slide="${index}" aria-label="Delete slide">x</button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      function openDeckEditor(kind) {
         if (kind === "vision" && !state.visionCreated) {
           notify("Create your vision first");
           return;
@@ -3198,27 +3431,48 @@
           notify("Create your anti-vision first");
           return;
         }
-        const deck = deckFor(kind);
-        if (!deck.length) {
-          notify("Add a slide first");
-          return;
+        editorKind = kind;
+        renderDeckEditor();
+        document.getElementById("deckEditor").classList.add("open");
+        document.getElementById("deckEditor").setAttribute("aria-hidden", "false");
+      }
+
+      function closeDeckEditor() {
+        document.getElementById("deckEditor").classList.remove("open");
+        document.getElementById("deckEditor").setAttribute("aria-hidden", "true");
+      }
+
+      function editDeck(kind) {
+        openDeckEditor(kind);
+      }
+
+      async function deleteDeckSlide(index) {
+        const deck = deckFor(editorKind);
+        const slide = deck[index];
+        if (!slide) return;
+        if (isStoredImageRef(slide.image)) {
+          const key = storedImageKey(slide.image);
+          delete imageCache[key];
+          await deleteStoredImage(key);
         }
-        const selected = Number(prompt(`Slide to edit or remove: 1-${deck.length}`, "1")) - 1;
-        if (!Number.isInteger(selected) || selected < 0 || selected >= deck.length || !deck[selected]) return;
-        const action = prompt("Type edit or remove", "edit");
-        if (action && action.trim().toLowerCase().startsWith("remove")) {
-          deck.splice(selected, 1);
-          save();
-          paint();
-          notify("Slide removed");
-          return;
-        }
-        const title = prompt("Slide title", deck[selected].title);
-        if (title && title.trim()) deck[selected].title = title.trim();
-        const caption = prompt("Slide text", deck[selected].caption);
-        if (caption && caption.trim()) deck[selected].caption = caption.trim();
+        deck.splice(index, 1);
         save();
         paint();
+        renderDeckEditor();
+        notify("Slide removed");
+      }
+
+      function editDeckSlideText(index) {
+        const deck = deckFor(editorKind);
+        const slide = deck[index];
+        if (!slide) return;
+        const title = prompt("Slide title", slide.title);
+        if (title && title.trim()) slide.title = title.trim();
+        const caption = prompt("Slide text", slide.caption);
+        if (caption && caption.trim()) slide.caption = caption.trim();
+        save();
+        paint();
+        renderDeckEditor();
         notify("Slide updated");
       }
 
@@ -3264,6 +3518,7 @@
 
           save();
           paint();
+          if (document.getElementById("deckEditor").classList.contains("open")) renderDeckEditor();
           notify(mode === "ai-edit" ? "AI edit added" : "Photo added");
         } catch (error) {
           notify("Photo could not be saved");
@@ -3377,6 +3632,21 @@
       document.getElementById("togglePlayer").addEventListener("click", () => {
         playerPaused = !playerPaused;
         document.getElementById("togglePlayer").textContent = playerPaused ? "Resume" : "Pause";
+      });
+      document.getElementById("closeDeckEditor").addEventListener("click", closeDeckEditor);
+      document.getElementById("editorDone").addEventListener("click", closeDeckEditor);
+      document.getElementById("editorAddPhoto").addEventListener("click", () => uploadDeckPhoto(editorKind, "upload"));
+      document.getElementById("deckEditor").addEventListener("click", (event) => {
+        if (event.target.id === "deckEditor") closeDeckEditor();
+      });
+      document.getElementById("deckEditorList").addEventListener("click", (event) => {
+        const deleteButton = event.target.closest("[data-delete-slide]");
+        if (deleteButton) {
+          deleteDeckSlide(Number(deleteButton.dataset.deleteSlide));
+          return;
+        }
+        const editButton = event.target.closest("[data-edit-slide]");
+        if (editButton) editDeckSlideText(Number(editButton.dataset.editSlide));
       });
       document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
       document.getElementById("startTrial").addEventListener("click", startAppleTrial);
