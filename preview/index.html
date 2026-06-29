@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=16" />
+    <link rel="manifest" href="./manifest.webmanifest?v=17" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v16";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v17";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=16")
+            .register("./service-worker.js?v=17")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1686,23 +1686,6 @@
       body[data-theme="dark"] .nav button.active {
         color: #f4f4f1;
         background: rgba(255, 255, 255, 0.08);
-      }
-
-      .nav .plus-nav {
-        width: 76px;
-        height: 76px;
-        align-self: end;
-        justify-self: center;
-        border-radius: 50%;
-        color: #fff;
-        background: #111;
-        font-size: 38px;
-        line-height: 1;
-      }
-
-      body[data-theme="dark"] .nav .plus-nav {
-        color: #111416;
-        background: #f4f4f1;
       }
 
       input,
