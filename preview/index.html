@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=23" />
+    <link rel="manifest" href="./manifest.webmanifest?v=24" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v23";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v24";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=23")
+            .register("./service-worker.js?v=24")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1060,15 +1060,25 @@
       }
 
       .deck-strip {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
         min-height: 0;
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        padding-bottom: 2px;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+      }
+
+      .deck-strip::-webkit-scrollbar {
+        display: none;
       }
 
       .deck-card {
-        min-width: 0;
+        min-width: 122px;
+        flex: 0 0 122px;
         min-height: 228px;
+        position: relative;
         display: grid;
         align-content: end;
         gap: 5px;
@@ -1081,6 +1091,38 @@
           var(--slide-bg, linear-gradient(145deg, #111, #565853));
         background-size: cover;
         background-position: center;
+        scroll-snap-align: start;
+      }
+
+      .deck-card.empty {
+        flex-basis: 100%;
+        min-height: 228px;
+        justify-items: center;
+        align-content: center;
+        text-align: center;
+        color: var(--ink);
+        background: var(--soft);
+      }
+
+      .deck-stage.negative .deck-card.empty {
+        color: #f4f4f1;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .deck-card-index {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: #111;
+        background: rgba(255, 255, 255, 0.82);
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 950;
       }
 
       .deck-card strong {
@@ -1096,14 +1138,16 @@
 
       .deck-actions {
         display: grid;
-        grid-template-columns: repeat(var(--action-count, 4), minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 8px;
       }
 
       .deck-actions .btn {
         min-height: 42px;
-        padding: 0 7px;
-        font-size: 12px;
+        padding: 0 5px;
+        font-size: 11px;
+        line-height: 1.05;
+        white-space: normal;
       }
 
       .player {
@@ -2035,11 +2079,12 @@
 
             <div class="deck-actions hidden" id="visionActions">
               <button class="btn" id="playVisionDeck" type="button">Play</button>
-              <button class="btn secondary" id="uploadVisionPhoto" type="button">Photo</button>
-              <button class="btn secondary" id="generateVision" type="button">AI</button>
+              <button class="btn secondary" id="uploadVisionPhoto" type="button">Upload</button>
+              <button class="btn secondary" id="generateVision" type="button">AI image</button>
+              <button class="btn secondary" id="aiEditVisionPhoto" type="button">AI edit</button>
               <button class="btn secondary" id="editVisionDeck" type="button">Edit</button>
             </div>
-            <input id="visionPhotoInput" type="file" accept="image/*" hidden />
+            <input id="visionPhotoInput" type="file" accept="image/*" multiple hidden />
           </section>
 
           <section class="screen" id="anti">
@@ -2064,11 +2109,12 @@
 
             <div class="deck-actions hidden" id="antiActions">
               <button class="btn" id="playAntiDeck" type="button">Play</button>
-              <button class="btn secondary" id="uploadAntiPhoto" type="button">Photo</button>
-              <button class="btn secondary" id="generateAnti" type="button">AI</button>
+              <button class="btn secondary" id="uploadAntiPhoto" type="button">Upload</button>
+              <button class="btn secondary" id="generateAnti" type="button">AI image</button>
+              <button class="btn secondary" id="aiEditAntiPhoto" type="button">AI edit</button>
               <button class="btn secondary" id="editAntiDeck" type="button">Edit</button>
             </div>
-            <input id="antiPhotoInput" type="file" accept="image/*" hidden />
+            <input id="antiPhotoInput" type="file" accept="image/*" multiple hidden />
           </section>
 
           <section class="screen" id="pro">
@@ -2299,6 +2345,8 @@
       const IMAGE_DB_NAME = "visualize-image-store";
       const IMAGE_STORE_NAME = "images";
       const STORED_IMAGE_PREFIX = "stored:";
+      const MAX_DECK_SLIDES = 12;
+      const pendingPhotoMode = { vision: "upload", anti: "upload" };
 
       function save() {
         try {
@@ -2649,8 +2697,19 @@
       function renderDeck(kind) {
         const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
         const id = kind === "vision" ? "visionDeck" : "antiDeck";
-        document.getElementById(id).innerHTML = deck.slice(0, 3).map((slide, index) => `
+        if (!deck.length) {
+          document.getElementById(id).innerHTML = `
+            <div class="deck-card empty">
+              <strong>No slides yet.</strong>
+              <span>Upload a photo, generate an AI image, or AI-edit a photo to start the sequence.</span>
+            </div>
+          `;
+          return;
+        }
+
+        document.getElementById(id).innerHTML = deck.map((slide, index) => `
           <div class="deck-card" style="${slideBackground(kind, index, slideImageUrl(slide))}">
+            <em class="deck-card-index">${index + 1}</em>
             <strong>${escapeHtml(slide.title)}</strong>
             <span>${escapeHtml(slide.caption)}</span>
           </div>
@@ -2662,7 +2721,7 @@
         document.getElementById("visionStage").classList.toggle("hidden", !state.visionCreated);
         document.getElementById("visionActions").classList.toggle("hidden", !state.visionCreated);
         document.getElementById("visionHint").textContent = state.visionCreated
-          ? "Play it full screen, then update photos, text, or AI scenes whenever your goal evolves."
+          ? (state.visionSlides.length ? "Play it full screen, then update photos, text, or AI scenes whenever your goal evolves." : "Add photos, generate an AI image, or AI-edit a photo to build your Vision sequence.")
           : "Build a daily visual sequence from your goals.";
       }
 
@@ -2671,7 +2730,7 @@
         document.getElementById("antiStage").classList.toggle("hidden", !state.antiCreated);
         document.getElementById("antiActions").classList.toggle("hidden", !state.antiCreated);
         document.getElementById("antiHint").textContent = state.antiCreated
-          ? "Play it full screen, then update the uncomfortable scenes when your goals become clearer."
+          ? (state.antiSlides.length ? "Play it full screen, then update the uncomfortable scenes when your goals become clearer." : "Add photos, generate an AI image, or AI-edit a photo to build your Anti-vision sequence.")
           : "Build the scene that makes the cost of delay visible.";
       }
 
@@ -2858,35 +2917,66 @@
         notify("Goal updated");
       }
 
+      function deckFor(kind) {
+        return kind === "vision" ? state.visionSlides : state.antiSlides;
+      }
+
+      function ensureDeckCreated(kind, message) {
+        if (kind === "vision") state.visionCreated = true;
+        if (kind === "anti") state.antiCreated = true;
+        if (message) notify(message);
+      }
+
+      function defaultSlideCopy(kind, source, index) {
+        if (kind === "vision") {
+          return {
+            title: source[index] || `Vision scene ${index + 1}`,
+            caption: "A concrete visual anchor for the future you are building."
+          };
+        }
+        return {
+          title: source[index] || `Anti-vision scene ${index + 1}`,
+          caption: "A clear reminder of the cost of delay."
+        };
+      }
+
+      function appendSlide(kind, slide) {
+        const deck = deckFor(kind);
+        if (deck.length >= MAX_DECK_SLIDES) {
+          notify(`Maximum ${MAX_DECK_SLIDES} slides for now`);
+          return false;
+        }
+        deck.push(slide);
+        ensureDeckCreated(kind);
+        return true;
+      }
+
       function generateDeck(kind, message) {
         const source = state.goals.length ? state.goals : defaults.goals;
-        if (kind === "vision") {
-          state.visionSlides = [
-            { title: source[0] || "Identity", caption: "The image of a person acting from higher standards.", image: "" },
-            { title: source[1] || "Environment", caption: "A concrete scene from the life you want to build.", image: "" },
-            { title: source[2] || "Result", caption: "The moment your goal becomes visible and daily.", image: "" }
-          ];
-          state.visionCreated = true;
-          notify(message || "Vision updated");
-        } else {
-          state.antiSlides = [
-            { title: source[0] || "Delay", caption: "The faded version if this goal always stays tomorrow.", image: "" },
-            { title: source[1] || "Cost", caption: "The environment created when you never truly choose.", image: "" },
-            { title: source[2] || "Consequence", caption: "An uncomfortable scene that pulls you back to the right direction.", image: "" }
-          ];
-          state.antiCreated = true;
-          notify(message || "Anti-vision updated");
-        }
+        const deck = deckFor(kind);
+        const promptText = prompt(
+          kind === "vision" ? "Describe the AI image for your Vision" : "Describe the AI image for your Anti-vision",
+          source[deck.length % source.length] || ""
+        );
+        if (!promptText || !promptText.trim()) return;
+        const title = kind === "vision" ? "AI vision scene" : "AI anti-vision scene";
+        const caption = promptText.trim();
+        if (!appendSlide(kind, { title, caption, image: "", source: "ai-generated", aiPrompt: caption })) return;
+        save();
+        paint();
+        notify(message || "AI image added");
+      }
+
+      function createVision() {
+        ensureDeckCreated("vision", "Vision created");
         save();
         paint();
       }
 
-      function createVision() {
-        generateDeck("vision", "Vision created");
-      }
-
       function createAnti() {
-        generateDeck("anti", "Anti-vision created");
+        ensureDeckCreated("anti", "Anti-vision created");
+        save();
+        paint();
       }
 
       function editDeck(kind) {
@@ -2898,9 +2988,21 @@
           notify("Create your anti-vision first");
           return;
         }
-        const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
-        const selected = Number(prompt("Which slide do you want to edit? 1, 2, or 3", "1")) - 1;
-        if (!Number.isInteger(selected) || selected < 0 || selected > 2 || !deck[selected]) return;
+        const deck = deckFor(kind);
+        if (!deck.length) {
+          notify("Add a slide first");
+          return;
+        }
+        const selected = Number(prompt(`Slide to edit or remove: 1-${deck.length}`, "1")) - 1;
+        if (!Number.isInteger(selected) || selected < 0 || selected >= deck.length || !deck[selected]) return;
+        const action = prompt("Type edit or remove", "edit");
+        if (action && action.trim().toLowerCase().startsWith("remove")) {
+          deck.splice(selected, 1);
+          save();
+          paint();
+          notify("Slide removed");
+          return;
+        }
         const title = prompt("Slide title", deck[selected].title);
         if (title && title.trim()) deck[selected].title = title.trim();
         const caption = prompt("Slide text", deck[selected].caption);
@@ -2910,38 +3012,48 @@
         notify("Slide updated");
       }
 
-      function uploadDeckPhoto(kind) {
+      function uploadDeckPhoto(kind, mode = "upload") {
+        pendingPhotoMode[kind] = mode;
         document.getElementById(kind === "vision" ? "visionPhotoInput" : "antiPhotoInput").click();
       }
 
       async function handleDeckPhoto(kind, event) {
-        const file = event.target.files[0];
-        if (!file) return;
+        const files = [...event.target.files].filter((file) => file && file.type.startsWith("image/"));
+        if (!files.length) return;
+        const mode = pendingPhotoMode[kind] || "upload";
         try {
-          if (!(kind === "vision" ? state.visionSlides : state.antiSlides).length) {
-            generateDeck(kind, kind === "vision" ? "Vision created" : "Deck created");
-          }
-          const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
-          const selected = Number(prompt("Add photo to slide: 1, 2, or 3", "1")) - 1;
-          if (!Number.isInteger(selected) || selected < 0 || selected > 2 || !deck[selected]) return;
+          ensureDeckCreated(kind);
+          const editPrompt = mode === "ai-edit"
+            ? prompt("Describe how AI should modify the photo before adding it", kind === "vision" ? "Make it feel like my future self already lives this." : "Make the consequence of delay feel clear and uncomfortable.")
+            : "";
+          if (mode === "ai-edit" && (!editPrompt || !editPrompt.trim())) return;
           notify("Saving photo...");
-          const dataUrl = await compressImageFile(file);
-          const imageKey = makeImageKey(kind, selected);
-          const saved = await writeStoredImage(imageKey, dataUrl);
-          if (kind === "vision") state.visionCreated = true;
-          if (kind === "anti") state.antiCreated = true;
-          if (saved) {
-            imageCache[imageKey] = dataUrl;
-            deck[selected].image = `${STORED_IMAGE_PREFIX}${imageKey}`;
-          } else {
-            deck[selected].image = dataUrl;
+
+          for (const file of files) {
+            const deck = deckFor(kind);
+            if (deck.length >= MAX_DECK_SLIDES) break;
+            const dataUrl = await compressImageFile(file);
+            const imageKey = makeImageKey(kind, deck.length);
+            const saved = await writeStoredImage(imageKey, dataUrl);
+            const imageRef = saved ? `${STORED_IMAGE_PREFIX}${imageKey}` : dataUrl;
+            if (saved) imageCache[imageKey] = dataUrl;
+            const copy = defaultSlideCopy(kind, state.goals.length ? state.goals : defaults.goals, deck.length);
+            const slide = {
+              title: mode === "ai-edit" ? (kind === "vision" ? "AI edited vision" : "AI edited anti-vision") : copy.title,
+              caption: mode === "ai-edit" ? editPrompt.trim() : copy.caption,
+              image: imageRef,
+              source: mode
+            };
+            appendSlide(kind, slide);
           }
+
           save();
           paint();
-          notify(saved ? "Photo saved" : "Photo added");
+          notify(mode === "ai-edit" ? "AI edit added" : "Photo added");
         } catch (error) {
           notify("Photo could not be saved");
         } finally {
+          pendingPhotoMode[kind] = "upload";
           event.target.value = "";
         }
       }
@@ -2973,7 +3085,10 @@
           notify("Create your anti-vision first");
           return;
         }
-        if (!deck.length) return;
+        if (!deck.length) {
+          notify("Add a slide first");
+          return;
+        }
         playerKind = kind;
         playerIndex = 0;
         playerPaused = false;
@@ -3034,8 +3149,10 @@
       document.getElementById("generateAnti").addEventListener("click", () => generateDeck("anti"));
       document.getElementById("playVisionDeck").addEventListener("click", () => startDeckPlayer("vision"));
       document.getElementById("playAntiDeck").addEventListener("click", () => startDeckPlayer("anti"));
-      document.getElementById("uploadVisionPhoto").addEventListener("click", () => uploadDeckPhoto("vision"));
-      document.getElementById("uploadAntiPhoto").addEventListener("click", () => uploadDeckPhoto("anti"));
+      document.getElementById("uploadVisionPhoto").addEventListener("click", () => uploadDeckPhoto("vision", "upload"));
+      document.getElementById("uploadAntiPhoto").addEventListener("click", () => uploadDeckPhoto("anti", "upload"));
+      document.getElementById("aiEditVisionPhoto").addEventListener("click", () => uploadDeckPhoto("vision", "ai-edit"));
+      document.getElementById("aiEditAntiPhoto").addEventListener("click", () => uploadDeckPhoto("anti", "ai-edit"));
       document.getElementById("editVisionDeck").addEventListener("click", () => editDeck("vision"));
       document.getElementById("editAntiDeck").addEventListener("click", () => editDeck("anti"));
       document.getElementById("visionPhotoInput").addEventListener("change", (event) => handleDeckPhoto("vision", event));
