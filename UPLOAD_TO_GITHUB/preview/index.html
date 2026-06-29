@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=15" />
+    <link rel="manifest" href="./manifest.webmanifest?v=16" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-26-v15";
+      const VISUALIZE_APP_VERSION = "2026-06-29-v16";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=15")
+            .register("./service-worker.js?v=16")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -603,6 +603,175 @@
         line-height: 1.35;
         font-weight: 850;
         animation: helperPulse 4.8s ease-in-out infinite;
+      }
+
+      .life-onboarding,
+      .life-dashboard {
+        min-height: 530px;
+        display: grid;
+        align-content: center;
+        gap: 16px;
+        padding: 24px;
+        border-radius: 28px;
+        color: var(--ink);
+        background: #fff;
+        box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
+      }
+
+      body[data-theme="dark"] .life-onboarding,
+      body[data-theme="dark"] .life-dashboard {
+        background: #181c1e;
+      }
+
+      .life-onboarding {
+        text-align: center;
+        justify-items: center;
+      }
+
+      .life-onboarding h1 {
+        max-width: 310px;
+        font-size: 32px;
+        line-height: 1.04;
+        font-weight: 950;
+      }
+
+      .life-onboarding p,
+      .life-summary,
+      .life-legend {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.38;
+        font-weight: 760;
+      }
+
+      .field-stack {
+        width: 100%;
+        display: grid;
+        gap: 9px;
+        margin-top: 2px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+        text-align: left;
+      }
+
+      .field span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .field input {
+        min-height: 46px;
+        border-radius: 16px;
+        background: var(--soft);
+      }
+
+      .life-dashboard {
+        align-content: start;
+        gap: 12px;
+      }
+
+      .life-head {
+        text-align: center;
+      }
+
+      .life-head h1 {
+        display: grid;
+        gap: 2px;
+        margin-top: 6px;
+      }
+
+      .life-head strong {
+        font-size: 48px;
+        line-height: 0.95;
+        font-weight: 950;
+        letter-spacing: 0;
+      }
+
+      .life-head em {
+        color: var(--muted);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 900;
+      }
+
+      .life-progress {
+        height: 10px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--soft);
+      }
+
+      .life-progress span {
+        display: block;
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--ink);
+      }
+
+      .life-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .life-stat {
+        min-height: 70px;
+        display: grid;
+        align-content: center;
+        gap: 3px;
+        padding: 10px;
+        border-radius: 18px;
+        background: var(--soft);
+        text-align: center;
+      }
+
+      .life-stat strong {
+        font-size: 20px;
+        line-height: 1;
+        font-weight: 950;
+      }
+
+      .life-stat span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .life-map {
+        display: grid;
+        grid-template-columns: repeat(20, 1fr);
+        gap: 3px;
+        padding: 10px 0 2px;
+      }
+
+      .life-dot {
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: #d7d7d2;
+      }
+
+      .life-dot.spent {
+        background: #111;
+      }
+
+      body[data-theme="dark"] .life-dot {
+        background: #33383a;
+      }
+
+      body[data-theme="dark"] .life-dot.spent {
+        background: #f4f4f1;
+      }
+
+      .life-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 2px;
       }
 
       @keyframes helperPulse {
@@ -1494,13 +1663,14 @@
         bottom: 14px;
         height: 72px;
         display: grid;
-        grid-template-columns: 1fr 1fr 76px 1fr 1fr;
-        gap: 2px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
         background: transparent;
       }
 
       .nav button {
-        border: 0;
+        border: 1px solid transparent;
+        border-radius: 999px;
         color: #9a9a96;
         background: transparent;
         font-size: 12px;
@@ -1509,10 +1679,13 @@
 
       .nav button.active {
         color: var(--ink);
+        background: rgba(255, 255, 255, 0.58);
+        border-color: var(--line);
       }
 
       body[data-theme="dark"] .nav button.active {
         color: #f4f4f1;
+        background: rgba(255, 255, 255, 0.08);
       }
 
       .nav .plus-nav {
@@ -1595,29 +1768,58 @@
       <div class="phone">
         <main class="app">
           <div class="topbar">
-            <button class="tiny-toggle" id="listenBtn" type="button" aria-label="Audio guide" title="Audio guide">
+            <button class="tiny-toggle" id="profileTop" type="button" aria-label="Open profile" title="Profile">
               <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 10v4h4l5 4V6l-5 4H4Z"></path>
-                <path d="M16 9.5a4 4 0 0 1 0 5"></path>
-                <path d="M18.5 7a7 7 0 0 1 0 10"></path>
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M5 20a7 7 0 0 1 14 0"></path>
               </svg>
             </button>
             <img class="brand-logo" src="./icon.svg" alt="Visualize" />
           </div>
 
           <section class="screen active" id="today">
-            <article class="goal-hero">
-              <span>Goal board</span>
-              <h1 id="goalTitle">Write what you want to see before you live it.</h1>
-              <button class="begin-btn" id="addGoal" type="button">+ Goal</button>
+            <article class="life-onboarding" id="lifeOnboarding">
+              <span class="deck-kicker">First setup</span>
+              <h1>Build your life clock.</h1>
+              <p>We estimate your remaining days and weeks from your age and a simple average lifespan. It is not a prediction, it is a reminder.</p>
+              <div class="field-stack">
+                <label class="field">
+                  <span>Your age</span>
+                  <input id="lifeAge" type="number" min="1" max="120" inputmode="numeric" placeholder="Example: 28" />
+                </label>
+                <label class="field">
+                  <span>Life estimate</span>
+                  <input id="lifeExpectancy" type="number" min="50" max="120" inputmode="numeric" value="85" />
+                </label>
+                <label class="field">
+                  <span>Main focus</span>
+                  <input id="lifeFocus" type="text" maxlength="80" placeholder="Example: build my body and business" />
+                </label>
+              </div>
+              <button class="btn" id="saveLifeProfile" type="button">Create life clock</button>
             </article>
 
-            <article class="reflection-card">
-              <h2>written goals.</h2>
-              <p id="goalText">Keep a few clear goals in sight. Vision and Anti-vision use this list to build your presentations.</p>
+            <article class="life-dashboard hidden" id="lifeDashboard">
+              <div class="life-head">
+                <span class="deck-kicker">Life clock</span>
+                <h1><strong id="lifeDaysLeft">0</strong><em>days left</em></h1>
+                <p class="life-summary" id="lifeSummary">Based on your current age and life estimate.</p>
+              </div>
+              <div class="life-progress" aria-label="Estimated life used">
+                <span id="lifeProgressBar"></span>
+              </div>
+              <div class="life-stats">
+                <div class="life-stat"><strong id="lifeWeeksLeft">0</strong><span>weeks left</span></div>
+                <div class="life-stat"><strong id="lifeYearsLeft">0</strong><span>years left</span></div>
+                <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
+              </div>
+              <div class="life-map" id="lifeMap" aria-label="Estimated life map"></div>
+              <p class="life-legend" id="lifeLegend">Each dot is a small block of life. Dark dots are time already spent.</p>
+              <div class="life-actions">
+                <button class="btn" id="reviewVisionFromLife" type="button">Vision</button>
+                <button class="btn secondary" id="editLifeInfo" type="button">Edit info</button>
+              </div>
             </article>
-
-            <div class="goal-list" id="goalList"></div>
           </section>
 
           <section class="screen" id="vision">
@@ -1802,11 +2004,9 @@
         </aside>
 
         <nav class="nav" aria-label="Navigazione principale">
-          <button class="active" data-view="today">Goal</button>
+          <button class="active" data-view="today">Life</button>
           <button data-view="vision">Vision</button>
-          <button class="plus-nav" id="addGoalNav" type="button" aria-label="Add goal">+</button>
           <button data-view="anti">Anti</button>
-          <button id="profileNav" type="button">Profile</button>
         </nav>
       </div>
     </div>
@@ -1835,6 +2035,12 @@
         goalText: "Keep a few clear goals in sight. Vision and Anti-vision use this list to build your presentations.",
         goals: ["Strong healthy body", "Stable business", "Better home and relationships"],
         mantra: "I am the kind of person who keeps promises to myself.",
+        lifeProfile: {
+          complete: false,
+          age: "",
+          expectancy: 85,
+          focus: ""
+        },
         visionTitle: "The version you are building",
         visionCreated: false,
         antiTitle: "The life you do not want to choose",
@@ -1867,6 +2073,10 @@
           ...((savedState && savedState.settings) || {})
         },
         goals: Array.isArray(savedState && savedState.goals) ? savedState.goals : defaults.goals,
+        lifeProfile: {
+          ...defaults.lifeProfile,
+          ...((savedState && savedState.lifeProfile) || {})
+        },
         visionCreated: Boolean(savedState && savedState.visionCreated),
         antiCreated: Boolean(savedState && savedState.antiCreated),
         visionSlides: Array.isArray(savedState && savedState.visionSlides) ? savedState.visionSlides : defaults.visionSlides,
@@ -1896,6 +2106,26 @@
           '"': "&quot;",
           "'": "&#39;"
         }[char]));
+      }
+
+      function clampNumber(value, min, max) {
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) return min;
+        return Math.min(max, Math.max(min, numeric));
+      }
+
+      function formatNumber(value) {
+        return Math.round(value).toLocaleString("en-US");
+      }
+
+      function getLifeStats() {
+        const age = clampNumber(state.lifeProfile.age, 0, 120);
+        const expectancy = Math.max(clampNumber(state.lifeProfile.expectancy, 50, 120), age + 1);
+        const yearsLeft = Math.max(expectancy - age, 0);
+        const daysLeft = Math.round(yearsLeft * 365.25);
+        const weeksLeft = Math.round(yearsLeft * 52.1775);
+        const usedPercent = Math.min(100, Math.max(0, (age / expectancy) * 100));
+        return { age, expectancy, yearsLeft, daysLeft, weeksLeft, usedPercent };
       }
 
       function applySettings() {
@@ -1928,8 +2158,42 @@
         return `--slide-bg: ${(kind === "vision" ? vision : anti)[index % 3]}`;
       }
 
+      function renderLifeClock() {
+        const onboarding = document.getElementById("lifeOnboarding");
+        const dashboard = document.getElementById("lifeDashboard");
+        const isComplete = Boolean(state.lifeProfile.complete);
+        onboarding.classList.toggle("hidden", isComplete);
+        dashboard.classList.toggle("hidden", !isComplete);
+
+        document.getElementById("lifeAge").value = state.lifeProfile.age || "";
+        document.getElementById("lifeExpectancy").value = state.lifeProfile.expectancy || 85;
+        document.getElementById("lifeFocus").value = state.lifeProfile.focus || "";
+
+        if (!isComplete) return;
+
+        const stats = getLifeStats();
+        const focus = state.lifeProfile.focus ? ` Focus: ${state.lifeProfile.focus}.` : "";
+        document.getElementById("lifeDaysLeft").textContent = formatNumber(stats.daysLeft);
+        document.getElementById("lifeWeeksLeft").textContent = formatNumber(stats.weeksLeft);
+        document.getElementById("lifeYearsLeft").textContent = stats.yearsLeft.toFixed(1);
+        document.getElementById("lifeUsedPercent").textContent = `${Math.round(stats.usedPercent)}%`;
+        document.getElementById("lifeSummary").textContent =
+          `Estimated from age ${stats.age} to ${stats.expectancy}. That is about ${formatNumber(stats.weeksLeft)} weeks left.${focus}`;
+        document.getElementById("lifeProgressBar").style.width = `${stats.usedPercent}%`;
+
+        const totalDots = 120;
+        const spentDots = Math.round((stats.usedPercent / 100) * totalDots);
+        document.getElementById("lifeMap").innerHTML = Array.from({ length: totalDots }, (_, index) =>
+          `<span class="life-dot ${index < spentDots ? "spent" : ""}"></span>`
+        ).join("");
+        document.getElementById("lifeLegend").textContent =
+          "The map compresses an average life into 120 dots. Dark dots are already spent; light dots are still yours to use.";
+      }
+
       function renderGoalList() {
-        document.getElementById("goalList").innerHTML = state.goals.slice(0, 4).map((goal, index) => `
+        const list = document.querySelector("[data-goal-list]");
+        if (!list) return;
+        list.innerHTML = state.goals.slice(0, 4).map((goal, index) => `
           <button class="goal-item" type="button" data-goal-index="${index}">
             <span class="goal-index">${index + 1}</span>
             <strong>${escapeHtml(goal)}</strong>
@@ -1968,10 +2232,9 @@
       }
 
       function paint() {
-        document.getElementById("goalTitle").textContent = state.goalTitle;
-        document.getElementById("goalText").textContent = state.goalText;
         document.getElementById("visionTitle").textContent = state.visionTitle;
         document.getElementById("antiTitle").textContent = state.antiTitle;
+        renderLifeClock();
         renderGoalList();
         renderDeck("vision");
         renderDeck("anti");
@@ -2027,6 +2290,40 @@
           "Visualize the positive scene, then look clearly at what happens if you delay."
         ].join(" ");
         speak(script);
+      }
+
+      function saveLifeProfile() {
+        const age = clampNumber(document.getElementById("lifeAge").value, 0, 120);
+        const expectancy = clampNumber(document.getElementById("lifeExpectancy").value || 85, 50, 120);
+        const focus = document.getElementById("lifeFocus").value.trim();
+
+        if (age < 1) {
+          notify("Add your age first");
+          return;
+        }
+
+        state.lifeProfile = {
+          complete: true,
+          age,
+          expectancy: Math.max(expectancy, age + 1),
+          focus
+        };
+
+        if (focus) {
+          state.goals = [
+            focus,
+            ...state.goals.filter((goal) => goal.toLowerCase() !== focus.toLowerCase())
+          ].slice(0, 4);
+        }
+
+        save();
+        paint();
+        notify("Life clock created");
+      }
+
+      function editLifeInfo() {
+        state.lifeProfile.complete = false;
+        paint();
       }
 
       function addGoal() {
@@ -2186,17 +2483,12 @@
         button.addEventListener("click", () => setView(button.dataset.view));
       });
 
-      document.getElementById("listenBtn").addEventListener("click", speakMain);
-      document.getElementById("profileNav").addEventListener("click", openProfile);
+      document.getElementById("profileTop").addEventListener("click", openProfile);
       document.getElementById("closeProfile").addEventListener("click", closeProfile);
       document.getElementById("profileScrim").addEventListener("click", closeProfile);
-      document.getElementById("addGoal").addEventListener("click", addGoal);
-      document.getElementById("addGoalNav").addEventListener("click", addGoal);
-      document.getElementById("goalList").addEventListener("click", (event) => {
-        const item = event.target.closest("[data-goal-index]");
-        if (!item) return;
-        editGoal(Number(item.dataset.goalIndex));
-      });
+      document.getElementById("saveLifeProfile").addEventListener("click", saveLifeProfile);
+      document.getElementById("editLifeInfo").addEventListener("click", editLifeInfo);
+      document.getElementById("reviewVisionFromLife").addEventListener("click", () => setView("vision"));
       document.getElementById("createVision").addEventListener("click", createVision);
       document.getElementById("createAnti").addEventListener("click", createAnti);
       document.getElementById("generateVision").addEventListener("click", () => generateDeck("vision"));
