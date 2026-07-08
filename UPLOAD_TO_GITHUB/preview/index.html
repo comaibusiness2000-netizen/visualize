@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=33" />
+    <link rel="manifest" href="./manifest.webmanifest?v=34" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-08-v33";
+      const VISUALIZE_APP_VERSION = "2026-07-08-v34";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=33")
+            .register("./service-worker.js?v=34")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -905,6 +905,13 @@
         background: var(--soft);
       }
 
+      .progress-goal.editing {
+        gap: 10px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        background: var(--control);
+      }
+
       .progress-goal-head {
         display: grid;
         grid-template-columns: 1fr auto;
@@ -948,6 +955,64 @@
       .progress-edit {
         border: 0;
         background: transparent;
+      }
+
+      .inline-goal-field {
+        display: grid;
+        gap: 7px;
+      }
+
+      .inline-goal-field span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+      }
+
+      .inline-goal-field input {
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        color: var(--ink);
+        background: var(--paper);
+        padding: 0 14px;
+        font-size: 15px;
+        font-weight: 900;
+        outline: none;
+      }
+
+      .inline-goal-field input:focus {
+        border-color: rgba(232, 196, 104, 0.95);
+        box-shadow: 0 0 0 3px rgba(232, 196, 104, 0.18);
+      }
+
+      .inline-edit-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .inline-edit-actions button {
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--ink);
+        background: var(--soft);
+        font-size: 13px;
+        font-weight: 950;
+      }
+
+      .inline-edit-actions button:first-child {
+        border-color: #111111;
+        color: #111111;
+        background: var(--gold);
+      }
+
+      body[data-theme="dark"] .inline-edit-actions button:first-child {
+        border-color: rgba(232, 196, 104, 0.58);
+        color: #111111;
       }
 
       #goals.screen.active {
@@ -1448,6 +1513,22 @@
         background: var(--control);
       }
 
+      .deck-editor-item.text-editing {
+        grid-column: 1 / -1;
+        min-height: 156px;
+        aspect-ratio: auto;
+        display: grid;
+        grid-template-columns: 96px minmax(0, 1fr);
+        gap: 12px;
+        padding: 10px;
+      }
+
+      .deck-editor-item.text-editing .deck-editor-thumb {
+        height: 100%;
+        min-height: 136px;
+        border-radius: 16px;
+      }
+
       .deck-editor-item.empty {
         grid-column: 1 / -1;
         min-height: 210px;
@@ -1534,6 +1615,73 @@
         right: 10px;
         color: #fff;
         background: var(--red);
+      }
+
+      .deck-editor-form {
+        min-width: 0;
+        display: grid;
+        gap: 8px;
+        align-content: start;
+      }
+
+      .deck-editor-field {
+        display: grid;
+        gap: 5px;
+      }
+
+      .deck-editor-field span {
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 950;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+      }
+
+      .deck-editor-field input,
+      .deck-editor-field textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        color: var(--ink);
+        background: var(--paper);
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 850;
+        line-height: 1.25;
+        outline: none;
+      }
+
+      .deck-editor-field textarea {
+        min-height: 62px;
+        resize: none;
+      }
+
+      .deck-editor-field input:focus,
+      .deck-editor-field textarea:focus {
+        border-color: rgba(232, 196, 104, 0.95);
+        box-shadow: 0 0 0 3px rgba(232, 196, 104, 0.16);
+      }
+
+      .deck-editor-form-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .deck-editor-form-actions button {
+        min-height: 36px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--ink);
+        background: var(--soft);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .deck-editor-form-actions button:first-child {
+        border-color: rgba(232, 196, 104, 0.9);
+        color: #111111;
+        background: var(--gold);
       }
 
       .deck-editor-foot {
@@ -2848,6 +2996,8 @@
       let selfTalkLoopActive = false;
       let currentView = "today";
       let editorKind = "vision";
+      let editingProgressIndex = null;
+      let editingSlideIndex = null;
       const viewHistory = [];
       const imageCache = {};
       const IMAGE_DB_NAME = "visualize-image-store";
@@ -3483,6 +3633,21 @@
 
         list.innerHTML = goals.slice(0, 5).map((goal, index) => {
           const progress = clampNumber(goal.progress, 0, 100);
+          if (editingProgressIndex === index) {
+            const label = state.goalMode === "daily" ? "Daily task" : "Short-term goal";
+            return `
+              <div class="progress-goal editing" data-progress-index="${index}">
+                <label class="inline-goal-field">
+                  <span>${label}</span>
+                  <input type="text" value="${escapeHtml(goal.title || "")}" maxlength="80" placeholder="Write it here..." data-inline-progress-title="${index}" />
+                </label>
+                <div class="inline-edit-actions">
+                  <button type="button" data-save-progress="${index}">Save</button>
+                  <button type="button" data-cancel-progress="${index}">Cancel</button>
+                </div>
+              </div>
+            `;
+          }
           return `
             <div class="progress-goal" data-progress-index="${index}">
               <div class="progress-goal-head">
@@ -3773,40 +3938,74 @@
       }
 
       function setGoalMode(mode) {
+        editingProgressIndex = null;
         state.goalMode = mode;
         save();
         renderProgressGoals();
       }
 
+      function focusInlineProgressEditor() {
+        requestAnimationFrame(() => {
+          const input = document.querySelector("[data-inline-progress-title]");
+          if (!input) return;
+          input.focus();
+          input.setSelectionRange(input.value.length, input.value.length);
+        });
+      }
+
       function addProgressGoal() {
         const goals = activeProgressGoals();
-        const label = state.goalMode === "daily" ? "daily task" : "short-term goal";
         if (goals.length >= 5) {
           notify("Maximum 5 items here");
           return;
         }
-        const title = prompt(`Add ${label}`, "");
-        if (!title || !title.trim()) return;
-        goals.push({ title: title.trim(), progress: 0 });
-        save();
+        goals.push({ title: "", progress: 0, draft: true });
+        editingProgressIndex = goals.length - 1;
         renderProgressGoals();
-        notify(state.goalMode === "daily" ? "Task added" : "Goal added");
+        focusInlineProgressEditor();
       }
 
       function editProgressGoal(index) {
         const goals = activeProgressGoals();
         const current = goals[index];
         if (!current) return;
-        const next = prompt("Edit title. Leave empty to delete it.", current.title);
-        if (next === null) return;
-        if (!next.trim()) {
-          goals.splice(index, 1);
-        } else {
-          current.title = next.trim();
+        editingProgressIndex = index;
+        renderProgressGoals();
+        focusInlineProgressEditor();
+      }
+
+      function saveProgressGoal(index) {
+        const goals = activeProgressGoals();
+        const current = goals[index];
+        const input = document.querySelector(`[data-inline-progress-title="${index}"]`);
+        if (!current || !input) return;
+        const title = input.value.trim();
+        if (!title) {
+          if (current.draft) {
+            goals.splice(index, 1);
+            editingProgressIndex = null;
+            renderProgressGoals();
+            return;
+          }
+          notify("Add a title first");
+          input.focus();
+          return;
         }
+        current.title = title;
+        delete current.draft;
+        editingProgressIndex = null;
         save();
         renderProgressGoals();
-        notify("Updated");
+        notify(state.goalMode === "daily" ? "Task saved" : "Goal saved");
+      }
+
+      function cancelProgressGoal(index) {
+        const goals = activeProgressGoals();
+        if (goals[index] && goals[index].draft) {
+          goals.splice(index, 1);
+        }
+        editingProgressIndex = null;
+        renderProgressGoals();
       }
 
       function updateProgressGoal(index, value) {
@@ -3822,25 +4021,17 @@
           notify("Maximum 4 goals in this view");
           return;
         }
-        const goal = prompt("Write a goal", "");
-        if (!goal || !goal.trim()) return;
-        state.goals.push(goal.trim());
-        save();
-        paint();
-        notify("Goal added");
+        setView("goals");
+        state.goalMode = "short";
+        renderProgressGoals();
+        addProgressGoal();
       }
 
       function editGoal(index) {
-        const next = prompt("Edit goal. Leave empty to delete it.", state.goals[index]);
-        if (next === null) return;
-        if (!next.trim()) {
-          state.goals.splice(index, 1);
-        } else {
-          state.goals[index] = next.trim();
-        }
-        save();
-        paint();
-        notify("Goal updated");
+        setView("goals");
+        state.goalMode = "short";
+        renderProgressGoals();
+        editProgressGoal(index);
       }
 
       function deckFor(kind) {
@@ -3956,21 +4147,49 @@
           return;
         }
 
-        document.getElementById("deckEditorList").innerHTML = deck.map((slide, index) => `
-          <div class="deck-editor-item" data-editor-index="${index}">
+        document.getElementById("deckEditorList").innerHTML = deck.map((slide, index) => {
+          const thumb = `
             <div class="deck-editor-thumb" style="${slideBackground(editorKind, index, slideImageUrl(slide))}">
               <span>${index + 1}</span>
             </div>
-            <div class="deck-editor-copy">
-              <strong>${escapeHtml(slide.title)}</strong>
-              <span>${escapeHtml(slide.caption)}</span>
+          `;
+
+          if (editingSlideIndex === index) {
+            return `
+              <div class="deck-editor-item text-editing" data-editor-index="${index}">
+                ${thumb}
+                <div class="deck-editor-form">
+                  <label class="deck-editor-field">
+                    <span>Title</span>
+                    <input type="text" value="${escapeHtml(slide.title || "")}" maxlength="70" data-slide-title="${index}" />
+                  </label>
+                  <label class="deck-editor-field">
+                    <span>Text</span>
+                    <textarea maxlength="140" data-slide-caption="${index}">${escapeHtml(slide.caption || "")}</textarea>
+                  </label>
+                  <div class="deck-editor-form-actions">
+                    <button type="button" data-save-slide-text="${index}">Save</button>
+                    <button type="button" data-cancel-slide-text="${index}">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="deck-editor-item" data-editor-index="${index}">
+              ${thumb}
+              <div class="deck-editor-copy">
+                <strong>${escapeHtml(slide.title)}</strong>
+                <span>${escapeHtml(slide.caption)}</span>
+              </div>
+              <div class="deck-editor-actions">
+                <button type="button" data-edit-slide="${index}" aria-label="Edit slide text">Aa</button>
+                <button class="delete-slide" type="button" data-delete-slide="${index}" aria-label="Delete image">x</button>
+              </div>
             </div>
-            <div class="deck-editor-actions">
-              <button type="button" data-edit-slide="${index}" aria-label="Edit slide text">Aa</button>
-              <button class="delete-slide" type="button" data-delete-slide="${index}" aria-label="Delete image">x</button>
-            </div>
-          </div>
-        `).join("");
+          `;
+        }).join("");
       }
 
       function openDeckEditor(kind) {
@@ -3982,6 +4201,7 @@
           notify("Create your anti-vision first");
           return;
         }
+        if (editorKind !== kind) editingSlideIndex = null;
         editorKind = kind;
         renderDeckEditor();
         document.getElementById("deckEditor").classList.add("open");
@@ -3989,6 +4209,7 @@
       }
 
       function closeDeckEditor() {
+        editingSlideIndex = null;
         document.getElementById("deckEditor").classList.remove("open");
         document.getElementById("deckEditor").setAttribute("aria-hidden", "true");
       }
@@ -4017,14 +4238,41 @@
         const deck = deckFor(editorKind);
         const slide = deck[index];
         if (!slide) return;
-        const title = prompt("Slide title", slide.title);
-        if (title && title.trim()) slide.title = title.trim();
-        const caption = prompt("Slide text", slide.caption);
-        if (caption && caption.trim()) slide.caption = caption.trim();
+        editingSlideIndex = index;
+        renderDeckEditor();
+        requestAnimationFrame(() => {
+          const input = document.querySelector(`[data-slide-title="${index}"]`);
+          if (!input) return;
+          input.focus();
+          input.setSelectionRange(input.value.length, input.value.length);
+        });
+      }
+
+      function saveDeckSlideText(index) {
+        const deck = deckFor(editorKind);
+        const slide = deck[index];
+        const titleInput = document.querySelector(`[data-slide-title="${index}"]`);
+        const captionInput = document.querySelector(`[data-slide-caption="${index}"]`);
+        if (!slide || !titleInput || !captionInput) return;
+        const title = titleInput.value.trim();
+        const caption = captionInput.value.trim();
+        if (!title && !caption) {
+          notify("Add at least one line");
+          titleInput.focus();
+          return;
+        }
+        slide.title = title || (editorKind === "vision" ? `Vision scene ${index + 1}` : `Anti-vision scene ${index + 1}`);
+        slide.caption = caption || (editorKind === "vision" ? "A concrete visual anchor for the future you are building." : "A clear reminder of the cost of delay.");
+        editingSlideIndex = null;
         save();
         paint();
         renderDeckEditor();
         notify("Slide updated");
+      }
+
+      function cancelDeckSlideText() {
+        editingSlideIndex = null;
+        renderDeckEditor();
       }
 
       function uploadDeckPhoto(kind, mode = "upload") {
@@ -4159,9 +4407,32 @@
         updateProgressGoal(Number(row.dataset.progressIndex), event.target.value);
       });
       document.getElementById("progressGoalList").addEventListener("click", (event) => {
+        const saveButton = event.target.closest("[data-save-progress]");
+        if (saveButton) {
+          saveProgressGoal(Number(saveButton.dataset.saveProgress));
+          return;
+        }
+        const cancelButton = event.target.closest("[data-cancel-progress]");
+        if (cancelButton) {
+          cancelProgressGoal(Number(cancelButton.dataset.cancelProgress));
+          return;
+        }
         const editButton = event.target.closest("[data-edit-progress]");
         if (!editButton) return;
         editProgressGoal(Number(editButton.dataset.editProgress));
+      });
+      document.getElementById("progressGoalList").addEventListener("keydown", (event) => {
+        const input = event.target.closest("[data-inline-progress-title]");
+        if (!input) return;
+        const index = Number(input.dataset.inlineProgressTitle);
+        if (event.key === "Enter") {
+          event.preventDefault();
+          saveProgressGoal(index);
+        }
+        if (event.key === "Escape") {
+          event.preventDefault();
+          cancelProgressGoal(index);
+        }
       });
       document.getElementById("createVision").addEventListener("click", createVision);
       document.getElementById("createAnti").addEventListener("click", createAnti);
@@ -4186,6 +4457,16 @@
         if (event.target.id === "deckEditor") closeDeckEditor();
       });
       document.getElementById("deckEditorList").addEventListener("click", (event) => {
+        const saveTextButton = event.target.closest("[data-save-slide-text]");
+        if (saveTextButton) {
+          saveDeckSlideText(Number(saveTextButton.dataset.saveSlideText));
+          return;
+        }
+        const cancelTextButton = event.target.closest("[data-cancel-slide-text]");
+        if (cancelTextButton) {
+          cancelDeckSlideText();
+          return;
+        }
         const deleteButton = event.target.closest("[data-delete-slide]");
         if (deleteButton) {
           deleteDeckSlide(Number(deleteButton.dataset.deleteSlide));
@@ -4193,6 +4474,19 @@
         }
         const editButton = event.target.closest("[data-edit-slide]");
         if (editButton) editDeckSlideText(Number(editButton.dataset.editSlide));
+      });
+      document.getElementById("deckEditorList").addEventListener("keydown", (event) => {
+        const field = event.target.closest("[data-slide-title], [data-slide-caption]");
+        if (!field) return;
+        const index = Number(field.dataset.slideTitle || field.dataset.slideCaption);
+        if (event.key === "Enter" && event.target.matches("[data-slide-title]")) {
+          event.preventDefault();
+          saveDeckSlideText(index);
+        }
+        if (event.key === "Escape") {
+          event.preventDefault();
+          cancelDeckSlideText();
+        }
       });
       document.getElementById("startTrial").addEventListener("click", startAppleTrial);
       document.getElementById("signInApple").addEventListener("click", signInWithApple);
