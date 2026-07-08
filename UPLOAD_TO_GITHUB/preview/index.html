@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=31" />
+    <link rel="manifest" href="./manifest.webmanifest?v=32" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-08-v31";
+      const VISUALIZE_APP_VERSION = "2026-07-08-v32";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=31")
+            .register("./service-worker.js?v=32")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2452,13 +2452,13 @@
 
           <section class="screen" id="vision">
             <div class="helper-copy">
-              <span id="visionHint">Build a daily visual sequence from real images of the future you want.</span>
+              <span id="visionHint">Add images of who you want to become, what you want to have, and who you want around you.</span>
             </div>
 
             <article class="vision-empty" id="visionEmpty">
               <span class="deck-kicker">Vision setup</span>
               <h2>Create the future scene first.</h2>
-              <p>Upload photos that make your future feel specific: your body, home, work, relationships, environment, routines, and symbols of the life you want.</p>
+              <p>Upload images of how you want to look, what you want to own or experience, the places you want to live in, and the kind of people you want around you.</p>
               <button class="btn" id="createVision" type="button">Create vision</button>
             </article>
 
@@ -2480,13 +2480,13 @@
 
           <section class="screen" id="anti">
             <div class="helper-copy">
-              <span id="antiHint">Build the scene that makes the cost of delay visible, without overcomplicating it.</span>
+              <span id="antiHint">Add the opposite: who you refuse to become, what you refuse to lose, and what you refuse to tolerate.</span>
             </div>
 
             <article class="anti-empty" id="antiEmpty">
               <span class="deck-kicker">Anti-vision setup</span>
               <h2>Create the scene you refuse to live.</h2>
-              <p>Upload images that represent what happens if you drift: low energy, disorder, wasted time, poor health, weak focus, or an environment you refuse to accept.</p>
+              <p>Upload images that show the opposite future: the body, environment, relationships, habits, stress, loneliness, or regret you do not want to end up with.</p>
               <button class="btn" id="createAnti" type="button">Create anti-vision</button>
             </article>
 
@@ -3473,8 +3473,8 @@
         document.getElementById("visionStage").classList.toggle("hidden", !state.visionCreated);
         document.getElementById("visionActions").classList.toggle("hidden", !state.visionCreated);
         document.getElementById("visionHint").textContent = state.visionCreated
-          ? (state.visionSlides.length ? "Play it full screen, then update the photos whenever your future feels clearer." : "Upload 5-10 images that make your future feel concrete.")
-          : "Build a daily visual sequence from real images of the future you want.";
+          ? (state.visionSlides.length ? "Play it full screen, then update the photos whenever your future feels clearer." : "Upload 5-10 images of who you want to be, what you want to have, and who you want beside you.")
+          : "Add images of who you want to become, what you want to have, and who you want around you.";
       }
 
       function renderAntiState() {
@@ -3482,8 +3482,8 @@
         document.getElementById("antiStage").classList.toggle("hidden", !state.antiCreated);
         document.getElementById("antiActions").classList.toggle("hidden", !state.antiCreated);
         document.getElementById("antiHint").textContent = state.antiCreated
-          ? (state.antiSlides.length ? "Play it full screen, then update the photos when the warning becomes sharper." : "Upload 5-10 images that make the cost of drifting feel real.")
-          : "Build the scene that makes the cost of delay visible, without overcomplicating it.";
+          ? (state.antiSlides.length ? "Play it full screen, then update the photos when the warning becomes sharper." : "Upload 5-10 images of the opposite future: what you do not want to become, lose, or tolerate.")
+          : "Add the opposite: who you refuse to become, what you refuse to lose, and what you refuse to tolerate.";
       }
 
       function paint() {
