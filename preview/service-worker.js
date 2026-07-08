@@ -1,4 +1,4 @@
-const CACHE_NAME = "visualize-preview-v30";
+const CACHE_NAME = "visualize-preview-v31";
 const APP_SHELL = [
   "./",
   "./index.html",

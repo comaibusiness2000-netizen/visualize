@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=30" />
+    <link rel="manifest" href="./manifest.webmanifest?v=31" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-08-v30";
+      const VISUALIZE_APP_VERSION = "2026-07-08-v31";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=30")
+            .register("./service-worker.js?v=31")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -104,7 +104,8 @@
 
       button,
       input,
-      textarea {
+      textarea,
+      select {
         font: inherit;
       }
 
@@ -2135,6 +2136,53 @@
         color: var(--red);
       }
 
+      .audio-card {
+        display: grid;
+        gap: 12px;
+      }
+
+      .audio-field {
+        display: grid;
+        gap: 7px;
+      }
+
+      .audio-field span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .audio-field textarea,
+      .audio-field select {
+        border-radius: 18px;
+        background: var(--control);
+      }
+
+      .voice-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: end;
+      }
+
+      .voice-refresh {
+        width: 46px;
+        height: 46px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: var(--ink);
+        background: var(--control);
+        font-size: 19px;
+        font-weight: 950;
+      }
+
+      .audio-note {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+        font-weight: 760;
+      }
+
       .text-link {
         border: 0;
         padding: 0;
@@ -2256,13 +2304,20 @@
       }
 
       input,
-      textarea {
+      textarea,
+      select {
         width: 100%;
         border: 1px solid var(--line);
         outline: 0;
         padding: 13px 14px;
         color: var(--ink);
         background: transparent;
+      }
+
+      select {
+        min-height: 46px;
+        border-radius: 16px;
+        appearance: none;
       }
 
       textarea {
@@ -2562,6 +2617,36 @@
             </div>
           </div>
 
+          <div class="profile-card audio-card">
+            <div>
+              <h2>Self-talk audio</h2>
+              <p>Write the mindset script you want to hear repeatedly before your visualization exercise.</p>
+            </div>
+            <label class="audio-field">
+              <span>Your script</span>
+              <textarea id="selfTalkText" maxlength="1600" placeholder="Write your self-talk here..."></textarea>
+            </label>
+            <div class="voice-row">
+              <label class="audio-field">
+                <span>Voice</span>
+                <select id="selfTalkVoice" aria-label="Self-talk voice"></select>
+              </label>
+              <button class="voice-refresh" id="refreshVoices" type="button" aria-label="Refresh voices">R</button>
+            </div>
+            <div class="setting-row">
+              <div>
+                <strong>Repeat playback</strong>
+                <span>Loop this track until you stop it.</span>
+              </div>
+              <button class="switch" id="repeatSelfTalk" type="button" aria-label="Repeat self-talk"></button>
+            </div>
+            <div class="action-row">
+              <button class="btn" id="playSelfTalk" type="button">Play audio</button>
+              <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
+            </div>
+            <p class="audio-note" id="voiceQualityNote">Voice quality depends on the voices installed on this device. On iPhone, some system voices sound more natural after downloading enhanced voices in iOS settings.</p>
+          </div>
+
           <div class="profile-card">
             <h2>Cloud readiness</h2>
             <p>Designed for 10,000+ users with account auth, database rows, object storage, and Apple subscription entitlements.</p>
@@ -2667,6 +2752,7 @@
           { title: "Improve body composition", progress: 25 }
         ],
         mantra: "I am the kind of person who keeps promises to myself.",
+        selfTalk: "I am training my attention. I see my future clearly, and I act like the person who is already building it. I do not need to feel perfect. I need to stay honest, focused, and consistent. Today I choose the actions that make my vision real.",
         lifeProfile: {
           complete: false,
           age: "",
@@ -2685,6 +2771,8 @@
           theme: "light",
           dailyReminder: true,
           slowAudio: true,
+          repeatSelfTalk: false,
+          selfTalkVoiceURI: "",
           language: "en"
         },
         account: {
@@ -2745,6 +2833,7 @@
       let playerIndex = 0;
       let playerKind = "vision";
       let playerPaused = false;
+      let selfTalkLoopActive = false;
       let currentView = "today";
       let editorKind = "vision";
       const viewHistory = [];
@@ -3071,6 +3160,54 @@
         return { age, currentAge, expectancy, elapsedDays, yearsLeft, daysLeft, weeksLeft, totalMonths, spentMonths, monthsLeft, usedPercent };
       }
 
+      function voiceLangPrefix() {
+        return ({
+          en: "en",
+          es: "es",
+          fr: "fr",
+          pt: "pt",
+          zh: "zh"
+        }[state.settings.language] || "en").toLowerCase();
+      }
+
+      function voiceScore(voice) {
+        const name = `${voice.name || ""} ${voice.lang || ""}`.toLowerCase();
+        let score = voice.lang && voice.lang.toLowerCase().startsWith(voiceLangPrefix()) ? 30 : 0;
+        if (voice.default) score += 10;
+        if (voice.localService) score += 8;
+        ["enhanced", "premium", "neural", "natural", "samantha", "ava", "alex", "daniel", "karen", "google", "microsoft"].forEach((word) => {
+          if (name.includes(word)) score += 8;
+        });
+        return score;
+      }
+
+      function availableVoices() {
+        if (!("speechSynthesis" in window)) return [];
+        return speechSynthesis.getVoices().slice().sort((a, b) => voiceScore(b) - voiceScore(a));
+      }
+
+      function selectedSelfTalkVoice() {
+        const voices = availableVoices();
+        if (!voices.length) return null;
+        const selected = voices.find((voice) => voice.voiceURI === state.settings.selfTalkVoiceURI);
+        if (selected) return selected;
+        return voices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith(voiceLangPrefix())) || voices[0];
+      }
+
+      function populateVoiceOptions() {
+        const select = document.getElementById("selfTalkVoice");
+        if (!select) return;
+        const voices = availableVoices();
+        const selectedVoice = selectedSelfTalkVoice();
+        select.innerHTML = `<option value="">Best available voice</option>` + voices.map((voice) =>
+          `<option value="${escapeHtml(voice.voiceURI)}">${escapeHtml(voice.name)} (${escapeHtml(voice.lang || "voice")})</option>`
+        ).join("");
+        select.value = state.settings.selfTalkVoiceURI || "";
+        document.getElementById("voiceQualityNote").textContent = voices.length
+          ? `Selected: ${selectedVoice ? `${selectedVoice.name} (${selectedVoice.lang})` : "best available voice"}. Voice quality depends on this device.`
+          : "No downloadable voices were exposed by this browser yet. Try Refresh voices, or play once from Safari.";
+      }
+
       function applySettings() {
         document.body.dataset.theme = state.settings.theme;
         document.querySelector('meta[name="theme-color"]').setAttribute(
@@ -3081,6 +3218,9 @@
         document.getElementById("themeDark").classList.toggle("active", state.settings.theme === "dark");
         document.getElementById("dailyReminder").classList.toggle("on", state.settings.dailyReminder);
         document.getElementById("slowAudio").classList.toggle("on", state.settings.slowAudio);
+        document.getElementById("repeatSelfTalk").classList.toggle("on", state.settings.repeatSelfTalk);
+        document.getElementById("selfTalkText").value = state.selfTalk || defaults.selfTalk;
+        populateVoiceOptions();
         document.querySelectorAll("[data-lang]").forEach((button) => {
           button.classList.toggle("active", button.dataset.lang === state.settings.language);
         });
@@ -3405,10 +3545,10 @@
         document.getElementById("profileDrawer").setAttribute("aria-hidden", "true");
       }
 
-      function speak(text) {
+      function speak(text, options = {}) {
         if (!("speechSynthesis" in window)) {
           notify("Audio not supported");
-          return;
+          return null;
         }
         const voiceLang = {
           en: "en-US",
@@ -3419,9 +3559,18 @@
         }[state.settings.language] || "en-US";
         speechSynthesis.cancel();
         const voice = new SpeechSynthesisUtterance(text);
-        voice.lang = voiceLang;
+        const selectedVoice = options.voice || selectedSelfTalkVoice();
+        if (selectedVoice) {
+          voice.voice = selectedVoice;
+          voice.lang = selectedVoice.lang || voiceLang;
+        } else {
+          voice.lang = voiceLang;
+        }
         voice.rate = state.settings.slowAudio ? 0.82 : 0.94;
+        if (typeof options.onend === "function") voice.onend = options.onend;
+        if (typeof options.onerror === "function") voice.onerror = options.onerror;
         speechSynthesis.speak(voice);
+        return voice;
       }
 
       function speakMain() {
@@ -3432,6 +3581,44 @@
           "Visualize the positive scene, then look clearly at what happens if you delay."
         ].join(" ");
         speak(script);
+      }
+
+      function saveSelfTalkFromForm({ silent = false } = {}) {
+        const text = document.getElementById("selfTalkText").value.trim();
+        state.selfTalk = text || defaults.selfTalk;
+        state.settings.selfTalkVoiceURI = document.getElementById("selfTalkVoice").value || "";
+        save();
+        if (!silent) notify("Self-talk saved");
+      }
+
+      function playSelfTalk() {
+        const text = document.getElementById("selfTalkText").value.trim();
+        if (!text) {
+          notify("Write your self-talk first");
+          return;
+        }
+        state.selfTalk = text;
+        state.settings.selfTalkVoiceURI = document.getElementById("selfTalkVoice").value || "";
+        saveWithoutSyncBump();
+        selfTalkLoopActive = Boolean(state.settings.repeatSelfTalk);
+        speak(text, {
+          voice: selectedSelfTalkVoice(),
+          onend: () => {
+            if (!selfTalkLoopActive || !state.settings.repeatSelfTalk) return;
+            setTimeout(playSelfTalk, 650);
+          },
+          onerror: () => {
+            selfTalkLoopActive = false;
+            notify("Audio stopped");
+          }
+        });
+        notify(selfTalkLoopActive ? "Self-talk looping" : "Self-talk playing");
+      }
+
+      function stopSelfTalk() {
+        selfTalkLoopActive = false;
+        if ("speechSynthesis" in window) speechSynthesis.cancel();
+        notify("Audio stopped");
       }
 
       function saveLifeProfile() {
@@ -3935,7 +4122,35 @@
         notify(state.settings.slowAudio ? "Slow audio" : "Normal audio");
       });
 
+      document.getElementById("repeatSelfTalk").addEventListener("click", () => {
+        state.settings.repeatSelfTalk = !state.settings.repeatSelfTalk;
+        if (!state.settings.repeatSelfTalk) selfTalkLoopActive = false;
+        save();
+        applySettings();
+        notify(state.settings.repeatSelfTalk ? "Repeat on" : "Repeat off");
+      });
+
+      document.getElementById("selfTalkVoice").addEventListener("change", () => {
+        state.settings.selfTalkVoiceURI = document.getElementById("selfTalkVoice").value || "";
+        save();
+        populateVoiceOptions();
+        notify("Voice selected");
+      });
+
+      document.getElementById("refreshVoices").addEventListener("click", () => {
+        populateVoiceOptions();
+        notify("Voices refreshed");
+      });
+
+      document.getElementById("selfTalkText").addEventListener("blur", () => {
+        saveSelfTalkFromForm({ silent: true });
+      });
+
+      document.getElementById("playSelfTalk").addEventListener("click", playSelfTalk);
+      document.getElementById("stopSelfTalk").addEventListener("click", stopSelfTalk);
+
       document.getElementById("saveProfile").addEventListener("click", () => {
+        saveSelfTalkFromForm({ silent: true });
         save();
         closeProfile();
         notify("Profile saved");
@@ -3953,6 +4168,9 @@
       });
       window.addEventListener("pageshow", showLifeClockForPendingUpdate);
       window.addEventListener("focus", showLifeClockForPendingUpdate);
+      if ("speechSynthesis" in window) {
+        speechSynthesis.onvoiceschanged = populateVoiceOptions;
+      }
 
       bootApp();
     </script>
