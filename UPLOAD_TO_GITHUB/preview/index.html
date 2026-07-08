@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=29" />
+    <link rel="manifest" href="./manifest.webmanifest?v=30" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-06-29-v29";
+      const VISUALIZE_APP_VERSION = "2026-07-08-v30";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=29")
+            .register("./service-worker.js?v=30")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1178,14 +1178,14 @@
 
       .deck-actions {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
       }
 
       .deck-actions .btn {
         min-height: 42px;
-        padding: 0 5px;
-        font-size: 11px;
+        padding: 0 10px;
+        font-size: 12px;
         line-height: 1.05;
         white-space: normal;
       }
@@ -1209,46 +1209,97 @@
         display: grid;
         align-content: end;
         gap: 12px;
-        padding: 82px 26px 122px;
+        padding: 92px 24px 124px;
         isolation: isolate;
+        overflow: hidden;
+        background: #050607;
+      }
+
+      .player-media {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
         background:
-          linear-gradient(180deg, rgba(5, 6, 7, 0.05), rgba(5, 6, 7, 0.82)),
+          linear-gradient(180deg, rgba(5, 6, 7, 0.02), rgba(5, 6, 7, 0.78)),
           var(--slide-bg, linear-gradient(145deg, #111, #565853 58%, #d9d9d6));
         background-size: cover;
         background-position: center;
+        transform: scale(1.02);
+      }
+
+      .player-slide.is-animating .player-media {
+        animation: cinematicPhoto 3.25s ease both;
       }
 
       .player-slide::before {
         content: "";
         position: absolute;
         inset: 0;
-        z-index: -1;
+        z-index: 1;
         background:
-          radial-gradient(circle at 50% 34%, transparent 0 26%, rgba(0, 0, 0, 0.18) 58%),
-          linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.68));
+          radial-gradient(circle at 50% 28%, transparent 0 28%, rgba(0, 0, 0, 0.18) 62%),
+          linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.76));
+        pointer-events: none;
+      }
+
+      .player-copy {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        gap: 8px;
+        max-width: 360px;
+        padding: 16px 16px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 24px;
+        background: rgba(5, 6, 7, 0.28);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+      }
+
+      .player-kicker {
+        color: rgba(255, 255, 255, 0.64);
+        font-size: 11px;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        font-weight: 950;
       }
 
       .player-slide h2 {
-        max-width: 360px;
-        font-size: 42px;
-        line-height: 0.98;
+        font-size: 38px;
+        line-height: 1;
         font-weight: 950;
         text-shadow: 0 14px 34px rgba(0, 0, 0, 0.46);
       }
 
       .player-slide p {
-        max-width: 340px;
         color: rgba(255, 255, 255, 0.82);
-        font-size: 17px;
+        font-size: 16px;
         line-height: 1.35;
         font-weight: 800;
         text-shadow: 0 10px 28px rgba(0, 0, 0, 0.44);
       }
 
+      @keyframes cinematicPhoto {
+        0% {
+          opacity: 0.35;
+          transform: scale(1.04) translate3d(-1.2%, 1%, 0);
+          filter: saturate(0.9);
+        }
+        18% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1.12) translate3d(1.4%, -1.2%, 0);
+          filter: saturate(1.06);
+        }
+      }
+
       .player-top,
       .player-controls {
         position: relative;
-        z-index: 1;
+        z-index: 3;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -1486,14 +1537,14 @@
 
       .deck-editor-foot {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 8px;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
       }
 
       .deck-editor-foot .btn {
         min-height: 44px;
-        padding: 0 8px;
-        font-size: 12px;
+        padding: 0 12px;
+        font-size: 13px;
         line-height: 1.05;
         white-space: normal;
       }
@@ -1916,7 +1967,7 @@
         color: #b9b0a4;
       }
 
-      .ai-badge {
+      .plan-badge {
         min-width: 70px;
         height: 44px;
         display: grid;
@@ -2346,13 +2397,13 @@
 
           <section class="screen" id="vision">
             <div class="helper-copy">
-              <span id="visionHint">Build a daily visual sequence from your goals.</span>
+              <span id="visionHint">Build a daily visual sequence from real images of the future you want.</span>
             </div>
 
             <article class="vision-empty" id="visionEmpty">
               <span class="deck-kicker">Vision setup</span>
               <h2>Create the future scene first.</h2>
-              <p>Add your own photos, or create AI images from your goals, then turn them into a short daily visualization presentation.</p>
+              <p>Upload photos that make your future feel specific: your body, home, work, relationships, environment, routines, and symbols of the life you want.</p>
               <button class="btn" id="createVision" type="button">Create vision</button>
             </article>
 
@@ -2367,8 +2418,6 @@
             <div class="deck-actions hidden" id="visionActions">
               <button class="btn" id="playVisionDeck" type="button">Play</button>
               <button class="btn secondary" id="uploadVisionPhoto" type="button">Upload</button>
-              <button class="btn secondary" id="generateVision" type="button">AI image</button>
-              <button class="btn secondary" id="aiEditVisionPhoto" type="button">AI edit</button>
               <button class="btn secondary" id="editVisionDeck" type="button">Edit</button>
             </div>
             <input id="visionPhotoInput" type="file" accept="image/*" multiple hidden />
@@ -2376,13 +2425,13 @@
 
           <section class="screen" id="anti">
             <div class="helper-copy">
-              <span id="antiHint">Build the scene that makes the cost of delay visible.</span>
+              <span id="antiHint">Build the scene that makes the cost of delay visible, without overcomplicating it.</span>
             </div>
 
             <article class="anti-empty" id="antiEmpty">
               <span class="deck-kicker">Anti-vision setup</span>
               <h2>Create the scene you refuse to live.</h2>
-              <p>Add photos, or create AI images from your goals, then turn them into a short presentation that makes the cost of inaction impossible to ignore.</p>
+              <p>Upload images that represent what happens if you drift: low energy, disorder, wasted time, poor health, weak focus, or an environment you refuse to accept.</p>
               <button class="btn" id="createAnti" type="button">Create anti-vision</button>
             </article>
 
@@ -2397,8 +2446,6 @@
             <div class="deck-actions hidden" id="antiActions">
               <button class="btn" id="playAntiDeck" type="button">Play</button>
               <button class="btn secondary" id="uploadAntiPhoto" type="button">Upload</button>
-              <button class="btn secondary" id="generateAnti" type="button">AI image</button>
-              <button class="btn secondary" id="aiEditAntiPhoto" type="button">AI edit</button>
               <button class="btn secondary" id="editAntiDeck" type="button">Edit</button>
             </div>
             <input id="antiPhotoInput" type="file" accept="image/*" multiple hidden />
@@ -2408,45 +2455,45 @@
             <div class="paywall">
               <button class="paywall-close" id="closePro" type="button" aria-label="Close Pro">x</button>
               <div class="paywall-tabs" aria-label="Plans">
-                <button type="button">Premium</button>
-                <button class="active" type="button">Premium + AI</button>
+                <button type="button">Free</button>
+                <button class="active" type="button">Premium</button>
               </div>
 
               <div class="paywall-head">
                 <div class="ghost-bird" aria-hidden="true"></div>
                 <h1>Visualize better with Visualize.</h1>
-                <p>with <em>guided AI</em> for goals, images, and scripts.</p>
+                <p>with cloud sync, richer presentations, and private backups.</p>
               </div>
 
               <div class="feature-card">
                 <div class="feature-row">
                   <div class="feature-icon">P</div>
                   <div>
-                    <strong>Personalized visions</strong>
-                    <span>Custom prompts to see the life you want to build.</span>
+                    <strong>Private photo decks</strong>
+                    <span>Keep vision and anti-vision images backed up safely.</span>
                   </div>
-                  <div class="ai-badge">AI</div>
+                  <div class="plan-badge">Pro</div>
                 </div>
                 <div class="feature-row">
                   <div class="feature-icon">A</div>
                   <div>
-                    <strong>Reflective analysis</strong>
-                    <span>Find patterns across mantras, delays, and recurring goals.</span>
+                    <strong>Cross-device sync</strong>
+                    <span>Use the same decks across iPhone and iPad.</span>
                   </div>
-                  <div class="ai-badge">AI</div>
+                  <div class="plan-badge">Pro</div>
                 </div>
                 <div class="feature-row">
                   <div class="feature-icon">S</div>
                   <div>
-                    <strong>Smart audio scripts</strong>
-                    <span>Mindset tracks adapted to your main objective.</span>
+                    <strong>Enhanced playback</strong>
+                    <span>More presentation styles for your daily exercise.</span>
                   </div>
-                  <div class="ai-badge">AI</div>
+                  <div class="plan-badge">Pro</div>
                 </div>
               </div>
 
               <div class="paywall-footer">
-                <strong>Yearly + AI<br />EUR 99.99 annually (EUR 8.33/month)<br />Apple In-App Purchase</strong>
+                <strong>Yearly Premium<br />EUR 39.99 annually<br />Apple In-App Purchase</strong>
                 <button class="trial-btn" id="startTrial" type="button">Try 3 days free</button>
               </div>
             </div>
@@ -2509,7 +2556,7 @@
             <div class="setting-row">
               <div>
                 <strong>Cloud sync</strong>
-                <span>Account, goals, decks, AI jobs, and image files sync across iPhone and iPad.</span>
+                <span>Account, goals, decks, and image files sync across iPhone and iPad.</span>
               </div>
               <button class="switch" id="cloudSyncSwitch" type="button" aria-label="Cloud sync pending"></button>
             </div>
@@ -2517,7 +2564,7 @@
 
           <div class="profile-card">
             <h2>Cloud readiness</h2>
-            <p>Designed for 10,000+ users with account auth, database rows, object storage, AI jobs, and Apple subscription entitlements.</p>
+            <p>Designed for 10,000+ users with account auth, database rows, object storage, and Apple subscription entitlements.</p>
             <div class="status-list">
               <div class="status-pill"><span>Auth</span><strong>Sign in with Apple</strong></div>
               <div class="status-pill"><span>Images</span><strong>Cloud storage</strong></div>
@@ -2540,7 +2587,7 @@
 
           <div class="profile-card">
             <h2>Data</h2>
-            <p>Production will separate account data, private images, AI prompts, and subscription status. The prototype can still be reset here.</p>
+            <p>Production will separate account data, private images, goals, and subscription status. The prototype can still be reset here.</p>
             <div class="action-row">
               <button class="btn secondary" id="resetData" type="button">Reset</button>
               <button class="btn" id="saveProfile" type="button">Save</button>
@@ -2549,16 +2596,8 @@
 
           <div class="profile-card">
             <h2>Privacy</h2>
-            <p>Images, goals, anti-visions, AI prompts, and audio scripts are sensitive. Production requires explicit consent, deletion, and a clear privacy policy.</p>
+            <p>Images, goals, anti-visions, and audio scripts are sensitive. Production requires explicit consent, deletion, and a clear privacy policy.</p>
             <button class="text-link" id="openPrivacy" type="button">Open privacy policy draft</button>
-          </div>
-
-          <div class="profile-card">
-            <h2>Upgrade</h2>
-            <p>Open Pro + AI options for generated images, scripts, and visualizations.</p>
-            <div class="action-row">
-              <button class="btn" id="openProFromProfile" type="button">Pro + AI</button>
-            </div>
           </div>
         </aside>
 
@@ -2575,8 +2614,12 @@
 
     <div class="player" id="deckPlayer" aria-hidden="true">
       <div class="player-slide" id="playerSlide">
-        <h2 id="playerTitle">Identity</h2>
-        <p id="playerCaption">You move like someone who has already decided.</p>
+        <div class="player-media" aria-hidden="true"></div>
+        <div class="player-copy">
+          <span class="player-kicker" id="playerKicker">Vision 1</span>
+          <h2 id="playerTitle">Identity</h2>
+          <p id="playerCaption">You move like someone who has already decided.</p>
+        </div>
       </div>
       <div class="player-top">
         <button class="player-close" id="closePlayer" type="button" aria-label="Close presentation">x</button>
@@ -2601,8 +2644,6 @@
         <div class="deck-editor-list" id="deckEditorList"></div>
         <div class="deck-editor-foot">
           <button class="btn secondary" id="editorAddPhoto" type="button">+ Photos</button>
-          <button class="btn secondary" id="editorGenerateImage" type="button">AI image</button>
-          <button class="btn secondary" id="editorAiEditPhoto" type="button">AI edit</button>
           <button class="btn" id="editorDone" type="button">Done</button>
         </div>
       </div>
@@ -2660,7 +2701,7 @@
         },
         subscription: {
           plan: "free",
-          proAI: false,
+          premium: false,
           entitlementSource: "apple-iap"
         }
       };
@@ -2718,7 +2759,6 @@
         auth: "sign-in-with-apple",
         database: "supabase-postgres",
         storage: "object-storage",
-        ai: "server-side-generation",
         payments: "apple-in-app-purchase"
       };
       const pendingPhotoMode = { vision: "upload", anti: "upload" };
@@ -3273,7 +3313,7 @@
           document.getElementById(id).innerHTML = `
             <div class="deck-card empty">
               <strong>No slides yet.</strong>
-              <span>Upload a photo, generate an AI image, or AI-edit a photo to start the sequence.</span>
+              <span>Upload photos in the order you want to see them during the exercise.</span>
             </div>
           `;
           return;
@@ -3293,8 +3333,8 @@
         document.getElementById("visionStage").classList.toggle("hidden", !state.visionCreated);
         document.getElementById("visionActions").classList.toggle("hidden", !state.visionCreated);
         document.getElementById("visionHint").textContent = state.visionCreated
-          ? (state.visionSlides.length ? "Play it full screen, then update photos, text, or AI scenes whenever your goal evolves." : "Add photos, generate an AI image, or AI-edit a photo to build your Vision sequence.")
-          : "Build a daily visual sequence from your goals.";
+          ? (state.visionSlides.length ? "Play it full screen, then update the photos whenever your future feels clearer." : "Upload 5-10 images that make your future feel concrete.")
+          : "Build a daily visual sequence from real images of the future you want.";
       }
 
       function renderAntiState() {
@@ -3302,8 +3342,8 @@
         document.getElementById("antiStage").classList.toggle("hidden", !state.antiCreated);
         document.getElementById("antiActions").classList.toggle("hidden", !state.antiCreated);
         document.getElementById("antiHint").textContent = state.antiCreated
-          ? (state.antiSlides.length ? "Play it full screen, then update the uncomfortable scenes when your goals become clearer." : "Add photos, generate an AI image, or AI-edit a photo to build your Anti-vision sequence.")
-          : "Build the scene that makes the cost of delay visible.";
+          ? (state.antiSlides.length ? "Play it full screen, then update the photos when the warning becomes sharper." : "Upload 5-10 images that make the cost of drifting feel real.")
+          : "Build the scene that makes the cost of delay visible, without overcomplicating it.";
       }
 
       function paint() {
@@ -3528,31 +3568,6 @@
         return true;
       }
 
-      function generateDeck(kind, message) {
-        const source = state.goals.length ? state.goals : defaults.goals;
-        const deck = deckFor(kind);
-        const promptText = prompt(
-          kind === "vision" ? "Describe the AI image for your Vision" : "Describe the AI image for your Anti-vision",
-          source[deck.length % source.length] || ""
-        );
-        if (!promptText || !promptText.trim()) return;
-        const title = kind === "vision" ? "AI vision scene" : "AI anti-vision scene";
-        const caption = promptText.trim();
-        if (!appendSlide(kind, {
-          title,
-          caption,
-          image: "",
-          source: "ai-generated",
-          aiPrompt: caption,
-          aiStatus: backendReady() ? "queued" : "pending-backend",
-          aiProvider: PRODUCTION_BACKEND.ai
-        })) return;
-        save();
-        paint();
-        if (document.getElementById("deckEditor").classList.contains("open")) renderDeckEditor();
-        notify(backendReady() ? (message || "AI image queued") : "AI backend needed");
-      }
-
       function createVision() {
         ensureDeckCreated("vision", "Vision created");
         save();
@@ -3602,8 +3617,8 @@
       }
 
       function startAppleTrial() {
-        state.subscription.plan = "pro-ai-pending";
-        state.subscription.proAI = false;
+        state.subscription.plan = "premium-pending";
+        state.subscription.premium = false;
         save();
         notify("Apple IAP required in native app");
       }
@@ -3625,7 +3640,7 @@
             <div class="deck-editor-item empty">
               <div class="deck-editor-copy">
                 <strong>No images yet.</strong>
-                <span>Use + Photos, AI image, or AI edit to build this presentation.</span>
+                <span>Use + Photos to add images in the order you want them to appear.</span>
               </div>
             </div>
           `;
@@ -3711,13 +3726,8 @@
       async function handleDeckPhoto(kind, event) {
         const files = [...event.target.files].filter((file) => file && file.type.startsWith("image/"));
         if (!files.length) return;
-        const mode = pendingPhotoMode[kind] || "upload";
         try {
           ensureDeckCreated(kind);
-          const editPrompt = mode === "ai-edit"
-            ? prompt("Describe how AI should modify the photo before adding it", kind === "vision" ? "Make it feel like my future self already lives this." : "Make the consequence of delay feel clear and uncomfortable.")
-            : "";
-          if (mode === "ai-edit" && (!editPrompt || !editPrompt.trim())) return;
           notify("Saving photo...");
 
           for (const file of files) {
@@ -3734,11 +3744,10 @@
             if (saved) imageCache[imageKey] = dataUrl;
             const copy = defaultSlideCopy(kind, state.goals.length ? state.goals : defaults.goals, deck.length);
             const slide = {
-              title: mode === "ai-edit" ? (kind === "vision" ? "AI edited vision" : "AI edited anti-vision") : copy.title,
-              caption: mode === "ai-edit" ? editPrompt.trim() : copy.caption,
+              title: copy.title,
+              caption: copy.caption,
               image: imageRef,
-              source: mode,
-              aiStatus: mode === "ai-edit" ? (backendReady() ? "queued" : "pending-backend") : ""
+              source: "upload"
             };
             appendSlide(kind, slide);
           }
@@ -3746,7 +3755,7 @@
           save();
           paint();
           if (document.getElementById("deckEditor").classList.contains("open")) renderDeckEditor();
-          notify(mode === "ai-edit" ? "AI edit added" : "Photo added");
+          notify("Photo added");
         } catch (error) {
           notify("Photo could not be saved");
         } finally {
@@ -3760,6 +3769,11 @@
         const slide = deck[playerIndex % deck.length];
         const playerSlide = document.getElementById("playerSlide");
         playerSlide.setAttribute("style", slideBackground(playerKind, playerIndex, slideImageUrl(slide)));
+        playerSlide.classList.remove("is-animating");
+        void playerSlide.offsetWidth;
+        playerSlide.classList.add("is-animating");
+        document.getElementById("playerKicker").textContent =
+          `${playerKind === "vision" ? "Vision" : "Anti-vision"} ${playerIndex + 1}`;
         document.getElementById("playerTitle").textContent = slide.title;
         document.getElementById("playerCaption").textContent = slide.caption;
         document.getElementById("playerCount").textContent = `${playerIndex + 1} / ${deck.length}`;
@@ -3842,14 +3856,10 @@
       });
       document.getElementById("createVision").addEventListener("click", createVision);
       document.getElementById("createAnti").addEventListener("click", createAnti);
-      document.getElementById("generateVision").addEventListener("click", () => generateDeck("vision"));
-      document.getElementById("generateAnti").addEventListener("click", () => generateDeck("anti"));
       document.getElementById("playVisionDeck").addEventListener("click", () => startDeckPlayer("vision"));
       document.getElementById("playAntiDeck").addEventListener("click", () => startDeckPlayer("anti"));
       document.getElementById("uploadVisionPhoto").addEventListener("click", () => uploadDeckPhoto("vision", "upload"));
       document.getElementById("uploadAntiPhoto").addEventListener("click", () => uploadDeckPhoto("anti", "upload"));
-      document.getElementById("aiEditVisionPhoto").addEventListener("click", () => uploadDeckPhoto("vision", "ai-edit"));
-      document.getElementById("aiEditAntiPhoto").addEventListener("click", () => uploadDeckPhoto("anti", "ai-edit"));
       document.getElementById("editVisionDeck").addEventListener("click", () => editDeck("vision"));
       document.getElementById("editAntiDeck").addEventListener("click", () => editDeck("anti"));
       document.getElementById("visionPhotoInput").addEventListener("change", (event) => handleDeckPhoto("vision", event));
@@ -3863,8 +3873,6 @@
       document.getElementById("closeDeckEditor").addEventListener("click", closeDeckEditor);
       document.getElementById("editorDone").addEventListener("click", closeDeckEditor);
       document.getElementById("editorAddPhoto").addEventListener("click", () => uploadDeckPhoto(editorKind, "upload"));
-      document.getElementById("editorGenerateImage").addEventListener("click", () => generateDeck(editorKind));
-      document.getElementById("editorAiEditPhoto").addEventListener("click", () => uploadDeckPhoto(editorKind, "ai-edit"));
       document.getElementById("deckEditor").addEventListener("click", (event) => {
         if (event.target.id === "deckEditor") closeDeckEditor();
       });
@@ -3877,7 +3885,6 @@
         const editButton = event.target.closest("[data-edit-slide]");
         if (editButton) editDeckSlideText(Number(editButton.dataset.editSlide));
       });
-      document.getElementById("openProFromProfile").addEventListener("click", () => setView("pro"));
       document.getElementById("startTrial").addEventListener("click", startAppleTrial);
       document.getElementById("signInApple").addEventListener("click", signInWithApple);
       document.getElementById("syncNow").addEventListener("click", syncNow);
