@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=32" />
+    <link rel="manifest" href="./manifest.webmanifest?v=33" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-08-v32";
+      const VISUALIZE_APP_VERSION = "2026-07-08-v33";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=32")
+            .register("./service-worker.js?v=33")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2596,6 +2596,17 @@
             </div>
             <div class="setting-row">
               <div>
+                <strong>Notifications</strong>
+                <span id="notificationStatus">Ask this device for notification permission.</span>
+              </div>
+              <button class="switch" id="notificationsSwitch" type="button" aria-label="Notifications"></button>
+            </div>
+            <div class="action-row">
+              <button class="btn secondary" id="testNotification" type="button">Test notification</button>
+              <button class="btn secondary" id="openNotificationHelp" type="button">How it works</button>
+            </div>
+            <div class="setting-row">
+              <div>
                 <strong>Slower audio</strong>
                 <span>Mindset track with a calmer rhythm.</span>
               </div>
@@ -2770,6 +2781,7 @@
         settings: {
           theme: "light",
           dailyReminder: true,
+          notificationsEnabled: false,
           slowAudio: true,
           repeatSelfTalk: false,
           selfTalkVoiceURI: "",
@@ -3208,6 +3220,46 @@
           : "No downloadable voices were exposed by this browser yet. Try Refresh voices, or play once from Safari.";
       }
 
+      function notificationsSupported() {
+        return "Notification" in window;
+      }
+
+      function notificationPermission() {
+        return notificationsSupported() ? Notification.permission : "unsupported";
+      }
+
+      function notificationsAreActive() {
+        return state.settings.notificationsEnabled && notificationPermission() === "granted";
+      }
+
+      function updateNotificationUI() {
+        const status = document.getElementById("notificationStatus");
+        const toggle = document.getElementById("notificationsSwitch");
+        const testButton = document.getElementById("testNotification");
+        if (!status || !toggle || !testButton) return;
+        const permission = notificationPermission();
+        const active = notificationsAreActive();
+
+        toggle.classList.toggle("on", active);
+        testButton.disabled = !active;
+
+        if (permission === "unsupported") {
+          status.textContent = "Notifications are not available in this browser. Native iOS builds will use system notifications.";
+          return;
+        }
+        if (permission === "denied") {
+          status.textContent = "Notifications are blocked. Re-enable them from browser or iOS settings.";
+          return;
+        }
+        if (permission === "granted") {
+          status.textContent = active
+            ? "On. This prototype can send test notifications; production will schedule real reminders."
+            : "Allowed by this device, currently turned off in Visualize.";
+          return;
+        }
+        status.textContent = "Off. Turn on to ask this device for permission.";
+      }
+
       function applySettings() {
         document.body.dataset.theme = state.settings.theme;
         document.querySelector('meta[name="theme-color"]').setAttribute(
@@ -3221,6 +3273,7 @@
         document.getElementById("repeatSelfTalk").classList.toggle("on", state.settings.repeatSelfTalk);
         document.getElementById("selfTalkText").value = state.selfTalk || defaults.selfTalk;
         populateVoiceOptions();
+        updateNotificationUI();
         document.querySelectorAll("[data-lang]").forEach((button) => {
           button.classList.toggle("active", button.dataset.lang === state.settings.language);
         });
@@ -3619,6 +3672,75 @@
         selfTalkLoopActive = false;
         if ("speechSynthesis" in window) speechSynthesis.cancel();
         notify("Audio stopped");
+      }
+
+      async function showLocalNotification(title, body) {
+        if (!notificationsSupported() || Notification.permission !== "granted") {
+          notify("Notifications not allowed");
+          return false;
+        }
+        try {
+          if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+            const registration = await navigator.serviceWorker.ready;
+            await registration.showNotification(title, {
+              body,
+              icon: "./icon.svg",
+              badge: "./icon.svg",
+              tag: "visualize-reminder"
+            });
+            return true;
+          }
+          new Notification(title, { body, icon: "./icon.svg" });
+          return true;
+        } catch (error) {
+          try {
+            new Notification(title, { body, icon: "./icon.svg" });
+            return true;
+          } catch (fallbackError) {
+            notify("Notification failed");
+            return false;
+          }
+        }
+      }
+
+      async function setNotificationsEnabled(nextEnabled) {
+        if (!nextEnabled) {
+          state.settings.notificationsEnabled = false;
+          save();
+          applySettings();
+          notify("Notifications off");
+          return;
+        }
+        if (!notificationsSupported()) {
+          state.settings.notificationsEnabled = false;
+          save();
+          applySettings();
+          notify("Notifications not supported here");
+          return;
+        }
+        let permission = Notification.permission;
+        if (permission === "default") permission = await Notification.requestPermission();
+        state.settings.notificationsEnabled = permission === "granted";
+        save();
+        applySettings();
+        if (permission === "granted") {
+          notify("Notifications on");
+          return;
+        }
+        notify(permission === "denied" ? "Notifications blocked" : "Notifications not enabled");
+      }
+
+      async function testNotification() {
+        if (!notificationsAreActive()) {
+          notify("Turn notifications on first");
+          return;
+        }
+        const sent = await showLocalNotification("Visualize", "Time to review your Vision and choose the next right action.");
+        if (sent) notify("Test sent");
+      }
+
+      function explainNotifications() {
+        notify("Web prototype: test notifications only. Native app: scheduled daily reminders.");
       }
 
       function saveLifeProfile() {
@@ -4114,6 +4236,13 @@
         applySettings();
         notify(state.settings.dailyReminder ? "Reminder on" : "Reminder off");
       });
+
+      document.getElementById("notificationsSwitch").addEventListener("click", () => {
+        setNotificationsEnabled(!notificationsAreActive());
+      });
+
+      document.getElementById("testNotification").addEventListener("click", testNotification);
+      document.getElementById("openNotificationHelp").addEventListener("click", explainNotifications);
 
       document.getElementById("slowAudio").addEventListener("click", () => {
         state.settings.slowAudio = !state.settings.slowAudio;
