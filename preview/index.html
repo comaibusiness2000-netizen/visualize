@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=44" />
+    <link rel="manifest" href="./manifest.webmanifest?v=45" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v44";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v45";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=44")
+            .register("./service-worker.js?v=45")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1341,6 +1341,13 @@
         background: #ffffff;
       }
 
+      body[data-theme="dark"] .deck-stage.positive {
+        color: #fffaf0;
+        background:
+          radial-gradient(circle at 18% 12%, rgba(232, 196, 104, 0.1), transparent 30%),
+          #1b2023;
+      }
+
       .deck-stage.negative {
         color: #fff;
         background:
@@ -1355,6 +1362,11 @@
       .deck-stage.negative .deck-kicker,
       .deck-stage.negative .deck-card span {
         color: rgba(255, 255, 255, 0.82);
+      }
+
+      body[data-theme="dark"] .deck-stage.positive .deck-kicker,
+      body[data-theme="dark"] .deck-stage.positive .deck-head h2 {
+        color: #fffaf0;
       }
 
       .deck-head h2 {
