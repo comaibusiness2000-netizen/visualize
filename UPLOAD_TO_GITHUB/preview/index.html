@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=41" />
+    <link rel="manifest" href="./manifest.webmanifest?v=42" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v41";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v42";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=41")
+            .register("./service-worker.js?v=42")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1083,7 +1083,6 @@
       body[data-theme="dark"] .speech-pill,
       body[data-theme="dark"] .speech-new,
       body[data-theme="dark"] .voice-line,
-      body[data-theme="dark"] .speech-guide span,
       body[data-theme="dark"] .voice-card {
         border: 1px solid #3f474b;
         background: #252c30;
@@ -2576,8 +2575,8 @@
         min-height: 0;
         height: 100%;
         display: grid;
-        grid-template-rows: auto auto auto minmax(0, 1fr) auto auto;
-        gap: 10px;
+        grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+        gap: 12px;
         overflow: hidden;
         border-radius: 28px;
         padding: 18px;
@@ -2608,35 +2607,6 @@
         font-size: 12px;
         line-height: 1.32;
         font-weight: 760;
-      }
-
-      .speech-guide {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 7px;
-      }
-
-      .speech-guide span {
-        min-height: 46px;
-        display: grid;
-        align-content: center;
-        gap: 3px;
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 8px;
-        color: var(--muted);
-        background: var(--soft);
-        font-size: 10px;
-        line-height: 1.12;
-        font-weight: 850;
-      }
-
-      .speech-guide strong {
-        display: block;
-        color: var(--ink);
-        font-size: 11px;
-        line-height: 1.05;
-        font-weight: 950;
       }
 
       .speech-list-row {
@@ -2733,7 +2703,7 @@
         min-height: 0;
         display: grid;
         grid-template-rows: auto minmax(0, 1fr);
-        gap: 8px;
+        gap: 9px;
       }
 
       .speech-field {
@@ -2760,7 +2730,7 @@
 
       .speech-field textarea {
         height: 100%;
-        min-height: 132px;
+        min-height: 150px;
         resize: none;
         line-height: 1.35;
         font-weight: 760;
@@ -2774,19 +2744,14 @@
 
       .voice-line {
         display: grid;
-        gap: 9px;
-        min-height: 102px;
+        grid-template-columns: minmax(0, 1fr) 132px;
+        align-items: center;
+        gap: 10px;
+        min-height: 58px;
         border: 1px solid var(--line);
         border-radius: 18px;
-        padding: 10px;
+        padding: 9px 10px 9px 13px;
         background: var(--soft);
-      }
-
-      .voice-line-head {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 10px;
       }
 
       .voice-line span,
@@ -2802,6 +2767,7 @@
 
       .voice-line strong {
         display: block;
+        margin-top: 3px;
         font-size: 16px;
         line-height: 1.05;
         font-weight: 950;
@@ -2809,8 +2775,9 @@
 
       .voice-carousel {
         min-width: 0;
+        width: 132px;
         display: flex;
-        gap: 8px;
+        gap: 0;
         overflow-x: auto;
         overscroll-behavior-inline: contain;
         scroll-snap-type: x mandatory;
@@ -2822,18 +2789,18 @@
       }
 
       .voice-card {
-        min-width: 112px;
-        min-height: 54px;
-        flex: 0 0 112px;
+        min-width: 100%;
+        min-height: 44px;
+        flex: 0 0 100%;
         display: grid;
         align-content: center;
-        gap: 3px;
+        gap: 2px;
         border: 1px solid var(--line);
         border-radius: 16px;
-        padding: 8px 10px;
+        padding: 7px 10px;
         color: var(--ink);
         background: var(--control);
-        text-align: left;
+        text-align: center;
         scroll-snap-align: center;
       }
 
@@ -3396,12 +3363,6 @@
                 <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
               </div>
 
-              <div class="speech-guide" aria-label="Self speech structure">
-                <span><strong>Identity</strong>Who you are becoming.</span>
-                <span><strong>Scene</strong>What you can see clearly.</span>
-                <span><strong>Action</strong>What you do next.</span>
-              </div>
-
               <div class="speech-editor">
                 <label class="speech-field">
                   <span>Title</span>
@@ -3414,10 +3375,10 @@
               </div>
 
               <div class="voice-line">
-                <div class="voice-line-head">
+                <div>
                   <span>Voice</span>
                   <strong id="voiceProfileName">Maya</strong>
-                  <em id="voiceQualityNote">Swipe to change</em>
+                  <em id="voiceQualityNote">Swipe to change voice</em>
                 </div>
                 <div class="voice-carousel" id="voiceCarousel" aria-label="Swipe voice options"></div>
               </div>
@@ -4316,13 +4277,9 @@
         const name = document.getElementById("voiceProfileName");
         const note = document.getElementById("voiceQualityNote");
         if (!name || !note) return;
-        const voices = availableVoices();
-        const selectedVoice = selectedSelfTalkVoice();
         const profile = activeVoiceProfile();
         name.textContent = profile.name;
-        note.textContent = voices.length
-          ? `${profile.tone} - ${selectedVoice ? selectedVoice.name : "best available"}`
-          : profile.tone;
+        note.textContent = "Swipe to change voice";
         renderVoiceCarousel({ preserveScroll });
       }
 
