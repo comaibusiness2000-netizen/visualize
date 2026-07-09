@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=40" />
+    <link rel="manifest" href="./manifest.webmanifest?v=41" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v40";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v41";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=40")
+            .register("./service-worker.js?v=41")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1082,9 +1082,16 @@
       body[data-theme="dark"] .progress-goal,
       body[data-theme="dark"] .speech-pill,
       body[data-theme="dark"] .speech-new,
-      body[data-theme="dark"] .voice-line {
+      body[data-theme="dark"] .voice-line,
+      body[data-theme="dark"] .speech-guide span,
+      body[data-theme="dark"] .voice-card {
         border: 1px solid #3f474b;
         background: #252c30;
+      }
+
+      body[data-theme="dark"] .voice-card.active {
+        border-color: rgba(232, 196, 104, 0.72);
+        background: rgba(232, 196, 104, 0.18);
       }
 
       .progress-goal.editing {
@@ -1460,14 +1467,14 @@
 
       .deck-actions {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7px;
       }
 
       .deck-actions .btn {
         min-height: 42px;
-        padding: 0 10px;
-        font-size: 12px;
+        padding: 0 8px;
+        font-size: 11px;
         line-height: 1.05;
         white-space: normal;
       }
@@ -2569,8 +2576,8 @@
         min-height: 0;
         height: 100%;
         display: grid;
-        grid-template-rows: auto auto minmax(0, 1fr) auto auto;
-        gap: 12px;
+        grid-template-rows: auto auto auto minmax(0, 1fr) auto auto;
+        gap: 10px;
         overflow: hidden;
         border-radius: 28px;
         padding: 18px;
@@ -2601,6 +2608,35 @@
         font-size: 12px;
         line-height: 1.32;
         font-weight: 760;
+      }
+
+      .speech-guide {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .speech-guide span {
+        min-height: 46px;
+        display: grid;
+        align-content: center;
+        gap: 3px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 8px;
+        color: var(--muted);
+        background: var(--soft);
+        font-size: 10px;
+        line-height: 1.12;
+        font-weight: 850;
+      }
+
+      .speech-guide strong {
+        display: block;
+        color: var(--ink);
+        font-size: 11px;
+        line-height: 1.05;
+        font-weight: 950;
       }
 
       .speech-list-row {
@@ -2697,7 +2733,7 @@
         min-height: 0;
         display: grid;
         grid-template-rows: auto minmax(0, 1fr);
-        gap: 9px;
+        gap: 8px;
       }
 
       .speech-field {
@@ -2724,7 +2760,7 @@
 
       .speech-field textarea {
         height: 100%;
-        min-height: 150px;
+        min-height: 132px;
         resize: none;
         line-height: 1.35;
         font-weight: 760;
@@ -2738,14 +2774,19 @@
 
       .voice-line {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        align-items: center;
-        gap: 10px;
-        min-height: 58px;
+        gap: 9px;
+        min-height: 102px;
         border: 1px solid var(--line);
         border-radius: 18px;
-        padding: 9px 10px 9px 13px;
+        padding: 10px;
         background: var(--soft);
+      }
+
+      .voice-line-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
       }
 
       .voice-line span,
@@ -2761,10 +2802,54 @@
 
       .voice-line strong {
         display: block;
-        margin-top: 3px;
-        font-size: 17px;
+        font-size: 16px;
         line-height: 1.05;
         font-weight: 950;
+      }
+
+      .voice-carousel {
+        min-width: 0;
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+
+      .voice-carousel::-webkit-scrollbar {
+        display: none;
+      }
+
+      .voice-card {
+        min-width: 112px;
+        min-height: 54px;
+        flex: 0 0 112px;
+        display: grid;
+        align-content: center;
+        gap: 3px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 8px 10px;
+        color: var(--ink);
+        background: var(--control);
+        text-align: left;
+        scroll-snap-align: center;
+      }
+
+      .voice-card.active {
+        border-color: rgba(232, 196, 104, 0.95);
+        background: rgba(232, 196, 104, 0.2);
+        transform: translateY(-1px) scale(1.02);
+      }
+
+      .voice-card strong {
+        font-size: 14px;
+      }
+
+      .voice-card span {
+        font-size: 9px;
+        letter-spacing: 0.7px;
       }
 
       .speech-actions {
@@ -3264,6 +3349,7 @@
               <button class="btn" id="playVisionDeck" type="button">Play</button>
               <button class="btn secondary" id="uploadVisionPhoto" type="button">Upload</button>
               <button class="btn secondary" id="editVisionDeck" type="button">Edit</button>
+              <button class="btn secondary" id="exportVisionDeck" type="button">Export</button>
             </div>
             <input id="visionPhotoInput" type="file" accept="image/*" multiple hidden />
           </section>
@@ -3292,6 +3378,7 @@
               <button class="btn" id="playAntiDeck" type="button">Play</button>
               <button class="btn secondary" id="uploadAntiPhoto" type="button">Upload</button>
               <button class="btn secondary" id="editAntiDeck" type="button">Edit</button>
+              <button class="btn secondary" id="exportAntiDeck" type="button">Export</button>
             </div>
             <input id="antiPhotoInput" type="file" accept="image/*" multiple hidden />
           </section>
@@ -3309,6 +3396,12 @@
                 <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
               </div>
 
+              <div class="speech-guide" aria-label="Self speech structure">
+                <span><strong>Identity</strong>Who you are becoming.</span>
+                <span><strong>Scene</strong>What you can see clearly.</span>
+                <span><strong>Action</strong>What you do next.</span>
+              </div>
+
               <div class="speech-editor">
                 <label class="speech-field">
                   <span>Title</span>
@@ -3321,12 +3414,12 @@
               </div>
 
               <div class="voice-line">
-                <div>
+                <div class="voice-line-head">
                   <span>Voice</span>
                   <strong id="voiceProfileName">Maya</strong>
-                  <em id="voiceQualityNote">Warm female</em>
+                  <em id="voiceQualityNote">Swipe to change</em>
                 </div>
-                <button class="btn secondary" id="changeSelfTalkVoice" type="button">Change</button>
+                <div class="voice-carousel" id="voiceCarousel" aria-label="Swipe voice options"></div>
               </div>
 
               <div class="speech-actions">
@@ -3682,6 +3775,7 @@
       let playerKind = "vision";
       let playerPaused = false;
       let selfTalkLoopActive = false;
+      let voiceScrollTimer = null;
       let currentView = "today";
       let editorKind = "vision";
       let editingProgressIndex = null;
@@ -4218,7 +4312,7 @@
         return voices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith(voiceLangPrefix())) || voices[0];
       }
 
-      function populateVoiceOptions() {
+      function populateVoiceOptions({ preserveScroll = false } = {}) {
         const name = document.getElementById("voiceProfileName");
         const note = document.getElementById("voiceQualityNote");
         if (!name || !note) return;
@@ -4227,8 +4321,59 @@
         const profile = activeVoiceProfile();
         name.textContent = profile.name;
         note.textContent = voices.length
-          ? `${profile.tone} · ${selectedVoice ? selectedVoice.name : "best available"}`
+          ? `${profile.tone} - ${selectedVoice ? selectedVoice.name : "best available"}`
           : profile.tone;
+        renderVoiceCarousel({ preserveScroll });
+      }
+
+      function renderVoiceCarousel({ preserveScroll = false } = {}) {
+        const carousel = document.getElementById("voiceCarousel");
+        if (!carousel) return;
+        const scrollLeft = carousel.scrollLeft;
+        carousel.innerHTML = VOICE_PROFILES.map((profile) => `
+          <button class="voice-card ${profile.id === state.settings.selfTalkVoicePreset ? "active" : ""}" type="button" data-voice-preset="${profile.id}">
+            <strong>${escapeHtml(profile.name)}</strong>
+            <span>${escapeHtml(profile.tone)}</span>
+          </button>
+        `).join("");
+
+        requestAnimationFrame(() => {
+          if (preserveScroll) {
+            carousel.scrollLeft = scrollLeft;
+            return;
+          }
+          const active = carousel.querySelector(".voice-card.active");
+          if (active) active.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+        });
+      }
+
+      function selectVoiceProfile(profileId, { silent = false, fromScroll = false } = {}) {
+        const profile = VOICE_PROFILES.find((item) => item.id === profileId);
+        if (!profile || state.settings.selfTalkVoicePreset === profile.id) return;
+        state.settings.selfTalkVoicePreset = profile.id;
+        state.settings.selfTalkVoiceURI = "";
+        saveSelfTalkFromForm({ silent: true });
+        populateVoiceOptions({ preserveScroll: fromScroll });
+        if (!fromScroll) {
+          const active = document.querySelector(`[data-voice-preset="${profile.id}"]`);
+          if (active) active.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+        }
+        if (!silent) notify(`${profile.name} selected`);
+      }
+
+      function syncVoiceFromSwipe() {
+        const carousel = document.getElementById("voiceCarousel");
+        if (!carousel) return;
+        const cards = Array.from(carousel.querySelectorAll("[data-voice-preset]"));
+        if (!cards.length) return;
+        const center = carousel.scrollLeft + (carousel.clientWidth / 2);
+        const nearest = cards
+          .map((card) => ({
+            card,
+            distance: Math.abs((card.offsetLeft + (card.offsetWidth / 2)) - center)
+          }))
+          .sort((a, b) => a.distance - b.distance)[0].card;
+        selectVoiceProfile(nearest.dataset.voicePreset, { silent: true, fromScroll: true });
       }
 
       function renderSelfTalkScripts() {
@@ -4768,11 +4913,7 @@
       function cycleSelfTalkVoice() {
         const current = VOICE_PROFILES.findIndex((profile) => profile.id === state.settings.selfTalkVoicePreset);
         const next = VOICE_PROFILES[(current + 1 + VOICE_PROFILES.length) % VOICE_PROFILES.length];
-        state.settings.selfTalkVoicePreset = next.id;
-        state.settings.selfTalkVoiceURI = "";
-        saveSelfTalkFromForm({ silent: true });
-        populateVoiceOptions();
-        notify(`${next.name} selected`);
+        selectVoiceProfile(next.id);
       }
 
       function playSelfTalk() {
@@ -5289,6 +5430,213 @@
         }
       }
 
+      function roundedRectPath(context, x, y, width, height, radius) {
+        const r = Math.min(radius, width / 2, height / 2);
+        context.beginPath();
+        context.moveTo(x + r, y);
+        context.lineTo(x + width - r, y);
+        context.quadraticCurveTo(x + width, y, x + width, y + r);
+        context.lineTo(x + width, y + height - r);
+        context.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+        context.lineTo(x + r, y + height);
+        context.quadraticCurveTo(x, y + height, x, y + height - r);
+        context.lineTo(x, y + r);
+        context.quadraticCurveTo(x, y, x + r, y);
+        context.closePath();
+      }
+
+      function wrapCanvasText(context, text, maxWidth) {
+        const words = String(text || "").split(/\s+/).filter(Boolean);
+        const lines = [];
+        let line = "";
+        words.forEach((word) => {
+          const test = line ? `${line} ${word}` : word;
+          if (context.measureText(test).width <= maxWidth || !line) {
+            line = test;
+          } else {
+            lines.push(line);
+            line = word;
+          }
+        });
+        if (line) lines.push(line);
+        return lines;
+      }
+
+      function drawCoverImage(context, image, width, height, progress) {
+        const zoom = 1.04 + (progress * 0.08);
+        const ratio = Math.max(width / image.naturalWidth, height / image.naturalHeight) * zoom;
+        const drawWidth = image.naturalWidth * ratio;
+        const drawHeight = image.naturalHeight * ratio;
+        const driftX = (progress - 0.5) * 34;
+        const driftY = (0.5 - progress) * 26;
+        context.drawImage(image, (width - drawWidth) / 2 + driftX, (height - drawHeight) / 2 + driftY, drawWidth, drawHeight);
+      }
+
+      function drawExportSlide(context, canvas, slide, image, kind, index, total, progress) {
+        const width = canvas.width;
+        const height = canvas.height;
+        const positive = kind === "vision";
+        const gradient = context.createLinearGradient(0, 0, width, height);
+        gradient.addColorStop(0, positive ? "#f5f2e8" : "#070809");
+        gradient.addColorStop(0.58, positive ? "#52534d" : "#151719");
+        gradient.addColorStop(1, positive ? "#111111" : "#241411");
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, width, height);
+
+        if (image) drawCoverImage(context, image, width, height, progress);
+
+        const overlay = context.createLinearGradient(0, 0, 0, height);
+        overlay.addColorStop(0, "rgba(0,0,0,0.06)");
+        overlay.addColorStop(0.55, "rgba(0,0,0,0.18)");
+        overlay.addColorStop(1, "rgba(0,0,0,0.86)");
+        context.fillStyle = overlay;
+        context.fillRect(0, 0, width, height);
+
+        context.save();
+        roundedRectPath(context, 52, height - 360, width - 104, 250, 34);
+        context.fillStyle = "rgba(8, 9, 10, 0.48)";
+        context.fill();
+        context.strokeStyle = "rgba(255,255,255,0.18)";
+        context.lineWidth = 2;
+        context.stroke();
+        context.restore();
+
+        context.fillStyle = positive ? "#e8c468" : "#da5a3a";
+        context.beginPath();
+        context.arc(82, height - 322, 10, 0, Math.PI * 2);
+        context.fill();
+
+        context.fillStyle = "rgba(255,255,255,0.68)";
+        context.font = "900 20px Inter, Arial, sans-serif";
+        context.fillText(`${positive ? "VISION" : "ANTI-VISION"} ${index + 1} / ${total}`, 104, height - 314);
+
+        context.fillStyle = "#ffffff";
+        context.font = "950 44px Inter, Arial, sans-serif";
+        wrapCanvasText(context, slide.title || (positive ? "Your future" : "The warning"), width - 150).slice(0, 3).forEach((line, lineIndex) => {
+          context.fillText(line, 76, height - 250 + (lineIndex * 48));
+        });
+
+        context.fillStyle = "rgba(255,255,255,0.82)";
+        context.font = "800 25px Inter, Arial, sans-serif";
+        wrapCanvasText(context, slide.caption || "Keep this image close.", width - 150).slice(0, 3).forEach((line, lineIndex) => {
+          context.fillText(line, 76, height - 98 + (lineIndex * 32));
+        });
+      }
+
+      function supportedVideoMimeType() {
+        if (!("MediaRecorder" in window)) return "";
+        return [
+          "video/mp4;codecs=h264",
+          "video/mp4",
+          "video/webm;codecs=vp9",
+          "video/webm;codecs=vp8",
+          "video/webm"
+        ].find((type) => MediaRecorder.isTypeSupported(type)) || "";
+      }
+
+      async function drawSlideForVideo(context, canvas, slide, kind, index, total, duration) {
+        let image = null;
+        const imageUrl = slideImageUrl(slide);
+        if (imageUrl) {
+          try {
+            image = await loadImage(imageUrl);
+          } catch (error) {
+            image = null;
+          }
+        }
+
+        await new Promise((resolve) => {
+          const startedAt = performance.now();
+          function frame(now) {
+            const progress = Math.min(1, (now - startedAt) / duration);
+            drawExportSlide(context, canvas, slide, image, kind, index, total, progress);
+            if (progress < 1) {
+              requestAnimationFrame(frame);
+              return;
+            }
+            resolve();
+          }
+          requestAnimationFrame(frame);
+        });
+      }
+
+      async function shareOrDownloadVideo(blob, kind, mimeType) {
+        const type = blob.type || mimeType || "video/webm";
+        const extension = type.includes("mp4") ? "mp4" : "webm";
+        const fileName = `visualize-${kind}-${todayKey()}.${extension}`;
+        const file = new File([blob], fileName, { type });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+          await navigator.share({
+            title: kind === "vision" ? "Vision presentation" : "Anti-vision presentation",
+            text: "Your Visualize presentation video.",
+            files: [file]
+          });
+          notify("Video ready to save");
+          return;
+        }
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1200);
+        notify("Video downloaded");
+      }
+
+      async function exportDeckVideo(kind) {
+        const deck = deckFor(kind);
+        if (!deck.length) {
+          notify("Add slides first");
+          return;
+        }
+        if (!("MediaRecorder" in window) || !HTMLCanvasElement.prototype.captureStream) {
+          notify("Video export needs the native app or a newer browser");
+          return;
+        }
+
+        notify("Preparing video...");
+        const canvas = document.createElement("canvas");
+        canvas.width = 720;
+        canvas.height = 1280;
+        const context = canvas.getContext("2d");
+        const stream = canvas.captureStream(24);
+        const mimeType = supportedVideoMimeType();
+        const chunks = [];
+        let recorder;
+
+        try {
+          recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+        } catch (error) {
+          stream.getTracks().forEach((track) => track.stop());
+          notify("Video export not supported here");
+          return;
+        }
+
+        const stopped = new Promise((resolve) => {
+          recorder.ondataavailable = (event) => {
+            if (event.data && event.data.size) chunks.push(event.data);
+          };
+          recorder.onstop = () => resolve(new Blob(chunks, { type: mimeType || "video/webm" }));
+        });
+
+        recorder.start(250);
+        for (let index = 0; index < deck.length; index += 1) {
+          await drawSlideForVideo(context, canvas, deck[index], kind, index, deck.length, 1900);
+        }
+        recorder.stop();
+        stream.getTracks().forEach((track) => track.stop());
+        const blob = await stopped;
+        try {
+          await shareOrDownloadVideo(blob, kind, mimeType);
+        } catch (error) {
+          notify("Export cancelled");
+        }
+      }
+
       function renderPlayerSlide() {
         const deck = playerKind === "vision" ? state.visionSlides : state.antiSlides;
         const slide = deck[playerIndex % deck.length];
@@ -5406,6 +5754,8 @@
       document.getElementById("createAnti").addEventListener("click", createAnti);
       document.getElementById("playVisionDeck").addEventListener("click", () => startDeckPlayer("vision"));
       document.getElementById("playAntiDeck").addEventListener("click", () => startDeckPlayer("anti"));
+      document.getElementById("exportVisionDeck").addEventListener("click", () => exportDeckVideo("vision"));
+      document.getElementById("exportAntiDeck").addEventListener("click", () => exportDeckVideo("anti"));
       document.getElementById("uploadVisionPhoto").addEventListener("click", () => uploadDeckPhoto("vision", "upload"));
       document.getElementById("uploadAntiPhoto").addEventListener("click", () => uploadDeckPhoto("anti", "upload"));
       document.getElementById("editVisionDeck").addEventListener("click", () => editDeck("vision"));
@@ -5506,7 +5856,15 @@
       document.getElementById("testNotification").addEventListener("click", testNotification);
       document.getElementById("openNotificationHelp").addEventListener("click", explainNotifications);
 
-      document.getElementById("changeSelfTalkVoice").addEventListener("click", cycleSelfTalkVoice);
+      document.getElementById("voiceCarousel").addEventListener("click", (event) => {
+        const card = event.target.closest("[data-voice-preset]");
+        if (card) selectVoiceProfile(card.dataset.voicePreset);
+      });
+
+      document.getElementById("voiceCarousel").addEventListener("scroll", () => {
+        clearTimeout(voiceScrollTimer);
+        voiceScrollTimer = setTimeout(syncVoiceFromSwipe, 130);
+      }, { passive: true });
 
       document.getElementById("selfTalkText").addEventListener("blur", () => {
         saveSelfTalkFromForm({ silent: true });
