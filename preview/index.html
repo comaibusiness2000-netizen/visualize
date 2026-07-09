@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=36" />
+    <link rel="manifest" href="./manifest.webmanifest?v=37" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v36";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v37";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=36")
+            .register("./service-worker.js?v=37")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2340,11 +2340,11 @@
         min-height: 0;
         height: 100%;
         display: grid;
-        grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto;
-        gap: 9px;
+        grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+        gap: 12px;
         overflow: hidden;
         border-radius: 28px;
-        padding: 15px;
+        padding: 18px;
         color: var(--ink);
         background: #ffffff;
         box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
@@ -2360,37 +2360,29 @@
 
       .speech-head h2 {
         margin-top: 4px;
-        font-size: 23px;
+        font-size: 24px;
         line-height: 1.05;
         font-weight: 950;
       }
 
       .speech-head p {
-        max-width: 320px;
+        max-width: 300px;
         margin: 5px auto 0;
         color: var(--muted);
-        font-size: 11px;
-        line-height: 1.28;
+        font-size: 12px;
+        line-height: 1.32;
         font-weight: 760;
       }
 
-      .speech-tip {
-        min-height: 38px;
+      .speech-list-row {
+        min-height: 44px;
         display: grid;
-        align-items: center;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        padding: 8px 11px;
-        color: var(--muted);
-        background: var(--soft);
-        font-size: 11px;
-        line-height: 1.2;
-        font-weight: 820;
-        text-align: center;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
       }
 
       .speech-list {
-        min-height: 42px;
+        min-height: 44px;
         display: flex;
         gap: 8px;
         overflow-x: auto;
@@ -2450,8 +2442,8 @@
       }
 
       .speech-delete {
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         border: 0;
         border-radius: 50%;
         color: #ffffff;
@@ -2460,11 +2452,23 @@
         font-weight: 950;
       }
 
+      .speech-new {
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: var(--ink);
+        background: var(--soft);
+        font-size: 26px;
+        line-height: 1;
+        font-weight: 850;
+      }
+
       .speech-editor {
         min-height: 0;
         display: grid;
         grid-template-rows: auto minmax(0, 1fr);
-        gap: 7px;
+        gap: 9px;
       }
 
       .speech-field {
@@ -2475,7 +2479,7 @@
 
       .speech-field span {
         color: var(--muted);
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 950;
         letter-spacing: 1.2px;
         text-transform: uppercase;
@@ -2491,7 +2495,7 @@
 
       .speech-field textarea {
         height: 100%;
-        min-height: 96px;
+        min-height: 150px;
         resize: none;
         line-height: 1.35;
         font-weight: 760;
@@ -2503,116 +2507,55 @@
         box-shadow: 0 0 0 3px rgba(232, 196, 104, 0.16);
       }
 
-      .voice-grid {
+      .voice-line {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 6px;
-      }
-
-      .voice-card {
-        min-width: 0;
-        min-height: 48px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        min-height: 58px;
         border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 7px 5px;
-        color: var(--muted);
+        border-radius: 18px;
+        padding: 9px 10px 9px 13px;
         background: var(--soft);
-        text-align: center;
       }
 
-      .voice-card.active {
-        border-color: rgba(232, 196, 104, 0.95);
-        color: #111111;
-        background: var(--gold);
-      }
-
-      body[data-theme="dark"] .voice-card.active {
-        color: #111111;
-      }
-
-      .voice-card strong,
-      .voice-card span {
+      .voice-line span,
+      .voice-line em {
         display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        color: var(--muted);
+        font-size: 10px;
+        font-style: normal;
+        font-weight: 950;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
       }
 
-      .voice-card strong {
-        font-size: 12px;
-        line-height: 1;
+      .voice-line strong {
+        display: block;
+        margin-top: 3px;
+        font-size: 17px;
+        line-height: 1.05;
         font-weight: 950;
       }
 
-      .voice-card span {
-        margin-top: 3px;
-        font-size: 9px;
-        font-weight: 850;
-      }
-
-      .speech-options {
+      .speech-actions {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
       }
 
-      .speech-option {
-        min-height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        padding: 9px 10px;
-        background: var(--soft);
-      }
-
-      .speech-option strong {
-        font-size: 11px;
-        line-height: 1.05;
-      }
-
-      .speech-option .switch {
-        width: 44px;
-        height: 26px;
-      }
-
-      .speech-option .switch::before {
-        width: 20px;
-        height: 20px;
-      }
-
-      .speech-option .switch.on::before {
-        transform: translateX(18px);
-      }
-
-      .speech-options .btn {
-        min-height: 40px;
-        padding: 0 8px;
-        font-size: 12px;
-        line-height: 1.05;
-        white-space: normal;
-      }
-
-      .speech-actions {
-        display: grid;
-        grid-template-columns: 0.9fr 1fr 0.85fr;
-        gap: 8px;
-      }
-
       .speech-actions .btn {
-        min-height: 40px;
-        padding: 0 10px;
-        font-size: 13px;
+        min-height: 46px;
+        padding: 0 12px;
+        font-size: 14px;
         line-height: 1.05;
         white-space: normal;
       }
 
       .speech-workbench .audio-note {
         margin-top: 4px;
-        font-size: 10px;
-        line-height: 1.18;
+        font-size: 11px;
+        line-height: 1.24;
       }
 
       .text-link {
@@ -2943,13 +2886,13 @@
               <div class="speech-head">
                 <span class="deck-kicker">Self speech</span>
                 <h2>Script your inner voice.</h2>
-                <p>Use first person, present tense, and concrete actions. Make it believable enough to repeat daily, not generic motivation.</p>
-                <p class="audio-note" id="voiceQualityNote">Choose one of four warm voice styles.</p>
+                <p>Write the text you want to hear before you act, train, work, or visualize.</p>
               </div>
 
-              <p class="speech-tip">Try: “I am becoming...”, “Today I will...”, “I refuse to...”, or “I keep proving...”</p>
-
-              <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
+              <div class="speech-list-row">
+                <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
+                <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
+              </div>
 
               <div class="speech-editor">
                 <label class="speech-field">
@@ -2962,21 +2905,16 @@
                 </label>
               </div>
 
-              <div class="voice-grid" id="selfTalkVoiceChoices" aria-label="Self speech voice"></div>
-
-              <div class="speech-options">
-                <div class="speech-option">
-                  <strong>Repeat</strong>
-                  <button class="switch" id="repeatSelfTalk" type="button" aria-label="Repeat self speech"></button>
+              <div class="voice-line">
+                <div>
+                  <span>Voice</span>
+                  <strong id="voiceProfileName">Maya</strong>
+                  <em id="voiceQualityNote">Warm female</em>
                 </div>
-                <div class="speech-option">
-                  <strong>Slow voice</strong>
-                  <button class="switch" id="slowAudio" type="button" aria-label="Slower audio"></button>
-                </div>
+                <button class="btn secondary" id="changeSelfTalkVoice" type="button">Change</button>
               </div>
 
               <div class="speech-actions">
-                <button class="btn secondary" id="addSelfTalkScript" type="button">New</button>
                 <button class="btn" id="playSelfTalk" type="button">Play</button>
                 <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
               </div>
@@ -3760,19 +3698,16 @@
       }
 
       function populateVoiceOptions() {
-        const list = document.getElementById("selfTalkVoiceChoices");
-        if (!list) return;
+        const name = document.getElementById("voiceProfileName");
+        const note = document.getElementById("voiceQualityNote");
+        if (!name || !note) return;
         const voices = availableVoices();
         const selectedVoice = selectedSelfTalkVoice();
-        list.innerHTML = VOICE_PROFILES.map((profile) =>
-          `<button class="voice-card ${profile.id === state.settings.selfTalkVoicePreset ? "active" : ""}" type="button" data-voice-preset="${profile.id}">
-            <strong>${escapeHtml(profile.name)}</strong>
-            <span>${escapeHtml(profile.tone)}</span>
-          </button>`
-        ).join("");
-        document.getElementById("voiceQualityNote").textContent = voices.length
-          ? `${activeVoiceProfile().name}: ${selectedVoice ? `${selectedVoice.name} (${selectedVoice.lang})` : "best available voice"}`
-          : "Voice styles will use the best voice this device exposes.";
+        const profile = activeVoiceProfile();
+        name.textContent = profile.name;
+        note.textContent = voices.length
+          ? `${profile.tone} · ${selectedVoice ? selectedVoice.name : "best available"}`
+          : profile.tone;
       }
 
       function renderSelfTalkScripts() {
@@ -3850,8 +3785,6 @@
         document.getElementById("themeLight").classList.toggle("active", state.settings.theme === "light");
         document.getElementById("themeDark").classList.toggle("active", state.settings.theme === "dark");
         document.getElementById("dailyReminder").classList.toggle("on", state.settings.dailyReminder);
-        document.getElementById("slowAudio").classList.toggle("on", state.settings.slowAudio);
-        document.getElementById("repeatSelfTalk").classList.toggle("on", state.settings.repeatSelfTalk);
         populateVoiceOptions();
         updateNotificationUI();
         document.querySelectorAll("[data-lang]").forEach((button) => {
@@ -4290,6 +4223,16 @@
         notify("Self speech removed");
       }
 
+      function cycleSelfTalkVoice() {
+        const current = VOICE_PROFILES.findIndex((profile) => profile.id === state.settings.selfTalkVoicePreset);
+        const next = VOICE_PROFILES[(current + 1 + VOICE_PROFILES.length) % VOICE_PROFILES.length];
+        state.settings.selfTalkVoicePreset = next.id;
+        state.settings.selfTalkVoiceURI = "";
+        saveSelfTalkFromForm({ silent: true });
+        populateVoiceOptions();
+        notify(`${next.name} selected`);
+      }
+
       function playSelfTalk() {
         saveSelfTalkFromForm({ silent: true, syncBump: false });
         const text = activeSelfTalkScript().text.trim();
@@ -4297,19 +4240,15 @@
           notify("Write your self speech first");
           return;
         }
-        selfTalkLoopActive = Boolean(state.settings.repeatSelfTalk);
+        selfTalkLoopActive = false;
         speak(text, {
           voice: selectedSelfTalkVoice(),
-          onend: () => {
-            if (!selfTalkLoopActive || !state.settings.repeatSelfTalk) return;
-            setTimeout(playSelfTalk, 650);
-          },
           onerror: () => {
             selfTalkLoopActive = false;
             notify("Audio stopped");
           }
         });
-        notify(selfTalkLoopActive ? "Self speech looping" : "Self speech playing");
+        notify("Self speech playing");
       }
 
       function stopSelfTalk() {
@@ -5017,30 +4956,7 @@
       document.getElementById("testNotification").addEventListener("click", testNotification);
       document.getElementById("openNotificationHelp").addEventListener("click", explainNotifications);
 
-      document.getElementById("slowAudio").addEventListener("click", () => {
-        state.settings.slowAudio = !state.settings.slowAudio;
-        save();
-        applySettings();
-        notify(state.settings.slowAudio ? "Slow audio" : "Normal audio");
-      });
-
-      document.getElementById("repeatSelfTalk").addEventListener("click", () => {
-        state.settings.repeatSelfTalk = !state.settings.repeatSelfTalk;
-        if (!state.settings.repeatSelfTalk) selfTalkLoopActive = false;
-        save();
-        applySettings();
-        notify(state.settings.repeatSelfTalk ? "Repeat on" : "Repeat off");
-      });
-
-      document.getElementById("selfTalkVoiceChoices").addEventListener("click", (event) => {
-        const button = event.target.closest("[data-voice-preset]");
-        if (!button) return;
-        state.settings.selfTalkVoicePreset = button.dataset.voicePreset;
-        state.settings.selfTalkVoiceURI = "";
-        saveSelfTalkFromForm({ silent: true });
-        populateVoiceOptions();
-        notify(`${activeVoiceProfile().name} selected`);
-      });
+      document.getElementById("changeSelfTalkVoice").addEventListener("click", cycleSelfTalkVoice);
 
       document.getElementById("selfTalkText").addEventListener("blur", () => {
         saveSelfTalkFromForm({ silent: true });
