@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=34" />
+    <link rel="manifest" href="./manifest.webmanifest?v=35" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-08-v34";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v35";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=34")
+            .register("./service-worker.js?v=35")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2331,6 +2331,242 @@
         font-weight: 760;
       }
 
+      #speech.screen.active {
+        grid-template-rows: auto minmax(0, 1fr);
+        align-content: stretch;
+      }
+
+      .speech-workbench {
+        min-height: 0;
+        height: 100%;
+        display: grid;
+        grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto auto;
+        gap: 8px;
+        overflow: hidden;
+        border-radius: 28px;
+        padding: 16px;
+        color: var(--ink);
+        background: #ffffff;
+        box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
+      }
+
+      body[data-theme="dark"] .speech-workbench {
+        background: #181c1e;
+      }
+
+      .speech-head {
+        text-align: center;
+      }
+
+      .speech-head h2 {
+        margin-top: 6px;
+        font-size: 24px;
+        line-height: 1.05;
+        font-weight: 950;
+      }
+
+      .speech-head p {
+        max-width: 320px;
+        margin: 6px auto 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.34;
+        font-weight: 760;
+      }
+
+      .speech-guides {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+      }
+
+      .speech-guides span {
+        min-height: 30px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        background: var(--soft);
+        font-size: 10px;
+        font-weight: 900;
+        overflow: hidden;
+        padding: 0 4px;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .speech-list {
+        min-height: 44px;
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scrollbar-width: none;
+      }
+
+      .speech-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      .speech-pill {
+        min-width: 124px;
+        max-width: 148px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 6px 7px 6px 10px;
+        background: var(--soft);
+      }
+
+      .speech-pill.active {
+        border-color: rgba(232, 196, 104, 0.95);
+        background: rgba(232, 196, 104, 0.16);
+      }
+
+      .speech-select {
+        min-width: 0;
+        border: 0;
+        padding: 0;
+        color: var(--ink);
+        background: transparent;
+        text-align: left;
+      }
+
+      .speech-select strong,
+      .speech-select span {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .speech-select strong {
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .speech-select span {
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 750;
+      }
+
+      .speech-delete {
+        width: 28px;
+        height: 28px;
+        border: 0;
+        border-radius: 50%;
+        color: #ffffff;
+        background: var(--red);
+        font-size: 14px;
+        font-weight: 950;
+      }
+
+      .speech-editor {
+        min-height: 0;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        gap: 8px;
+      }
+
+      .speech-field {
+        min-height: 0;
+        display: grid;
+        gap: 6px;
+      }
+
+      .speech-field span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+      }
+
+      .speech-field input,
+      .speech-field textarea {
+        border-radius: 16px;
+        color: var(--ink);
+        background: var(--paper);
+      }
+
+      .speech-field textarea {
+        height: 100%;
+        min-height: 104px;
+        resize: none;
+        line-height: 1.35;
+        font-weight: 760;
+      }
+
+      .speech-field input:focus,
+      .speech-field textarea:focus,
+      .audio-field select:focus {
+        border-color: rgba(232, 196, 104, 0.95);
+        box-shadow: 0 0 0 3px rgba(232, 196, 104, 0.16);
+      }
+
+      .speech-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .speech-option {
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 9px 10px;
+        background: var(--soft);
+      }
+
+      .speech-option strong {
+        font-size: 12px;
+        line-height: 1.05;
+      }
+
+      .speech-option .switch {
+        width: 44px;
+        height: 26px;
+      }
+
+      .speech-option .switch::before {
+        width: 20px;
+        height: 20px;
+      }
+
+      .speech-option .switch.on::before {
+        transform: translateX(18px);
+      }
+
+      .speech-actions {
+        display: grid;
+        grid-template-columns: 0.9fr 1fr 0.8fr;
+        gap: 8px;
+      }
+
+      .speech-actions .btn {
+        min-height: 40px;
+        padding: 0 10px;
+        font-size: 13px;
+        line-height: 1.05;
+        white-space: normal;
+      }
+
+      .speech-workbench .audio-note {
+        font-size: 11px;
+        line-height: 1.25;
+      }
+
       .text-link {
         border: 0;
         padding: 0;
@@ -2426,7 +2662,7 @@
         bottom: 14px;
         height: 72px;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 8px;
         background: transparent;
       }
@@ -2654,6 +2890,66 @@
             <input id="antiPhotoInput" type="file" accept="image/*" multiple hidden />
           </section>
 
+          <section class="screen" id="speech">
+            <div class="helper-copy">
+              <span id="speechHint">Write the voice you want to hear before you act, train, work, or visualize.</span>
+            </div>
+
+            <article class="speech-workbench">
+              <div class="speech-head">
+                <span class="deck-kicker">Self speech</span>
+                <h2>Script your inner voice.</h2>
+                <p>Use first person, present tense, and concrete actions. Make it believable enough to repeat daily, not generic motivation.</p>
+              </div>
+
+              <div class="speech-guides" aria-label="Writing tips">
+                <span>I am becoming...</span>
+                <span>Today I will...</span>
+                <span>I refuse to...</span>
+                <span>I keep proving...</span>
+              </div>
+
+              <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
+
+              <div class="speech-editor">
+                <label class="speech-field">
+                  <span>Title</span>
+                  <input id="selfTalkTitle" type="text" maxlength="56" placeholder="Example: Morning identity" />
+                </label>
+                <label class="speech-field">
+                  <span>Script</span>
+                  <textarea id="selfTalkText" maxlength="1800" placeholder="Write your self speech here..."></textarea>
+                </label>
+              </div>
+
+              <div class="voice-row">
+                <label class="audio-field">
+                  <span>Voice</span>
+                  <select id="selfTalkVoice" aria-label="Self speech voice"></select>
+                </label>
+                <button class="voice-refresh" id="refreshVoices" type="button" aria-label="Refresh voices">R</button>
+              </div>
+
+              <div class="speech-options">
+                <div class="speech-option">
+                  <strong>Repeat</strong>
+                  <button class="switch" id="repeatSelfTalk" type="button" aria-label="Repeat self speech"></button>
+                </div>
+                <div class="speech-option">
+                  <strong>Slow voice</strong>
+                  <button class="switch" id="slowAudio" type="button" aria-label="Slower audio"></button>
+                </div>
+              </div>
+
+              <div class="speech-actions">
+                <button class="btn secondary" id="addSelfTalkScript" type="button">New</button>
+                <button class="btn" id="playSelfTalk" type="button">Play</button>
+                <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
+              </div>
+              <p class="audio-note" id="voiceQualityNote">Voice quality depends on the voices installed on this device.</p>
+            </article>
+          </section>
+
           <section class="screen" id="pro">
             <div class="paywall">
               <button class="paywall-close" id="closePro" type="button" aria-label="Close Pro">x</button>
@@ -2755,13 +3051,6 @@
             </div>
             <div class="setting-row">
               <div>
-                <strong>Slower audio</strong>
-                <span>Mindset track with a calmer rhythm.</span>
-              </div>
-              <button class="switch" id="slowAudio" type="button" aria-label="Slower audio"></button>
-            </div>
-            <div class="setting-row">
-              <div>
                 <strong>Local saving</strong>
                 <span>Prototype fallback. Production saves encrypted data and image references to the cloud.</span>
               </div>
@@ -2774,36 +3063,6 @@
               </div>
               <button class="switch" id="cloudSyncSwitch" type="button" aria-label="Cloud sync pending"></button>
             </div>
-          </div>
-
-          <div class="profile-card audio-card">
-            <div>
-              <h2>Self-talk audio</h2>
-              <p>Write the mindset script you want to hear repeatedly before your visualization exercise.</p>
-            </div>
-            <label class="audio-field">
-              <span>Your script</span>
-              <textarea id="selfTalkText" maxlength="1600" placeholder="Write your self-talk here..."></textarea>
-            </label>
-            <div class="voice-row">
-              <label class="audio-field">
-                <span>Voice</span>
-                <select id="selfTalkVoice" aria-label="Self-talk voice"></select>
-              </label>
-              <button class="voice-refresh" id="refreshVoices" type="button" aria-label="Refresh voices">R</button>
-            </div>
-            <div class="setting-row">
-              <div>
-                <strong>Repeat playback</strong>
-                <span>Loop this track until you stop it.</span>
-              </div>
-              <button class="switch" id="repeatSelfTalk" type="button" aria-label="Repeat self-talk"></button>
-            </div>
-            <div class="action-row">
-              <button class="btn" id="playSelfTalk" type="button">Play audio</button>
-              <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
-            </div>
-            <p class="audio-note" id="voiceQualityNote">Voice quality depends on the voices installed on this device. On iPhone, some system voices sound more natural after downloading enhanced voices in iOS settings.</p>
           </div>
 
           <div class="profile-card">
@@ -2850,6 +3109,7 @@
           <button data-view="goals">Goal</button>
           <button data-view="vision">Vision</button>
           <button data-view="anti">Anti</button>
+          <button data-view="speech">Speech</button>
         </nav>
       </div>
     </div>
@@ -2912,6 +3172,17 @@
         ],
         mantra: "I am the kind of person who keeps promises to myself.",
         selfTalk: "I am training my attention. I see my future clearly, and I act like the person who is already building it. I do not need to feel perfect. I need to stay honest, focused, and consistent. Today I choose the actions that make my vision real.",
+        selfTalkScripts: [
+          {
+            title: "Morning identity",
+            text: "I am training my attention. I see my future clearly, and I act like the person who is already building it. I do not need to feel perfect. I need to stay honest, focused, and consistent. Today I choose the actions that make my vision real."
+          },
+          {
+            title: "Before vision",
+            text: "I slow down and see the future I am building. I notice the body, the work, the home, the people, and the standards I choose. Then I take one clear action that makes that future more real today."
+          }
+        ],
+        activeSelfTalkIndex: 0,
         lifeProfile: {
           complete: false,
           age: "",
@@ -2956,6 +3227,11 @@
 
       const storedState = JSON.parse(localStorage.getItem("visualize-simple-v1") || "null");
       const savedState = storedState && storedState.appVersion === defaults.appVersion ? storedState : null;
+      const initialSelfTalkScripts = normalizeSelfTalkScripts(savedState);
+      const initialSelfTalkIndex = Math.min(
+        initialSelfTalkScripts.length - 1,
+        Math.max(0, Number(savedState && savedState.activeSelfTalkIndex) || 0)
+      );
       const state = {
         ...defaults,
         ...(savedState || {}),
@@ -2979,6 +3255,8 @@
         goalMode: savedState && ["daily", "short"].includes(savedState.goalMode) ? savedState.goalMode : defaults.goalMode,
         dailyTasks: Array.isArray(savedState && savedState.dailyTasks) ? savedState.dailyTasks : defaults.dailyTasks,
         shortTermGoals: Array.isArray(savedState && savedState.shortTermGoals) ? savedState.shortTermGoals : defaults.shortTermGoals,
+        selfTalkScripts: initialSelfTalkScripts,
+        activeSelfTalkIndex: initialSelfTalkIndex,
         lifeProfile: {
           ...defaults.lifeProfile,
           ...((savedState && savedState.lifeProfile) || {})
@@ -3013,6 +3291,41 @@
         payments: "apple-in-app-purchase"
       };
       const pendingPhotoMode = { vision: "upload", anti: "upload" };
+
+      function normalizeSelfTalkScripts(source) {
+        const scripts = Array.isArray(source && source.selfTalkScripts)
+          ? source.selfTalkScripts
+              .map((script, index) => ({
+                title: String((script && script.title) || `Self speech ${index + 1}`).trim() || `Self speech ${index + 1}`,
+                text: String((script && script.text) || "").trim()
+              }))
+              .filter((script) => script.title || script.text)
+          : [];
+
+        if (scripts.length) return scripts;
+
+        const legacyText = String((source && source.selfTalk) || defaults.selfTalk).trim() || defaults.selfTalk;
+        return [
+          { title: "Main self speech", text: legacyText },
+          ...defaults.selfTalkScripts.slice(1)
+        ];
+      }
+
+      function ensureSelfTalkScripts() {
+        if (!Array.isArray(state.selfTalkScripts) || !state.selfTalkScripts.length) {
+          state.selfTalkScripts = normalizeSelfTalkScripts(state);
+        }
+        state.activeSelfTalkIndex = Math.min(
+          state.selfTalkScripts.length - 1,
+          Math.max(0, Number(state.activeSelfTalkIndex) || 0)
+        );
+        return state.selfTalkScripts;
+      }
+
+      function activeSelfTalkScript() {
+        const scripts = ensureSelfTalkScripts();
+        return scripts[state.activeSelfTalkIndex];
+      }
 
       function save() {
         try {
@@ -3370,6 +3683,32 @@
           : "No downloadable voices were exposed by this browser yet. Try Refresh voices, or play once from Safari.";
       }
 
+      function renderSelfTalkScripts() {
+        const list = document.getElementById("selfTalkList");
+        if (!list) return;
+        const scripts = ensureSelfTalkScripts();
+        list.innerHTML = scripts.map((script, index) => `
+          <div class="speech-pill ${index === state.activeSelfTalkIndex ? "active" : ""}">
+            <button class="speech-select" type="button" data-self-talk-index="${index}">
+              <strong>${escapeHtml(script.title || `Self speech ${index + 1}`)}</strong>
+              <span>${escapeHtml((script.text || "Write this script").slice(0, 54))}</span>
+            </button>
+            <button class="speech-delete" type="button" data-delete-self-talk="${index}" aria-label="Delete self speech">x</button>
+          </div>
+        `).join("");
+      }
+
+      function renderSelfSpeech() {
+        const titleInput = document.getElementById("selfTalkTitle");
+        const textInput = document.getElementById("selfTalkText");
+        if (!titleInput || !textInput) return;
+        const script = activeSelfTalkScript();
+        renderSelfTalkScripts();
+        titleInput.value = script.title || "";
+        textInput.value = script.text || "";
+        state.selfTalk = script.text || defaults.selfTalk;
+      }
+
       function notificationsSupported() {
         return "Notification" in window;
       }
@@ -3421,7 +3760,6 @@
         document.getElementById("dailyReminder").classList.toggle("on", state.settings.dailyReminder);
         document.getElementById("slowAudio").classList.toggle("on", state.settings.slowAudio);
         document.getElementById("repeatSelfTalk").classList.toggle("on", state.settings.repeatSelfTalk);
-        document.getElementById("selfTalkText").value = state.selfTalk || defaults.selfTalk;
         populateVoiceOptions();
         updateNotificationUI();
         document.querySelectorAll("[data-lang]").forEach((button) => {
@@ -3713,6 +4051,7 @@
         renderDeck("anti");
         renderVisionState();
         renderAntiState();
+        renderSelfSpeech();
         applySettings();
       }
 
@@ -3801,23 +4140,73 @@
         speak(script);
       }
 
-      function saveSelfTalkFromForm({ silent = false } = {}) {
-        const text = document.getElementById("selfTalkText").value.trim();
-        state.selfTalk = text || defaults.selfTalk;
-        state.settings.selfTalkVoiceURI = document.getElementById("selfTalkVoice").value || "";
+      function saveSelfTalkFromForm({ silent = false, syncBump = true } = {}) {
+        const titleInput = document.getElementById("selfTalkTitle");
+        const textInput = document.getElementById("selfTalkText");
+        const voiceInput = document.getElementById("selfTalkVoice");
+        if (!titleInput || !textInput || !voiceInput) return;
+        const script = activeSelfTalkScript();
+        script.title = titleInput.value.trim() || `Self speech ${state.activeSelfTalkIndex + 1}`;
+        script.text = textInput.value.trim();
+        state.selfTalk = script.text || defaults.selfTalk;
+        state.settings.selfTalkVoiceURI = voiceInput.value || "";
+        if (syncBump) save();
+        else saveWithoutSyncBump();
+        renderSelfTalkScripts();
+        if (!silent) notify("Self speech saved");
+      }
+
+      function addSelfTalkScript() {
+        saveSelfTalkFromForm({ silent: true });
+        const scripts = ensureSelfTalkScripts();
+        scripts.push({
+          title: `Self speech ${scripts.length + 1}`,
+          text: ""
+        });
+        state.activeSelfTalkIndex = scripts.length - 1;
         save();
-        if (!silent) notify("Self-talk saved");
+        renderSelfSpeech();
+        requestAnimationFrame(() => {
+          const input = document.getElementById("selfTalkTitle");
+          if (!input) return;
+          input.focus();
+          input.select();
+        });
+        notify("New self speech");
+      }
+
+      function selectSelfTalkScript(index) {
+        const scripts = ensureSelfTalkScripts();
+        if (!scripts[index]) return;
+        if (index !== state.activeSelfTalkIndex) saveSelfTalkFromForm({ silent: true });
+        state.activeSelfTalkIndex = index;
+        saveWithoutSyncBump();
+        renderSelfSpeech();
+      }
+
+      function deleteSelfTalkScript(index) {
+        const scripts = ensureSelfTalkScripts();
+        if (!scripts[index]) return;
+        if (scripts.length === 1) {
+          scripts[0] = { title: "Main self speech", text: "" };
+          state.activeSelfTalkIndex = 0;
+        } else {
+          scripts.splice(index, 1);
+          state.activeSelfTalkIndex = Math.min(scripts.length - 1, Math.max(0, state.activeSelfTalkIndex - (index <= state.activeSelfTalkIndex ? 1 : 0)));
+        }
+        state.selfTalk = activeSelfTalkScript().text || defaults.selfTalk;
+        save();
+        renderSelfSpeech();
+        notify("Self speech removed");
       }
 
       function playSelfTalk() {
-        const text = document.getElementById("selfTalkText").value.trim();
+        saveSelfTalkFromForm({ silent: true, syncBump: false });
+        const text = activeSelfTalkScript().text.trim();
         if (!text) {
-          notify("Write your self-talk first");
+          notify("Write your self speech first");
           return;
         }
-        state.selfTalk = text;
-        state.settings.selfTalkVoiceURI = document.getElementById("selfTalkVoice").value || "";
-        saveWithoutSyncBump();
         selfTalkLoopActive = Boolean(state.settings.repeatSelfTalk);
         speak(text, {
           voice: selectedSelfTalkVoice(),
@@ -3830,7 +4219,7 @@
             notify("Audio stopped");
           }
         });
-        notify(selfTalkLoopActive ? "Self-talk looping" : "Self-talk playing");
+        notify(selfTalkLoopActive ? "Self speech looping" : "Self speech playing");
       }
 
       function stopSelfTalk() {
@@ -4554,8 +4943,7 @@
       });
 
       document.getElementById("selfTalkVoice").addEventListener("change", () => {
-        state.settings.selfTalkVoiceURI = document.getElementById("selfTalkVoice").value || "";
-        save();
+        saveSelfTalkFromForm({ silent: true });
         populateVoiceOptions();
         notify("Voice selected");
       });
@@ -4569,6 +4957,21 @@
         saveSelfTalkFromForm({ silent: true });
       });
 
+      document.getElementById("selfTalkTitle").addEventListener("blur", () => {
+        saveSelfTalkFromForm({ silent: true });
+      });
+
+      document.getElementById("selfTalkList").addEventListener("click", (event) => {
+        const deleteButton = event.target.closest("[data-delete-self-talk]");
+        if (deleteButton) {
+          deleteSelfTalkScript(Number(deleteButton.dataset.deleteSelfTalk));
+          return;
+        }
+        const selectButton = event.target.closest("[data-self-talk-index]");
+        if (selectButton) selectSelfTalkScript(Number(selectButton.dataset.selfTalkIndex));
+      });
+
+      document.getElementById("addSelfTalkScript").addEventListener("click", addSelfTalkScript);
       document.getElementById("playSelfTalk").addEventListener("click", playSelfTalk);
       document.getElementById("stopSelfTalk").addEventListener("click", stopSelfTalk);
 
