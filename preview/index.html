@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="it">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=39" />
+    <link rel="manifest" href="./manifest.webmanifest?v=40" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v39";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v40";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=39")
+            .register("./service-worker.js?v=40")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -102,6 +102,100 @@
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
+      @keyframes phoneWake {
+        0% {
+          opacity: 0;
+          transform: translateY(14px) scale(0.985);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes screenArrives {
+        0% {
+          opacity: 0;
+          transform: translateY(18px) scale(0.985);
+        }
+        64% {
+          opacity: 1;
+          transform: translateY(-2px) scale(1.004);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes panelPop {
+        0% {
+          opacity: 0;
+          transform: translateY(14px) scale(0.965);
+        }
+        72% {
+          opacity: 1;
+          transform: translateY(-3px) scale(1.01);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes logoBreathe {
+        0%, 100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        45% {
+          transform: translateY(-2px) rotate(-1deg);
+        }
+        62% {
+          transform: translateY(1px) rotate(1deg);
+        }
+      }
+
+      @keyframes activeNavBounce {
+        0% {
+          transform: translateY(0) scale(1);
+        }
+        48% {
+          transform: translateY(-5px) scale(1.08);
+        }
+        100% {
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes insightScrimIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes insightCardIn {
+        0% {
+          opacity: 0;
+          transform: translateY(34px) scale(0.92) rotate(-1deg);
+        }
+        58% {
+          opacity: 1;
+          transform: translateY(-8px) scale(1.018) rotate(0.5deg);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0deg);
+        }
+      }
+
+      @keyframes insightSpark {
+        0%, 100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-3px) scale(1.08);
+        }
+      }
+
       button,
       input,
       textarea,
@@ -111,6 +205,29 @@
 
       button {
         cursor: pointer;
+      }
+
+      button,
+      .btn,
+      .tiny-toggle,
+      .nav button,
+      .speech-pill,
+      .progress-edit,
+      .deck-card {
+        transition:
+          transform 0.2s cubic-bezier(0.2, 0.95, 0.25, 1.35),
+          box-shadow 0.2s ease,
+          background-color 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      button:active,
+      .btn:active,
+      .tiny-toggle:active,
+      .nav button:active,
+      .speech-pill:active,
+      .deck-card:active {
+        transform: scale(0.94);
       }
 
       h1,
@@ -147,6 +264,7 @@
         border-radius: 34px;
         background: var(--paper);
         box-shadow: 0 24px 62px rgba(17, 17, 17, 0.22);
+        animation: phoneWake 0.52s cubic-bezier(0.2, 0.9, 0.18, 1) both;
       }
 
       .app {
@@ -174,6 +292,19 @@
         display: grid;
         align-content: start;
         gap: 12px;
+        animation: screenArrives 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .screen.active > * {
+        animation: panelPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .screen.active > *:nth-child(2) {
+        animation-delay: 0.05s;
+      }
+
+      .screen.active > *:nth-child(3) {
+        animation-delay: 0.1s;
       }
 
       .topbar {
@@ -226,6 +357,7 @@
         justify-self: center;
         border-radius: 12px;
         box-shadow: none;
+        animation: logoBreathe 5.6s ease-in-out infinite;
       }
 
       .week-row {
@@ -928,6 +1060,23 @@
         padding: 12px;
         border-radius: 18px;
         background: var(--soft);
+        animation: panelPop 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .progress-goal:nth-child(2) {
+        animation-delay: 0.04s;
+      }
+
+      .progress-goal:nth-child(3) {
+        animation-delay: 0.08s;
+      }
+
+      .progress-goal:nth-child(4) {
+        animation-delay: 0.12s;
+      }
+
+      .progress-goal:nth-child(5) {
+        animation-delay: 0.16s;
       }
 
       body[data-theme="dark"] .progress-goal,
@@ -1242,6 +1391,29 @@
         background-size: cover;
         background-position: center;
         scroll-snap-align: start;
+        animation: panelPop 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .deck-card:hover,
+      .progress-goal:hover,
+      .speech-pill:hover {
+        transform: translateY(-2px);
+      }
+
+      .deck-card:nth-child(2) {
+        animation-delay: 0.04s;
+      }
+
+      .deck-card:nth-child(3) {
+        animation-delay: 0.08s;
+      }
+
+      .deck-card:nth-child(4) {
+        animation-delay: 0.12s;
+      }
+
+      .deck-card:nth-child(5) {
+        animation-delay: 0.16s;
       }
 
       .deck-card.empty {
@@ -1485,6 +1657,11 @@
 
       .deck-editor.open {
         display: grid;
+        animation: insightScrimIn 0.2s ease both;
+      }
+
+      .deck-editor.open .deck-editor-panel {
+        animation: insightCardIn 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .deck-editor-panel {
@@ -1970,6 +2147,14 @@
         box-shadow: 0 10px 22px rgba(17, 17, 17, 0.08);
       }
 
+      .btn:hover,
+      .tiny-toggle:hover,
+      .deck-editor-close:hover,
+      .drawer-close:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 28px rgba(17, 17, 17, 0.12);
+      }
+
       .btn.secondary {
         color: var(--ink);
         background: transparent;
@@ -2233,7 +2418,7 @@
         background: var(--paper);
         border-left: 1px solid var(--line);
         transform: translateX(110%);
-        transition: transform 0.22s ease;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         scrollbar-width: none;
       }
 
@@ -2715,6 +2900,7 @@
         color: var(--ink);
         background: rgba(255, 255, 255, 0.58);
         border-color: var(--line);
+        animation: activeNavBounce 0.38s cubic-bezier(0.18, 1.2, 0.25, 1) both;
       }
 
       body[data-theme="dark"] .nav button.active {
@@ -2775,6 +2961,176 @@
       .toast.show {
         opacity: 1;
         transform: translate(-50%, 0);
+      }
+
+      .insight-scrim {
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        display: none;
+        place-items: end center;
+        padding: 22px;
+        background: rgba(10, 10, 10, 0.34);
+        backdrop-filter: blur(6px);
+      }
+
+      .insight-scrim.open {
+        display: grid;
+        animation: insightScrimIn 0.2s ease both;
+      }
+
+      .insight-card {
+        width: min(100%, 390px);
+        display: grid;
+        gap: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(17, 17, 17, 0.08);
+        border-radius: 30px;
+        padding: 18px;
+        color: #111111;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(244, 242, 236, 0.96)),
+          #ffffff;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.26);
+      }
+
+      .insight-scrim.open .insight-card {
+        animation: insightCardIn 0.56s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      body[data-theme="dark"] .insight-card {
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #fff8ea;
+        background:
+          linear-gradient(180deg, rgba(31, 36, 39, 0.98), rgba(17, 21, 23, 0.98)),
+          #171b1e;
+      }
+
+      .insight-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .insight-kicker {
+        display: inline-grid;
+        grid-auto-flow: column;
+        align-items: center;
+        gap: 8px;
+        color: #77736a;
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+
+      body[data-theme="dark"] .insight-kicker {
+        color: #d8d1c3;
+      }
+
+      .insight-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 0 0 7px rgba(232, 196, 104, 0.16);
+        animation: insightSpark 1.65s ease-in-out infinite;
+      }
+
+      .insight-close {
+        width: 38px;
+        height: 38px;
+        border: 1px solid rgba(17, 17, 17, 0.08);
+        border-radius: 50%;
+        color: inherit;
+        background: rgba(255, 255, 255, 0.66);
+        font-size: 20px;
+        font-weight: 950;
+      }
+
+      body[data-theme="dark"] .insight-close {
+        border-color: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .insight-card h2 {
+        font-size: 28px;
+        line-height: 1.03;
+        font-weight: 950;
+      }
+
+      .insight-card p {
+        color: #55564f;
+        font-size: 15px;
+        line-height: 1.42;
+        font-weight: 760;
+      }
+
+      body[data-theme="dark"] .insight-card p {
+        color: #ece5d8;
+      }
+
+      .insight-source {
+        color: #7d796f;
+        font-size: 12px;
+        line-height: 1.35;
+        font-weight: 850;
+      }
+
+      body[data-theme="dark"] .insight-source {
+        color: #cfc6b7;
+      }
+
+      .insight-actions {
+        display: grid;
+        grid-template-columns: 1fr 1.25fr;
+        gap: 9px;
+      }
+
+      .insight-actions button {
+        min-height: 46px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 950;
+      }
+
+      .insight-later {
+        border: 1px solid rgba(17, 17, 17, 0.12);
+        color: inherit;
+        background: transparent;
+      }
+
+      .insight-use {
+        border: 1px solid #111111;
+        color: #111111;
+        background: var(--gold);
+      }
+
+      body[data-theme="dark"] .insight-later {
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+
+      body[data-theme="dark"] .insight-use {
+        border-color: rgba(232, 196, 104, 0.72);
+      }
+
+      .btn:active,
+      .tiny-toggle:active,
+      .deck-editor-close:active,
+      .drawer-close:active,
+      .insight-actions button:active {
+        transform: scale(0.94);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
       }
 
       @media (max-width: 520px) {
@@ -3145,6 +3501,21 @@
     </div>
 
     <div class="toast" id="toast">Done</div>
+    <div class="insight-scrim" id="dailyInsight" aria-hidden="true">
+      <article class="insight-card" role="dialog" aria-modal="true" aria-labelledby="dailyInsightTitle">
+        <div class="insight-top">
+          <span class="insight-kicker"><span class="insight-dot" aria-hidden="true"></span>Daily insight</span>
+          <button class="insight-close" id="closeDailyInsight" type="button" aria-label="Close insight">x</button>
+        </div>
+        <h2 id="dailyInsightTitle">Future-self training.</h2>
+        <p id="dailyInsightText">A short story about visualization will appear here once a day.</p>
+        <span class="insight-source" id="dailyInsightSource">Source</span>
+        <div class="insight-actions">
+          <button class="insight-later" id="dismissDailyInsight" type="button">Later</button>
+          <button class="insight-use" id="useDailyInsight" type="button">Use this</button>
+        </div>
+      </article>
+    </div>
 
     <div class="player" id="deckPlayer" aria-hidden="true">
       <div class="player-slide" id="playerSlide">
@@ -3249,6 +3620,10 @@
           lastSyncedAt: "",
           pendingChanges: 0
         },
+        dailyInsight: {
+          lastShownDate: "",
+          index: 0
+        },
         subscription: {
           plan: "free",
           premium: false,
@@ -3277,6 +3652,10 @@
         sync: {
           ...defaults.sync,
           ...((savedState && savedState.sync) || {})
+        },
+        dailyInsight: {
+          ...defaults.dailyInsight,
+          ...((savedState && savedState.dailyInsight) || {})
         },
         subscription: {
           ...defaults.subscription,
@@ -3349,6 +3728,43 @@
           name: "Elias",
           tone: "Deep male",
           hints: ["fred", "daniel", "ralph", "jorge", "diego", "male", "man", "google uk english male"]
+        }
+      ];
+      const DAILY_INSIGHTS = [
+        {
+          title: "Chase a future self.",
+          text: "Matthew McConaughey used his 2014 Oscar speech to describe chasing the version of himself ten years ahead. That loop is powerful: make the next identity visible, then behave toward it today.",
+          source: "Based on: Academy Awards speech coverage, TIME, 2014.",
+          action: "vision",
+          cta: "Open Vision"
+        },
+        {
+          title: "See it, say it, work for it.",
+          text: "Conor McGregor told GQ that his method was to picture what he wanted, speak it with confidence, work for it, and watch it become real. The useful part is the sequence: image, words, effort.",
+          source: "Based on: GQ interview with Conor McGregor, 2017.",
+          action: "speech",
+          cta: "Write Speech"
+        },
+        {
+          title: "Make the target physical.",
+          text: "Before he was a major movie star, Jim Carrey famously wrote himself a future check for acting work. Whether or not the number matters, the habit does: turn the invisible target into something concrete.",
+          source: "Based on: Oprah interview notes and The New Yorker profile.",
+          action: "goals",
+          cta: "Set Goal"
+        },
+        {
+          title: "Rehearse the hard part.",
+          text: "Elite athletes do not only imagine the perfect moment. They rehearse pressure, mistakes, and bad conditions too. Your anti-vision can work the same way: see the cost, then choose against it.",
+          source: "Based on: sport psychology imagery research and Olympic performance reporting.",
+          action: "anti",
+          cta: "Open Anti"
+        },
+        {
+          title: "Pair imagery with practice.",
+          text: "Sports psychology research suggests imagery works best when it supports real practice. The point is not to dream instead of acting. It is to make action feel familiar before you do it.",
+          source: "Based on: imagery interventions in sport psychology research.",
+          action: "goals",
+          cta: "Plan Action"
         }
       ];
 
@@ -3624,6 +4040,7 @@
         paint();
         updateBackButton();
         setTimeout(showLifeClockForPendingUpdate, 360);
+        setTimeout(() => openDailyInsight(), 980);
       }
 
       function notify(text) {
@@ -3658,6 +4075,48 @@
         const month = String(now.getMonth() + 1).padStart(2, "0");
         const day = String(now.getDate()).padStart(2, "0");
         return `${year}-${month}-${day}`;
+      }
+
+      function currentDailyInsight() {
+        const index = Math.max(0, Number(state.dailyInsight.index) || 0);
+        return DAILY_INSIGHTS[index % DAILY_INSIGHTS.length];
+      }
+
+      function paintDailyInsight(insight) {
+        document.getElementById("dailyInsightTitle").textContent = insight.title;
+        document.getElementById("dailyInsightText").textContent = insight.text;
+        document.getElementById("dailyInsightSource").textContent = insight.source;
+        document.getElementById("useDailyInsight").textContent = insight.cta;
+        document.getElementById("dailyInsight").dataset.action = insight.action;
+      }
+
+      function openDailyInsight({ force = false } = {}) {
+        if (!force && !state.lifeProfile.complete) return;
+        if (!force && state.dailyInsight.lastShownDate === todayKey()) return;
+
+        const insight = currentDailyInsight();
+        paintDailyInsight(insight);
+        const modal = document.getElementById("dailyInsight");
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+
+        if (!force) {
+          state.dailyInsight.lastShownDate = todayKey();
+          state.dailyInsight.index = (Math.max(0, Number(state.dailyInsight.index) || 0) + 1) % DAILY_INSIGHTS.length;
+          saveWithoutSyncBump();
+        }
+      }
+
+      function closeDailyInsight() {
+        const modal = document.getElementById("dailyInsight");
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      function useDailyInsight() {
+        const action = document.getElementById("dailyInsight").dataset.action;
+        closeDailyInsight();
+        if (MAIN_VIEWS.has(action)) setView(action);
       }
 
       function localDayTime(value = new Date()) {
@@ -4432,6 +4891,7 @@
         save();
         paint();
         notify("Life clock created");
+        setTimeout(() => openDailyInsight(), 720);
       }
 
       function editLifeInfo() {
@@ -5069,6 +5529,12 @@
       document.getElementById("addSelfTalkScript").addEventListener("click", addSelfTalkScript);
       document.getElementById("playSelfTalk").addEventListener("click", playSelfTalk);
       document.getElementById("stopSelfTalk").addEventListener("click", stopSelfTalk);
+      document.getElementById("closeDailyInsight").addEventListener("click", closeDailyInsight);
+      document.getElementById("dismissDailyInsight").addEventListener("click", closeDailyInsight);
+      document.getElementById("useDailyInsight").addEventListener("click", useDailyInsight);
+      document.getElementById("dailyInsight").addEventListener("click", (event) => {
+        if (event.target.id === "dailyInsight") closeDailyInsight();
+      });
 
       document.getElementById("saveProfile").addEventListener("click", () => {
         saveSelfTalkFromForm({ silent: true });
