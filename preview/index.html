@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=38" />
+    <link rel="manifest" href="./manifest.webmanifest?v=39" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v38";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v39";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=38")
+            .register("./service-worker.js?v=39")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -204,6 +204,20 @@
 
       .back-toggle {
         justify-self: end;
+        width: auto;
+        min-width: 78px;
+        height: 40px;
+        grid-auto-flow: column;
+        gap: 5px;
+        border-radius: 999px;
+        padding: 0 12px 0 10px;
+        font-size: 13px;
+        font-weight: 950;
+      }
+
+      .back-toggle svg {
+        width: 18px;
+        height: 18px;
       }
 
       .brand-logo {
@@ -2798,10 +2812,12 @@
               </svg>
             </button>
             <img class="brand-logo" src="./icon.svg" alt="Visualize" />
-            <button class="tiny-toggle back-toggle hidden" id="backBtn" type="button" aria-label="Go back" title="Back">
+            <button class="tiny-toggle back-toggle hidden" id="backBtn" type="button" aria-label="Back" title="Back">
               <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 18l-6-6 6-6"></path>
+                <path d="M19 12H5"></path>
+                <path d="M12 19l-7-7 7-7"></path>
               </svg>
+              <span>Back</span>
             </button>
           </div>
 
@@ -3291,7 +3307,10 @@
       let editorKind = "vision";
       let editingProgressIndex = null;
       let editingSlideIndex = null;
-      const viewHistory = [];
+      const MAIN_VIEWS = new Set(["today", "goals", "vision", "anti", "speech"]);
+      let contextualBackTarget = null;
+      let contextualBackAction = "";
+      let lifeEditSnapshot = null;
       const imageCache = {};
       const IMAGE_DB_NAME = "visualize-image-store";
       const IMAGE_STORE_NAME = "images";
@@ -4125,27 +4144,38 @@
 
       function updateBackButton() {
         const backBtn = document.getElementById("backBtn");
-        const canGoBack = viewHistory.length > 0;
+        const canGoBack = Boolean(contextualBackTarget || contextualBackAction);
         backBtn.classList.toggle("hidden", !canGoBack);
         backBtn.disabled = !canGoBack;
       }
 
+      function clearContextualBack() {
+        contextualBackTarget = null;
+        contextualBackAction = "";
+        lifeEditSnapshot = null;
+      }
+
       function setView(name, options = {}) {
+        const isMainView = MAIN_VIEWS.has(name);
+
         if (name === currentView) {
           closeProfile();
+          if (isMainView && !options.keepBack) clearContextualBack();
           updateBackButton();
           return;
         }
 
-        if (!options.fromHistory && !options.replace) {
-          viewHistory.push(currentView);
-          if (viewHistory.length > 8) viewHistory.shift();
+        if (isMainView && !options.keepBack) {
+          clearContextualBack();
+        } else if (!isMainView && !contextualBackTarget && !options.replace) {
+          contextualBackTarget = options.backTo || (MAIN_VIEWS.has(currentView) ? currentView : "today");
         }
 
         currentView = name;
         document.querySelectorAll(".screen").forEach((view) => view.classList.toggle("active", view.id === name));
+        const activeNavView = isMainView ? name : contextualBackTarget;
         document.querySelectorAll(".nav button[data-view]").forEach((button) => {
-          button.classList.toggle("active", button.dataset.view === name);
+          button.classList.toggle("active", button.dataset.view === activeNavView);
         });
         closeProfile();
         updateBackButton();
@@ -4153,9 +4183,19 @@
       }
 
       function goBack() {
-        const previous = viewHistory.pop();
-        if (!previous) return;
-        setView(previous, { fromHistory: true });
+        if (contextualBackAction === "restore-life-profile" && lifeEditSnapshot) {
+          state.lifeProfile = { ...lifeEditSnapshot };
+          clearContextualBack();
+          saveWithoutSyncBump();
+          paint();
+          setView("today", { replace: true });
+          return;
+        }
+
+        const target = contextualBackTarget;
+        if (!target) return;
+        clearContextualBack();
+        setView(target, { replace: true });
       }
 
       function openProfile() {
@@ -4388,14 +4428,21 @@
         };
         state.lifeProfile.lastSnapshot = lifeSnapshot(getLifeStats());
 
+        clearContextualBack();
         save();
         paint();
         notify("Life clock created");
       }
 
       function editLifeInfo() {
+        if (state.lifeProfile.complete) {
+          lifeEditSnapshot = { ...state.lifeProfile };
+          contextualBackTarget = "today";
+          contextualBackAction = "restore-life-profile";
+        }
         state.lifeProfile.complete = false;
         paint();
+        updateBackButton();
       }
 
       function setGoalMode(mode) {
@@ -4955,7 +5002,7 @@
       document.getElementById("cloudSyncSwitch").addEventListener("click", syncNow);
       document.getElementById("openPrivacy").addEventListener("click", openPrivacyDraft);
       document.getElementById("closePro").addEventListener("click", () => {
-        if (viewHistory.length) {
+        if (contextualBackTarget || contextualBackAction) {
           goBack();
           return;
         }
