@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=35" />
+    <link rel="manifest" href="./manifest.webmanifest?v=36" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v35";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v36";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=35")
+            .register("./service-worker.js?v=36")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2332,7 +2332,7 @@
       }
 
       #speech.screen.active {
-        grid-template-rows: auto minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
         align-content: stretch;
       }
 
@@ -2340,11 +2340,11 @@
         min-height: 0;
         height: 100%;
         display: grid;
-        grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto auto;
-        gap: 8px;
+        grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto;
+        gap: 9px;
         overflow: hidden;
         border-radius: 28px;
-        padding: 16px;
+        padding: 15px;
         color: var(--ink);
         background: #ffffff;
         box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
@@ -2359,46 +2359,38 @@
       }
 
       .speech-head h2 {
-        margin-top: 6px;
-        font-size: 24px;
+        margin-top: 4px;
+        font-size: 23px;
         line-height: 1.05;
         font-weight: 950;
       }
 
       .speech-head p {
         max-width: 320px;
-        margin: 6px auto 0;
+        margin: 5px auto 0;
         color: var(--muted);
-        font-size: 12px;
-        line-height: 1.34;
+        font-size: 11px;
+        line-height: 1.28;
         font-weight: 760;
       }
 
-      .speech-guides {
+      .speech-tip {
+        min-height: 38px;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 5px;
-      }
-
-      .speech-guides span {
-        min-height: 30px;
-        display: grid;
-        place-items: center;
+        align-items: center;
         border: 1px solid var(--line);
-        border-radius: 999px;
+        border-radius: 18px;
+        padding: 8px 11px;
         color: var(--muted);
         background: var(--soft);
-        font-size: 10px;
-        font-weight: 900;
-        overflow: hidden;
-        padding: 0 4px;
+        font-size: 11px;
+        line-height: 1.2;
+        font-weight: 820;
         text-align: center;
-        text-overflow: ellipsis;
-        white-space: nowrap;
       }
 
       .speech-list {
-        min-height: 44px;
+        min-height: 42px;
         display: flex;
         gap: 8px;
         overflow-x: auto;
@@ -2472,7 +2464,7 @@
         min-height: 0;
         display: grid;
         grid-template-rows: auto minmax(0, 1fr);
-        gap: 8px;
+        gap: 7px;
       }
 
       .speech-field {
@@ -2483,7 +2475,7 @@
 
       .speech-field span {
         color: var(--muted);
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 950;
         letter-spacing: 1.2px;
         text-transform: uppercase;
@@ -2494,21 +2486,68 @@
         border-radius: 16px;
         color: var(--ink);
         background: var(--paper);
+        padding: 11px 12px;
       }
 
       .speech-field textarea {
         height: 100%;
-        min-height: 104px;
+        min-height: 96px;
         resize: none;
         line-height: 1.35;
         font-weight: 760;
       }
 
       .speech-field input:focus,
-      .speech-field textarea:focus,
-      .audio-field select:focus {
+      .speech-field textarea:focus {
         border-color: rgba(232, 196, 104, 0.95);
         box-shadow: 0 0 0 3px rgba(232, 196, 104, 0.16);
+      }
+
+      .voice-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .voice-card {
+        min-width: 0;
+        min-height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 7px 5px;
+        color: var(--muted);
+        background: var(--soft);
+        text-align: center;
+      }
+
+      .voice-card.active {
+        border-color: rgba(232, 196, 104, 0.95);
+        color: #111111;
+        background: var(--gold);
+      }
+
+      body[data-theme="dark"] .voice-card.active {
+        color: #111111;
+      }
+
+      .voice-card strong,
+      .voice-card span {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .voice-card strong {
+        font-size: 12px;
+        line-height: 1;
+        font-weight: 950;
+      }
+
+      .voice-card span {
+        margin-top: 3px;
+        font-size: 9px;
+        font-weight: 850;
       }
 
       .speech-options {
@@ -2518,7 +2557,7 @@
       }
 
       .speech-option {
-        min-height: 42px;
+        min-height: 40px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -2530,7 +2569,7 @@
       }
 
       .speech-option strong {
-        font-size: 12px;
+        font-size: 11px;
         line-height: 1.05;
       }
 
@@ -2548,9 +2587,17 @@
         transform: translateX(18px);
       }
 
+      .speech-options .btn {
+        min-height: 40px;
+        padding: 0 8px;
+        font-size: 12px;
+        line-height: 1.05;
+        white-space: normal;
+      }
+
       .speech-actions {
         display: grid;
-        grid-template-columns: 0.9fr 1fr 0.8fr;
+        grid-template-columns: 0.9fr 1fr 0.85fr;
         gap: 8px;
       }
 
@@ -2563,8 +2610,9 @@
       }
 
       .speech-workbench .audio-note {
-        font-size: 11px;
-        line-height: 1.25;
+        margin-top: 4px;
+        font-size: 10px;
+        line-height: 1.18;
       }
 
       .text-link {
@@ -2891,23 +2939,15 @@
           </section>
 
           <section class="screen" id="speech">
-            <div class="helper-copy">
-              <span id="speechHint">Write the voice you want to hear before you act, train, work, or visualize.</span>
-            </div>
-
             <article class="speech-workbench">
               <div class="speech-head">
                 <span class="deck-kicker">Self speech</span>
                 <h2>Script your inner voice.</h2>
                 <p>Use first person, present tense, and concrete actions. Make it believable enough to repeat daily, not generic motivation.</p>
+                <p class="audio-note" id="voiceQualityNote">Choose one of four warm voice styles.</p>
               </div>
 
-              <div class="speech-guides" aria-label="Writing tips">
-                <span>I am becoming...</span>
-                <span>Today I will...</span>
-                <span>I refuse to...</span>
-                <span>I keep proving...</span>
-              </div>
+              <p class="speech-tip">Try: “I am becoming...”, “Today I will...”, “I refuse to...”, or “I keep proving...”</p>
 
               <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
 
@@ -2922,13 +2962,7 @@
                 </label>
               </div>
 
-              <div class="voice-row">
-                <label class="audio-field">
-                  <span>Voice</span>
-                  <select id="selfTalkVoice" aria-label="Self speech voice"></select>
-                </label>
-                <button class="voice-refresh" id="refreshVoices" type="button" aria-label="Refresh voices">R</button>
-              </div>
+              <div class="voice-grid" id="selfTalkVoiceChoices" aria-label="Self speech voice"></div>
 
               <div class="speech-options">
                 <div class="speech-option">
@@ -2946,7 +2980,6 @@
                 <button class="btn" id="playSelfTalk" type="button">Play</button>
                 <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
               </div>
-              <p class="audio-note" id="voiceQualityNote">Voice quality depends on the voices installed on this device.</p>
             </article>
           </section>
 
@@ -3204,6 +3237,7 @@
           slowAudio: true,
           repeatSelfTalk: false,
           selfTalkVoiceURI: "",
+          selfTalkVoicePreset: "warm-female",
           language: "en"
         },
         account: {
@@ -3291,6 +3325,32 @@
         payments: "apple-in-app-purchase"
       };
       const pendingPhotoMode = { vision: "upload", anti: "upload" };
+      const VOICE_PROFILES = [
+        {
+          id: "warm-female",
+          name: "Maya",
+          tone: "Warm female",
+          hints: ["samantha", "ava", "victoria", "moira", "karen", "female", "woman", "zira"]
+        },
+        {
+          id: "calm-male",
+          name: "Noah",
+          tone: "Calm male",
+          hints: ["alex", "daniel", "oliver", "aaron", "thomas", "male", "man", "david", "mark"]
+        },
+        {
+          id: "gentle-female",
+          name: "Lina",
+          tone: "Gentle female",
+          hints: ["tessa", "serena", "susan", "samantha", "ava", "lucia", "female", "woman"]
+        },
+        {
+          id: "deep-male",
+          name: "Elias",
+          tone: "Deep male",
+          hints: ["fred", "daniel", "ralph", "jorge", "diego", "male", "man", "google uk english male"]
+        }
+      ];
 
       function normalizeSelfTalkScripts(source) {
         const scripts = Array.isArray(source && source.selfTalkScripts)
@@ -3661,26 +3721,58 @@
         return speechSynthesis.getVoices().slice().sort((a, b) => voiceScore(b) - voiceScore(a));
       }
 
+      function activeVoiceProfile() {
+        return VOICE_PROFILES.find((profile) => profile.id === state.settings.selfTalkVoicePreset) || VOICE_PROFILES[0];
+      }
+
+      function voiceProfileScore(voice, profile) {
+        const name = `${voice.name || ""} ${voice.lang || ""}`.toLowerCase();
+        let score = voiceScore(voice);
+        profile.hints.forEach((hint) => {
+          if (name.includes(hint)) score += 18;
+        });
+        if (profile.id.includes("male") && !profile.id.includes("female")) {
+          ["male", "man", "alex", "daniel", "oliver", "david", "mark", "fred"].forEach((hint) => {
+            if (name.includes(hint)) score += 8;
+          });
+        } else {
+          ["female", "woman", "samantha", "ava", "victoria", "karen", "susan"].forEach((hint) => {
+            if (name.includes(hint)) score += 8;
+          });
+        }
+        return score;
+      }
+
+      function bestVoiceForProfile(profile) {
+        const voices = availableVoices();
+        if (!voices.length) return null;
+        return voices.slice().sort((a, b) => voiceProfileScore(b, profile) - voiceProfileScore(a, profile))[0];
+      }
+
       function selectedSelfTalkVoice() {
         const voices = availableVoices();
         if (!voices.length) return null;
+        const profileVoice = bestVoiceForProfile(activeVoiceProfile());
+        if (profileVoice) return profileVoice;
         const selected = voices.find((voice) => voice.voiceURI === state.settings.selfTalkVoiceURI);
         if (selected) return selected;
         return voices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith(voiceLangPrefix())) || voices[0];
       }
 
       function populateVoiceOptions() {
-        const select = document.getElementById("selfTalkVoice");
-        if (!select) return;
+        const list = document.getElementById("selfTalkVoiceChoices");
+        if (!list) return;
         const voices = availableVoices();
         const selectedVoice = selectedSelfTalkVoice();
-        select.innerHTML = `<option value="">Best available voice</option>` + voices.map((voice) =>
-          `<option value="${escapeHtml(voice.voiceURI)}">${escapeHtml(voice.name)} (${escapeHtml(voice.lang || "voice")})</option>`
+        list.innerHTML = VOICE_PROFILES.map((profile) =>
+          `<button class="voice-card ${profile.id === state.settings.selfTalkVoicePreset ? "active" : ""}" type="button" data-voice-preset="${profile.id}">
+            <strong>${escapeHtml(profile.name)}</strong>
+            <span>${escapeHtml(profile.tone)}</span>
+          </button>`
         ).join("");
-        select.value = state.settings.selfTalkVoiceURI || "";
         document.getElementById("voiceQualityNote").textContent = voices.length
-          ? `Selected: ${selectedVoice ? `${selectedVoice.name} (${selectedVoice.lang})` : "best available voice"}. Voice quality depends on this device.`
-          : "No downloadable voices were exposed by this browser yet. Try Refresh voices, or play once from Safari.";
+          ? `${activeVoiceProfile().name}: ${selectedVoice ? `${selectedVoice.name} (${selectedVoice.lang})` : "best available voice"}`
+          : "Voice styles will use the best voice this device exposes.";
       }
 
       function renderSelfTalkScripts() {
@@ -4143,13 +4235,11 @@
       function saveSelfTalkFromForm({ silent = false, syncBump = true } = {}) {
         const titleInput = document.getElementById("selfTalkTitle");
         const textInput = document.getElementById("selfTalkText");
-        const voiceInput = document.getElementById("selfTalkVoice");
-        if (!titleInput || !textInput || !voiceInput) return;
+        if (!titleInput || !textInput) return;
         const script = activeSelfTalkScript();
         script.title = titleInput.value.trim() || `Self speech ${state.activeSelfTalkIndex + 1}`;
         script.text = textInput.value.trim();
         state.selfTalk = script.text || defaults.selfTalk;
-        state.settings.selfTalkVoiceURI = voiceInput.value || "";
         if (syncBump) save();
         else saveWithoutSyncBump();
         renderSelfTalkScripts();
@@ -4942,15 +5032,14 @@
         notify(state.settings.repeatSelfTalk ? "Repeat on" : "Repeat off");
       });
 
-      document.getElementById("selfTalkVoice").addEventListener("change", () => {
+      document.getElementById("selfTalkVoiceChoices").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-voice-preset]");
+        if (!button) return;
+        state.settings.selfTalkVoicePreset = button.dataset.voicePreset;
+        state.settings.selfTalkVoiceURI = "";
         saveSelfTalkFromForm({ silent: true });
         populateVoiceOptions();
-        notify("Voice selected");
-      });
-
-      document.getElementById("refreshVoices").addEventListener("click", () => {
-        populateVoiceOptions();
-        notify("Voices refreshed");
+        notify(`${activeVoiceProfile().name} selected`);
       });
 
       document.getElementById("selfTalkText").addEventListener("blur", () => {
