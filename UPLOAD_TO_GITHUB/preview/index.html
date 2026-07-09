@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=43" />
+    <link rel="manifest" href="./manifest.webmanifest?v=44" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v43";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v44";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=43")
+            .register("./service-worker.js?v=44")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2784,8 +2784,54 @@
         scrollbar-width: none;
       }
 
+      .voice-picker {
+        position: relative;
+        min-width: 0;
+        width: 132px;
+        display: grid;
+        gap: 5px;
+      }
+
+      .voice-picker::before,
+      .voice-picker::after {
+        position: absolute;
+        top: 16px;
+        z-index: 2;
+        width: 20px;
+        height: 20px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 8px 18px rgba(17, 17, 17, 0.09);
+        font-size: 13px;
+        font-weight: 950;
+        pointer-events: none;
+      }
+
+      .voice-picker::before {
+        content: "<";
+        left: -7px;
+      }
+
+      .voice-picker::after {
+        content: ">";
+        right: -7px;
+      }
+
+      body[data-theme="dark"] .voice-picker::before,
+      body[data-theme="dark"] .voice-picker::after {
+        color: #fffaf0;
+        background: rgba(255, 255, 255, 0.13);
+      }
+
       .voice-carousel::-webkit-scrollbar {
         display: none;
+      }
+
+      #speech.screen.active .voice-carousel {
+        animation: voiceNudge 3.4s ease-in-out 1.1s 2;
       }
 
       .voice-card {
@@ -2817,6 +2863,48 @@
       .voice-card span {
         font-size: 9px;
         letter-spacing: 0.7px;
+      }
+
+      .voice-dots {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      .voice-dots span {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: rgba(17, 17, 17, 0.22);
+      }
+
+      .voice-dots span.active {
+        width: 13px;
+        border-radius: 999px;
+        background: var(--gold);
+      }
+
+      body[data-theme="dark"] .voice-dots span {
+        background: rgba(255, 250, 240, 0.24);
+      }
+
+      body[data-theme="dark"] .voice-dots span.active {
+        background: var(--gold);
+      }
+
+      @keyframes voiceNudge {
+        0%, 100% {
+          transform: translateX(0);
+        }
+        18% {
+          transform: translateX(-9px);
+        }
+        36% {
+          transform: translateX(7px);
+        }
+        54% {
+          transform: translateX(0);
+        }
       }
 
       .speech-actions {
@@ -3380,7 +3468,10 @@
                   <strong id="voiceProfileName">Maya</strong>
                   <em id="voiceQualityNote">Swipe to change voice</em>
                 </div>
-                <div class="voice-carousel" id="voiceCarousel" aria-label="Swipe voice options"></div>
+                <div class="voice-picker" aria-label="Swipe voice options">
+                  <div class="voice-carousel" id="voiceCarousel"></div>
+                  <div class="voice-dots" id="voiceDots" aria-hidden="true"></div>
+                </div>
               </div>
 
               <div class="speech-actions">
@@ -4293,6 +4384,12 @@
             <span>${escapeHtml(profile.tone)}</span>
           </button>
         `).join("");
+        const dots = document.getElementById("voiceDots");
+        if (dots) {
+          dots.innerHTML = VOICE_PROFILES.map((profile) =>
+            `<span class="${profile.id === state.settings.selfTalkVoicePreset ? "active" : ""}"></span>`
+          ).join("");
+        }
 
         requestAnimationFrame(() => {
           if (preserveScroll) {
