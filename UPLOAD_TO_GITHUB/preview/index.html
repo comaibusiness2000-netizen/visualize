@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=42" />
+    <link rel="manifest" href="./manifest.webmanifest?v=43" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v42";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v43";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=42")
+            .register("./service-worker.js?v=43")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3278,7 +3278,7 @@
             <article class="goal-workbench">
               <div class="goal-mode" aria-label="Goal mode">
                 <button class="active" id="goalModeDaily" type="button">Daily tasks</button>
-                <button id="goalModeShort" type="button">Short-term goals</button>
+                <button id="goalModeShort" type="button">Long-term goals</button>
               </div>
 
               <div class="goal-workbench-head">
@@ -4589,11 +4589,11 @@
               empty: "Add one task that would make today count."
             }
           : {
-              kicker: "Short-term goals",
-              title: "Track the next win.",
-              text: "Use this for goals close enough to act on, but bigger than a single day.",
+              kicker: "Long-term goals",
+              title: "Track the bigger win.",
+              text: "Use this for goals you want to close this year, or goals that need repeated action over time.",
               add: "Add goal",
-              empty: "Add one short-term goal you can realistically move this week."
+              empty: "Add one long-term goal you can move this year."
             };
       }
 
@@ -4609,7 +4609,7 @@
         document.getElementById("goalHint").textContent =
           state.goalMode === "daily"
             ? "Daily tasks are for execution today. Vision stays for long-term goals."
-            : "Short-term goals bridge today and your long-term Vision.";
+            : "Long-term goals bridge daily action and your Vision.";
         document.getElementById("addProgressGoal").textContent = copy.add;
 
         if (!goals.length) {
@@ -4620,7 +4620,7 @@
         list.innerHTML = goals.slice(0, 5).map((goal, index) => {
           const progress = clampNumber(goal.progress, 0, 100);
           if (editingProgressIndex === index) {
-            const label = state.goalMode === "daily" ? "Daily task" : "Short-term goal";
+            const label = state.goalMode === "daily" ? "Daily task" : "Long-term goal";
             return `
               <div class="progress-goal editing" data-progress-index="${index}">
                 <label class="inline-goal-field">
