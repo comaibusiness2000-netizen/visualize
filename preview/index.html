@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=37" />
+    <link rel="manifest" href="./manifest.webmanifest?v=38" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v37";
+      const VISUALIZE_APP_VERSION = "2026-07-09-v38";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=37")
+            .register("./service-worker.js?v=38")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -74,14 +74,14 @@
       }
 
       body[data-theme="dark"] {
-        --paper: #111416;
-        --ink: #f4f4f1;
-        --muted: #aaa9a2;
-        --line: #2b3032;
-        --panel: #181c1e;
-        --soft: #202426;
-        --warm: #181c1e;
-        --control: #181c1e;
+        --paper: #0f1315;
+        --ink: #f8f5ee;
+        --muted: #d3cec4;
+        --line: #3c4448;
+        --panel: #1b2023;
+        --soft: #252b2f;
+        --warm: #1b2023;
+        --control: #20262a;
       }
 
       * {
@@ -130,6 +130,11 @@
 
       body[data-theme="dark"] .stage {
         background: #07090b;
+      }
+
+      body[data-theme="dark"] ::placeholder {
+        color: #bdb7ad;
+        opacity: 1;
       }
 
       .phone {
@@ -321,7 +326,7 @@
       }
 
       body[data-theme="dark"] .reflection-card {
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.08);
       }
 
       .reflection-card h2 {
@@ -610,6 +615,12 @@
         animation: helperPulse 4.8s ease-in-out infinite;
       }
 
+      body[data-theme="dark"] .helper-copy span {
+        color: #eee9df;
+        animation: none;
+        opacity: 1;
+      }
+
       .life-onboarding,
       .life-dashboard {
         min-height: 530px;
@@ -625,7 +636,7 @@
 
       body[data-theme="dark"] .life-onboarding,
       body[data-theme="dark"] .life-dashboard {
-        background: #181c1e;
+        background: #1b2023;
       }
 
       .life-onboarding {
@@ -835,7 +846,7 @@
       }
 
       body[data-theme="dark"] .goal-workbench {
-        background: #181c1e;
+        background: #1b2023;
       }
 
       .goal-mode {
@@ -905,6 +916,14 @@
         background: var(--soft);
       }
 
+      body[data-theme="dark"] .progress-goal,
+      body[data-theme="dark"] .speech-pill,
+      body[data-theme="dark"] .speech-new,
+      body[data-theme="dark"] .voice-line {
+        border: 1px solid #3f474b;
+        background: #252c30;
+      }
+
       .progress-goal.editing {
         gap: 10px;
         padding: 14px;
@@ -950,6 +969,17 @@
         color: var(--muted);
         font-size: 11px;
         font-weight: 900;
+      }
+
+      body[data-theme="dark"] .progress-goal output,
+      body[data-theme="dark"] .progress-goal-foot span,
+      body[data-theme="dark"] .progress-edit,
+      body[data-theme="dark"] .speech-select span,
+      body[data-theme="dark"] .speech-field span,
+      body[data-theme="dark"] .voice-line span,
+      body[data-theme="dark"] .voice-line em,
+      body[data-theme="dark"] .audio-note {
+        color: #ddd8ce;
       }
 
       .progress-edit {
@@ -1083,7 +1113,7 @@
         color: #f4f4f1;
         background:
           radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.05), transparent 32%),
-          #181c1e;
+          #1b2023;
       }
 
       body[data-theme="dark"] .anti-empty {
@@ -1100,7 +1130,7 @@
       .anti-empty .deck-kicker,
       body[data-theme="dark"] .vision-empty .deck-kicker,
       body[data-theme="dark"] .anti-empty .deck-kicker {
-        color: rgba(255, 247, 223, 0.56);
+        color: rgba(255, 247, 223, 0.78);
       }
 
       .vision-empty h2,
@@ -2351,7 +2381,7 @@
       }
 
       body[data-theme="dark"] .speech-workbench {
-        background: #181c1e;
+        background: #1b2023;
       }
 
       .speech-head {
@@ -2674,8 +2704,13 @@
       }
 
       body[data-theme="dark"] .nav button.active {
-        color: #f4f4f1;
-        background: rgba(255, 255, 255, 0.08);
+        color: #fffaf0;
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.22);
+      }
+
+      body[data-theme="dark"] .nav button {
+        color: #c9c4ba;
       }
 
       input,
@@ -2687,6 +2722,14 @@
         padding: 13px 14px;
         color: var(--ink);
         background: transparent;
+      }
+
+      body[data-theme="dark"] input,
+      body[data-theme="dark"] textarea,
+      body[data-theme="dark"] select {
+        border-color: #444d51;
+        color: #fffaf0;
+        background: #111619;
       }
 
       select {
