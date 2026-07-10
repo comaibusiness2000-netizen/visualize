@@ -23,19 +23,29 @@ import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import * as Speech from "expo-speech";
 
-const STORAGE_VERSION = 1;
+const STORAGE_VERSION = 2;
 const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
 
+function uid(prefix) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function nowIso() {
+  return new Date().toISOString();
+}
+
 const blankState = {
   storageVersion: STORAGE_VERSION,
+  localInstallId: uid("install"),
   profile: {
     complete: false,
     name: "",
     age: "",
     expectancy: 85,
-    createdAt: ""
+    createdAt: "",
+    updatedAt: ""
   },
   dailyTasks: [],
   longGoals: [],
@@ -46,6 +56,16 @@ const blankState = {
   settings: {
     darkMode: true,
     notifications: false
+  },
+  sync: {
+    mode: "local",
+    cloudEnabled: false,
+    cloudUserId: "",
+    migrationStatus: "not-started",
+    lastSyncedAt: "",
+    hasLocalChanges: false,
+    localCreatedAt: nowIso(),
+    localUpdatedAt: ""
   }
 };
 
@@ -57,28 +77,62 @@ const tabs = [
   { id: "speech", label: "Speech" }
 ];
 
-function uid(prefix) {
-  return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
 function clamp(value, min, max) {
   const number = Number(value);
   if (!Number.isFinite(number)) return min;
   return Math.min(max, Math.max(min, number));
 }
 
+function normalizeLocalRecord(record, prefix, localInstallId) {
+  const value = record && typeof record === "object" ? record : {};
+  const timestamp = value.createdAt || value.updatedAt || nowIso();
+  return {
+    ...value,
+    id: value.id || uid(prefix),
+    source: value.source || "local",
+    syncStatus: value.syncStatus || "local",
+    sourceInstallId: value.sourceInstallId || localInstallId,
+    createdAt: value.createdAt || timestamp,
+    updatedAt: value.updatedAt || timestamp
+  };
+}
+
 function mergeStoredState(saved) {
   if (!saved || typeof saved !== "object") return blankState;
+  const localInstallId = saved.localInstallId || uid("install");
+  const profile = { ...blankState.profile, ...(saved.profile || {}) };
+  if (profile.complete && !profile.updatedAt) {
+    profile.updatedAt = profile.createdAt || nowIso();
+  }
   return {
     ...blankState,
     ...saved,
-    profile: { ...blankState.profile, ...(saved.profile || {}) },
+    localInstallId,
+    profile,
     settings: { ...blankState.settings, ...(saved.settings || {}) },
-    dailyTasks: Array.isArray(saved.dailyTasks) ? saved.dailyTasks : [],
-    longGoals: Array.isArray(saved.longGoals) ? saved.longGoals : [],
-    visionSlides: Array.isArray(saved.visionSlides) ? saved.visionSlides : [],
-    antiSlides: Array.isArray(saved.antiSlides) ? saved.antiSlides : [],
-    selfSpeeches: Array.isArray(saved.selfSpeeches) ? saved.selfSpeeches : []
+    sync: {
+      ...blankState.sync,
+      ...(saved.sync || {}),
+      mode: (saved.sync && saved.sync.mode) || "local",
+      cloudEnabled: Boolean(saved.sync && saved.sync.cloudEnabled),
+      migrationStatus: (saved.sync && saved.sync.migrationStatus) || "not-started",
+      localCreatedAt: (saved.sync && saved.sync.localCreatedAt) || nowIso()
+    },
+    dailyTasks: Array.isArray(saved.dailyTasks)
+      ? saved.dailyTasks.map((item) => normalizeLocalRecord(item, "task", localInstallId))
+      : [],
+    longGoals: Array.isArray(saved.longGoals)
+      ? saved.longGoals.map((item) => normalizeLocalRecord(item, "goal", localInstallId))
+      : [],
+    visionSlides: Array.isArray(saved.visionSlides)
+      ? saved.visionSlides.map((item) => normalizeLocalRecord(item, "vision", localInstallId))
+      : [],
+    antiSlides: Array.isArray(saved.antiSlides)
+      ? saved.antiSlides.map((item) => normalizeLocalRecord(item, "anti", localInstallId))
+      : [],
+    selfSpeeches: Array.isArray(saved.selfSpeeches)
+      ? saved.selfSpeeches.map((item) => normalizeLocalRecord(item, "speech", localInstallId))
+      : []
   };
 }
 
@@ -224,7 +278,17 @@ export default function App() {
   function updateState(mutator) {
     setAppState((current) => {
       const next = typeof mutator === "function" ? mutator(current) : mutator;
-      return mergeStoredState({ ...next, storageVersion: STORAGE_VERSION });
+      const merged = mergeStoredState({ ...next, storageVersion: STORAGE_VERSION });
+      return {
+        ...merged,
+        sync: {
+          ...merged.sync,
+          mode: merged.sync.mode || "local",
+          migrationStatus: merged.sync.cloudEnabled ? merged.sync.migrationStatus : "local-ready",
+          hasLocalChanges: true,
+          localUpdatedAt: nowIso()
+        }
+      };
     });
   }
 
@@ -247,7 +311,8 @@ export default function App() {
         name,
         age,
         expectancy: Math.max(expectancy, age + 1),
-        createdAt: current.profile.createdAt || new Date().toISOString()
+        createdAt: current.profile.createdAt || nowIso(),
+        updatedAt: nowIso()
       }
     }));
     setProfileOpen(false);
@@ -256,7 +321,17 @@ export default function App() {
   function addGoal() {
     const title = draftGoal.trim();
     if (!title) return;
-    const item = { id: uid("goal"), title, progress: 0 };
+    const timestamp = nowIso();
+    const item = {
+      id: uid("goal"),
+      title,
+      progress: 0,
+      source: "local",
+      syncStatus: "local",
+      sourceInstallId: appState.localInstallId,
+      createdAt: timestamp,
+      updatedAt: timestamp
+    };
     updateState((current) => {
       const key = goalMode === "daily" ? "dailyTasks" : "longGoals";
       if (current[key].length >= 5) {
@@ -271,9 +346,10 @@ export default function App() {
   function updateGoalProgress(id, progress) {
     updateState((current) => {
       const key = goalMode === "daily" ? "dailyTasks" : "longGoals";
+      const timestamp = nowIso();
       return {
         ...current,
-        [key]: current[key].map((goal) => (goal.id === id ? { ...goal, progress } : goal))
+        [key]: current[key].map((goal) => (goal.id === id ? { ...goal, progress, updatedAt: timestamp } : goal))
       };
     });
   }
@@ -309,10 +385,16 @@ export default function App() {
     const savedSlides = [];
     for (const asset of assets) {
       if (!asset.uri) continue;
+      const timestamp = nowIso();
       const localUri = await persistPickedImage(asset.uri, kind);
       savedSlides.push({
         id: uid("slide"),
         imageUri: localUri,
+        source: "local",
+        syncStatus: "local",
+        sourceInstallId: appState.localInstallId,
+        createdAt: timestamp,
+        updatedAt: timestamp,
         title: kind === "vision" ? `Vision scene ${appState[deckKey].length + savedSlides.length + 1}` : `Anti-vision scene ${appState[deckKey].length + savedSlides.length + 1}`,
         caption:
           kind === "vision"
@@ -342,22 +424,46 @@ export default function App() {
     }
     updateState((current) => {
       const existing = current.selfSpeeches[current.activeSpeechIndex];
+      const timestamp = nowIso();
       if (!existing) {
-        return { ...current, selfSpeeches: [{ id: uid("speech"), title, text }], activeSpeechIndex: 0 };
+        return {
+          ...current,
+          selfSpeeches: [{
+            id: uid("speech"),
+            title,
+            text,
+            source: "local",
+            syncStatus: "local",
+            sourceInstallId: current.localInstallId,
+            createdAt: timestamp,
+            updatedAt: timestamp
+          }],
+          activeSpeechIndex: 0
+        };
       }
       return {
         ...current,
         selfSpeeches: current.selfSpeeches.map((speech, index) =>
-          index === current.activeSpeechIndex ? { ...speech, title, text } : speech
+          index === current.activeSpeechIndex ? { ...speech, title, text, updatedAt: timestamp } : speech
         )
       };
     });
   }
 
   function newSpeech() {
+    const timestamp = nowIso();
     updateState((current) => ({
       ...current,
-      selfSpeeches: [...current.selfSpeeches, { id: uid("speech"), title: "", text: "" }],
+      selfSpeeches: [...current.selfSpeeches, {
+        id: uid("speech"),
+        title: "",
+        text: "",
+        source: "local",
+        syncStatus: "local",
+        sourceInstallId: current.localInstallId,
+        createdAt: timestamp,
+        updatedAt: timestamp
+      }],
       activeSpeechIndex: current.selfSpeeches.length
     }));
     setDraftSpeechTitle("");
@@ -647,6 +753,15 @@ export default function App() {
               </Text>
             </View>
             <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+              <Text style={[styles.panelTitle, { color: theme.ink }]}>Cloud-ready data</Text>
+              <Text style={[styles.body, { color: theme.muted }]}>
+                Your local profile, goals, images, and speeches have stable local IDs. When cloud sync is added, this device can upload its existing data into your account before sync is turned on.
+              </Text>
+              <Text style={[styles.syncFootnote, { color: theme.muted }]}>
+                Device key: {String(appState.localInstallId || "").slice(0, 18)}
+              </Text>
+            </View>
+            <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
               <Text style={[styles.panelTitle, { color: theme.ink }]}>Appearance</Text>
               <View style={styles.switchRow}>
                 <Text style={[styles.body, { color: theme.ink }]}>Dark mode</Text>
@@ -829,6 +944,7 @@ const styles = StyleSheet.create({
   bigProgressTrack: { height: 12, overflow: "hidden", borderRadius: 999, marginBottom: 14 },
   bigProgressFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   body: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
+  syncFootnote: { marginTop: 10, fontSize: 11, lineHeight: 16, fontWeight: "900", letterSpacing: 0.5 },
   statsRow: { flexDirection: "row", gap: 10, marginBottom: 14 },
   statCard: { flex: 1, borderWidth: 1, borderRadius: 22, padding: 14 },
   statValue: { fontSize: 22, fontWeight: "900" },
