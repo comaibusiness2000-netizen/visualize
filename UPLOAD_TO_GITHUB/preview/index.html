@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=45" />
+    <link rel="manifest" href="./manifest.webmanifest?v=46" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-09-v45";
+      const VISUALIZE_APP_VERSION = "2026-07-10-v46";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=45")
+            .register("./service-worker.js?v=46")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3888,6 +3888,7 @@
           hints: ["fred", "daniel", "ralph", "jorge", "diego", "male", "man", "google uk english male"]
         }
       ];
+      const DAILY_INSIGHTS_ENABLED = false;
       const DAILY_INSIGHTS = [
         {
           title: "Chase a future self.",
@@ -4198,7 +4199,6 @@
         paint();
         updateBackButton();
         setTimeout(showLifeClockForPendingUpdate, 360);
-        setTimeout(() => openDailyInsight(), 980);
       }
 
       function notify(text) {
@@ -4249,6 +4249,8 @@
       }
 
       function openDailyInsight({ force = false } = {}) {
+        if (!DAILY_INSIGHTS_ENABLED) return;
+        if (!DAILY_INSIGHTS.length) return;
         if (!force && !state.lifeProfile.complete) return;
         if (!force && state.dailyInsight.lastShownDate === todayKey()) return;
 
@@ -5098,7 +5100,6 @@
         save();
         paint();
         notify("Life clock created");
-        setTimeout(() => openDailyInsight(), 720);
       }
 
       function editLifeInfo() {
