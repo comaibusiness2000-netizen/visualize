@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=48" />
+    <link rel="manifest" href="./manifest.webmanifest?v=49" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-10-v48";
+      const VISUALIZE_APP_VERSION = "2026-07-10-v49";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=48")
+            .register("./service-worker.js?v=49")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -4777,6 +4777,14 @@
         return speechSynthesis.getVoices().slice().sort((a, b) => voiceScore(b) - voiceScore(a));
       }
 
+      function voiceMatchesActiveLanguage(voice) {
+        return Boolean(voice.lang && voice.lang.toLowerCase().startsWith(voiceLangPrefix()));
+      }
+
+      function voicesForActiveLanguage(voices = availableVoices()) {
+        return voices.filter(voiceMatchesActiveLanguage);
+      }
+
       function activeVoiceProfile() {
         return VOICE_PROFILES.find((profile) => profile.id === state.settings.selfTalkVoicePreset) || VOICE_PROFILES[0];
       }
@@ -4799,8 +4807,7 @@
         return score;
       }
 
-      function bestVoiceForProfile(profile) {
-        const voices = availableVoices();
+      function bestVoiceForProfile(profile, voices = availableVoices()) {
         if (!voices.length) return null;
         return voices.slice().sort((a, b) => voiceProfileScore(b, profile) - voiceProfileScore(a, profile))[0];
       }
@@ -4808,11 +4815,13 @@
       function selectedSelfTalkVoice() {
         const voices = availableVoices();
         if (!voices.length) return null;
-        const profileVoice = bestVoiceForProfile(activeVoiceProfile());
-        if (profileVoice) return profileVoice;
-        const selected = voices.find((voice) => voice.voiceURI === state.settings.selfTalkVoiceURI);
+        const languageVoices = voicesForActiveLanguage(voices);
+        const candidates = languageVoices.length ? languageVoices : voices;
+        const selected = candidates.find((voice) => voice.voiceURI === state.settings.selfTalkVoiceURI);
         if (selected) return selected;
-        return voices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith(voiceLangPrefix())) || voices[0];
+        const profileVoice = bestVoiceForProfile(activeVoiceProfile(), candidates);
+        if (profileVoice) return profileVoice;
+        return candidates[0] || null;
       }
 
       function populateVoiceOptions({ preserveScroll = false } = {}) {
@@ -6358,6 +6367,7 @@
       document.querySelectorAll("[data-lang]").forEach((button) => {
         button.addEventListener("click", () => {
           state.settings.language = button.dataset.lang;
+          state.settings.selfTalkVoiceURI = "";
           save();
           paint();
           notify(uiText("languageSelected", { language: button.textContent }));
