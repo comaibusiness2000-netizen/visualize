@@ -55,7 +55,8 @@ const blankState = {
   activeSpeechIndex: 0,
   settings: {
     darkMode: true,
-    notifications: false
+    notifications: false,
+    language: "en"
   },
   sync: {
     mode: "local",
@@ -70,12 +71,143 @@ const blankState = {
 };
 
 const tabs = [
-  { id: "life", label: "Life" },
-  { id: "goals", label: "Goals" },
-  { id: "vision", label: "Vision" },
-  { id: "anti", label: "Anti" },
-  { id: "speech", label: "Speech" }
+  { id: "life" },
+  { id: "goals" },
+  { id: "vision" },
+  { id: "anti" },
+  { id: "speech" }
 ];
+
+const languages = [
+  { id: "en", label: "English", speech: "en-US" },
+  { id: "es", label: "Spanish", speech: "es-ES" },
+  { id: "fr", label: "French", speech: "fr-FR" },
+  { id: "pt", label: "Portuguese", speech: "pt-PT" },
+  { id: "zh", label: "Chinese", speech: "zh-CN" }
+];
+
+const copy = {
+  en: {
+    "tab.life": "Life",
+    "tab.goals": "Goals",
+    "tab.vision": "Vision",
+    "tab.anti": "Anti",
+    "tab.speech": "Speech",
+    "setup.kicker": "Profile setup",
+    "setup.title": "Build your life clock first.",
+    "setup.body": "Visualize starts empty. Create your profile, then add your goals, images, and self speech step by step.",
+    "setup.name": "First name",
+    "setup.age": "Age",
+    "setup.estimate": "Life estimate, example 85",
+    "setup.create": "Create profile",
+    "life.kicker": "Life clock",
+    "life.days": "estimated days left",
+    "life.summary": "Based on age {age} and a life estimate of {expectancy}. Not a prediction, a reminder.",
+    "life.weeks": "weeks",
+    "life.months": "months",
+    "life.used": "used",
+    "life.monthMap": "Life by months",
+    "life.monthMapBody": "Each dot is one month. Filled dots are already spent.",
+    "goals.daily": "Daily tasks",
+    "goals.long": "Long-term goals",
+    "goals.dailyTitle": "What moves today forward?",
+    "goals.longTitle": "What are you building this year?",
+    "goals.body": "Add up to 5 items and manually move the progress bar.",
+    "goals.addTask": "Add task",
+    "goals.addGoal": "Add goal",
+    "goals.emptyTitle": "Nothing here yet.",
+    "goals.emptyBody": "Start with one small action or one long-term goal.",
+    "goals.complete": "{progress}% complete",
+    "deck.visionTitle": "Create your Vision",
+    "deck.antiTitle": "Create your Anti-vision",
+    "deck.visionBody": "Add images of who you want to become, what you want to have, and who you want around you.",
+    "deck.antiBody": "Add images of the opposite future: what you do not want to become, lose, or tolerate.",
+    "deck.add": "Add images",
+    "deck.play": "Play",
+    "deck.emptyTitle": "No images yet.",
+    "deck.emptyBody": "The deck starts empty. Add photos from this iPhone to keep them saved locally.",
+    "speech.title": "Self speech",
+    "speech.body": "Write the self-talk you want to hear repeatedly. Keep it personal, direct, and believable.",
+    "speech.titlePlaceholder": "Title",
+    "speech.textPlaceholder": "Write your speech here",
+    "speech.save": "Save",
+    "speech.new": "New",
+    "speech.listen": "Listen",
+    "speech.stop": "Stop",
+    "speech.emptyDraft": "Empty draft",
+    "profile.kicker": "Local-only profile",
+    "profile.storageTitle": "Device storage",
+    "profile.storageBody": "Saved on this iPhone only. Closing the app or restarting the phone will keep the data. Deleting the app removes the local data.",
+    "profile.cloudTitle": "Cloud-ready data",
+    "profile.cloudBody": "Your local profile, goals, images, and speeches have stable local IDs. When cloud sync is added, this device can upload its existing data into your account before sync is turned on.",
+    "profile.deviceKey": "Device key",
+    "profile.appearance": "Appearance",
+    "profile.darkMode": "Dark mode",
+    "profile.notifications": "Notifications later",
+    "profile.language": "Language",
+    "profile.reset": "Reset this device",
+    "profile.close": "Close",
+    "player.close": "Close",
+    "alert.profile": "Profile",
+    "alert.addName": "Add your first name first.",
+    "alert.addAge": "Add your age first.",
+    "alert.goals": "Goals",
+    "alert.maxGoals": "Keep this list focused: maximum 5 items.",
+    "alert.photos": "Photos",
+    "alert.allowPhotos": "Allow photo access to add images to your deck.",
+    "alert.deckFull": "Deck full",
+    "alert.maxImages": "Maximum {max} images for now.",
+    "alert.deck": "Deck",
+    "alert.addImagesFirst": "Add images first.",
+    "alert.selfSpeech": "Self speech",
+    "alert.writeSpeech": "Write the text you want to listen to first.",
+    "alert.writeSpeechPlay": "Write a speech first.",
+    "alert.resetTitle": "Reset local data",
+    "alert.resetBody": "This removes the profile, goals, images, and self speeches from this device.",
+    "alert.cancel": "Cancel",
+    "alert.reset": "Reset"
+  },
+  es: {
+    "tab.life": "Vida", "tab.goals": "Metas", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voz",
+    "setup.kicker": "Crear perfil", "setup.title": "Crea primero tu reloj de vida.", "setup.body": "Visualize empieza vacio. Crea tu perfil y luego agrega metas, imagenes y self speech paso a paso.", "setup.name": "Nombre", "setup.age": "Edad", "setup.estimate": "Estimacion de vida, ejemplo 85", "setup.create": "Crear perfil",
+    "life.kicker": "Reloj de vida", "life.days": "dias estimados restantes", "life.summary": "Basado en edad {age} y una estimacion de vida de {expectancy}. No es una prediccion, es un recordatorio.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada punto es un mes. Los puntos llenos ya pasaron.",
+    "goals.daily": "Tareas diarias", "goals.long": "Metas a largo plazo", "goals.dailyTitle": "Que hace avanzar el dia?", "goals.longTitle": "Que estas construyendo este ano?", "goals.body": "Agrega hasta 5 items y mueve manualmente la barra de progreso.", "goals.addTask": "Agregar tarea", "goals.addGoal": "Agregar meta", "goals.emptyTitle": "Todavia no hay nada.", "goals.emptyBody": "Empieza con una pequena accion o una meta a largo plazo.", "goals.complete": "{progress}% completo",
+    "deck.visionTitle": "Crea tu Vision", "deck.antiTitle": "Crea tu Anti-vision", "deck.visionBody": "Agrega imagenes de quien quieres ser, lo que quieres tener y quien quieres cerca.", "deck.antiBody": "Agrega imagenes del futuro opuesto: lo que no quieres llegar a ser, perder o tolerar.", "deck.add": "Agregar imagenes", "deck.play": "Reproducir", "deck.emptyTitle": "Sin imagenes aun.", "deck.emptyBody": "El deck empieza vacio. Agrega fotos desde este iPhone para guardarlas localmente.",
+    "speech.title": "Self speech", "speech.body": "Escribe el dialogo interno que quieres escuchar repetidamente. Hazlo personal, directo y creible.", "speech.titlePlaceholder": "Titulo", "speech.textPlaceholder": "Escribe tu self speech aqui", "speech.save": "Guardar", "speech.new": "Nuevo", "speech.listen": "Escuchar", "speech.stop": "Stop", "speech.emptyDraft": "Borrador vacio",
+    "profile.kicker": "Perfil local", "profile.storageTitle": "Guardado en el dispositivo", "profile.storageBody": "Guardado solo en este iPhone. Al cerrar la app o reiniciar el telefono, los datos se mantienen. Si eliminas la app, se eliminan los datos locales.", "profile.cloudTitle": "Datos listos para cloud", "profile.cloudBody": "Tu perfil, metas, imagenes y speeches locales tienen IDs estables. Cuando agreguemos cloud sync, este dispositivo podra subir sus datos existentes antes de activar la sincronizacion.", "profile.deviceKey": "Clave dispositivo", "profile.appearance": "Apariencia", "profile.darkMode": "Modo oscuro", "profile.notifications": "Notificaciones luego", "profile.language": "Idioma", "profile.reset": "Resetear este dispositivo", "profile.close": "Cerrar", "player.close": "Cerrar",
+    "alert.profile": "Perfil", "alert.addName": "Agrega tu nombre primero.", "alert.addAge": "Agrega tu edad primero.", "alert.goals": "Metas", "alert.maxGoals": "Mantén la lista enfocada: maximo 5 items.", "alert.photos": "Fotos", "alert.allowPhotos": "Permite acceso a fotos para agregarlas a tu deck.", "alert.deckFull": "Deck lleno", "alert.maxImages": "Maximo {max} imagenes por ahora.", "alert.deck": "Deck", "alert.addImagesFirst": "Agrega imagenes primero.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Escribe primero el texto que quieres escuchar.", "alert.writeSpeechPlay": "Escribe un speech primero.", "alert.resetTitle": "Resetear datos locales", "alert.resetBody": "Esto elimina perfil, metas, imagenes y self speeches de este dispositivo.", "alert.cancel": "Cancelar", "alert.reset": "Resetear"
+  },
+  fr: {
+    "tab.life": "Vie", "tab.goals": "Objectifs", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voix",
+    "setup.kicker": "Creation du profil", "setup.title": "Commence par ton horloge de vie.", "setup.body": "Visualize commence vide. Cree ton profil, puis ajoute tes objectifs, images et self speech pas a pas.", "setup.name": "Prenom", "setup.age": "Age", "setup.estimate": "Estimation de vie, exemple 85", "setup.create": "Creer le profil",
+    "life.kicker": "Horloge de vie", "life.days": "jours estimes restants", "life.summary": "Base sur l'age {age} et une estimation de vie de {expectancy}. Ce n'est pas une prediction, c'est un rappel.", "life.weeks": "semaines", "life.months": "mois", "life.used": "utilise", "life.monthMap": "Vie par mois", "life.monthMapBody": "Chaque point est un mois. Les points remplis sont deja passes.",
+    "goals.daily": "Taches du jour", "goals.long": "Objectifs long terme", "goals.dailyTitle": "Qu'est-ce qui fait avancer aujourd'hui?", "goals.longTitle": "Que construis-tu cette annee?", "goals.body": "Ajoute jusqu'a 5 elements et ajuste manuellement la progression.", "goals.addTask": "Ajouter tache", "goals.addGoal": "Ajouter objectif", "goals.emptyTitle": "Rien pour l'instant.", "goals.emptyBody": "Commence avec une petite action ou un objectif long terme.", "goals.complete": "{progress}% termine",
+    "deck.visionTitle": "Cree ta Vision", "deck.antiTitle": "Cree ton Anti-vision", "deck.visionBody": "Ajoute des images de qui tu veux devenir, ce que tu veux avoir et qui tu veux autour de toi.", "deck.antiBody": "Ajoute les images du futur oppose: ce que tu refuses de devenir, perdre ou tolerer.", "deck.add": "Ajouter images", "deck.play": "Lire", "deck.emptyTitle": "Aucune image.", "deck.emptyBody": "Le deck commence vide. Ajoute des photos depuis cet iPhone pour les garder localement.",
+    "speech.title": "Self speech", "speech.body": "Ecris le discours interieur que tu veux ecouter souvent. Personnel, direct, credible.", "speech.titlePlaceholder": "Titre", "speech.textPlaceholder": "Ecris ton self speech ici", "speech.save": "Sauver", "speech.new": "Nouveau", "speech.listen": "Ecouter", "speech.stop": "Stop", "speech.emptyDraft": "Brouillon vide",
+    "profile.kicker": "Profil local", "profile.storageTitle": "Stockage appareil", "profile.storageBody": "Sauve seulement sur cet iPhone. Fermer l'app ou redemarrer le telephone garde les donnees. Supprimer l'app supprime les donnees locales.", "profile.cloudTitle": "Donnees pretes pour le cloud", "profile.cloudBody": "Profil, objectifs, images et speeches locaux ont des IDs stables. Quand le cloud sync arrivera, cet appareil pourra envoyer ses donnees existantes avant d'activer la sync.", "profile.deviceKey": "Cle appareil", "profile.appearance": "Apparence", "profile.darkMode": "Mode sombre", "profile.notifications": "Notifications plus tard", "profile.language": "Langue", "profile.reset": "Reinitialiser", "profile.close": "Fermer", "player.close": "Fermer",
+    "alert.profile": "Profil", "alert.addName": "Ajoute ton prenom d'abord.", "alert.addAge": "Ajoute ton age d'abord.", "alert.goals": "Objectifs", "alert.maxGoals": "Garde la liste concentree: maximum 5 elements.", "alert.photos": "Photos", "alert.allowPhotos": "Autorise l'acces aux photos pour les ajouter au deck.", "alert.deckFull": "Deck plein", "alert.maxImages": "Maximum {max} images pour l'instant.", "alert.deck": "Deck", "alert.addImagesFirst": "Ajoute d'abord des images.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Ecris d'abord le texte a ecouter.", "alert.writeSpeechPlay": "Ecris d'abord un speech.", "alert.resetTitle": "Reinitialiser les donnees locales", "alert.resetBody": "Cela supprime le profil, les objectifs, les images et les self speeches de cet appareil.", "alert.cancel": "Annuler", "alert.reset": "Reinitialiser"
+  },
+  pt: {
+    "tab.life": "Vida", "tab.goals": "Metas", "tab.vision": "Visao", "tab.anti": "Anti", "tab.speech": "Voz",
+    "setup.kicker": "Criar perfil", "setup.title": "Crie primeiro seu relogio de vida.", "setup.body": "Visualize comeca vazio. Crie seu perfil e depois adicione metas, imagens e self speech passo a passo.", "setup.name": "Nome", "setup.age": "Idade", "setup.estimate": "Estimativa de vida, exemplo 85", "setup.create": "Criar perfil",
+    "life.kicker": "Relogio de vida", "life.days": "dias estimados restantes", "life.summary": "Baseado na idade {age} e estimativa de vida de {expectancy}. Nao e previsao, e lembrete.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada ponto e um mes. Pontos preenchidos ja passaram.",
+    "goals.daily": "Tarefas diarias", "goals.long": "Metas de longo prazo", "goals.dailyTitle": "O que move hoje para frente?", "goals.longTitle": "O que voce esta construindo este ano?", "goals.body": "Adicione ate 5 itens e mova manualmente a barra de progresso.", "goals.addTask": "Adicionar tarefa", "goals.addGoal": "Adicionar meta", "goals.emptyTitle": "Nada aqui ainda.", "goals.emptyBody": "Comece com uma pequena acao ou uma meta de longo prazo.", "goals.complete": "{progress}% completo",
+    "deck.visionTitle": "Crie sua Visao", "deck.antiTitle": "Crie sua Anti-visao", "deck.visionBody": "Adicione imagens de quem voce quer ser, do que quer ter e de quem quer perto.", "deck.antiBody": "Adicione imagens do futuro oposto: o que voce nao quer se tornar, perder ou tolerar.", "deck.add": "Adicionar imagens", "deck.play": "Reproduzir", "deck.emptyTitle": "Sem imagens ainda.", "deck.emptyBody": "O deck comeca vazio. Adicione fotos deste iPhone para salva-las localmente.",
+    "speech.title": "Self speech", "speech.body": "Escreva o dialogo interno que quer ouvir repetidamente. Pessoal, direto e crivel.", "speech.titlePlaceholder": "Titulo", "speech.textPlaceholder": "Escreva seu self speech aqui", "speech.save": "Salvar", "speech.new": "Novo", "speech.listen": "Ouvir", "speech.stop": "Parar", "speech.emptyDraft": "Rascunho vazio",
+    "profile.kicker": "Perfil local", "profile.storageTitle": "Armazenamento no dispositivo", "profile.storageBody": "Salvo apenas neste iPhone. Fechar o app ou reiniciar o telefone mantem os dados. Apagar o app remove os dados locais.", "profile.cloudTitle": "Dados prontos para cloud", "profile.cloudBody": "Perfil, metas, imagens e speeches locais tem IDs estaveis. Quando adicionarmos cloud sync, este dispositivo podera enviar os dados existentes antes de ativar a sincronizacao.", "profile.deviceKey": "Chave do dispositivo", "profile.appearance": "Aparencia", "profile.darkMode": "Modo escuro", "profile.notifications": "Notificacoes depois", "profile.language": "Idioma", "profile.reset": "Resetar dispositivo", "profile.close": "Fechar", "player.close": "Fechar",
+    "alert.profile": "Perfil", "alert.addName": "Adicione seu nome primeiro.", "alert.addAge": "Adicione sua idade primeiro.", "alert.goals": "Metas", "alert.maxGoals": "Mantenha a lista focada: maximo 5 itens.", "alert.photos": "Fotos", "alert.allowPhotos": "Permita acesso as fotos para adiciona-las ao deck.", "alert.deckFull": "Deck cheio", "alert.maxImages": "Maximo {max} imagens por agora.", "alert.deck": "Deck", "alert.addImagesFirst": "Adicione imagens primeiro.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Escreva primeiro o texto que quer ouvir.", "alert.writeSpeechPlay": "Escreva um speech primeiro.", "alert.resetTitle": "Resetar dados locais", "alert.resetBody": "Isso remove perfil, metas, imagens e self speeches deste dispositivo.", "alert.cancel": "Cancelar", "alert.reset": "Resetar"
+  },
+  zh: {
+    "tab.life": "生命", "tab.goals": "目标", "tab.vision": "愿景", "tab.anti": "反愿景", "tab.speech": "自我对话",
+    "setup.kicker": "创建资料", "setup.title": "先建立你的生命时钟。", "setup.body": "Visualize 会从空白开始。先创建资料，再一步步添加目标、图片和自我对话。", "setup.name": "名字", "setup.age": "年龄", "setup.estimate": "寿命估计，例如 85", "setup.create": "创建资料",
+    "life.kicker": "生命时钟", "life.days": "预计剩余天数", "life.summary": "基于年龄 {age} 和寿命估计 {expectancy}。这不是预测，而是提醒。", "life.weeks": "周", "life.months": "月", "life.used": "已用", "life.monthMap": "按月显示生命", "life.monthMapBody": "每个点代表一个月。填满的点表示已经过去。",
+    "goals.daily": "每日任务", "goals.long": "长期目标", "goals.dailyTitle": "今天什么能推动你前进？", "goals.longTitle": "今年你在建立什么？", "goals.body": "最多添加 5 项，并手动调整进度条。", "goals.addTask": "添加任务", "goals.addGoal": "添加目标", "goals.emptyTitle": "这里还没有内容。", "goals.emptyBody": "从一个小行动或一个长期目标开始。", "goals.complete": "完成 {progress}%",
+    "deck.visionTitle": "创建你的愿景", "deck.antiTitle": "创建你的反愿景", "deck.visionBody": "添加你想成为什么样的人、想拥有什么、想和谁在一起的图片。", "deck.antiBody": "添加相反未来的图片：你不想成为什么、不想失去什么、不想容忍什么。", "deck.add": "添加图片", "deck.play": "播放", "deck.emptyTitle": "还没有图片。", "deck.emptyBody": "卡组从空白开始。从这台 iPhone 添加照片，并保存在本机。",
+    "speech.title": "自我对话", "speech.body": "写下你想反复听到的自我对话。让它个人化、直接、可信。", "speech.titlePlaceholder": "标题", "speech.textPlaceholder": "在这里写下你的自我对话", "speech.save": "保存", "speech.new": "新建", "speech.listen": "聆听", "speech.stop": "停止", "speech.emptyDraft": "空草稿",
+    "profile.kicker": "本地资料", "profile.storageTitle": "设备存储", "profile.storageBody": "只保存在这台 iPhone。关闭 app 或重启手机后数据仍会保留。删除 app 会删除本地数据。", "profile.cloudTitle": "可迁移到云端的数据", "profile.cloudBody": "你的本地资料、目标、图片和自我对话都有稳定的本地 ID。未来加入云同步时，这台设备可以先上传现有数据，再开启同步。", "profile.deviceKey": "设备键", "profile.appearance": "外观", "profile.darkMode": "深色模式", "profile.notifications": "稍后通知", "profile.language": "语言", "profile.reset": "重置此设备", "profile.close": "关闭", "player.close": "关闭",
+    "alert.profile": "资料", "alert.addName": "请先填写名字。", "alert.addAge": "请先填写年龄。", "alert.goals": "目标", "alert.maxGoals": "保持专注：最多 5 项。", "alert.photos": "照片", "alert.allowPhotos": "允许访问照片，才能添加到卡组。", "alert.deckFull": "卡组已满", "alert.maxImages": "目前最多 {max} 张图片。", "alert.deck": "卡组", "alert.addImagesFirst": "请先添加图片。", "alert.selfSpeech": "自我对话", "alert.writeSpeech": "请先写下要聆听的文字。", "alert.writeSpeechPlay": "请先写一段自我对话。", "alert.resetTitle": "重置本地数据", "alert.resetBody": "这会从此设备删除资料、目标、图片和自我对话。", "alert.cancel": "取消", "alert.reset": "重置"
+  }
+};
 
 function clamp(value, min, max) {
   const number = Number(value);
@@ -217,6 +349,15 @@ export default function App() {
   const setupPulse = useRef(new Animated.Value(0)).current;
 
   const theme = appState.settings.darkMode ? darkTheme : lightTheme;
+  const language = appState.settings.language || "en";
+  const languageMeta = languages.find((item) => item.id === language) || languages[0];
+  const t = (key, values = {}) => {
+    const template = (copy[language] && copy[language][key]) || copy.en[key] || key;
+    return Object.entries(values).reduce(
+      (text, [name, value]) => text.replace(new RegExp(`\\{${name}\\}`, "g"), String(value)),
+      template
+    );
+  };
   const profileComplete = appState.profile.complete;
   const activeGoals = goalMode === "daily" ? appState.dailyTasks : appState.longGoals;
   const activeSpeech = appState.selfSpeeches[appState.activeSpeechIndex] || null;
@@ -297,11 +438,11 @@ export default function App() {
     const age = clamp(profileDraft.age, 0, 120);
     const expectancy = clamp(profileDraft.expectancy || 85, 50, 120);
     if (!name) {
-      Alert.alert("Profile", "Add your first name first.");
+      Alert.alert(t("alert.profile"), t("alert.addName"));
       return;
     }
     if (age < 1) {
-      Alert.alert("Profile", "Add your age first.");
+      Alert.alert(t("alert.profile"), t("alert.addAge"));
       return;
     }
     updateState((current) => ({
@@ -335,7 +476,7 @@ export default function App() {
     updateState((current) => {
       const key = goalMode === "daily" ? "dailyTasks" : "longGoals";
       if (current[key].length >= 5) {
-        Alert.alert("Goals", "Keep this list focused: maximum 5 items.");
+        Alert.alert(t("alert.goals"), t("alert.maxGoals"));
         return current;
       }
       return { ...current, [key]: [...current[key], item] };
@@ -365,13 +506,13 @@ export default function App() {
   async function addImages(kind) {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      Alert.alert("Photos", "Allow photo access to add images to your deck.");
+      Alert.alert(t("alert.photos"), t("alert.allowPhotos"));
       return;
     }
     const deckKey = kind === "vision" ? "visionSlides" : "antiSlides";
     const remaining = MAX_DECK_SLIDES - appState[deckKey].length;
     if (remaining <= 0) {
-      Alert.alert("Deck full", `Maximum ${MAX_DECK_SLIDES} images for now.`);
+      Alert.alert(t("alert.deckFull"), t("alert.maxImages", { max: MAX_DECK_SLIDES }));
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -419,7 +560,7 @@ export default function App() {
     const title = draftSpeechTitle.trim() || "Self speech";
     const text = draftSpeechText.trim();
     if (!text) {
-      Alert.alert("Self speech", "Write the text you want to listen to first.");
+      Alert.alert(t("alert.selfSpeech"), t("alert.writeSpeech"));
       return;
     }
     updateState((current) => {
@@ -480,18 +621,18 @@ export default function App() {
   function playSpeech() {
     const text = draftSpeechText.trim() || activeSpeech?.text || "";
     if (!text) {
-      Alert.alert("Self speech", "Write a speech first.");
+      Alert.alert(t("alert.selfSpeech"), t("alert.writeSpeechPlay"));
       return;
     }
     Speech.stop();
-    Speech.speak(text, { language: "en-US", rate: 0.88, pitch: 0.96 });
+    Speech.speak(text, { language: languageMeta.speech, rate: 0.88, pitch: 0.96 });
   }
 
   function resetLocalData() {
-    Alert.alert("Reset local data", "This removes the profile, goals, images, and self speeches from this device.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(t("alert.resetTitle"), t("alert.resetBody"), [
+      { text: t("alert.cancel"), style: "cancel" },
       {
-        text: "Reset",
+        text: t("alert.reset"),
         style: "destructive",
         onPress: async () => {
           await FileSystem.deleteAsync(STATE_FILE, { idempotent: true }).catch(() => {});
@@ -517,16 +658,16 @@ export default function App() {
           <View style={styles.logoSlashSecond} />
           <View style={styles.logoDot} />
         </Animated.View>
-        <Text style={[styles.setupKicker, { color: theme.muted }]}>Profile setup</Text>
-        <Text style={[styles.setupTitle, { color: theme.ink }]}>Build your life clock first.</Text>
+        <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.kicker")}</Text>
+        <Text style={[styles.setupTitle, { color: theme.ink }]}>{t("setup.title")}</Text>
         <Text style={[styles.setupText, { color: theme.muted }]}>
-          Visualize starts empty. Create your profile, then add your goals, images, and self speech step by step.
+          {t("setup.body")}
         </Text>
         <View style={styles.setupFields}>
           <TextInput
             value={String(profileDraft.name || "")}
             onChangeText={(name) => setProfileDraft((current) => ({ ...current, name }))}
-            placeholder="First name"
+            placeholder={t("setup.name")}
             placeholderTextColor={theme.placeholder}
             style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
           />
@@ -534,7 +675,7 @@ export default function App() {
             value={String(profileDraft.age || "")}
             onChangeText={(age) => setProfileDraft((current) => ({ ...current, age }))}
             keyboardType="number-pad"
-            placeholder="Age"
+            placeholder={t("setup.age")}
             placeholderTextColor={theme.placeholder}
             style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
           />
@@ -542,13 +683,13 @@ export default function App() {
             value={String(profileDraft.expectancy || "")}
             onChangeText={(expectancy) => setProfileDraft((current) => ({ ...current, expectancy }))}
             keyboardType="number-pad"
-            placeholder="Life estimate, example 85"
+            placeholder={t("setup.estimate")}
             placeholderTextColor={theme.placeholder}
             style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
           />
         </View>
         <TouchableOpacity style={styles.primaryButton} onPress={saveProfile}>
-          <Text style={styles.primaryText}>Create profile</Text>
+          <Text style={styles.primaryText}>{t("setup.create")}</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     );
@@ -560,26 +701,26 @@ export default function App() {
     return (
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.heroCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.kicker, { color: theme.muted }]}>Life clock</Text>
+          <Text style={[styles.kicker, { color: theme.muted }]}>{t("life.kicker")}</Text>
           <Text style={[styles.daysNumber, { color: theme.ink }]}>{stats.daysLeft.toLocaleString("en-US")}</Text>
-          <Text style={[styles.daysLabel, { color: theme.muted }]}>estimated days left</Text>
+          <Text style={[styles.daysLabel, { color: theme.muted }]}>{t("life.days")}</Text>
           <View style={[styles.bigProgressTrack, { backgroundColor: theme.soft }]}>
             <View style={[styles.bigProgressFill, { width: `${stats.usedPercent}%` }]} />
           </View>
           <Text style={[styles.body, { color: theme.muted }]}>
-            Based on age {stats.age} and a life estimate of {stats.expectancy}. Not a prediction, a reminder.
+            {t("life.summary", { age: stats.age, expectancy: stats.expectancy })}
           </Text>
         </View>
 
         <View style={styles.statsRow}>
-          <StatCard label="weeks" value={stats.weeksLeft} theme={theme} />
-          <StatCard label="months" value={stats.monthsLeft} theme={theme} />
-          <StatCard label="used" value={`${stats.usedPercent}%`} theme={theme} />
+          <StatCard label={t("life.weeks")} value={stats.weeksLeft} theme={theme} />
+          <StatCard label={t("life.months")} value={stats.monthsLeft} theme={theme} />
+          <StatCard label={t("life.used")} value={`${stats.usedPercent}%`} theme={theme} />
         </View>
 
         <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.panelTitle, { color: theme.ink }]}>Life by months</Text>
-          <Text style={[styles.body, { color: theme.muted }]}>Each dot is one month. Filled dots are already spent.</Text>
+          <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("life.monthMap")}</Text>
+          <Text style={[styles.body, { color: theme.muted }]}>{t("life.monthMapBody")}</Text>
           <View style={styles.dotMap}>
             {dots.map((spent, index) => (
               <View key={`${index}`} style={[styles.lifeDot, spent && styles.lifeDotSpent]} />
@@ -595,23 +736,23 @@ export default function App() {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.segment, { backgroundColor: theme.soft }]}>
           <TouchableOpacity style={[styles.segmentButton, goalMode === "daily" && styles.segmentActive]} onPress={() => setGoalMode("daily")}>
-            <Text style={[styles.segmentText, goalMode === "daily" && styles.segmentTextActive]}>Daily tasks</Text>
+            <Text style={[styles.segmentText, goalMode === "daily" && styles.segmentTextActive]}>{t("goals.daily")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.segmentButton, goalMode === "long" && styles.segmentActive]} onPress={() => setGoalMode("long")}>
-            <Text style={[styles.segmentText, goalMode === "long" && styles.segmentTextActive]}>Long-term goals</Text>
+            <Text style={[styles.segmentText, goalMode === "long" && styles.segmentTextActive]}>{t("goals.long")}</Text>
           </TouchableOpacity>
         </View>
 
         <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
           <Text style={[styles.panelTitle, { color: theme.ink }]}>
-            {goalMode === "daily" ? "What moves today forward?" : "What are you building this year?"}
+            {goalMode === "daily" ? t("goals.dailyTitle") : t("goals.longTitle")}
           </Text>
-          <Text style={[styles.body, { color: theme.muted }]}>Add up to 5 items and manually move the progress bar.</Text>
+          <Text style={[styles.body, { color: theme.muted }]}>{t("goals.body")}</Text>
           <View style={styles.addRow}>
             <TextInput
               value={draftGoal}
               onChangeText={setDraftGoal}
-              placeholder={goalMode === "daily" ? "Add task" : "Add goal"}
+              placeholder={goalMode === "daily" ? t("goals.addTask") : t("goals.addGoal")}
               placeholderTextColor={theme.placeholder}
               style={[styles.addInput, { color: theme.ink, backgroundColor: theme.input }]}
             />
@@ -622,7 +763,7 @@ export default function App() {
         </View>
 
         {!activeGoals.length ? (
-          <EmptyState theme={theme} title="Nothing here yet." text="Start with one small action or one long-term goal." />
+          <EmptyState theme={theme} title={t("goals.emptyTitle")} text={t("goals.emptyBody")} />
         ) : (
           activeGoals.map((goal) => (
             <View key={goal.id} style={[styles.goalCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
@@ -633,7 +774,7 @@ export default function App() {
                 </TouchableOpacity>
               </View>
               <ProgressScrubber value={goal.progress || 0} onChange={(progress) => updateGoalProgress(goal.id, progress)} />
-              <Text style={[styles.progressText, { color: theme.muted }]}>{goal.progress || 0}% complete</Text>
+              <Text style={[styles.progressText, { color: theme.muted }]}>{t("goals.complete", { progress: goal.progress || 0 })}</Text>
             </View>
           ))
         )}
@@ -647,24 +788,24 @@ export default function App() {
     return (
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.panelTitle, { color: theme.ink }]}>{positive ? "Create your Vision" : "Create your Anti-vision"}</Text>
+          <Text style={[styles.panelTitle, { color: theme.ink }]}>{positive ? t("deck.visionTitle") : t("deck.antiTitle")}</Text>
           <Text style={[styles.body, { color: theme.muted }]}>
             {positive
-              ? "Add images of who you want to become, what you want to have, and who you want around you."
-              : "Add images of the opposite future: what you do not want to become, lose, or tolerate."}
+              ? t("deck.visionBody")
+              : t("deck.antiBody")}
           </Text>
           <View style={styles.actionsRow}>
             <TouchableOpacity style={styles.primaryButtonFlex} onPress={() => addImages(kind)}>
-              <Text style={styles.primaryText}>Add images</Text>
+              <Text style={styles.primaryText}>{t("deck.add")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={() => (deck.length ? setPlayer({ kind, index: 0 }) : Alert.alert("Deck", "Add images first."))}>
-              <Text style={[styles.secondaryText, { color: theme.ink }]}>Play</Text>
+            <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={() => (deck.length ? setPlayer({ kind, index: 0 }) : Alert.alert(t("alert.deck"), t("alert.addImagesFirst")))}>
+              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("deck.play")}</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {!deck.length ? (
-          <EmptyState theme={theme} title="No images yet." text="The deck starts empty. Add photos from this iPhone to keep them saved locally." />
+          <EmptyState theme={theme} title={t("deck.emptyTitle")} text={t("deck.emptyBody")} />
         ) : (
           <View style={styles.grid}>
             {deck.map((slide) => (
@@ -685,39 +826,39 @@ export default function App() {
     return (
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.panelTitle, { color: theme.ink }]}>Self speech</Text>
+          <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("speech.title")}</Text>
           <Text style={[styles.body, { color: theme.muted }]}>
-            Write the self-talk you want to hear repeatedly. Keep it personal, direct, and believable.
+            {t("speech.body")}
           </Text>
           <TextInput
             value={draftSpeechTitle}
             onChangeText={setDraftSpeechTitle}
-            placeholder="Title"
+            placeholder={t("speech.titlePlaceholder")}
             placeholderTextColor={theme.placeholder}
             style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
           />
           <TextInput
             value={draftSpeechText}
             onChangeText={setDraftSpeechText}
-            placeholder="Write your speech here"
+            placeholder={t("speech.textPlaceholder")}
             placeholderTextColor={theme.placeholder}
             multiline
             style={[styles.input, styles.speechInput, { color: theme.ink, backgroundColor: theme.input }]}
           />
           <View style={styles.actionsRow}>
             <TouchableOpacity style={styles.primaryButtonFlex} onPress={saveSpeech}>
-              <Text style={styles.primaryText}>Save</Text>
+              <Text style={styles.primaryText}>{t("speech.save")}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={newSpeech}>
-              <Text style={[styles.secondaryText, { color: theme.ink }]}>New</Text>
+              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.new")}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.actionsRow}>
             <TouchableOpacity style={styles.primaryButtonFlex} onPress={playSpeech}>
-              <Text style={styles.primaryText}>Listen</Text>
+              <Text style={styles.primaryText}>{t("speech.listen")}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={() => Speech.stop()}>
-              <Text style={[styles.secondaryText, { color: theme.ink }]}>Stop</Text>
+              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -725,7 +866,7 @@ export default function App() {
         {appState.selfSpeeches.map((speech, index) => (
           <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: theme.card, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)}>
             <Text style={[styles.goalTitle, { color: theme.ink }]}>{speech.title || `Self speech ${index + 1}`}</Text>
-            <Text style={[styles.body, { color: theme.muted }]} numberOfLines={2}>{speech.text || "Empty draft"}</Text>
+            <Text style={[styles.body, { color: theme.muted }]} numberOfLines={2}>{speech.text || t("speech.emptyDraft")}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -738,48 +879,65 @@ export default function App() {
         <SafeAreaView style={[styles.screen, { backgroundColor: theme.bg }]}>
           <View style={styles.modalHeader}>
             <View>
-              <Text style={[styles.kicker, { color: theme.muted }]}>Local-only profile</Text>
+              <Text style={[styles.kicker, { color: theme.muted }]}>{t("profile.kicker")}</Text>
               <Text style={[styles.modalTitle, { color: theme.ink }]}>{appState.profile.name || "Your profile"}</Text>
             </View>
             <TouchableOpacity onPress={() => setProfileOpen(false)}>
-              <Text style={[styles.closeText, { color: theme.ink }]}>Close</Text>
+              <Text style={[styles.closeText, { color: theme.ink }]}>{t("profile.close")}</Text>
             </TouchableOpacity>
           </View>
           <ScrollView contentContainerStyle={styles.content}>
             <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-              <Text style={[styles.panelTitle, { color: theme.ink }]}>Device storage</Text>
+              <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("profile.storageTitle")}</Text>
               <Text style={[styles.body, { color: theme.muted }]}>
-                Saved on this iPhone only. Closing the app or restarting the phone will keep the data. Deleting the app removes the local data.
+                {t("profile.storageBody")}
               </Text>
             </View>
             <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-              <Text style={[styles.panelTitle, { color: theme.ink }]}>Cloud-ready data</Text>
+              <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("profile.cloudTitle")}</Text>
               <Text style={[styles.body, { color: theme.muted }]}>
-                Your local profile, goals, images, and speeches have stable local IDs. When cloud sync is added, this device can upload its existing data into your account before sync is turned on.
+                {t("profile.cloudBody")}
               </Text>
               <Text style={[styles.syncFootnote, { color: theme.muted }]}>
-                Device key: {String(appState.localInstallId || "").slice(0, 18)}
+                {t("profile.deviceKey")}: {String(appState.localInstallId || "").slice(0, 18)}
               </Text>
             </View>
             <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-              <Text style={[styles.panelTitle, { color: theme.ink }]}>Appearance</Text>
+              <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("profile.appearance")}</Text>
               <View style={styles.switchRow}>
-                <Text style={[styles.body, { color: theme.ink }]}>Dark mode</Text>
+                <Text style={[styles.body, { color: theme.ink }]}>{t("profile.darkMode")}</Text>
                 <Switch
                   value={appState.settings.darkMode}
                   onValueChange={(darkMode) => updateState((current) => ({ ...current, settings: { ...current.settings, darkMode } }))}
                 />
               </View>
               <View style={styles.switchRow}>
-                <Text style={[styles.body, { color: theme.ink }]}>Notifications later</Text>
+                <Text style={[styles.body, { color: theme.ink }]}>{t("profile.notifications")}</Text>
                 <Switch
                   value={appState.settings.notifications}
                   onValueChange={(notifications) => updateState((current) => ({ ...current, settings: { ...current.settings, notifications } }))}
                 />
               </View>
             </View>
+            <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+              <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("profile.language")}</Text>
+              <View style={styles.languageGrid}>
+                {languages.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={[
+                      styles.languageButton,
+                      { borderColor: item.id === language ? "#E8C468" : theme.line, backgroundColor: item.id === language ? "rgba(232,196,104,0.18)" : "transparent" }
+                    ]}
+                    onPress={() => updateState((current) => ({ ...current, settings: { ...current.settings, language: item.id } }))}
+                  >
+                    <Text style={[styles.languageText, { color: theme.ink }]}>{item.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
             <TouchableOpacity style={styles.dangerButton} onPress={resetLocalData}>
-              <Text style={styles.primaryText}>Reset this device</Text>
+              <Text style={styles.primaryText}>{t("profile.reset")}</Text>
             </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>
@@ -797,12 +955,12 @@ export default function App() {
           {slide?.imageUri ? <Image source={{ uri: slide.imageUri }} style={styles.playerImage} /> : null}
           <View style={styles.playerShade} />
           <View style={styles.playerText}>
-            <Text style={styles.playerKicker}>{player.kind === "vision" ? "Vision" : "Anti-vision"}</Text>
+            <Text style={styles.playerKicker}>{player.kind === "vision" ? t("tab.vision") : t("tab.anti")}</Text>
             <Text style={styles.playerTitle}>{slide?.title || "Your deck"}</Text>
             <Text style={styles.playerCaption}>{slide?.caption || ""}</Text>
           </View>
           <TouchableOpacity style={styles.playerClose} onPress={() => setPlayer(null)}>
-            <Text style={styles.playerCloseText}>Close</Text>
+            <Text style={styles.playerCloseText}>{t("player.close")}</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -843,7 +1001,7 @@ export default function App() {
           <View style={[styles.nav, { backgroundColor: theme.nav }]}>
             {tabs.map((item) => (
               <TouchableOpacity key={item.id} style={[styles.navItem, tab === item.id && styles.navActive]} onPress={() => setTab(item.id)}>
-                <Text style={[styles.navText, { color: tab === item.id ? "#101418" : theme.muted }]}>{item.label}</Text>
+                <Text style={[styles.navText, { color: tab === item.id ? "#101418" : theme.muted }]}>{t(`tab.${item.id}`)}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -980,6 +1138,9 @@ const styles = StyleSheet.create({
   removeImageText: { color: "#FFFFFF", fontSize: 18, fontWeight: "900" },
   speechPill: { borderWidth: 1, borderRadius: 22, padding: 15, marginBottom: 10 },
   switchRow: { minHeight: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  languageGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 },
+  languageButton: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 13, paddingVertical: 10 },
+  languageText: { fontSize: 13, fontWeight: "900" },
   dangerButton: { minHeight: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#9D3326", marginTop: 4 },
   modalHeader: { minHeight: 74, paddingHorizontal: 18, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   modalTitle: { fontSize: 26, fontWeight: "900" },

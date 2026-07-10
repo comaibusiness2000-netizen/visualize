@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=47" />
+    <link rel="manifest" href="./manifest.webmanifest?v=48" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-10-v47";
+      const VISUALIZE_APP_VERSION = "2026-07-10-v48";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=47")
+            .register("./service-worker.js?v=48")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3903,6 +3903,372 @@
         visionSlides: Array.isArray(savedState && savedState.visionSlides) ? savedState.visionSlides : defaults.visionSlides,
         antiSlides: Array.isArray(savedState && savedState.antiSlides) ? savedState.antiSlides : defaults.antiSlides
       };
+
+      const UI_TEXT = {
+        en: {
+          profileSetup: "Profile setup",
+          setupTitle: "Start with a blank life clock.",
+          setupText: "Create your profile first. The app will begin empty, then you add your goals, images, and self speech step by step.",
+          firstName: "Your first name",
+          age: "Your age",
+          estimate: "Life estimate",
+          createProfile: "Create profile",
+          lifeClock: "Life clock",
+          daysLeft: "days left",
+          lifeSummary: "Estimated from age {age} to {expectancy}. That is about {months} months, or {weeks} weeks, left.",
+          weeksLeft: "weeks left",
+          monthsLeft: "months left",
+          lifeUsed: "life used",
+          lifeLegend: "Each dot is a small block of life. Dark dots are time already spent.",
+          editInfo: "Edit info",
+          dailyTasks: "Daily tasks",
+          longGoals: "Long-term goals",
+          dailyTitle: "Move today forward.",
+          longTitle: "Track the bigger win.",
+          dailyText: "Keep a short list of what makes today count, then move the progress bar manually.",
+          longText: "Use this for goals you want to close this year, or goals that need repeated action over time.",
+          addTask: "Add task",
+          addGoal: "Add goal",
+          emptyTask: "Add one task that would make today count.",
+          emptyGoal: "Add one long-term goal you can move this year.",
+          dailyHint: "Daily tasks are for execution today. Vision stays for long-term goals.",
+          longHint: "Long-term goals bridge daily action and your Vision.",
+          visionSetup: "Vision setup",
+          createVisionTitle: "Create the future scene first.",
+          visionSetupText: "Upload images of how you want to look, what you want to own or experience, the places you want to live in, and the kind of people you want around you.",
+          createVision: "Create vision",
+          visionDeck: "Vision deck",
+          antiSetup: "Anti-vision setup",
+          createAntiTitle: "Create the warning scene first.",
+          antiSetupText: "Upload images of the life you refuse to drift into: what you do not want to become, lose, or tolerate.",
+          createAnti: "Create anti-vision",
+          antiDeck: "Anti-vision deck",
+          play: "Play",
+          upload: "Upload",
+          edit: "Edit",
+          export: "Export",
+          noSlides: "No slides yet.",
+          noSlidesText: "Upload photos in the order you want to see them during the exercise.",
+          selfSpeech: "Self speech",
+          speechTitle: "Script your inner voice.",
+          speechText: "Write the text you want to hear before you act, train, work, or visualize.",
+          title: "Title",
+          script: "Script",
+          voice: "Voice",
+          swipeVoice: "Swipe to change voice",
+          stop: "Stop",
+          profile: "Profile",
+          settings: "Settings",
+          language: "Language",
+          languageText: "Choose the language used by the app interface.",
+          save: "Save",
+          light: "Light",
+          dark: "Dark",
+          navLife: "Life",
+          navGoal: "Goal",
+          navVision: "Vision",
+          navAnti: "Anti",
+          navSpeech: "Speech",
+          profileSaved: "Profile saved",
+          languageSelected: "{language} selected"
+        },
+        es: {
+          profileSetup: "Crear perfil", setupTitle: "Empieza con un reloj de vida vacio.", setupText: "Crea primero tu perfil. La app empieza vacia y luego agregas metas, imagenes y self speech paso a paso.", firstName: "Tu nombre", age: "Tu edad", estimate: "Estimacion de vida", createProfile: "Crear perfil", lifeClock: "Reloj de vida", daysLeft: "dias restantes", lifeSummary: "Estimado desde edad {age} hasta {expectancy}. Son unos {months} meses, o {weeks} semanas, restantes.", weeksLeft: "semanas restantes", monthsLeft: "meses restantes", lifeUsed: "vida usada", lifeLegend: "Cada punto es un bloque pequeno de vida. Los puntos oscuros son tiempo ya vivido.", editInfo: "Editar datos", dailyTasks: "Tareas diarias", longGoals: "Metas a largo plazo", dailyTitle: "Haz avanzar hoy.", longTitle: "Sigue la gran meta.", dailyText: "Mantén una lista corta de lo que hace que hoy cuente y mueve el progreso manualmente.", longText: "Usa esto para metas que quieres cerrar este ano o que necesitan accion repetida.", addTask: "Agregar tarea", addGoal: "Agregar meta", emptyTask: "Agrega una tarea que haga que hoy cuente.", emptyGoal: "Agrega una meta a largo plazo que puedas mover este ano.", dailyHint: "Las tareas diarias son para ejecutar hoy. Vision queda para metas a largo plazo.", longHint: "Las metas a largo plazo conectan accion diaria y Vision.", visionSetup: "Configurar vision", createVisionTitle: "Crea primero la escena futura.", visionSetupText: "Sube imagenes de como quieres verte, que quieres tener o vivir, donde quieres estar y quienes quieres cerca.", createVision: "Crear vision", visionDeck: "Deck de vision", antiSetup: "Configurar anti-vision", createAntiTitle: "Crea primero la escena de advertencia.", antiSetupText: "Sube imagenes de la vida en la que no quieres caer: lo que no quieres ser, perder o tolerar.", createAnti: "Crear anti-vision", antiDeck: "Deck anti-vision", play: "Reproducir", upload: "Subir", edit: "Editar", export: "Exportar", noSlides: "Sin slides aun.", noSlidesText: "Sube fotos en el orden en que quieres verlas durante el ejercicio.", selfSpeech: "Self speech", speechTitle: "Escribe tu voz interior.", speechText: "Escribe el texto que quieres escuchar antes de actuar, entrenar, trabajar o visualizar.", title: "Titulo", script: "Script", voice: "Voz", swipeVoice: "Desliza para cambiar voz", stop: "Stop", profile: "Perfil", settings: "Ajustes", language: "Idioma", languageText: "Elige el idioma usado por la interfaz.", save: "Guardar", light: "Claro", dark: "Oscuro", navLife: "Vida", navGoal: "Metas", navVision: "Vision", navAnti: "Anti", navSpeech: "Voz", profileSaved: "Perfil guardado", languageSelected: "{language} seleccionado"
+        },
+        fr: {
+          profileSetup: "Creation profil", setupTitle: "Commence avec une horloge de vie vide.", setupText: "Cree ton profil. L'app commence vide, puis tu ajoutes objectifs, images et self speech pas a pas.", firstName: "Ton prenom", age: "Ton age", estimate: "Estimation de vie", createProfile: "Creer profil", lifeClock: "Horloge de vie", daysLeft: "jours restants", lifeSummary: "Estime de l'age {age} a {expectancy}. Environ {months} mois, ou {weeks} semaines, restants.", weeksLeft: "semaines restantes", monthsLeft: "mois restants", lifeUsed: "vie utilisee", lifeLegend: "Chaque point est un petit bloc de vie. Les points sombres sont le temps deja passe.", editInfo: "Modifier", dailyTasks: "Taches du jour", longGoals: "Objectifs long terme", dailyTitle: "Fais avancer aujourd'hui.", longTitle: "Suis la grande victoire.", dailyText: "Garde une courte liste de ce qui compte aujourd'hui et ajuste la progression.", longText: "Utilise ceci pour les objectifs a finir cette annee ou qui demandent une action repetee.", addTask: "Ajouter tache", addGoal: "Ajouter objectif", emptyTask: "Ajoute une tache qui ferait compter aujourd'hui.", emptyGoal: "Ajoute un objectif long terme a avancer cette annee.", dailyHint: "Les taches du jour servent a agir maintenant. Vision reste pour le long terme.", longHint: "Les objectifs long terme relient l'action quotidienne a ta Vision.", visionSetup: "Setup Vision", createVisionTitle: "Cree d'abord la scene future.", visionSetupText: "Ajoute des images de qui tu veux devenir, ce que tu veux avoir, les lieux ou vivre et les personnes autour de toi.", createVision: "Creer vision", visionDeck: "Deck Vision", antiSetup: "Setup Anti-vision", createAntiTitle: "Cree d'abord la scene d'avertissement.", antiSetupText: "Ajoute des images de la vie que tu refuses: ce que tu ne veux pas devenir, perdre ou tolerer.", createAnti: "Creer anti-vision", antiDeck: "Deck Anti-vision", play: "Lire", upload: "Ajouter", edit: "Editer", export: "Exporter", noSlides: "Aucune slide.", noSlidesText: "Ajoute les photos dans l'ordre de l'exercice.", selfSpeech: "Self speech", speechTitle: "Ecris ta voix interieure.", speechText: "Ecris le texte a ecouter avant d'agir, t'entrainer, travailler ou visualiser.", title: "Titre", script: "Script", voice: "Voix", swipeVoice: "Glisse pour changer la voix", stop: "Stop", profile: "Profil", settings: "Reglages", language: "Langue", languageText: "Choisis la langue de l'interface.", save: "Sauver", light: "Clair", dark: "Sombre", navLife: "Vie", navGoal: "Objectifs", navVision: "Vision", navAnti: "Anti", navSpeech: "Voix", profileSaved: "Profil sauvegarde", languageSelected: "{language} choisi"
+        },
+        pt: {
+          profileSetup: "Criar perfil", setupTitle: "Comece com um relogio de vida vazio.", setupText: "Crie seu perfil primeiro. O app comeca vazio e depois voce adiciona metas, imagens e self speech.", firstName: "Seu nome", age: "Sua idade", estimate: "Estimativa de vida", createProfile: "Criar perfil", lifeClock: "Relogio de vida", daysLeft: "dias restantes", lifeSummary: "Estimado da idade {age} ate {expectancy}. Cerca de {months} meses, ou {weeks} semanas, restantes.", weeksLeft: "semanas restantes", monthsLeft: "meses restantes", lifeUsed: "vida usada", lifeLegend: "Cada ponto e um pequeno bloco de vida. Pontos escuros ja foram vividos.", editInfo: "Editar", dailyTasks: "Tarefas diarias", longGoals: "Metas de longo prazo", dailyTitle: "Mova hoje para frente.", longTitle: "Acompanhe a grande meta.", dailyText: "Mantenha uma lista curta do que faz hoje contar e mova o progresso manualmente.", longText: "Use para metas deste ano ou que precisam de acao repetida.", addTask: "Adicionar tarefa", addGoal: "Adicionar meta", emptyTask: "Adicione uma tarefa que faca hoje contar.", emptyGoal: "Adicione uma meta de longo prazo para este ano.", dailyHint: "Tarefas diarias sao para executar hoje. Vision fica para metas de longo prazo.", longHint: "Metas de longo prazo ligam acao diaria e Vision.", visionSetup: "Configurar visao", createVisionTitle: "Crie primeiro a cena futura.", visionSetupText: "Adicione imagens de quem quer ser, o que quer ter, onde quer viver e quem quer por perto.", createVision: "Criar visao", visionDeck: "Deck de visao", antiSetup: "Configurar anti-visao", createAntiTitle: "Crie primeiro a cena de alerta.", antiSetupText: "Adicione imagens da vida que voce recusa: o que nao quer se tornar, perder ou tolerar.", createAnti: "Criar anti-visao", antiDeck: "Deck anti-visao", play: "Reproduzir", upload: "Adicionar", edit: "Editar", export: "Exportar", noSlides: "Sem slides ainda.", noSlidesText: "Adicione fotos na ordem do exercicio.", selfSpeech: "Self speech", speechTitle: "Escreva sua voz interior.", speechText: "Escreva o texto que quer ouvir antes de agir, treinar, trabalhar ou visualizar.", title: "Titulo", script: "Script", voice: "Voz", swipeVoice: "Deslize para mudar voz", stop: "Parar", profile: "Perfil", settings: "Ajustes", language: "Idioma", languageText: "Escolha o idioma da interface.", save: "Salvar", light: "Claro", dark: "Escuro", navLife: "Vida", navGoal: "Metas", navVision: "Visao", navAnti: "Anti", navSpeech: "Voz", profileSaved: "Perfil salvo", languageSelected: "{language} selecionado"
+        },
+        zh: {
+          profileSetup: "创建资料", setupTitle: "从空白生命时钟开始。", setupText: "先创建资料。应用会从空白开始，然后一步步添加目标、图片和自我对话。", firstName: "名字", age: "年龄", estimate: "寿命估计", createProfile: "创建资料", lifeClock: "生命时钟", daysLeft: "剩余天数", lifeSummary: "从 {age} 岁到 {expectancy} 岁估算。大约剩余 {months} 个月，或 {weeks} 周。", weeksLeft: "剩余周数", monthsLeft: "剩余月数", lifeUsed: "已用生命", lifeLegend: "每个点代表一小段生命。深色点代表已过去的时间。", editInfo: "编辑信息", dailyTasks: "每日任务", longGoals: "长期目标", dailyTitle: "推动今天前进。", longTitle: "追踪更大的目标。", dailyText: "保留一小列今天重要的事，并手动移动进度条。", longText: "用于今年要完成或需要反复行动的目标。", addTask: "添加任务", addGoal: "添加目标", emptyTask: "添加一个能让今天有意义的任务。", emptyGoal: "添加一个今年可以推进的长期目标。", dailyHint: "每日任务用于今天执行。Vision 用于长期目标。", longHint: "长期目标连接每日行动和 Vision。", visionSetup: "愿景设置", createVisionTitle: "先创建未来场景。", visionSetupText: "上传你想成为什么样、想拥有什么、想住在哪里、想和谁在一起的图片。", createVision: "创建愿景", visionDeck: "愿景卡组", antiSetup: "反愿景设置", createAntiTitle: "先创建警示场景。", antiSetupText: "上传你拒绝滑向的生活：不想成为什么、不想失去什么、不想忍受什么。", createAnti: "创建反愿景", antiDeck: "反愿景卡组", play: "播放", upload: "上传", edit: "编辑", export: "导出", noSlides: "还没有幻灯片。", noSlidesText: "按练习时想看的顺序上传照片。", selfSpeech: "自我对话", speechTitle: "写下你的内在声音。", speechText: "写下行动、训练、工作或视觉化前想听到的文字。", title: "标题", script: "文本", voice: "声音", swipeVoice: "滑动切换声音", stop: "停止", profile: "资料", settings: "设置", language: "语言", languageText: "选择应用界面语言。", save: "保存", light: "浅色", dark: "深色", navLife: "生命", navGoal: "目标", navVision: "愿景", navAnti: "反愿景", navSpeech: "自我对话", profileSaved: "资料已保存", languageSelected: "已选择 {language}"
+        }
+      };
+
+      Object.assign(UI_TEXT.en, {
+        profileDefault: "Your profile",
+        accountSummaryLocal: "Prototype account. App Store builds will use Sign in with Apple and secure cloud sync.",
+        accountStatusLocal: "Local prototype",
+        accountStatusCloud: "Cloud account",
+        syncSummaryLocal: "Saved on this device. Cloud sync is waiting for the production backend.",
+        dailyReminder: "Daily reminder",
+        dailyReminderText: "A gentle nudge to open your vision.",
+        notifications: "Notifications",
+        notificationsText: "Ask this device for notification permission.",
+        localSaving: "Local saving",
+        localSavingText: "Saved on this device. Later, existing data can move into cloud sync.",
+        cloudSync: "Cloud sync",
+        cloudSyncText: "Account, goals, decks, and image files will sync across iPhone and iPad.",
+        cloudReadiness: "Cloud readiness",
+        cloudReadinessText: "Designed for 10,000+ users with account auth, database rows, object storage, and Apple subscription entitlements.",
+        data: "Data",
+        dataText: "The prototype can be reset here. Production will add export, deletion, and account recovery.",
+        privacy: "Privacy",
+        privacyText: "Images, goals, anti-visions, and audio scripts are sensitive. Production requires explicit consent, deletion, and a clear privacy policy.",
+        signIn: "Sign in",
+        sync: "Sync",
+        reset: "Reset",
+        testNotification: "Test notification",
+        howItWorks: "How it works",
+        privacyOpen: "Open privacy policy draft",
+        photos: "Photos",
+        done: "Done"
+      });
+      Object.assign(UI_TEXT.es, {
+        profileDefault: "Tu perfil",
+        accountSummaryLocal: "Cuenta prototipo. La version App Store usara Sign in with Apple y sincronizacion cloud segura.",
+        accountStatusLocal: "Prototipo local",
+        accountStatusCloud: "Cuenta cloud",
+        syncSummaryLocal: "Guardado en este dispositivo. Cloud sync espera el backend de produccion.",
+        dailyReminder: "Recordatorio diario",
+        dailyReminderText: "Un recordatorio suave para abrir tu vision.",
+        notifications: "Notificaciones",
+        notificationsText: "Pide permiso de notificaciones a este dispositivo.",
+        localSaving: "Guardado local",
+        localSavingText: "Guardado en este dispositivo. Mas adelante los datos existentes podran pasar al cloud.",
+        cloudSync: "Cloud sync",
+        cloudSyncText: "Cuenta, metas, decks e imagenes se sincronizaran entre iPhone y iPad.",
+        cloudReadiness: "Preparado para cloud",
+        cloudReadinessText: "Disenado para 10.000+ usuarios con auth, base de datos, storage y suscripciones Apple.",
+        data: "Datos",
+        dataText: "Puedes resetear el prototipo aqui. Produccion agregara exportacion, eliminacion y recuperacion de cuenta.",
+        privacy: "Privacidad",
+        privacyText: "Imagenes, metas, anti-visions y scripts de audio son sensibles. Produccion requiere consentimiento, borrado y privacidad clara.",
+        signIn: "Entrar",
+        sync: "Sync",
+        reset: "Resetear",
+        testNotification: "Probar notificacion",
+        howItWorks: "Como funciona",
+        privacyOpen: "Abrir borrador de privacidad",
+        photos: "Fotos",
+        done: "Listo"
+      });
+      Object.assign(UI_TEXT.fr, {
+        profileDefault: "Ton profil",
+        accountSummaryLocal: "Compte prototype. La version App Store utilisera Sign in with Apple et une sync cloud securisee.",
+        accountStatusLocal: "Prototype local",
+        accountStatusCloud: "Compte cloud",
+        syncSummaryLocal: "Sauve sur cet appareil. La sync cloud attend le backend de production.",
+        dailyReminder: "Rappel quotidien",
+        dailyReminderText: "Un rappel doux pour ouvrir ta vision.",
+        notifications: "Notifications",
+        notificationsText: "Demande l'autorisation de notifications sur cet appareil.",
+        localSaving: "Sauvegarde locale",
+        localSavingText: "Sauve sur cet appareil. Plus tard, les donnees existantes pourront passer au cloud.",
+        cloudSync: "Cloud sync",
+        cloudSyncText: "Compte, objectifs, decks et images se synchroniseront entre iPhone et iPad.",
+        cloudReadiness: "Pret pour le cloud",
+        cloudReadinessText: "Pense pour 10 000+ utilisateurs avec auth, base de donnees, stockage et abonnements Apple.",
+        data: "Donnees",
+        dataText: "Le prototype peut etre reinitialise ici. La production ajoutera export, suppression et recuperation de compte.",
+        privacy: "Confidentialite",
+        privacyText: "Images, objectifs, anti-visions et scripts audio sont sensibles. La production exige consentement, suppression et politique claire.",
+        signIn: "Connexion",
+        sync: "Sync",
+        reset: "Reset",
+        testNotification: "Tester notification",
+        howItWorks: "Comment ca marche",
+        privacyOpen: "Ouvrir brouillon confidentialite",
+        photos: "Photos",
+        done: "Termine"
+      });
+      Object.assign(UI_TEXT.pt, {
+        profileDefault: "Seu perfil",
+        accountSummaryLocal: "Conta prototipo. A versao App Store usara Sign in with Apple e cloud sync seguro.",
+        accountStatusLocal: "Prototipo local",
+        accountStatusCloud: "Conta cloud",
+        syncSummaryLocal: "Salvo neste dispositivo. Cloud sync aguarda o backend de producao.",
+        dailyReminder: "Lembrete diario",
+        dailyReminderText: "Um lembrete leve para abrir sua visao.",
+        notifications: "Notificacoes",
+        notificationsText: "Pedir permissao de notificacoes a este dispositivo.",
+        localSaving: "Salvamento local",
+        localSavingText: "Salvo neste dispositivo. Depois, os dados existentes poderao ir para cloud sync.",
+        cloudSync: "Cloud sync",
+        cloudSyncText: "Conta, metas, decks e imagens serao sincronizados entre iPhone e iPad.",
+        cloudReadiness: "Pronto para cloud",
+        cloudReadinessText: "Pensado para 10.000+ usuarios com auth, banco de dados, storage e assinaturas Apple.",
+        data: "Dados",
+        dataText: "O prototipo pode ser resetado aqui. Producao tera exportacao, exclusao e recuperacao de conta.",
+        privacy: "Privacidade",
+        privacyText: "Imagens, metas, anti-visoes e scripts de audio sao sensiveis. Producao exige consentimento, exclusao e politica clara.",
+        signIn: "Entrar",
+        sync: "Sync",
+        reset: "Resetar",
+        testNotification: "Testar notificacao",
+        howItWorks: "Como funciona",
+        privacyOpen: "Abrir rascunho de privacidade",
+        photos: "Fotos",
+        done: "Concluido"
+      });
+      Object.assign(UI_TEXT.zh, {
+        profileDefault: "你的资料",
+        accountSummaryLocal: "原型账号。App Store 版本将使用 Apple 登录和安全云同步。",
+        accountStatusLocal: "本地原型",
+        accountStatusCloud: "云账号",
+        syncSummaryLocal: "已保存在此设备。云同步等待生产后端。",
+        dailyReminder: "每日提醒",
+        dailyReminderText: "温和提醒你打开愿景。",
+        notifications: "通知",
+        notificationsText: "向此设备请求通知权限。",
+        localSaving: "本地保存",
+        localSavingText: "保存在此设备。未来现有数据可迁移到云同步。",
+        cloudSync: "云同步",
+        cloudSyncText: "账号、目标、卡组和图片将在 iPhone 和 iPad 间同步。",
+        cloudReadiness: "云端准备",
+        cloudReadinessText: "为 10,000+ 用户设计，包含账号、数据库、对象存储和 Apple 订阅。",
+        data: "数据",
+        dataText: "可在这里重置原型。生产版会加入导出、删除和账号恢复。",
+        privacy: "隐私",
+        privacyText: "图片、目标、反愿景和音频文本都很敏感。生产版需要明确同意、删除功能和清晰隐私政策。",
+        signIn: "登录",
+        sync: "同步",
+        reset: "重置",
+        testNotification: "测试通知",
+        howItWorks: "工作方式",
+        privacyOpen: "打开隐私政策草稿",
+        photos: "照片",
+        done: "完成"
+      });
+
+      function uiText(key, values = {}) {
+        const lang = state.settings.language || "en";
+        const template = (UI_TEXT[lang] && UI_TEXT[lang][key]) || UI_TEXT.en[key] || key;
+        return Object.entries(values).reduce(
+          (text, [name, value]) => text.replace(new RegExp(`\\{${name}\\}`, "g"), String(value)),
+          template
+        );
+      }
+
+      function setText(selector, key, values = {}) {
+        const element = document.querySelector(selector);
+        if (element) element.textContent = uiText(key, values);
+      }
+
+      function setPlaceholder(selector, key) {
+        const element = document.querySelector(selector);
+        if (element) element.setAttribute("placeholder", uiText(key));
+      }
+
+      function applyStaticTranslations() {
+        document.documentElement.lang = state.settings.language || "en";
+
+        setText("#lifeOnboarding .deck-kicker", "profileSetup");
+        setText("#lifeOnboarding h1", "setupTitle");
+        setText("#lifeOnboarding p", "setupText");
+        setText("#lifeOnboarding .field:nth-child(1) span", "firstName");
+        setText("#lifeOnboarding .field:nth-child(2) span", "age");
+        setText("#lifeOnboarding .field:nth-child(3) span", "estimate");
+        setPlaceholder("#profileName", "firstName");
+        setPlaceholder("#lifeAge", "age");
+        setText("#saveLifeProfile", "createProfile");
+
+        setText("#lifeDashboard .deck-kicker", "lifeClock");
+        setText("#lifeDashboard h1 em", "daysLeft");
+        setText(".life-stat:nth-child(1) span", "weeksLeft");
+        setText(".life-stat:nth-child(2) span", "monthsLeft");
+        setText(".life-stat:nth-child(3) span", "lifeUsed");
+        setText("#reviewVisionFromLife", "navVision");
+        setText("#editLifeInfo", "editInfo");
+
+        setText("#goalModeDaily", "dailyTasks");
+        setText("#goalModeShort", "longGoals");
+
+        setText("#visionEmpty .deck-kicker", "visionSetup");
+        setText("#visionEmpty h2", "createVisionTitle");
+        setText("#visionEmpty p", "visionSetupText");
+        setText("#createVision", "createVision");
+        setText("#visionStage .deck-kicker", "visionDeck");
+        setText("#playVisionDeck", "play");
+        setText("#uploadVisionPhoto", "upload");
+        setText("#editVisionDeck", "edit");
+        setText("#exportVisionDeck", "export");
+
+        setText("#antiEmpty .deck-kicker", "antiSetup");
+        setText("#antiEmpty h2", "createAntiTitle");
+        setText("#antiEmpty p", "antiSetupText");
+        setText("#createAnti", "createAnti");
+        setText("#antiStage .deck-kicker", "antiDeck");
+        setText("#playAntiDeck", "play");
+        setText("#uploadAntiPhoto", "upload");
+        setText("#editAntiDeck", "edit");
+        setText("#exportAntiDeck", "export");
+
+        setText("#speech .speech-head .deck-kicker", "selfSpeech");
+        setText("#speech .speech-head h2", "speechTitle");
+        setText("#speech .speech-head p", "speechText");
+        setText("#speech .speech-field:nth-child(1) span", "title");
+        setText("#speech .speech-field:nth-child(2) span", "script");
+        setPlaceholder("#selfTalkTitle", "title");
+        setPlaceholder("#selfTalkText", "script");
+        setText(".voice-line > div:first-child > span", "voice");
+        setText("#voiceQualityNote", "swipeVoice");
+        setText("#playSelfTalk", "play");
+        setText("#stopSelfTalk", "stop");
+
+        setText(".drawer-head h2", "profile");
+        setText("#accountSummary", "accountSummaryLocal");
+        setText("#accountStatus", "accountStatusLocal");
+        setText("#syncSummary", "syncSummaryLocal");
+        setText("#signInApple", "signIn");
+        setText("#syncNow", "sync");
+        setText(".profile-card:nth-of-type(3) h2", "settings");
+        const settingRows = document.querySelectorAll(".profile-card:nth-of-type(3) .setting-row");
+        if (settingRows[0]) {
+          const title = settingRows[0].querySelector("strong");
+          const body = settingRows[0].querySelector("span");
+          if (title) title.textContent = uiText("dailyReminder");
+          if (body) body.textContent = uiText("dailyReminderText");
+        }
+        if (settingRows[1]) {
+          const title = settingRows[1].querySelector("strong");
+          const body = settingRows[1].querySelector("span");
+          if (title) title.textContent = uiText("notifications");
+          if (body) body.textContent = uiText("notificationsText");
+        }
+        if (settingRows[2]) {
+          const title = settingRows[2].querySelector("strong");
+          const body = settingRows[2].querySelector("span");
+          if (title) title.textContent = uiText("localSaving");
+          if (body) body.textContent = uiText("localSavingText");
+        }
+        if (settingRows[3]) {
+          const title = settingRows[3].querySelector("strong");
+          const body = settingRows[3].querySelector("span");
+          if (title) title.textContent = uiText("cloudSync");
+          if (body) body.textContent = uiText("cloudSyncText");
+        }
+        setText("#testNotification", "testNotification");
+        setText("#openNotificationHelp", "howItWorks");
+        setText(".profile-card:nth-of-type(4) h2", "cloudReadiness");
+        setText(".profile-card:nth-of-type(4) > p", "cloudReadinessText");
+        setText(".profile-card:nth-of-type(5) h2", "language");
+        setText(".profile-card:nth-of-type(5) p", "languageText");
+        setText(".profile-card:nth-of-type(6) h2", "data");
+        setText(".profile-card:nth-of-type(6) > p", "dataText");
+        setText("#resetData", "reset");
+        setText(".profile-card:nth-of-type(7) h2", "privacy");
+        setText(".profile-card:nth-of-type(7) > p", "privacyText");
+        setText("#openPrivacy", "privacyOpen");
+        setText("#themeLight", "light");
+        setText("#themeDark", "dark");
+        setText("#saveProfile", "save");
+        const editorAddPhoto = document.getElementById("editorAddPhoto");
+        if (editorAddPhoto) editorAddPhoto.textContent = `+ ${uiText("photos")}`;
+        setText("#editorDone", "done");
+
+        document.querySelectorAll(".nav button[data-view]").forEach((button) => {
+          const labels = {
+            today: "navLife",
+            goals: "navGoal",
+            vision: "navVision",
+            anti: "navAnti",
+            speech: "navSpeech"
+          };
+          button.textContent = uiText(labels[button.dataset.view] || "navLife");
+        });
+      }
       const toast = document.getElementById("toast");
       let playerTimer = null;
       let playerIndex = 0;
@@ -4455,7 +4821,7 @@
         if (!name || !note) return;
         const profile = activeVoiceProfile();
         name.textContent = profile.name;
-        note.textContent = "Swipe to change voice";
+        note.textContent = uiText("swipeVoice");
         renderVoiceCarousel({ preserveScroll });
       }
 
@@ -4523,7 +4889,7 @@
           <div class="speech-pill ${index === state.activeSelfTalkIndex ? "active" : ""}">
             <button class="speech-select" type="button" data-self-talk-index="${index}">
               <strong>${escapeHtml(script.title || `Self speech ${index + 1}`)}</strong>
-              <span>${escapeHtml((script.text || "Write this script").slice(0, 54))}</span>
+              <span>${escapeHtml((script.text || uiText("script")).slice(0, 54))}</span>
             </button>
             <button class="speech-delete" type="button" data-delete-self-talk="${index}" aria-label="Delete self speech">x</button>
           </div>
@@ -4565,20 +4931,20 @@
         testButton.disabled = !active;
 
         if (permission === "unsupported") {
-          status.textContent = "Notifications are not available in this browser. Native iOS builds will use system notifications.";
+          status.textContent = uiText("notificationsText");
           return;
         }
         if (permission === "denied") {
-          status.textContent = "Notifications are blocked. Re-enable them from browser or iOS settings.";
+          status.textContent = uiText("notificationsText");
           return;
         }
         if (permission === "granted") {
           status.textContent = active
-            ? "On. This prototype can send test notifications; production will schedule real reminders."
-            : "Allowed by this device, currently turned off in Visualize.";
+            ? uiText("notifications")
+            : uiText("notificationsText");
           return;
         }
-        status.textContent = "Off. Turn on to ask this device for permission.";
+        status.textContent = uiText("notificationsText");
       }
 
       function applySettings() {
@@ -4587,6 +4953,7 @@
           "content",
           state.settings.theme === "dark" ? "#101418" : "#f4f4f2"
         );
+        applyStaticTranslations();
         document.getElementById("themeLight").classList.toggle("active", state.settings.theme === "light");
         document.getElementById("themeDark").classList.toggle("active", state.settings.theme === "dark");
         document.getElementById("dailyReminder").classList.toggle("on", state.settings.dailyReminder);
@@ -4596,15 +4963,15 @@
           button.classList.toggle("active", button.dataset.lang === state.settings.language);
         });
         const profileName = (state.account.name || "").trim();
-        document.getElementById("profileNameTitle").textContent = profileName || "Your profile";
+        document.getElementById("profileNameTitle").textContent = profileName || uiText("profileDefault");
         document.getElementById("accountAvatar").textContent = (profileName || "V").slice(0, 1).toUpperCase();
-        document.getElementById("accountStatus").textContent = state.account.signedIn ? "Cloud account" : "Local prototype";
+        document.getElementById("accountStatus").textContent = state.account.signedIn ? uiText("accountStatusCloud") : uiText("accountStatusLocal");
         document.getElementById("accountSummary").textContent = state.account.signedIn
           ? `${profileName || "Your profile"} is signed in. Production builds sync through the backend.`
-          : "Prototype account. App Store builds will use Sign in with Apple and secure cloud sync.";
+          : uiText("accountSummaryLocal");
         document.getElementById("syncSummary").textContent = state.sync.mode === "cloud"
           ? `Cloud sync ready. Pending changes: ${state.sync.pendingChanges || 0}.`
-          : "Saved on this device. Cloud sync is waiting for the production backend.";
+          : uiText("syncSummaryLocal");
         document.getElementById("cloudSyncSwitch").classList.toggle("on", state.sync.mode === "cloud");
       }
 
@@ -4639,8 +5006,12 @@
         document.getElementById("lifeWeeksLeft").textContent = formatNumber(stats.weeksLeft);
         document.getElementById("lifeMonthsLeft").textContent = formatNumber(stats.monthsLeft);
         document.getElementById("lifeUsedPercent").textContent = `${Math.round(stats.usedPercent)}%`;
-        document.getElementById("lifeSummary").textContent =
-          `Estimated from age ${stats.age} to ${stats.expectancy}. That is about ${formatNumber(stats.monthsLeft)} months, or ${formatNumber(stats.weeksLeft)} weeks, left.`;
+        document.getElementById("lifeSummary").textContent = uiText("lifeSummary", {
+          age: stats.age,
+          expectancy: stats.expectancy,
+          months: formatNumber(stats.monthsLeft),
+          weeks: formatNumber(stats.weeksLeft)
+        });
         document.getElementById("lifeProgressBar").style.width = `${stats.usedPercent}%`;
 
         document.getElementById("lifeMap").innerHTML = Array.from({ length: stats.totalMonths }, (_, index) => {
@@ -4648,8 +5019,7 @@
           const justSpent = options.animateMonth && index === stats.spentMonths - 1;
           return `<span class="life-dot ${isSpent ? "spent" : ""} ${justSpent ? "just-spent" : ""}" aria-hidden="true"></span>`;
         }).join("");
-        document.getElementById("lifeLegend").textContent =
-          "Each dot is one month. Dark months are already spent; light months are still yours to use.";
+        document.getElementById("lifeLegend").textContent = uiText("lifeLegend");
       }
 
       function animateNumberValue(element, fromValue, toValue, formatter = formatNumber) {
@@ -4718,8 +5088,12 @@
           animateNumberValue(document.getElementById("lifeWeeksLeft"), previous.weeksLeft, currentStats.weeksLeft);
           animateNumberValue(document.getElementById("lifeMonthsLeft"), previous.monthsLeft, currentStats.monthsLeft);
           animateNumberValue(document.getElementById("lifeUsedPercent"), Math.round(previous.usedPercent), Math.round(currentStats.usedPercent), (value) => `${Math.round(value)}%`);
-          document.getElementById("lifeSummary").textContent =
-            `Updated today. About ${formatNumber(currentStats.daysLeft)} days, ${formatNumber(currentStats.weeksLeft)} weeks, and ${formatNumber(currentStats.monthsLeft)} months remain.`;
+          document.getElementById("lifeSummary").textContent = uiText("lifeSummary", {
+            age: currentStats.age,
+            expectancy: currentStats.expectancy,
+            months: formatNumber(currentStats.monthsLeft),
+            weeks: formatNumber(currentStats.weeksLeft)
+          });
           document.getElementById("lifeMap").innerHTML = Array.from({ length: currentStats.totalMonths }, (_, index) => {
             const isSpent = index < currentStats.spentMonths;
             const justSpent = monthChanged && index === currentStats.spentMonths - 1;
@@ -4768,18 +5142,20 @@
       function goalModeCopy() {
         return state.goalMode === "daily"
           ? {
-              kicker: "Daily tasks",
-              title: "Move today forward.",
-              text: "Keep a short list of what makes today count, then move the progress bar manually.",
-              add: "Add task",
-              empty: "Add one task that would make today count."
+              kicker: uiText("dailyTasks"),
+              title: uiText("dailyTitle"),
+              text: uiText("dailyText"),
+              add: uiText("addTask"),
+              empty: uiText("emptyTask"),
+              hint: uiText("dailyHint")
             }
           : {
-              kicker: "Long-term goals",
-              title: "Track the bigger win.",
-              text: "Use this for goals you want to close this year, or goals that need repeated action over time.",
-              add: "Add goal",
-              empty: "Add one long-term goal you can move this year."
+              kicker: uiText("longGoals"),
+              title: uiText("longTitle"),
+              text: uiText("longText"),
+              add: uiText("addGoal"),
+              empty: uiText("emptyGoal"),
+              hint: uiText("longHint")
             };
       }
 
@@ -4792,10 +5168,7 @@
         document.getElementById("goalModeKicker").textContent = copy.kicker;
         document.getElementById("goalPanelTitle").textContent = copy.title;
         document.getElementById("goalPanelText").textContent = copy.text;
-        document.getElementById("goalHint").textContent =
-          state.goalMode === "daily"
-            ? "Daily tasks are for execution today. Vision stays for long-term goals."
-            : "Long-term goals bridge daily action and your Vision.";
+        document.getElementById("goalHint").textContent = copy.hint;
         document.getElementById("addProgressGoal").textContent = copy.add;
 
         if (!goals.length) {
@@ -4806,15 +5179,15 @@
         list.innerHTML = goals.slice(0, 5).map((goal, index) => {
           const progress = clampNumber(goal.progress, 0, 100);
           if (editingProgressIndex === index) {
-            const label = state.goalMode === "daily" ? "Daily task" : "Long-term goal";
+            const label = state.goalMode === "daily" ? uiText("dailyTasks") : uiText("longGoals");
             return `
               <div class="progress-goal editing" data-progress-index="${index}">
                 <label class="inline-goal-field">
                   <span>${label}</span>
-                  <input type="text" value="${escapeHtml(goal.title || "")}" maxlength="80" placeholder="Write it here..." data-inline-progress-title="${index}" />
+                  <input type="text" value="${escapeHtml(goal.title || "")}" maxlength="80" placeholder="${escapeHtml(uiText("title"))}" data-inline-progress-title="${index}" />
                 </label>
                 <div class="inline-edit-actions">
-                  <button type="button" data-save-progress="${index}">Save</button>
+                  <button type="button" data-save-progress="${index}">${escapeHtml(uiText("save"))}</button>
                   <button type="button" data-cancel-progress="${index}">Cancel</button>
                 </div>
               </div>
@@ -4842,8 +5215,8 @@
         if (!deck.length) {
           document.getElementById(id).innerHTML = `
             <div class="deck-card empty">
-              <strong>No slides yet.</strong>
-              <span>Upload photos in the order you want to see them during the exercise.</span>
+              <strong>${escapeHtml(uiText("noSlides"))}</strong>
+              <span>${escapeHtml(uiText("noSlidesText"))}</span>
             </div>
           `;
           return;
@@ -4863,8 +5236,8 @@
         document.getElementById("visionStage").classList.toggle("hidden", !state.visionCreated);
         document.getElementById("visionActions").classList.toggle("hidden", !state.visionCreated);
         document.getElementById("visionHint").textContent = state.visionCreated
-          ? (state.visionSlides.length ? "Play it full screen, then update the photos whenever your future feels clearer." : "Upload 5-10 images of who you want to be, what you want to have, and who you want beside you.")
-          : "Add images of who you want to become, what you want to have, and who you want around you.";
+          ? uiText("noSlidesText")
+          : uiText("visionSetupText");
       }
 
       function renderAntiState() {
@@ -4872,8 +5245,8 @@
         document.getElementById("antiStage").classList.toggle("hidden", !state.antiCreated);
         document.getElementById("antiActions").classList.toggle("hidden", !state.antiCreated);
         document.getElementById("antiHint").textContent = state.antiCreated
-          ? (state.antiSlides.length ? "Play it full screen, then update the photos when the warning becomes sharper." : "Upload 5-10 images of the opposite future: what you do not want to become, lose, or tolerate.")
-          : "Add the opposite: who you refuse to become, what you refuse to lose, and what you refuse to tolerate.";
+          ? uiText("noSlidesText")
+          : uiText("antiSetupText");
       }
 
       function paint() {
@@ -5387,18 +5760,18 @@
 
       function renderDeckEditor() {
         const deck = deckFor(editorKind);
-        document.getElementById("deckEditorKicker").textContent = editorKind === "vision" ? "Vision editor" : "Anti-vision editor";
+        document.getElementById("deckEditorKicker").textContent = editorKind === "vision" ? uiText("visionDeck") : uiText("antiDeck");
         document.getElementById("deckEditorTitle").textContent =
           editorKind === "vision"
-            ? `Edit Vision slides (${deck.length}/${MAX_DECK_SLIDES})`
-            : `Edit Anti-vision slides (${deck.length}/${MAX_DECK_SLIDES})`;
+            ? `${uiText("edit")} ${uiText("visionDeck")} (${deck.length}/${MAX_DECK_SLIDES})`
+            : `${uiText("edit")} ${uiText("antiDeck")} (${deck.length}/${MAX_DECK_SLIDES})`;
 
         if (!deck.length) {
           document.getElementById("deckEditorList").innerHTML = `
             <div class="deck-editor-item empty">
               <div class="deck-editor-copy">
-                <strong>No images yet.</strong>
-                <span>Use + Photos to add images in the order you want them to appear.</span>
+                <strong>${escapeHtml(uiText("noSlides"))}</strong>
+                <span>${escapeHtml(uiText("noSlidesText"))}</span>
               </div>
             </div>
           `;
@@ -5418,15 +5791,15 @@
                 ${thumb}
                 <div class="deck-editor-form">
                   <label class="deck-editor-field">
-                    <span>Title</span>
+                    <span>${escapeHtml(uiText("title"))}</span>
                     <input type="text" value="${escapeHtml(slide.title || "")}" maxlength="70" data-slide-title="${index}" />
                   </label>
                   <label class="deck-editor-field">
-                    <span>Text</span>
+                    <span>${escapeHtml(uiText("script"))}</span>
                     <textarea maxlength="140" data-slide-caption="${index}">${escapeHtml(slide.caption || "")}</textarea>
                   </label>
                   <div class="deck-editor-form-actions">
-                    <button type="button" data-save-slide-text="${index}">Save</button>
+                    <button type="button" data-save-slide-text="${index}">${escapeHtml(uiText("save"))}</button>
                     <button type="button" data-cancel-slide-text="${index}">Cancel</button>
                   </div>
                 </div>
@@ -5986,8 +6359,8 @@
         button.addEventListener("click", () => {
           state.settings.language = button.dataset.lang;
           save();
-          applySettings();
-          notify(`${button.textContent} selected`);
+          paint();
+          notify(uiText("languageSelected", { language: button.textContent }));
         });
       });
 
@@ -6047,7 +6420,7 @@
         saveSelfTalkFromForm({ silent: true });
         save();
         closeProfile();
-        notify("Profile saved");
+        notify(uiText("profileSaved"));
       });
 
       document.getElementById("resetData").addEventListener("click", async () => {
