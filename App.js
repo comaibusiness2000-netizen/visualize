@@ -1,7 +1,14 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
+  Animated,
   Image,
+  KeyboardAvoidingView,
+  Modal,
+  PanResponder,
+  Platform,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -12,482 +19,866 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import * as Speech from "expo-speech";
 
+const STORAGE_VERSION = 1;
+const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
+const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
+const MAX_DECK_SLIDES = 10;
+
+const blankState = {
+  storageVersion: STORAGE_VERSION,
+  profile: {
+    complete: false,
+    name: "",
+    age: "",
+    expectancy: 85,
+    createdAt: ""
+  },
+  dailyTasks: [],
+  longGoals: [],
+  visionSlides: [],
+  antiSlides: [],
+  selfSpeeches: [],
+  activeSpeechIndex: 0,
+  settings: {
+    darkMode: true,
+    notifications: false
+  }
+};
+
 const tabs = [
-  { id: "today", label: "Oggi" },
+  { id: "life", label: "Life" },
+  { id: "goals", label: "Goals" },
   { id: "vision", label: "Vision" },
   { id: "anti", label: "Anti" },
-  { id: "script", label: "Audio" },
-  { id: "premium", label: "Pro" }
+  { id: "speech", label: "Speech" }
 ];
 
-const starterGoals = [
-  {
-    id: "goal-health",
-    title: "Corpo energico",
-    area: "Salute",
-    horizon: "12 mesi",
-    status: "Attivo",
-    photo: null,
-    vision:
-      "Ti svegli leggero, allenato e concentrato. La giornata inizia con controllo, non con recupero.",
-    anti:
-      "Se continui a rimandare, l'energia diventa piu rara e ogni settimana richiede piu forza solo per tornare al punto di partenza.",
-    nextStep: "Allenamento da 25 minuti entro le 19:00"
-  },
-  {
-    id: "goal-money",
-    title: "Liberta finanziaria",
-    area: "Soldi",
-    horizon: "3 anni",
-    status: "In costruzione",
-    photo: null,
-    vision:
-      "Hai entrate stabili, margine mentale e puoi decidere con calma. I soldi diventano uno strumento, non una pressione.",
-    anti:
-      "Senza un sistema, le urgenze continuano a decidere al posto tuo e il futuro resta appeso alle stesse abitudini.",
-    nextStep: "Segna una spesa evitabile e automatizza 20 EUR"
-  },
-  {
-    id: "goal-identity",
-    title: "Identita disciplinata",
-    area: "Mindset",
-    horizon: "90 giorni",
-    status: "Priorita",
-    photo: null,
-    vision:
-      "Le tue azioni quotidiane confermano una persona solida, presente e affidabile. La motivazione non guida piu tutto.",
-    anti:
-      "Se aspetti di sentirti pronto, ogni calo d'umore diventa una spiegazione perfetta per restare fermo.",
-    nextStep: "Scrivi tre righe prima di guardare il telefono"
-  }
-];
-
-const areas = ["Salute", "Soldi", "Carriera", "Relazioni", "Mindset"];
-const horizons = ["30 giorni", "90 giorni", "12 mesi", "3 anni"];
-
-function makeGoalTitle(text) {
-  const clean = text.trim().replace(/[.?!]+$/, "");
-  if (!clean) return "Nuovo obiettivo";
-  return clean.length > 32 ? `${clean.slice(0, 32)}...` : clean;
+function uid(prefix) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function buildPrompt(goal) {
-  return [
-    "Photorealistic aspirational scene for a personal vision board.",
-    `Goal: ${goal.title}.`,
-    `Life area: ${goal.area}.`,
-    `Time horizon: ${goal.horizon}.`,
-    "Show a calm, grounded future identity with cinematic natural light.",
-    "No text, no logos, no horror, no medical claims, emotionally motivating but safe."
-  ].join(" ");
+function clamp(value, min, max) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return min;
+  return Math.min(max, Math.max(min, number));
+}
+
+function mergeStoredState(saved) {
+  if (!saved || typeof saved !== "object") return blankState;
+  return {
+    ...blankState,
+    ...saved,
+    profile: { ...blankState.profile, ...(saved.profile || {}) },
+    settings: { ...blankState.settings, ...(saved.settings || {}) },
+    dailyTasks: Array.isArray(saved.dailyTasks) ? saved.dailyTasks : [],
+    longGoals: Array.isArray(saved.longGoals) ? saved.longGoals : [],
+    visionSlides: Array.isArray(saved.visionSlides) ? saved.visionSlides : [],
+    antiSlides: Array.isArray(saved.antiSlides) ? saved.antiSlides : [],
+    selfSpeeches: Array.isArray(saved.selfSpeeches) ? saved.selfSpeeches : []
+  };
+}
+
+async function ensureImageDirectory() {
+  const info = await FileSystem.getInfoAsync(IMAGE_DIR);
+  if (!info.exists) {
+    await FileSystem.makeDirectoryAsync(IMAGE_DIR, { intermediates: true });
+  }
+}
+
+function imageExtension(uri) {
+  const clean = String(uri || "").split("?")[0];
+  const match = clean.match(/\.([a-zA-Z0-9]+)$/);
+  return match ? match[1].toLowerCase() : "jpg";
+}
+
+async function persistPickedImage(uri, kind) {
+  await ensureImageDirectory();
+  const destination = `${IMAGE_DIR}${kind}-${Date.now()}-${Math.random().toString(16).slice(2)}.${imageExtension(uri)}`;
+  await FileSystem.copyAsync({ from: uri, to: destination });
+  return destination;
+}
+
+function lifeStats(profile) {
+  const age = clamp(profile.age, 0, 120);
+  const expectancy = Math.max(clamp(profile.expectancy, 50, 120), age + 1);
+  const now = new Date();
+  const createdAt = profile.createdAt ? new Date(profile.createdAt) : now;
+  const elapsedDays = Math.max(0, Math.floor((now - createdAt) / 86400000));
+  const currentAge = Math.min(expectancy, age + elapsedDays / 365.25);
+  const daysLeft = Math.max(0, Math.round((expectancy - currentAge) * 365.25));
+  const weeksLeft = Math.round(daysLeft / 7);
+  const monthsLeft = Math.round(daysLeft / 30.44);
+  const totalMonths = Math.round(expectancy * 12);
+  const spentMonths = Math.min(totalMonths, Math.round(currentAge * 12));
+  const usedPercent = Math.min(100, Math.round((currentAge / expectancy) * 100));
+  return { age, expectancy, daysLeft, weeksLeft, monthsLeft, totalMonths, spentMonths, usedPercent };
+}
+
+function ProgressScrubber({ value, onChange }) {
+  const widthRef = useRef(1);
+  const commit = (locationX) => {
+    const next = clamp(Math.round((locationX / widthRef.current) * 100), 0, 100);
+    onChange(next);
+  };
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderGrant: (event) => commit(event.nativeEvent.locationX),
+        onPanResponderMove: (event) => commit(event.nativeEvent.locationX)
+      }),
+    [onChange]
+  );
+
+  return (
+    <View
+      style={styles.progressTrack}
+      onLayout={(event) => {
+        widthRef.current = Math.max(1, event.nativeEvent.layout.width);
+      }}
+      {...panResponder.panHandlers}
+    >
+      <View style={[styles.progressFill, { width: `${clamp(value, 0, 100)}%` }]} />
+      <View style={[styles.progressKnob, { left: `${clamp(value, 0, 100)}%` }]} />
+    </View>
+  );
 }
 
 export default function App() {
-  const [tab, setTab] = useState("today");
-  const [name, setName] = useState("Marco");
-  const [goalText, setGoalText] = useState("Diventare disciplinato, forte e libero nelle scelte.");
-  const [area, setArea] = useState("Mindset");
-  const [horizon, setHorizon] = useState("90 giorni");
-  const [intensity, setIntensity] = useState("Diretta");
-  const [gentleMode, setGentleMode] = useState(true);
-  const [goals, setGoals] = useState(starterGoals);
-  const [selectedGoalId, setSelectedGoalId] = useState(starterGoals[0].id);
+  const [appState, setAppState] = useState(blankState);
+  const [hydrated, setHydrated] = useState(false);
+  const [tab, setTab] = useState("life");
+  const [goalMode, setGoalMode] = useState("daily");
+  const [draftGoal, setDraftGoal] = useState("");
+  const [draftSpeechTitle, setDraftSpeechTitle] = useState("");
+  const [draftSpeechText, setDraftSpeechText] = useState("");
+  const [profileDraft, setProfileDraft] = useState(blankState.profile);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [player, setPlayer] = useState(null);
+  const setupPulse = useRef(new Animated.Value(0)).current;
 
-  const selectedGoal = goals.find((goal) => goal.id === selectedGoalId) || goals[0];
+  const theme = appState.settings.darkMode ? darkTheme : lightTheme;
+  const profileComplete = appState.profile.complete;
+  const activeGoals = goalMode === "daily" ? appState.dailyTasks : appState.longGoals;
+  const activeSpeech = appState.selfSpeeches[appState.activeSpeechIndex] || null;
 
-  const script = useMemo(() => {
-    const focus = selectedGoal || goals[0];
-    return [
-      `${name}, respira. Per i prossimi minuti guardi la tua vita con onesta e direzione.`,
-      `Il focus e ${focus.title.toLowerCase()}.`,
-      focus.vision,
-      gentleMode
-        ? "L'anti-vision non serve a spaventarti. Serve a ricordarti che anche non scegliere e una scelta."
-        : "Se non agisci, il costo non sparisce: si accumula in energia, tempo e fiducia persa.",
-      `Il prossimo passo e semplice: ${focus.nextStep}.`,
-      "Non devi dimostrare tutto oggi. Devi solo confermare la tua nuova identita con una scelta reale."
-    ].join(" ");
-  }, [gentleMode, goals, name, selectedGoal]);
-
-  function addGoal() {
-    const title = makeGoalTitle(goalText);
-    const goal = {
-      id: `goal-${Date.now()}`,
-      title,
-      area,
-      horizon,
-      status: "Nuovo",
-      photo: null,
-      vision: goalText,
-      anti: `Se "${title}" resta solo un pensiero, tra ${horizon.toLowerCase()} avrai piu spiegazioni ma meno prove.`,
-      nextStep: "Scegli una azione da 10 minuti e falla oggi"
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      try {
+        const info = await FileSystem.getInfoAsync(STATE_FILE);
+        if (info.exists) {
+          const raw = await FileSystem.readAsStringAsync(STATE_FILE);
+          if (mounted) {
+            const merged = mergeStoredState(JSON.parse(raw));
+            setAppState(merged);
+            setProfileDraft(merged.profile);
+            setDraftSpeechTitle(merged.selfSpeeches[merged.activeSpeechIndex]?.title || "");
+            setDraftSpeechText(merged.selfSpeeches[merged.activeSpeechIndex]?.text || "");
+          }
+        }
+      } catch (error) {
+        Alert.alert("Local data", "The saved local profile could not be loaded.");
+      } finally {
+        if (mounted) setHydrated(true);
+      }
+    }
+    load();
+    return () => {
+      mounted = false;
     };
-    setGoals([goal, ...goals]);
-    setSelectedGoalId(goal.id);
-    setTab("vision");
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    FileSystem.writeAsStringAsync(STATE_FILE, JSON.stringify(appState)).catch(() => {});
+  }, [appState, hydrated]);
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(setupPulse, { toValue: 1, duration: 1300, useNativeDriver: true }),
+        Animated.timing(setupPulse, { toValue: 0, duration: 1300, useNativeDriver: true })
+      ])
+    ).start();
+  }, [setupPulse]);
+
+  useEffect(() => {
+    if (!player) return undefined;
+    const timer = setInterval(() => {
+      setPlayer((current) => {
+        if (!current) return current;
+        const deck = current.kind === "vision" ? appState.visionSlides : appState.antiSlides;
+        if (!deck.length) return null;
+        return { ...current, index: (current.index + 1) % deck.length };
+      });
+    }, 3200);
+    return () => clearInterval(timer);
+  }, [player, appState.visionSlides, appState.antiSlides]);
+
+  function updateState(mutator) {
+    setAppState((current) => {
+      const next = typeof mutator === "function" ? mutator(current) : mutator;
+      return mergeStoredState({ ...next, storageVersion: STORAGE_VERSION });
+    });
   }
 
-  async function pickImage() {
-    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permission.granted) {
-      Alert.alert("Permesso necessario", "Per usare una foto personale devi autorizzare l'accesso alla libreria.");
+  function saveProfile() {
+    const name = String(profileDraft.name || "").trim();
+    const age = clamp(profileDraft.age, 0, 120);
+    const expectancy = clamp(profileDraft.expectancy || 85, 50, 120);
+    if (!name) {
+      Alert.alert("Profile", "Add your first name first.");
       return;
     }
+    if (age < 1) {
+      Alert.alert("Profile", "Add your age first.");
+      return;
+    }
+    updateState((current) => ({
+      ...current,
+      profile: {
+        complete: true,
+        name,
+        age,
+        expectancy: Math.max(expectancy, age + 1),
+        createdAt: current.profile.createdAt || new Date().toISOString()
+      }
+    }));
+    setProfileOpen(false);
+  }
 
+  function addGoal() {
+    const title = draftGoal.trim();
+    if (!title) return;
+    const item = { id: uid("goal"), title, progress: 0 };
+    updateState((current) => {
+      const key = goalMode === "daily" ? "dailyTasks" : "longGoals";
+      if (current[key].length >= 5) {
+        Alert.alert("Goals", "Keep this list focused: maximum 5 items.");
+        return current;
+      }
+      return { ...current, [key]: [...current[key], item] };
+    });
+    setDraftGoal("");
+  }
+
+  function updateGoalProgress(id, progress) {
+    updateState((current) => {
+      const key = goalMode === "daily" ? "dailyTasks" : "longGoals";
+      return {
+        ...current,
+        [key]: current[key].map((goal) => (goal.id === id ? { ...goal, progress } : goal))
+      };
+    });
+  }
+
+  function removeGoal(id) {
+    updateState((current) => ({
+      ...current,
+      dailyTasks: current.dailyTasks.filter((goal) => goal.id !== id),
+      longGoals: current.longGoals.filter((goal) => goal.id !== id)
+    }));
+  }
+
+  async function addImages(kind) {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert("Photos", "Allow photo access to add images to your deck.");
+      return;
+    }
+    const deckKey = kind === "vision" ? "visionSlides" : "antiSlides";
+    const remaining = MAX_DECK_SLIDES - appState[deckKey].length;
+    if (remaining <= 0) {
+      Alert.alert("Deck full", `Maximum ${MAX_DECK_SLIDES} images for now.`);
+      return;
+    }
     const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 5],
-      quality: 0.85
+      allowsMultipleSelection: true,
+      selectionLimit: remaining,
+      quality: 0.82,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images
     });
-
     if (result.canceled) return;
-    const asset = result.assets?.[0];
-    if (!asset?.uri || !selectedGoal) return;
-
-    setGoals((current) =>
-      current.map((goal) => (goal.id === selectedGoal.id ? { ...goal, photo: asset.uri } : goal))
-    );
+    const assets = (result.assets || []).slice(0, remaining);
+    const savedSlides = [];
+    for (const asset of assets) {
+      if (!asset.uri) continue;
+      const localUri = await persistPickedImage(asset.uri, kind);
+      savedSlides.push({
+        id: uid("slide"),
+        imageUri: localUri,
+        title: kind === "vision" ? `Vision scene ${appState[deckKey].length + savedSlides.length + 1}` : `Anti-vision scene ${appState[deckKey].length + savedSlides.length + 1}`,
+        caption:
+          kind === "vision"
+            ? "A concrete image of the future you are building."
+            : "A clear reminder of the future you refuse to choose."
+      });
+    }
+    if (!savedSlides.length) return;
+    updateState((current) => ({ ...current, [deckKey]: [...current[deckKey], ...savedSlides] }));
   }
 
-  function speakScript() {
-    Speech.stop();
-    Speech.speak(script, {
-      language: "it-IT",
-      rate: 0.92,
-      pitch: 0.96
+  async function removeSlide(kind, id) {
+    const deckKey = kind === "vision" ? "visionSlides" : "antiSlides";
+    const slide = appState[deckKey].find((item) => item.id === id);
+    updateState((current) => ({ ...current, [deckKey]: current[deckKey].filter((item) => item.id !== id) }));
+    if (slide?.imageUri) {
+      FileSystem.deleteAsync(slide.imageUri, { idempotent: true }).catch(() => {});
+    }
+  }
+
+  function saveSpeech() {
+    const title = draftSpeechTitle.trim() || "Self speech";
+    const text = draftSpeechText.trim();
+    if (!text) {
+      Alert.alert("Self speech", "Write the text you want to listen to first.");
+      return;
+    }
+    updateState((current) => {
+      const existing = current.selfSpeeches[current.activeSpeechIndex];
+      if (!existing) {
+        return { ...current, selfSpeeches: [{ id: uid("speech"), title, text }], activeSpeechIndex: 0 };
+      }
+      return {
+        ...current,
+        selfSpeeches: current.selfSpeeches.map((speech, index) =>
+          index === current.activeSpeechIndex ? { ...speech, title, text } : speech
+        )
+      };
     });
   }
 
-  function stopSpeech() {
-    Speech.stop();
+  function newSpeech() {
+    updateState((current) => ({
+      ...current,
+      selfSpeeches: [...current.selfSpeeches, { id: uid("speech"), title: "", text: "" }],
+      activeSpeechIndex: current.selfSpeeches.length
+    }));
+    setDraftSpeechTitle("");
+    setDraftSpeechText("");
   }
 
-  function simulateGeneration() {
-    Alert.alert(
-      "Prompt AI pronto",
-      buildPrompt(selectedGoal),
-      [{ text: "OK" }]
+  function selectSpeech(index) {
+    const speech = appState.selfSpeeches[index];
+    updateState((current) => ({ ...current, activeSpeechIndex: index }));
+    setDraftSpeechTitle(speech?.title || "");
+    setDraftSpeechText(speech?.text || "");
+  }
+
+  function playSpeech() {
+    const text = draftSpeechText.trim() || activeSpeech?.text || "";
+    if (!text) {
+      Alert.alert("Self speech", "Write a speech first.");
+      return;
+    }
+    Speech.stop();
+    Speech.speak(text, { language: "en-US", rate: 0.88, pitch: 0.96 });
+  }
+
+  function resetLocalData() {
+    Alert.alert("Reset local data", "This removes the profile, goals, images, and self speeches from this device.", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Reset",
+        style: "destructive",
+        onPress: async () => {
+          await FileSystem.deleteAsync(STATE_FILE, { idempotent: true }).catch(() => {});
+          await FileSystem.deleteAsync(IMAGE_DIR, { idempotent: true }).catch(() => {});
+          Speech.stop();
+          setAppState(blankState);
+          setProfileDraft(blankState.profile);
+          setDraftSpeechTitle("");
+          setDraftSpeechText("");
+          setTab("life");
+        }
+      }
+    ]);
+  }
+
+  function renderOnboarding() {
+    const scale = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.06] });
+    const translateY = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [0, -6] });
+    return (
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.centerFill}>
+        <Animated.View style={[styles.setupLogo, { transform: [{ scale }, { translateY }] }]}>
+          <View style={styles.logoSlash} />
+          <View style={styles.logoSlashSecond} />
+          <View style={styles.logoDot} />
+        </Animated.View>
+        <Text style={[styles.setupKicker, { color: theme.muted }]}>Profile setup</Text>
+        <Text style={[styles.setupTitle, { color: theme.ink }]}>Build your life clock first.</Text>
+        <Text style={[styles.setupText, { color: theme.muted }]}>
+          Visualize starts empty. Create your profile, then add your goals, images, and self speech step by step.
+        </Text>
+        <View style={styles.setupFields}>
+          <TextInput
+            value={String(profileDraft.name || "")}
+            onChangeText={(name) => setProfileDraft((current) => ({ ...current, name }))}
+            placeholder="First name"
+            placeholderTextColor={theme.placeholder}
+            style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
+          />
+          <TextInput
+            value={String(profileDraft.age || "")}
+            onChangeText={(age) => setProfileDraft((current) => ({ ...current, age }))}
+            keyboardType="number-pad"
+            placeholder="Age"
+            placeholderTextColor={theme.placeholder}
+            style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
+          />
+          <TextInput
+            value={String(profileDraft.expectancy || "")}
+            onChangeText={(expectancy) => setProfileDraft((current) => ({ ...current, expectancy }))}
+            keyboardType="number-pad"
+            placeholder="Life estimate, example 85"
+            placeholderTextColor={theme.placeholder}
+            style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
+          />
+        </View>
+        <TouchableOpacity style={styles.primaryButton} onPress={saveProfile}>
+          <Text style={styles.primaryText}>Create profile</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     );
   }
 
-  return (
-    <SafeAreaView style={styles.screen}>
-      <StatusBar barStyle="light-content" />
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.brand}>Visualize</Text>
-          <Text style={styles.tagline}>Vision board AI, anti-vision e script audio.</Text>
+  function renderLife() {
+    const stats = lifeStats(appState.profile);
+    const dots = Array.from({ length: stats.totalMonths }, (_, index) => index < stats.spentMonths);
+    return (
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={[styles.heroCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <Text style={[styles.kicker, { color: theme.muted }]}>Life clock</Text>
+          <Text style={[styles.daysNumber, { color: theme.ink }]}>{stats.daysLeft.toLocaleString("en-US")}</Text>
+          <Text style={[styles.daysLabel, { color: theme.muted }]}>estimated days left</Text>
+          <View style={[styles.bigProgressTrack, { backgroundColor: theme.soft }]}>
+            <View style={[styles.bigProgressFill, { width: `${stats.usedPercent}%` }]} />
+          </View>
+          <Text style={[styles.body, { color: theme.muted }]}>
+            Based on age {stats.age} and a life estimate of {stats.expectancy}. Not a prediction, a reminder.
+          </Text>
         </View>
-        <View style={styles.scorePill}>
-          <Text style={styles.scoreNumber}>{goals.length}</Text>
-          <Text style={styles.scoreLabel}>goals</Text>
-        </View>
-      </View>
 
-      <View style={styles.tabs}>
-        {tabs.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            onPress={() => setTab(item.id)}
-            style={[styles.tab, tab === item.id && styles.tabActive]}
-          >
-            <Text style={[styles.tabText, tab === item.id && styles.tabTextActive]}>{item.label}</Text>
+        <View style={styles.statsRow}>
+          <StatCard label="weeks" value={stats.weeksLeft} theme={theme} />
+          <StatCard label="months" value={stats.monthsLeft} theme={theme} />
+          <StatCard label="used" value={`${stats.usedPercent}%`} theme={theme} />
+        </View>
+
+        <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <Text style={[styles.panelTitle, { color: theme.ink }]}>Life by months</Text>
+          <Text style={[styles.body, { color: theme.muted }]}>Each dot is one month. Filled dots are already spent.</Text>
+          <View style={styles.dotMap}>
+            {dots.map((spent, index) => (
+              <View key={`${index}`} style={[styles.lifeDot, spent && styles.lifeDotSpent]} />
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+    );
+  }
+
+  function renderGoals() {
+    return (
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={[styles.segment, { backgroundColor: theme.soft }]}>
+          <TouchableOpacity style={[styles.segmentButton, goalMode === "daily" && styles.segmentActive]} onPress={() => setGoalMode("daily")}>
+            <Text style={[styles.segmentText, goalMode === "daily" && styles.segmentTextActive]}>Daily tasks</Text>
           </TouchableOpacity>
-        ))}
-      </View>
+          <TouchableOpacity style={[styles.segmentButton, goalMode === "long" && styles.segmentActive]} onPress={() => setGoalMode("long")}>
+            <Text style={[styles.segmentText, goalMode === "long" && styles.segmentTextActive]}>Long-term goals</Text>
+          </TouchableOpacity>
+        </View>
 
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {tab === "today" && (
-          <View>
-            <Text style={styles.heroTitle}>Vedi la persona che stai costruendo.</Text>
-            <Text style={styles.heroCopy}>
-              Ogni giorno rivedi la vision, ascolti lo script e scegli una prova piccola ma concreta.
-            </Text>
-
-            <View style={styles.focusCard}>
-              <View style={styles.futureVisual}>
-                {selectedGoal?.photo ? (
-                  <Image source={{ uri: selectedGoal.photo }} style={styles.photo} />
-                ) : (
-                  <View style={styles.visualFallback}>
-                    <Text style={styles.visualKicker}>Future self</Text>
-                    <Text style={styles.visualTitle}>{selectedGoal?.title}</Text>
-                  </View>
-                )}
-              </View>
-              <View style={styles.cardBody}>
-                <Text style={styles.cardTitle}>{selectedGoal?.title}</Text>
-                <Text style={styles.meta}>{selectedGoal?.area} / {selectedGoal?.horizon}</Text>
-                <Text style={styles.body}>{selectedGoal?.vision}</Text>
-                <TouchableOpacity style={styles.primaryButton} onPress={() => setTab("script")}>
-                  <Text style={styles.primaryButtonText}>Ascolta routine</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.panel}>
-              <Text style={styles.panelTitle}>Azione di oggi</Text>
-              <Text style={styles.body}>{selectedGoal?.nextStep}</Text>
-            </View>
-          </View>
-        )}
-
-        {tab === "vision" && (
-          <View>
-            <Text style={styles.sectionTitle}>Crea o aggiorna la vision</Text>
-            <TextInput value={name} onChangeText={setName} style={styles.input} placeholder="Nome" />
+        <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <Text style={[styles.panelTitle, { color: theme.ink }]}>
+            {goalMode === "daily" ? "What moves today forward?" : "What are you building this year?"}
+          </Text>
+          <Text style={[styles.body, { color: theme.muted }]}>Add up to 5 items and manually move the progress bar.</Text>
+          <View style={styles.addRow}>
             <TextInput
-              value={goalText}
-              onChangeText={setGoalText}
-              style={[styles.input, styles.textArea]}
-              multiline
-              placeholder="Descrivi il tuo obiettivo"
+              value={draftGoal}
+              onChangeText={setDraftGoal}
+              placeholder={goalMode === "daily" ? "Add task" : "Add goal"}
+              placeholderTextColor={theme.placeholder}
+              style={[styles.addInput, { color: theme.ink, backgroundColor: theme.input }]}
             />
-            <Text style={styles.label}>Area</Text>
-            <View style={styles.chips}>
-              {areas.map((item) => (
-                <TouchableOpacity
-                  key={item}
-                  onPress={() => setArea(item)}
-                  style={[styles.chip, area === item && styles.chipActive]}
-                >
-                  <Text style={[styles.chipText, area === item && styles.chipTextActive]}>{item}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <Text style={styles.label}>Orizzonte</Text>
-            <View style={styles.chips}>
-              {horizons.map((item) => (
-                <TouchableOpacity
-                  key={item}
-                  onPress={() => setHorizon(item)}
-                  style={[styles.chip, horizon === item && styles.chipActive]}
-                >
-                  <Text style={[styles.chipText, horizon === item && styles.chipTextActive]}>{item}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <TouchableOpacity style={styles.primaryButton} onPress={addGoal}>
-              <Text style={styles.primaryButtonText}>Aggiungi obiettivo</Text>
+            <TouchableOpacity style={styles.roundButton} onPress={addGoal}>
+              <Text style={styles.roundButtonText}>+</Text>
             </TouchableOpacity>
-
-            {goals.map((goal) => (
-              <TouchableOpacity
-                key={goal.id}
-                onPress={() => setSelectedGoalId(goal.id)}
-                style={[styles.goalCard, goal.id === selectedGoalId && styles.goalCardSelected]}
-              >
-                <View style={styles.thumb}>
-                  {goal.photo ? <Image source={{ uri: goal.photo }} style={styles.photo} /> : <Text style={styles.thumbText}>AI</Text>}
-                </View>
-                <View style={styles.goalText}>
-                  <Text style={styles.cardTitle}>{goal.title}</Text>
-                  <Text style={styles.meta}>{goal.area} / {goal.horizon} / {goal.status}</Text>
-                  <Text style={styles.body}>{goal.vision}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-
-            <View style={styles.actionsRow}>
-              <TouchableOpacity style={styles.secondaryButton} onPress={pickImage}>
-                <Text style={styles.secondaryButtonText}>Carica foto</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.secondaryButton} onPress={simulateGeneration}>
-                <Text style={styles.secondaryButtonText}>Prompt AI</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        )}
+        </View>
 
-        {tab === "anti" && (
-          <View>
-            <Text style={styles.sectionTitle}>Anti-vision</Text>
-            <Text style={styles.body}>
-              Una simulazione del costo del rinvio. E pensata per essere lucida, non traumatica.
-            </Text>
-
-            <View style={styles.panel}>
-              <View style={styles.switchRow}>
-                <View>
-                  <Text style={styles.panelTitle}>Modalita protetta</Text>
-                  <Text style={styles.muted}>Evita toni troppo duri e contenuti disturbanti.</Text>
-                </View>
-                <Switch value={gentleMode} onValueChange={setGentleMode} />
+        {!activeGoals.length ? (
+          <EmptyState theme={theme} title="Nothing here yet." text="Start with one small action or one long-term goal." />
+        ) : (
+          activeGoals.map((goal) => (
+            <View key={goal.id} style={[styles.goalCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
+              <View style={styles.goalHeader}>
+                <Text style={[styles.goalTitle, { color: theme.ink }]}>{goal.title}</Text>
+                <TouchableOpacity onPress={() => removeGoal(goal.id)}>
+                  <Text style={[styles.deleteText, { color: theme.muted }]}>x</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={styles.label}>Intensita</Text>
-              <View style={styles.chips}>
-                {["Leggera", "Diretta", "Forte"].map((item) => (
-                  <TouchableOpacity
-                    key={item}
-                    onPress={() => setIntensity(item)}
-                    style={[styles.chip, intensity === item && styles.chipDanger]}
-                  >
-                    <Text style={[styles.chipText, intensity === item && styles.chipTextDanger]}>{item}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+              <ProgressScrubber value={goal.progress || 0} onChange={(progress) => updateGoalProgress(goal.id, progress)} />
+              <Text style={[styles.progressText, { color: theme.muted }]}>{goal.progress || 0}% complete</Text>
             </View>
-
-            {goals.map((goal) => (
-              <TouchableOpacity
-                key={goal.id}
-                onPress={() => setSelectedGoalId(goal.id)}
-                style={[styles.warningCard, goal.id === selectedGoalId && styles.warningSelected]}
-              >
-                <Text style={styles.cardTitle}>{goal.title}</Text>
-                <Text style={styles.meta}>{intensity} / {gentleMode ? "protetta" : "senza filtro"}</Text>
-                <Text style={styles.body}>{goal.anti}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+          ))
         )}
+      </ScrollView>
+    );
+  }
 
-        {tab === "script" && (
-          <View>
-            <Text style={styles.sectionTitle}>Script audio</Text>
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Routine di {name}</Text>
-              <Text style={styles.bodyLarge}>{script}</Text>
-            </View>
-            <View style={styles.actionsRow}>
-              <TouchableOpacity style={styles.primaryButtonFlex} onPress={speakScript}>
-                <Text style={styles.primaryButtonText}>Ascolta</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.secondaryButtonFlex} onPress={stopSpeech}>
-                <Text style={styles.secondaryButtonText}>Stop</Text>
-              </TouchableOpacity>
-            </View>
+  function renderDeck(kind) {
+    const positive = kind === "vision";
+    const deck = positive ? appState.visionSlides : appState.antiSlides;
+    return (
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <Text style={[styles.panelTitle, { color: theme.ink }]}>{positive ? "Create your Vision" : "Create your Anti-vision"}</Text>
+          <Text style={[styles.body, { color: theme.muted }]}>
+            {positive
+              ? "Add images of who you want to become, what you want to have, and who you want around you."
+              : "Add images of the opposite future: what you do not want to become, lose, or tolerate."}
+          </Text>
+          <View style={styles.actionsRow}>
+            <TouchableOpacity style={styles.primaryButtonFlex} onPress={() => addImages(kind)}>
+              <Text style={styles.primaryText}>Add images</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={() => (deck.length ? setPlayer({ kind, index: 0 }) : Alert.alert("Deck", "Add images first."))}>
+              <Text style={[styles.secondaryText, { color: theme.ink }]}>Play</Text>
+            </TouchableOpacity>
           </View>
-        )}
+        </View>
 
-        {tab === "premium" && (
-          <View>
-            <Text style={styles.sectionTitle}>Visualize Pro</Text>
-            <View style={styles.priceCard}>
-              <Text style={styles.cardTitle}>Piano consigliato</Text>
-              <Text style={styles.price}>9,99 EUR / mese</Text>
-              <Text style={styles.body}>
-                Immagini AI avanzate, piu obiettivi, audio personalizzati, anti-vision guidata e backup cloud.
-              </Text>
-              <TouchableOpacity
-                style={styles.primaryButton}
-                onPress={() => Alert.alert("Paywall demo", "Qui collegheremo StoreKit o RevenueCat per gli abbonamenti iOS.")}
-              >
-                <Text style={styles.primaryButtonText}>Sblocca Pro</Text>
-              </TouchableOpacity>
-            </View>
-
-            {["Immagini AI con foto personali", "Script audio illimitati", "Backup cloud", "Routine mattina/sera"].map((item) => (
-              <View key={item} style={styles.featureRow}>
-                <Text style={styles.check}>✓</Text>
-                <Text style={styles.body}>{item}</Text>
+        {!deck.length ? (
+          <EmptyState theme={theme} title="No images yet." text="The deck starts empty. Add photos from this iPhone to keep them saved locally." />
+        ) : (
+          <View style={styles.grid}>
+            {deck.map((slide) => (
+              <View key={slide.id} style={[styles.imageTile, { borderColor: theme.line }]}>
+                <Image source={{ uri: slide.imageUri }} style={styles.tileImage} />
+                <TouchableOpacity style={styles.removeImage} onPress={() => removeSlide(kind, slide.id)}>
+                  <Text style={styles.removeImageText}>x</Text>
+                </TouchableOpacity>
               </View>
             ))}
           </View>
         )}
       </ScrollView>
+    );
+  }
+
+  function renderSpeech() {
+    return (
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <Text style={[styles.panelTitle, { color: theme.ink }]}>Self speech</Text>
+          <Text style={[styles.body, { color: theme.muted }]}>
+            Write the self-talk you want to hear repeatedly. Keep it personal, direct, and believable.
+          </Text>
+          <TextInput
+            value={draftSpeechTitle}
+            onChangeText={setDraftSpeechTitle}
+            placeholder="Title"
+            placeholderTextColor={theme.placeholder}
+            style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
+          />
+          <TextInput
+            value={draftSpeechText}
+            onChangeText={setDraftSpeechText}
+            placeholder="Write your speech here"
+            placeholderTextColor={theme.placeholder}
+            multiline
+            style={[styles.input, styles.speechInput, { color: theme.ink, backgroundColor: theme.input }]}
+          />
+          <View style={styles.actionsRow}>
+            <TouchableOpacity style={styles.primaryButtonFlex} onPress={saveSpeech}>
+              <Text style={styles.primaryText}>Save</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={newSpeech}>
+              <Text style={[styles.secondaryText, { color: theme.ink }]}>New</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.actionsRow}>
+            <TouchableOpacity style={styles.primaryButtonFlex} onPress={playSpeech}>
+              <Text style={styles.primaryText}>Listen</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={() => Speech.stop()}>
+              <Text style={[styles.secondaryText, { color: theme.ink }]}>Stop</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {appState.selfSpeeches.map((speech, index) => (
+          <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: theme.card, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)}>
+            <Text style={[styles.goalTitle, { color: theme.ink }]}>{speech.title || `Self speech ${index + 1}`}</Text>
+            <Text style={[styles.body, { color: theme.muted }]} numberOfLines={2}>{speech.text || "Empty draft"}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  }
+
+  function renderProfileModal() {
+    return (
+      <Modal visible={profileOpen} animationType="slide" onRequestClose={() => setProfileOpen(false)}>
+        <SafeAreaView style={[styles.screen, { backgroundColor: theme.bg }]}>
+          <View style={styles.modalHeader}>
+            <View>
+              <Text style={[styles.kicker, { color: theme.muted }]}>Local-only profile</Text>
+              <Text style={[styles.modalTitle, { color: theme.ink }]}>{appState.profile.name || "Your profile"}</Text>
+            </View>
+            <TouchableOpacity onPress={() => setProfileOpen(false)}>
+              <Text style={[styles.closeText, { color: theme.ink }]}>Close</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView contentContainerStyle={styles.content}>
+            <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+              <Text style={[styles.panelTitle, { color: theme.ink }]}>Device storage</Text>
+              <Text style={[styles.body, { color: theme.muted }]}>
+                Saved on this iPhone only. Closing the app or restarting the phone will keep the data. Deleting the app removes the local data.
+              </Text>
+            </View>
+            <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+              <Text style={[styles.panelTitle, { color: theme.ink }]}>Appearance</Text>
+              <View style={styles.switchRow}>
+                <Text style={[styles.body, { color: theme.ink }]}>Dark mode</Text>
+                <Switch
+                  value={appState.settings.darkMode}
+                  onValueChange={(darkMode) => updateState((current) => ({ ...current, settings: { ...current.settings, darkMode } }))}
+                />
+              </View>
+              <View style={styles.switchRow}>
+                <Text style={[styles.body, { color: theme.ink }]}>Notifications later</Text>
+                <Switch
+                  value={appState.settings.notifications}
+                  onValueChange={(notifications) => updateState((current) => ({ ...current, settings: { ...current.settings, notifications } }))}
+                />
+              </View>
+            </View>
+            <TouchableOpacity style={styles.dangerButton} onPress={resetLocalData}>
+              <Text style={styles.primaryText}>Reset this device</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </SafeAreaView>
+      </Modal>
+    );
+  }
+
+  function renderPlayer() {
+    if (!player) return null;
+    const deck = player.kind === "vision" ? appState.visionSlides : appState.antiSlides;
+    const slide = deck[player.index % Math.max(deck.length, 1)];
+    return (
+      <Modal visible animationType="fade" onRequestClose={() => setPlayer(null)}>
+        <View style={styles.player}>
+          {slide?.imageUri ? <Image source={{ uri: slide.imageUri }} style={styles.playerImage} /> : null}
+          <View style={styles.playerShade} />
+          <View style={styles.playerText}>
+            <Text style={styles.playerKicker}>{player.kind === "vision" ? "Vision" : "Anti-vision"}</Text>
+            <Text style={styles.playerTitle}>{slide?.title || "Your deck"}</Text>
+            <Text style={styles.playerCaption}>{slide?.caption || ""}</Text>
+          </View>
+          <TouchableOpacity style={styles.playerClose} onPress={() => setPlayer(null)}>
+            <Text style={styles.playerCloseText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  }
+
+  if (!hydrated) {
+    return (
+      <SafeAreaView style={[styles.screen, styles.loader]}>
+        <ActivityIndicator color="#E8C468" />
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={[styles.screen, { backgroundColor: theme.bg }]}>
+      <StatusBar barStyle={appState.settings.darkMode ? "light-content" : "dark-content"} />
+      {profileComplete ? (
+        <>
+          <View style={styles.header}>
+            <TouchableOpacity style={[styles.profileButton, { borderColor: theme.line }]} onPress={() => setProfileOpen(true)}>
+              <Text style={[styles.profileInitial, { color: theme.ink }]}>{(appState.profile.name || "V").slice(0, 1).toUpperCase()}</Text>
+            </TouchableOpacity>
+            <View style={styles.headerLogo}>
+              <View style={styles.logoSmallSlash} />
+              <View style={styles.logoSmallSlashSecond} />
+              <View style={styles.logoSmallDot} />
+            </View>
+            <View style={styles.headerSpacer} />
+          </View>
+          <View style={styles.main}>
+            {tab === "life" && renderLife()}
+            {tab === "goals" && renderGoals()}
+            {tab === "vision" && renderDeck("vision")}
+            {tab === "anti" && renderDeck("anti")}
+            {tab === "speech" && renderSpeech()}
+          </View>
+          <View style={[styles.nav, { backgroundColor: theme.nav }]}>
+            {tabs.map((item) => (
+              <TouchableOpacity key={item.id} style={[styles.navItem, tab === item.id && styles.navActive]} onPress={() => setTab(item.id)}>
+                <Text style={[styles.navText, { color: tab === item.id ? "#101418" : theme.muted }]}>{item.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          {renderProfileModal()}
+          {renderPlayer()}
+        </>
+      ) : (
+        renderOnboarding()
+      )}
     </SafeAreaView>
   );
 }
 
+function StatCard({ label, value, theme }) {
+  return (
+    <View style={[styles.statCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
+      <Text style={[styles.statValue, { color: theme.ink }]}>{String(value).toLocaleString("en-US")}</Text>
+      <Text style={[styles.statLabel, { color: theme.muted }]}>{label}</Text>
+    </View>
+  );
+}
+
+function EmptyState({ theme, title, text }) {
+  return (
+    <View style={[styles.empty, { backgroundColor: theme.card, borderColor: theme.line }]}>
+      <Text style={[styles.panelTitle, { color: theme.ink }]}>{title}</Text>
+      <Text style={[styles.body, { color: theme.muted }]}>{text}</Text>
+    </View>
+  );
+}
+
+const darkTheme = {
+  bg: "#101418",
+  card: "#1B2023",
+  nav: "rgba(27,32,35,0.96)",
+  soft: "#272C2E",
+  input: "#F4EFE4",
+  ink: "#FFF9ED",
+  muted: "#C9C4BA",
+  line: "rgba(255,255,255,0.14)",
+  placeholder: "#847E75"
+};
+
+const lightTheme = {
+  bg: "#F4F2EE",
+  card: "#FFFFFF",
+  nav: "rgba(255,255,255,0.96)",
+  soft: "#ECE8DF",
+  input: "#FFFFFF",
+  ink: "#111315",
+  muted: "#6E6B66",
+  line: "rgba(17,17,17,0.1)",
+  placeholder: "#9A948B"
+};
+
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#101418" },
-  header: {
-    paddingHorizontal: 18,
-    paddingTop: 14,
-    paddingBottom: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
-  },
-  brand: { color: "#F5F1E8", fontSize: 34, fontWeight: "900" },
-  tagline: { color: "#AAB4B8", fontSize: 13, marginTop: 4 },
-  scorePill: {
-    width: 62,
-    height: 62,
-    borderRadius: 8,
-    backgroundColor: "#E8C468",
+  screen: { flex: 1 },
+  loader: { alignItems: "center", justifyContent: "center", backgroundColor: "#101418" },
+  centerFill: { flex: 1, justifyContent: "center", padding: 24 },
+  setupLogo: {
+    width: 92,
+    height: 92,
+    alignSelf: "center",
+    marginBottom: 24,
+    borderRadius: 30,
+    backgroundColor: "#101418",
     alignItems: "center",
     justifyContent: "center"
   },
-  scoreNumber: { color: "#101418", fontSize: 22, fontWeight: "900" },
-  scoreLabel: { color: "#101418", fontSize: 11, fontWeight: "800" },
-  tabs: { flexDirection: "row", gap: 7, paddingHorizontal: 12, paddingBottom: 12 },
-  tab: {
-    flex: 1,
-    minHeight: 42,
-    borderRadius: 8,
-    paddingVertical: 10,
-    backgroundColor: "#1B2228",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  tabActive: { backgroundColor: "#E8C468" },
-  tabText: { color: "#B9C2C7", fontSize: 12, fontWeight: "800" },
-  tabTextActive: { color: "#101418" },
-  content: { padding: 16, paddingBottom: 44 },
-  heroTitle: { color: "#F5F1E8", fontSize: 35, lineHeight: 39, fontWeight: "900", marginBottom: 10 },
-  heroCopy: { color: "#CFD6D9", fontSize: 16, lineHeight: 23, marginBottom: 16 },
-  sectionTitle: { color: "#F5F1E8", fontSize: 26, fontWeight: "900", marginBottom: 14 },
-  input: { backgroundColor: "#F8F5EC", color: "#101418", borderRadius: 8, padding: 14, marginBottom: 10 },
-  textArea: { minHeight: 98, textAlignVertical: "top" },
-  label: { color: "#AAB4B8", fontSize: 13, fontWeight: "800", marginTop: 8, marginBottom: 8 },
-  chips: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 8 },
-  chip: { borderRadius: 8, paddingHorizontal: 11, paddingVertical: 9, backgroundColor: "#1B2228", borderWidth: 1, borderColor: "#2A353C" },
-  chipActive: { backgroundColor: "#E8C468", borderColor: "#E8C468" },
-  chipDanger: { backgroundColor: "#DA5A3A", borderColor: "#DA5A3A" },
-  chipText: { color: "#CFD6D9", fontWeight: "800" },
-  chipTextActive: { color: "#101418" },
-  chipTextDanger: { color: "#FFFFFF" },
-  focusCard: { backgroundColor: "#182126", borderRadius: 8, overflow: "hidden", borderWidth: 1, borderColor: "#2A353C", marginBottom: 12 },
-  futureVisual: { height: 280, backgroundColor: "#25343A" },
-  visualFallback: {
-    flex: 1,
-    justifyContent: "flex-end",
-    padding: 18,
-    backgroundColor: "#25343A"
-  },
-  visualKicker: { color: "#E8C468", fontSize: 12, textTransform: "uppercase", fontWeight: "900" },
-  visualTitle: { color: "#F5F1E8", fontSize: 29, lineHeight: 33, fontWeight: "900", marginTop: 6 },
-  photo: { width: "100%", height: "100%", resizeMode: "cover" },
-  cardBody: { padding: 14 },
-  card: { backgroundColor: "#182126", borderRadius: 8, padding: 15, marginTop: 12, borderWidth: 1, borderColor: "#2A353C" },
-  panel: { backgroundColor: "#182126", borderRadius: 8, padding: 15, marginTop: 12, borderWidth: 1, borderColor: "#2A353C" },
-  panelTitle: { color: "#F5F1E8", fontSize: 17, fontWeight: "900", marginBottom: 5 },
-  goalCard: {
-    flexDirection: "row",
-    gap: 12,
-    backgroundColor: "#182126",
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 12,
-    borderWidth: 1,
-    borderColor: "#2A353C"
-  },
-  goalCardSelected: { borderColor: "#E8C468" },
-  thumb: { width: 78, height: 98, borderRadius: 8, backgroundColor: "#26343C", alignItems: "center", justifyContent: "center", overflow: "hidden" },
-  thumbText: { color: "#E8C468", fontWeight: "900", fontSize: 18 },
-  goalText: { flex: 1 },
-  warningCard: { backgroundColor: "#251D1A", borderRadius: 8, padding: 15, marginTop: 12, borderWidth: 1, borderColor: "#7A3C2D" },
-  warningSelected: { borderColor: "#DA5A3A" },
-  priceCard: { backgroundColor: "#17231D", borderRadius: 8, padding: 16, borderWidth: 1, borderColor: "#315C45", marginBottom: 12 },
-  featureRow: { flexDirection: "row", gap: 10, alignItems: "center", backgroundColor: "#182126", borderRadius: 8, padding: 13, marginTop: 8 },
-  check: { color: "#6ABF8B", fontSize: 18, fontWeight: "900" },
-  cardTitle: { color: "#F5F1E8", fontSize: 18, fontWeight: "900", marginBottom: 4 },
-  meta: { color: "#E8C468", fontSize: 12, fontWeight: "800", marginBottom: 8 },
-  muted: { color: "#AAB4B8", fontSize: 13, lineHeight: 18 },
-  body: { color: "#CFD6D9", fontSize: 15, lineHeight: 22 },
-  bodyLarge: { color: "#CFD6D9", fontSize: 17, lineHeight: 27 },
-  switchRow: { flexDirection: "row", gap: 14, alignItems: "center", justifyContent: "space-between" },
-  primaryButton: { backgroundColor: "#DA5A3A", borderRadius: 8, padding: 14, alignItems: "center", marginTop: 12 },
-  primaryButtonFlex: { flex: 1, backgroundColor: "#DA5A3A", borderRadius: 8, padding: 14, alignItems: "center" },
-  primaryButtonText: { color: "#FFFFFF", fontWeight: "900" },
-  secondaryButton: { flex: 1, backgroundColor: "#1B2228", borderRadius: 8, padding: 14, alignItems: "center", borderWidth: 1, borderColor: "#2A353C" },
-  secondaryButtonFlex: { flex: 1, backgroundColor: "#1B2228", borderRadius: 8, padding: 14, alignItems: "center", borderWidth: 1, borderColor: "#2A353C" },
-  secondaryButtonText: { color: "#F5F1E8", fontWeight: "900" },
-  actionsRow: { flexDirection: "row", gap: 10, marginTop: 12 },
-  price: { color: "#E8C468", fontSize: 28, fontWeight: "900", marginVertical: 9 }
+  logoSlash: { position: "absolute", width: 11, height: 50, left: 29, top: 18, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoSlashSecond: { position: "absolute", width: 11, height: 50, left: 45, top: 18, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoDot: { position: "absolute", width: 18, height: 18, borderRadius: 9, right: 22, bottom: 23, backgroundColor: "#DA5A3A" },
+  setupKicker: { textAlign: "center", fontSize: 12, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
+  setupTitle: { marginTop: 10, textAlign: "center", fontSize: 38, lineHeight: 40, fontWeight: "900" },
+  setupText: { marginTop: 12, textAlign: "center", fontSize: 16, lineHeight: 23, fontWeight: "700" },
+  setupFields: { marginTop: 24, gap: 10 },
+  input: { minHeight: 50, borderRadius: 18, paddingHorizontal: 15, paddingVertical: 12, fontSize: 16, fontWeight: "700" },
+  speechInput: { minHeight: 220, textAlignVertical: "top", lineHeight: 22 },
+  primaryButton: { minHeight: 54, borderRadius: 999, paddingHorizontal: 22, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 18 },
+  primaryButtonFlex: { flex: 1, minHeight: 50, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A" },
+  primaryText: { color: "#FFFFFF", fontSize: 15, fontWeight: "900" },
+  secondaryButton: { flex: 1, minHeight: 50, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", borderWidth: 1 },
+  secondaryText: { fontSize: 15, fontWeight: "900" },
+  header: { height: 64, paddingHorizontal: 18, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  profileButton: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, alignItems: "center", justifyContent: "center" },
+  profileInitial: { fontSize: 17, fontWeight: "900" },
+  headerLogo: { width: 54, height: 34, alignItems: "center", justifyContent: "center" },
+  headerSpacer: { width: 44 },
+  logoSmallSlash: { position: "absolute", width: 6, height: 30, left: 19, top: 1, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoSmallSlashSecond: { position: "absolute", width: 6, height: 30, left: 29, top: 1, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoSmallDot: { position: "absolute", width: 10, height: 10, borderRadius: 5, right: 10, bottom: 5, backgroundColor: "#DA5A3A" },
+  main: { flex: 1 },
+  content: { padding: 18, paddingBottom: 118 },
+  heroCard: { borderWidth: 1, borderRadius: 30, padding: 22, marginBottom: 14 },
+  kicker: { fontSize: 11, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
+  daysNumber: { marginTop: 14, fontSize: 48, lineHeight: 52, fontWeight: "900" },
+  daysLabel: { fontSize: 16, fontWeight: "850", marginBottom: 18 },
+  bigProgressTrack: { height: 12, overflow: "hidden", borderRadius: 999, marginBottom: 14 },
+  bigProgressFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
+  body: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
+  statsRow: { flexDirection: "row", gap: 10, marginBottom: 14 },
+  statCard: { flex: 1, borderWidth: 1, borderRadius: 22, padding: 14 },
+  statValue: { fontSize: 22, fontWeight: "900" },
+  statLabel: { marginTop: 3, fontSize: 12, fontWeight: "900", textTransform: "uppercase" },
+  panel: { borderWidth: 1, borderRadius: 26, padding: 18, marginBottom: 14 },
+  panelTitle: { fontSize: 22, lineHeight: 26, fontWeight: "900", marginBottom: 8 },
+  dotMap: { marginTop: 15, flexDirection: "row", flexWrap: "wrap", gap: 4 },
+  lifeDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.28)" },
+  lifeDotSpent: { backgroundColor: "#E8C468" },
+  segment: { flexDirection: "row", borderRadius: 999, padding: 5, marginBottom: 14 },
+  segmentButton: { flex: 1, minHeight: 42, alignItems: "center", justifyContent: "center", borderRadius: 999 },
+  segmentActive: { backgroundColor: "#E8C468" },
+  segmentText: { color: "#807A70", fontWeight: "900" },
+  segmentTextActive: { color: "#101418" },
+  addRow: { flexDirection: "row", gap: 10, marginTop: 15 },
+  addInput: { flex: 1, minHeight: 50, borderRadius: 18, paddingHorizontal: 14, fontSize: 15, fontWeight: "800" },
+  roundButton: { width: 50, height: 50, borderRadius: 25, backgroundColor: "#101418", alignItems: "center", justifyContent: "center" },
+  roundButtonText: { color: "#FFFFFF", fontSize: 30, lineHeight: 32, fontWeight: "900" },
+  empty: { borderWidth: 1, borderRadius: 26, padding: 22, alignItems: "center" },
+  goalCard: { borderWidth: 1, borderRadius: 24, padding: 16, marginBottom: 12 },
+  goalHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
+  goalTitle: { flex: 1, fontSize: 18, fontWeight: "900", lineHeight: 23 },
+  deleteText: { fontSize: 22, fontWeight: "800", paddingHorizontal: 4 },
+  progressTrack: { height: 34, justifyContent: "center", marginTop: 15 },
+  progressFill: { position: "absolute", left: 0, height: 10, borderRadius: 999, backgroundColor: "#E8C468" },
+  progressKnob: { position: "absolute", width: 26, height: 26, marginLeft: -13, borderRadius: 13, backgroundColor: "#DA5A3A", borderWidth: 3, borderColor: "#FFFFFF" },
+  progressText: { marginTop: 2, fontSize: 12, fontWeight: "900" },
+  actionsRow: { flexDirection: "row", gap: 10, marginTop: 14 },
+  grid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+  imageTile: { width: "48%", aspectRatio: 0.74, overflow: "hidden", borderRadius: 24, borderWidth: 1, backgroundColor: "#24292C" },
+  tileImage: { width: "100%", height: "100%" },
+  removeImage: { position: "absolute", right: 8, top: 8, width: 32, height: 32, borderRadius: 16, backgroundColor: "rgba(0,0,0,0.58)", alignItems: "center", justifyContent: "center" },
+  removeImageText: { color: "#FFFFFF", fontSize: 18, fontWeight: "900" },
+  speechPill: { borderWidth: 1, borderRadius: 22, padding: 15, marginBottom: 10 },
+  switchRow: { minHeight: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  dangerButton: { minHeight: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#9D3326", marginTop: 4 },
+  modalHeader: { minHeight: 74, paddingHorizontal: 18, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  modalTitle: { fontSize: 26, fontWeight: "900" },
+  closeText: { fontSize: 15, fontWeight: "900" },
+  nav: { position: "absolute", left: 14, right: 14, bottom: 14, height: 70, borderRadius: 35, flexDirection: "row", alignItems: "center", padding: 6 },
+  navItem: { flex: 1, height: 56, borderRadius: 28, alignItems: "center", justifyContent: "center" },
+  navActive: { backgroundColor: "#E8C468" },
+  navText: { fontSize: 12, fontWeight: "900" },
+  player: { flex: 1, backgroundColor: "#000000", justifyContent: "flex-end" },
+  playerImage: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%" },
+  playerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.32)" },
+  playerText: { padding: 28, paddingBottom: 88 },
+  playerKicker: { color: "#E8C468", fontSize: 12, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
+  playerTitle: { color: "#FFFFFF", fontSize: 38, lineHeight: 42, fontWeight: "900", marginTop: 8 },
+  playerCaption: { color: "#F4EFE4", fontSize: 17, lineHeight: 24, fontWeight: "700", marginTop: 10 },
+  playerClose: { position: "absolute", right: 18, top: 58, minHeight: 42, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.18)" },
+  playerCloseText: { color: "#FFFFFF", fontWeight: "900" }
 });
