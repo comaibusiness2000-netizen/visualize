@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=51" />
+    <link rel="manifest" href="./manifest.webmanifest?v=52" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-19-v51";
+      const VISUALIZE_APP_VERSION = "2026-07-19-v52";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=51")
+            .register("./service-worker.js?v=52")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -865,10 +865,12 @@
       }
 
       .life-onboarding h1 {
-        max-width: 310px;
+        max-width: min(100%, 300px);
         font-size: clamp(26px, 7.1vw, 31px);
         line-height: 1.06;
         font-weight: 950;
+        text-align: center;
+        text-wrap: balance;
       }
 
       .life-onboarding .deck-kicker {
@@ -914,9 +916,11 @@
 
       #saveLifeProfile {
         min-width: min(100%, 190px);
+        max-width: 100%;
         padding-inline: 22px;
         white-space: normal;
         line-height: 1.15;
+        text-align: center;
       }
 
       .life-dashboard {
@@ -3990,7 +3994,7 @@
           profileSetup: "Creation profil", setupTitle: "Commence avec une horloge de vie vide.", setupText: "Cree ton profil. L'app commence vide, puis tu ajoutes objectifs, images et self speech pas a pas.", firstName: "Ton prenom", age: "Ton age", estimate: "Estimation de vie", createProfile: "Creer profil", lifeClock: "Horloge de vie", daysLeft: "jours restants", lifeSummary: "Estime de l'age {age} a {expectancy}. Environ {months} mois, ou {weeks} semaines, restants.", weeksLeft: "semaines restantes", monthsLeft: "mois restants", lifeUsed: "vie utilisee", lifeLegend: "Chaque point est un petit bloc de vie. Les points sombres sont le temps deja passe.", editInfo: "Modifier", dailyTasks: "Taches du jour", longGoals: "Objectifs long terme", dailyTitle: "Fais avancer aujourd'hui.", longTitle: "Suis la grande victoire.", dailyText: "Garde une courte liste de ce qui compte aujourd'hui et ajuste la progression.", longText: "Utilise ceci pour les objectifs a finir cette annee ou qui demandent une action repetee.", addTask: "Ajouter tache", addGoal: "Ajouter objectif", emptyTask: "Ajoute une tache qui ferait compter aujourd'hui.", emptyGoal: "Ajoute un objectif long terme a avancer cette annee.", dailyHint: "Les taches du jour servent a agir maintenant. Vision reste pour le long terme.", longHint: "Les objectifs long terme relient l'action quotidienne a ta Vision.", visionSetup: "Setup Vision", createVisionTitle: "Cree d'abord la scene future.", visionSetupText: "Ajoute des images de qui tu veux devenir, ce que tu veux avoir, les lieux ou vivre et les personnes autour de toi.", createVision: "Creer vision", visionDeck: "Deck Vision", antiSetup: "Setup Anti-vision", createAntiTitle: "Cree d'abord la scene d'avertissement.", antiSetupText: "Ajoute des images de la vie que tu refuses: ce que tu ne veux pas devenir, perdre ou tolerer.", createAnti: "Creer anti-vision", antiDeck: "Deck Anti-vision", play: "Lire", upload: "Ajouter", edit: "Editer", export: "Exporter", noSlides: "Aucune slide.", noSlidesText: "Ajoute les photos dans l'ordre de l'exercice.", selfSpeech: "Self speech", speechTitle: "Ecris ta voix interieure.", speechText: "Ecris le texte a ecouter avant d'agir, t'entrainer, travailler ou visualiser.", title: "Titre", script: "Script", voice: "Voix", swipeVoice: "Glisse pour changer la voix", stop: "Stop", profile: "Profil", settings: "Reglages", language: "Langue", languageText: "Choisis la langue de l'interface.", save: "Sauver", light: "Clair", dark: "Sombre", navLife: "Vie", navGoal: "Objectifs", navVision: "Vision", navAnti: "Anti", navSpeech: "Voix", profileSaved: "Profil sauvegarde", languageSelected: "{language} choisi"
         },
         pt: {
-          profileSetup: "Criar perfil", setupTitle: "Comece com um relogio de vida vazio.", setupText: "Crie seu perfil primeiro. O app comeca vazio e depois voce adiciona metas, imagens e self speech.", firstName: "Seu nome", age: "Sua idade", estimate: "Estimativa de vida", createProfile: "Criar perfil", lifeClock: "Relogio de vida", daysLeft: "dias restantes", lifeSummary: "Estimado da idade {age} ate {expectancy}. Cerca de {months} meses, ou {weeks} semanas, restantes.", weeksLeft: "semanas restantes", monthsLeft: "meses restantes", lifeUsed: "vida usada", lifeLegend: "Cada ponto e um pequeno bloco de vida. Pontos escuros ja foram vividos.", editInfo: "Editar", dailyTasks: "Tarefas diarias", longGoals: "Metas de longo prazo", dailyTitle: "Mova hoje para frente.", longTitle: "Acompanhe a grande meta.", dailyText: "Mantenha uma lista curta do que faz hoje contar e mova o progresso manualmente.", longText: "Use para metas deste ano ou que precisam de acao repetida.", addTask: "Adicionar tarefa", addGoal: "Adicionar meta", emptyTask: "Adicione uma tarefa que faca hoje contar.", emptyGoal: "Adicione uma meta de longo prazo para este ano.", dailyHint: "Tarefas diarias sao para executar hoje. Vision fica para metas de longo prazo.", longHint: "Metas de longo prazo ligam acao diaria e Vision.", visionSetup: "Configurar visao", createVisionTitle: "Crie primeiro a cena futura.", visionSetupText: "Adicione imagens de quem quer ser, o que quer ter, onde quer viver e quem quer por perto.", createVision: "Criar visao", visionDeck: "Deck de visao", antiSetup: "Configurar anti-visao", createAntiTitle: "Crie primeiro a cena de alerta.", antiSetupText: "Adicione imagens da vida que voce recusa: o que nao quer se tornar, perder ou tolerar.", createAnti: "Criar anti-visao", antiDeck: "Deck anti-visao", play: "Reproduzir", upload: "Adicionar", edit: "Editar", export: "Exportar", noSlides: "Sem slides ainda.", noSlidesText: "Adicione fotos na ordem do exercicio.", selfSpeech: "Self speech", speechTitle: "Escreva sua voz interior.", speechText: "Escreva o texto que quer ouvir antes de agir, treinar, trabalhar ou visualizar.", title: "Titulo", script: "Script", voice: "Voz", swipeVoice: "Deslize para mudar voz", stop: "Parar", profile: "Perfil", settings: "Ajustes", language: "Idioma", languageText: "Escolha o idioma da interface.", save: "Salvar", light: "Claro", dark: "Escuro", navLife: "Vida", navGoal: "Metas", navVision: "Visao", navAnti: "Anti", navSpeech: "Voz", profileSaved: "Perfil salvo", languageSelected: "{language} selecionado"
+          profileSetup: "Criar perfil", setupTitle: "Comece pelo relogio de vida.", setupText: "Crie seu perfil. Depois adicione metas, imagens e self speech.", firstName: "Seu nome", age: "Sua idade", estimate: "Estimativa de vida", createProfile: "Criar perfil", lifeClock: "Relogio de vida", daysLeft: "dias restantes", lifeSummary: "Estimado da idade {age} ate {expectancy}. Cerca de {months} meses, ou {weeks} semanas, restantes.", weeksLeft: "semanas restantes", monthsLeft: "meses restantes", lifeUsed: "vida usada", lifeLegend: "Cada ponto e um pequeno bloco de vida. Pontos escuros ja foram vividos.", editInfo: "Editar", dailyTasks: "Tarefas diarias", longGoals: "Metas de longo prazo", dailyTitle: "Mova hoje para frente.", longTitle: "Acompanhe a grande meta.", dailyText: "Mantenha uma lista curta do que faz hoje contar e mova o progresso manualmente.", longText: "Use para metas deste ano ou que precisam de acao repetida.", addTask: "Adicionar tarefa", addGoal: "Adicionar meta", emptyTask: "Adicione uma tarefa que faca hoje contar.", emptyGoal: "Adicione uma meta de longo prazo para este ano.", dailyHint: "Tarefas diarias sao para executar hoje. Vision fica para metas de longo prazo.", longHint: "Metas de longo prazo ligam acao diaria e Vision.", visionSetup: "Configurar visao", createVisionTitle: "Crie primeiro a cena futura.", visionSetupText: "Adicione imagens de quem quer ser, o que quer ter, onde quer viver e quem quer por perto.", createVision: "Criar visao", visionDeck: "Deck de visao", antiSetup: "Configurar anti-visao", createAntiTitle: "Crie primeiro a cena de alerta.", antiSetupText: "Adicione imagens da vida que voce recusa: o que nao quer se tornar, perder ou tolerar.", createAnti: "Criar anti-visao", antiDeck: "Deck anti-visao", play: "Reproduzir", upload: "Adicionar", edit: "Editar", export: "Exportar", noSlides: "Sem slides ainda.", noSlidesText: "Adicione fotos na ordem do exercicio.", selfSpeech: "Self speech", speechTitle: "Escreva sua voz interior.", speechText: "Escreva o texto que quer ouvir antes de agir, treinar, trabalhar ou visualizar.", title: "Titulo", script: "Script", voice: "Voz", swipeVoice: "Deslize para mudar voz", stop: "Parar", profile: "Perfil", settings: "Ajustes", language: "Idioma", languageText: "Escolha o idioma da interface.", save: "Salvar", light: "Claro", dark: "Escuro", navLife: "Vida", navGoal: "Metas", navVision: "Visao", navAnti: "Anti", navSpeech: "Voz", profileSaved: "Perfil salvo", languageSelected: "{language} selecionado"
         },
         zh: {
           profileSetup: "创建资料", setupTitle: "从空白生命时钟开始。", setupText: "先创建资料。应用会从空白开始，然后一步步添加目标、图片和自我对话。", firstName: "名字", age: "年龄", estimate: "寿命估计", createProfile: "创建资料", lifeClock: "生命时钟", daysLeft: "剩余天数", lifeSummary: "从 {age} 岁到 {expectancy} 岁估算。大约剩余 {months} 个月，或 {weeks} 周。", weeksLeft: "剩余周数", monthsLeft: "剩余月数", lifeUsed: "已用生命", lifeLegend: "每个点代表一小段生命。深色点代表已过去的时间。", editInfo: "编辑信息", dailyTasks: "每日任务", longGoals: "长期目标", dailyTitle: "推动今天前进。", longTitle: "追踪更大的目标。", dailyText: "保留一小列今天重要的事，并手动移动进度条。", longText: "用于今年要完成或需要反复行动的目标。", addTask: "添加任务", addGoal: "添加目标", emptyTask: "添加一个能让今天有意义的任务。", emptyGoal: "添加一个今年可以推进的长期目标。", dailyHint: "每日任务用于今天执行。Vision 用于长期目标。", longHint: "长期目标连接每日行动和 Vision。", visionSetup: "愿景设置", createVisionTitle: "先创建未来场景。", visionSetupText: "上传你想成为什么样、想拥有什么、想住在哪里、想和谁在一起的图片。", createVision: "创建愿景", visionDeck: "愿景卡组", antiSetup: "反愿景设置", createAntiTitle: "先创建警示场景。", antiSetupText: "上传你拒绝滑向的生活：不想成为什么、不想失去什么、不想忍受什么。", createAnti: "创建反愿景", antiDeck: "反愿景卡组", play: "播放", upload: "上传", edit: "编辑", export: "导出", noSlides: "还没有幻灯片。", noSlidesText: "按练习时想看的顺序上传照片。", selfSpeech: "自我对话", speechTitle: "写下你的内在声音。", speechText: "写下行动、训练、工作或视觉化前想听到的文字。", title: "标题", script: "文本", voice: "声音", swipeVoice: "滑动切换声音", stop: "停止", profile: "资料", settings: "设置", language: "语言", languageText: "选择应用界面语言。", save: "保存", light: "浅色", dark: "深色", navLife: "生命", navGoal: "目标", navVision: "愿景", navAnti: "反愿景", navSpeech: "自我对话", profileSaved: "资料已保存", languageSelected: "已选择 {language}"
