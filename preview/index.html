@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=50" />
+    <link rel="manifest" href="./manifest.webmanifest?v=51" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-19-v50";
+      const VISUALIZE_APP_VERSION = "2026-07-19-v51";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=50")
+            .register("./service-worker.js?v=51")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -769,11 +769,11 @@
 
       .life-onboarding,
       .life-dashboard {
-        min-height: 530px;
+        min-height: min(510px, calc(100dvh - 168px));
         display: grid;
         align-content: center;
-        gap: 16px;
-        padding: 24px;
+        gap: clamp(10px, 1.8vh, 14px);
+        padding: 22px;
         border-radius: 28px;
         color: var(--ink);
         background: #fff;
@@ -833,19 +833,19 @@
       }
 
       .setup-mark {
-        width: 82px;
-        height: 82px;
+        width: 64px;
+        height: 64px;
         display: grid;
         place-items: center;
-        border-radius: 28px;
+        border-radius: 22px;
         background: var(--ink);
         box-shadow: 0 18px 38px rgba(17, 17, 17, 0.18);
         animation: setupCardFloat 3.8s ease-in-out infinite;
       }
 
       .setup-mark img {
-        width: 42px;
-        height: 42px;
+        width: 34px;
+        height: 34px;
       }
 
       @keyframes setupGlow {
@@ -866,9 +866,16 @@
 
       .life-onboarding h1 {
         max-width: 310px;
-        font-size: 32px;
-        line-height: 1.04;
+        font-size: clamp(26px, 7.1vw, 31px);
+        line-height: 1.06;
         font-weight: 950;
+      }
+
+      .life-onboarding .deck-kicker {
+        max-width: 100%;
+        line-height: 1.2;
+        letter-spacing: 2px;
+        overflow-wrap: anywhere;
       }
 
       .life-onboarding p,
@@ -883,8 +890,8 @@
       .field-stack {
         width: 100%;
         display: grid;
-        gap: 9px;
-        margin-top: 2px;
+        gap: 8px;
+        margin-top: 0;
       }
 
       .field {
@@ -900,9 +907,16 @@
       }
 
       .field input {
-        min-height: 46px;
+        min-height: 44px;
         border-radius: 16px;
         background: var(--soft);
+      }
+
+      #saveLifeProfile {
+        min-width: min(100%, 190px);
+        padding-inline: 22px;
+        white-space: normal;
+        line-height: 1.15;
       }
 
       .life-dashboard {
@@ -3409,9 +3423,6 @@
                 <span class="active"></span>
                 <span></span>
                 <span></span>
-              </div>
-              <div class="setup-mark" aria-hidden="true">
-                <img src="./icon.svg" alt="" />
               </div>
               <span class="deck-kicker">Profile setup</span>
               <h1>Start with a blank life clock.</h1>

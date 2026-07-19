@@ -652,45 +652,51 @@ export default function App() {
     const scale = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.06] });
     const translateY = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [0, -6] });
     return (
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.centerFill}>
-        <Animated.View style={[styles.setupLogo, { transform: [{ scale }, { translateY }] }]}>
-          <View style={styles.logoSlash} />
-          <View style={styles.logoSlashSecond} />
-          <View style={styles.logoDot} />
-        </Animated.View>
-        <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.kicker")}</Text>
-        <Text style={[styles.setupTitle, { color: theme.ink }]}>{t("setup.title")}</Text>
-        <Text style={[styles.setupText, { color: theme.muted }]}>
-          {t("setup.body")}
-        </Text>
-        <View style={styles.setupFields}>
-          <TextInput
-            value={String(profileDraft.name || "")}
-            onChangeText={(name) => setProfileDraft((current) => ({ ...current, name }))}
-            placeholder={t("setup.name")}
-            placeholderTextColor={theme.placeholder}
-            style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
-          />
-          <TextInput
-            value={String(profileDraft.age || "")}
-            onChangeText={(age) => setProfileDraft((current) => ({ ...current, age }))}
-            keyboardType="number-pad"
-            placeholder={t("setup.age")}
-            placeholderTextColor={theme.placeholder}
-            style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
-          />
-          <TextInput
-            value={String(profileDraft.expectancy || "")}
-            onChangeText={(expectancy) => setProfileDraft((current) => ({ ...current, expectancy }))}
-            keyboardType="number-pad"
-            placeholder={t("setup.estimate")}
-            placeholderTextColor={theme.placeholder}
-            style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
-          />
-        </View>
-        <TouchableOpacity style={styles.primaryButton} onPress={saveProfile}>
-          <Text style={styles.primaryText}>{t("setup.create")}</Text>
-        </TouchableOpacity>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.onboardingShell}>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.onboardingContent}
+        >
+          <Animated.View style={[styles.setupLogo, { transform: [{ scale }, { translateY }] }]}>
+            <View style={styles.logoSlash} />
+            <View style={styles.logoSlashSecond} />
+            <View style={styles.logoDot} />
+          </Animated.View>
+          <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.kicker")}</Text>
+          <Text style={[styles.setupTitle, { color: theme.ink }]}>{t("setup.title")}</Text>
+          <Text style={[styles.setupText, { color: theme.muted }]}>
+            {t("setup.body")}
+          </Text>
+          <View style={styles.setupFields}>
+            <TextInput
+              value={String(profileDraft.name || "")}
+              onChangeText={(name) => setProfileDraft((current) => ({ ...current, name }))}
+              placeholder={t("setup.name")}
+              placeholderTextColor={theme.placeholder}
+              style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
+            />
+            <TextInput
+              value={String(profileDraft.age || "")}
+              onChangeText={(age) => setProfileDraft((current) => ({ ...current, age }))}
+              keyboardType="number-pad"
+              placeholder={t("setup.age")}
+              placeholderTextColor={theme.placeholder}
+              style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
+            />
+            <TextInput
+              value={String(profileDraft.expectancy || "")}
+              onChangeText={(expectancy) => setProfileDraft((current) => ({ ...current, expectancy }))}
+              keyboardType="number-pad"
+              placeholder={t("setup.estimate")}
+              placeholderTextColor={theme.placeholder}
+              style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
+            />
+          </View>
+          <TouchableOpacity style={styles.primaryButton} onPress={saveProfile}>
+            <Text style={styles.primaryText}>{t("setup.create")}</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </KeyboardAvoidingView>
     );
   }
@@ -1061,28 +1067,30 @@ const styles = StyleSheet.create({
   screen: { flex: 1 },
   loader: { alignItems: "center", justifyContent: "center", backgroundColor: "#101418" },
   centerFill: { flex: 1, justifyContent: "center", padding: 24 },
+  onboardingShell: { flex: 1 },
+  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 24, paddingVertical: 28 },
   setupLogo: {
-    width: 92,
-    height: 92,
+    width: 76,
+    height: 76,
     alignSelf: "center",
-    marginBottom: 24,
-    borderRadius: 30,
+    marginBottom: 18,
+    borderRadius: 24,
     backgroundColor: "#101418",
     alignItems: "center",
     justifyContent: "center"
   },
-  logoSlash: { position: "absolute", width: 11, height: 50, left: 29, top: 18, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
-  logoSlashSecond: { position: "absolute", width: 11, height: 50, left: 45, top: 18, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
-  logoDot: { position: "absolute", width: 18, height: 18, borderRadius: 9, right: 22, bottom: 23, backgroundColor: "#DA5A3A" },
+  logoSlash: { position: "absolute", width: 9, height: 42, left: 24, top: 15, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoSlashSecond: { position: "absolute", width: 9, height: 42, left: 37, top: 15, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoDot: { position: "absolute", width: 15, height: 15, borderRadius: 8, right: 18, bottom: 19, backgroundColor: "#DA5A3A" },
   setupKicker: { textAlign: "center", fontSize: 12, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
-  setupTitle: { marginTop: 10, textAlign: "center", fontSize: 38, lineHeight: 40, fontWeight: "900" },
-  setupText: { marginTop: 12, textAlign: "center", fontSize: 16, lineHeight: 23, fontWeight: "700" },
-  setupFields: { marginTop: 24, gap: 10 },
+  setupTitle: { marginTop: 9, textAlign: "center", fontSize: 34, lineHeight: 37, fontWeight: "900" },
+  setupText: { marginTop: 10, textAlign: "center", fontSize: 15, lineHeight: 22, fontWeight: "700" },
+  setupFields: { marginTop: 20, gap: 9 },
   input: { minHeight: 50, borderRadius: 18, paddingHorizontal: 15, paddingVertical: 12, fontSize: 16, fontWeight: "700" },
   speechInput: { minHeight: 220, textAlignVertical: "top", lineHeight: 22 },
-  primaryButton: { minHeight: 54, borderRadius: 999, paddingHorizontal: 22, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 18 },
+  primaryButton: { minHeight: 56, minWidth: 190, maxWidth: "100%", alignSelf: "center", borderRadius: 999, paddingHorizontal: 28, paddingVertical: 14, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 18 },
   primaryButtonFlex: { flex: 1, minHeight: 50, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A" },
-  primaryText: { color: "#FFFFFF", fontSize: 15, fontWeight: "900" },
+  primaryText: { color: "#FFFFFF", fontSize: 15, lineHeight: 19, textAlign: "center", fontWeight: "900" },
   secondaryButton: { flex: 1, minHeight: 50, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", borderWidth: 1 },
   secondaryText: { fontSize: 15, fontWeight: "900" },
   header: { height: 64, paddingHorizontal: 18, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
