@@ -1,5 +1,7 @@
 node_modules/
 .expo/
+.git/
+.github/
 .local-home/
 .npm-cache/
 .dotslash-cache/
@@ -7,8 +9,12 @@ node_modules/
 dist-ios-test/
 output/
 outputs/
-visualize-web-preview.zip
-visualize-*.zip
+preview/
+UPLOAD_TO_GITHUB/
+research/
+tools/
+docs/
+*.zip
 publish-log.txt
 npm-debug.log*
 yarn-debug.log*
