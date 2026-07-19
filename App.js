@@ -6,6 +6,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Modal,
+  NativeModules,
   PanResponder,
   Platform,
   Pressable,
@@ -27,6 +28,29 @@ const STORAGE_VERSION = 2;
 const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
+const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
+
+function normalizeLanguageId(locale) {
+  const normalized = String(locale || "").trim().toLowerCase();
+  if (!normalized) return "en";
+  if (normalized.startsWith("zh")) return "zh";
+  const base = normalized.split(/[-_]/)[0];
+  return SUPPORTED_LANGUAGE_IDS.includes(base) ? base : "en";
+}
+
+function detectPreferredLanguage() {
+  const candidates = [];
+  try {
+    candidates.push(Intl.DateTimeFormat().resolvedOptions().locale);
+  } catch (error) {}
+  try {
+    const settings = NativeModules.SettingsManager?.settings || {};
+    candidates.push(settings.AppleLocale);
+    candidates.push(...(settings.AppleLanguages || []));
+  } catch (error) {}
+  const detected = candidates.map(normalizeLanguageId).find((language) => language !== "en");
+  return detected || "en";
+}
 
 function uid(prefix) {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -56,7 +80,7 @@ const blankState = {
   settings: {
     darkMode: true,
     notifications: false,
-    language: "en"
+    language: detectPreferredLanguage()
   },
   sync: {
     mode: "local",
