@@ -75,6 +75,8 @@ If cloud sync, subscriptions, analytics, or AI generation are added later, the p
 
 ## TestFlight beta notes
 
+First tester email: `comaisamuele@gmail.com`
+
 ### What to test
 
 Please test the first-run flow and core local-only features:

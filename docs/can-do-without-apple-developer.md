@@ -42,7 +42,7 @@ Check:
 
 Make a short list of beta testers:
 
-1. Your Apple ID email.
+1. First tester: `comaisamuele@gmail.com`.
 2. Any friends who can test seriously.
 3. Their iPhone/iPad model if they know it.
 

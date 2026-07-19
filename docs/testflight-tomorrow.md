@@ -13,6 +13,12 @@ Use this when the Apple Developer Program membership is active.
 
 Do not send Apple ID password, 2FA codes, recovery keys, or payment details in chat.
 
+## First tester
+
+- Tester email: `comaisamuele@gmail.com`
+
+Use this as the first TestFlight invite after the build is available.
+
 ## What Codex can do after that
 
 1. Replace the support email in the support page.
