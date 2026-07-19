@@ -3,14 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Visualize Privacy Policy Draft</title>
+    <title>Visualize Privacy Policy</title>
     <style>
       :root {
         color-scheme: light dark;
         --paper: #f4f4f2;
         --ink: #111111;
-        --muted: #6f726d;
+        --muted: #686b66;
         --line: #deded9;
+        --panel: rgba(255, 255, 255, 0.66);
       }
 
       body {
@@ -44,12 +45,17 @@
         line-height: 1.6;
       }
 
+      a {
+        color: inherit;
+        font-weight: 700;
+      }
+
       .notice {
         margin-top: 22px;
         padding: 16px;
         border: 1px solid var(--line);
         border-radius: 18px;
-        background: rgba(255, 255, 255, 0.55);
+        background: var(--panel);
       }
 
       @media (prefers-color-scheme: dark) {
@@ -58,47 +64,47 @@
           --ink: #f4f4f1;
           --muted: #c4beb3;
           --line: #2c3236;
-        }
-
-        .notice {
-          background: rgba(255, 255, 255, 0.06);
+          --panel: rgba(255, 255, 255, 0.06);
         }
       }
     </style>
   </head>
   <body>
     <main>
-      <h1>Visualize privacy policy draft.</h1>
-      <p>This draft describes the production privacy model planned for the App Store version. It is not legal advice and should be reviewed before launch.</p>
+      <h1>Visualize privacy policy.</h1>
+      <p>Last updated: July 19, 2026.</p>
 
       <div class="notice">
-        <strong>Prototype status</strong>
-        <p>The current preview saves data locally on the device/browser. The production app is designed to use account-based cloud sync, secure image storage, and server-side AI generation.</p>
+        <strong>Current TestFlight version</strong>
+        <p>Visualize is currently local-only. Your profile, goals, photos, Vision decks, Anti-vision decks, and Self Speech scripts are saved on your device. They are not uploaded to a Visualize server in this version.</p>
       </div>
 
-      <h2>Data we expect to store</h2>
+      <h2>Information you add</h2>
       <ul>
-        <li>Account identifier from Sign in with Apple.</li>
-        <li>Goals, daily tasks, short-term goals, Vision decks, Anti-vision decks, and audio script settings.</li>
-        <li>Photos uploaded by the user and AI-generated or AI-edited images.</li>
-        <li>AI prompts needed to generate or edit images and scripts.</li>
-        <li>Subscription entitlement status from Apple In-App Purchase.</li>
+        <li>Profile details you type, such as first name, age, and life estimate.</li>
+        <li>Daily tasks and long-term goals.</li>
+        <li>Photos you choose from your photo library for Vision and Anti-vision decks.</li>
+        <li>Self Speech titles and scripts you write.</li>
+        <li>Local app settings such as theme, language, and notification preference.</li>
       </ul>
 
-      <h2>How data should be used</h2>
-      <p>User content should be used only to provide visualization, anti-vision, audio, AI generation, sync, account recovery, and subscription features.</p>
+      <h2>How your information is used</h2>
+      <p>Your information is used to provide the core app experience: the life clock, goal tracking, private image decks, presentation playback, and text-to-speech playback of your own scripts.</p>
 
-      <h2>Storage and sync</h2>
-      <p>Images should be compressed before upload and stored in private object storage. Database rows should store metadata and storage references, not raw image data.</p>
+      <h2>Photo access</h2>
+      <p>Visualize asks for photo library access only so you can select images for your Vision and Anti-vision decks. Selected images are copied into the app's local storage on your device.</p>
 
-      <h2>AI processing</h2>
-      <p>AI generation and image editing should run on the server, not directly from the app. API keys must never be embedded in the client.</p>
+      <h2>Audio and speech</h2>
+      <p>Self Speech playback uses the text-to-speech capability available on your device. The current TestFlight version does not upload your scripts to a Visualize server.</p>
 
-      <h2>Deletion</h2>
-      <p>Production users should be able to delete their account, goals, decks, images, prompts, generated content, and audio scripts.</p>
+      <h2>Cloud sync and AI</h2>
+      <p>Cloud sync, account creation, image generation, and AI editing are planned future features. They are not active in the current local-only TestFlight version. If they are added later, this policy and the App Store privacy details will be updated before release.</p>
 
-      <h2>Payments</h2>
-      <p>Subscriptions should use Apple In-App Purchase. The backend should validate receipts/server notifications and store entitlement state.</p>
+      <h2>Deleting data</h2>
+      <p>You can reset local data from inside the app. Deleting the app from your device also removes data stored locally by the app.</p>
+
+      <h2>Contact</h2>
+      <p>For privacy or support questions, use the support page: <a href="./support.html">Visualize Support</a>.</p>
     </main>
   </body>
 </html>

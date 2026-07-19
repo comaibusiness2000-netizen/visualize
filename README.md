@@ -65,4 +65,14 @@ The recommended path is Expo + EAS Build:
 5. Run an EAS iOS build.
 6. Submit through App Store Connect.
 
-This repository is prepared for that path, but dependencies are not installed in this workspace yet.
+This repository is prepared for that path.
+
+Current TestFlight prep:
+
+- Bundle ID: `com.comaibusiness2000.visualize`
+- App version: `0.2.0`
+- iOS build number: `1`
+- EAS config: `eas.json`
+- Privacy URL: `https://comaibusiness2000-netizen.github.io/visualize/privacy.html`
+- Support URL: `https://comaibusiness2000-netizen.github.io/visualize/support.html`
+- App Store prep notes: `docs/app-store-prep.md`

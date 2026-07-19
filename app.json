@@ -9,9 +9,13 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
+      "buildNumber": "1",
       "bundleIdentifier": "com.comaibusiness2000.visualize",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Visualize uses photos you select to create private vision and anti-vision decks saved on this device."
+        "NSPhotoLibraryUsageDescription": "Visualize uses photos you select to create private Vision and Anti-vision decks saved on this device."
       }
     },
     "extra": {
