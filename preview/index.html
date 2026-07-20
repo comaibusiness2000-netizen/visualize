@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=55" />
+    <link rel="manifest" href="./manifest.webmanifest?v=56" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-19-v55";
+      const VISUALIZE_APP_VERSION = "2026-07-20-v56";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=55")
+            .register("./service-worker.js?v=56")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -193,6 +193,72 @@
         }
         50% {
           transform: translateY(-3px) scale(1.08);
+        }
+      }
+
+      @keyframes lifeUpdateScrimIn {
+        0% { opacity: 0; }
+        14%, 84% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+
+      @keyframes lifeUpdateStageIn {
+        0% {
+          opacity: 0;
+          transform: translateY(22px) scale(0.94);
+        }
+        28% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        74% {
+          opacity: 1;
+          transform: translateY(0) scale(1.015);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-10px) scale(0.98);
+        }
+      }
+
+      @keyframes lifeOldDayLeaves {
+        0% {
+          opacity: 0.44;
+          transform: translateY(0);
+        }
+        48%, 100% {
+          opacity: 0.18;
+          transform: translateY(-24px);
+        }
+      }
+
+      @keyframes lifeNewDayArrives {
+        0% {
+          opacity: 0;
+          transform: translateY(18px) scale(0.82);
+        }
+        36% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        62% {
+          opacity: 1;
+          transform: translateY(-2px) scale(1.05);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes lifeUpdateDotHot {
+        0%, 100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(218, 90, 58, 0);
+        }
+        48% {
+          transform: scale(1.6);
+          box-shadow: 0 0 0 10px rgba(218, 90, 58, 0.22);
         }
       }
 
@@ -3207,6 +3273,156 @@
         transform: translate(-50%, 0);
       }
 
+      .life-update-scrim {
+        position: fixed;
+        inset: 0;
+        z-index: 92;
+        display: none;
+        place-items: center;
+        padding: 20px;
+        color: #fff8ea;
+        background:
+          radial-gradient(circle at 18% 16%, rgba(232, 196, 104, 0.2), transparent 30%),
+          radial-gradient(circle at 82% 78%, rgba(218, 90, 58, 0.18), transparent 32%),
+          rgba(8, 10, 11, 0.96);
+        backdrop-filter: blur(10px);
+      }
+
+      .life-update-scrim.open {
+        display: grid;
+        animation: lifeUpdateScrimIn 2.45s ease both;
+      }
+
+      .life-update-stage {
+        width: min(100%, 410px);
+        min-height: min(74dvh, 600px);
+        display: grid;
+        justify-items: center;
+        align-content: center;
+        gap: 12px;
+        overflow: hidden;
+        position: relative;
+        padding: 30px 22px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 38px;
+        background: linear-gradient(180deg, #15191c, #0d1012);
+        box-shadow: 0 34px 95px rgba(0, 0, 0, 0.48);
+      }
+
+      .life-update-scrim.open .life-update-stage {
+        animation: lifeUpdateStageIn 2.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .life-update-stage::before {
+        content: "";
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        top: -120px;
+        right: -92px;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 38% 36%, rgba(232, 196, 104, 0.72), transparent 42%),
+          radial-gradient(circle at 65% 64%, rgba(218, 90, 58, 0.62), transparent 42%);
+        opacity: 0.35;
+      }
+
+      .life-update-mark {
+        width: 68px;
+        height: 68px;
+        display: grid;
+        place-items: center;
+        z-index: 1;
+        margin-bottom: 10px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .life-update-mark img {
+        width: 38px;
+        height: 38px;
+      }
+
+      .life-update-kicker {
+        z-index: 1;
+        color: var(--gold);
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 2.2px;
+        text-transform: uppercase;
+      }
+
+      .life-update-old {
+        z-index: 1;
+        color: rgba(255, 255, 255, 0.34);
+        font-size: 36px;
+        line-height: 0.95;
+        font-weight: 950;
+        text-decoration: line-through;
+      }
+
+      .life-update-scrim.open .life-update-old {
+        animation: lifeOldDayLeaves 2.1s ease both;
+      }
+
+      .life-update-new {
+        z-index: 1;
+        color: #ffffff;
+        font-size: clamp(68px, 18vw, 92px);
+        line-height: 0.92;
+        font-weight: 950;
+        letter-spacing: 0;
+      }
+
+      .life-update-scrim.open .life-update-new {
+        animation: lifeNewDayArrives 1.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .life-update-label {
+        z-index: 1;
+        color: rgba(255, 250, 240, 0.76);
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .life-update-bar {
+        z-index: 1;
+        width: 100%;
+        height: 12px;
+        overflow: hidden;
+        margin-top: 18px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .life-update-bar span {
+        display: block;
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--gold);
+        transition: width 1.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .life-update-dots {
+        z-index: 1;
+        display: flex;
+        gap: 7px;
+        margin-top: 10px;
+      }
+
+      .life-update-dots span {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.22);
+      }
+
+      .life-update-dots span.hot {
+        background: var(--red);
+        animation: lifeUpdateDotHot 1.25s ease-in-out both;
+      }
+
       .insight-scrim {
         position: fixed;
         inset: 0;
@@ -3772,6 +3988,20 @@
           <button class="insight-later" id="dismissDailyInsight" type="button">Later</button>
           <button class="insight-use" id="useDailyInsight" type="button">Use this</button>
         </div>
+      </article>
+    </div>
+
+    <div class="life-update-scrim" id="lifeUpdateOverlay" aria-hidden="true">
+      <article class="life-update-stage" aria-live="polite">
+        <div class="life-update-mark" aria-hidden="true">
+          <img src="./icon.svg" alt="" />
+        </div>
+        <span class="life-update-kicker" id="lifeUpdateKicker">Life clock</span>
+        <span class="life-update-old" id="lifeUpdateOldDays">0</span>
+        <strong class="life-update-new" id="lifeUpdateNewDays">0</strong>
+        <span class="life-update-label" id="lifeUpdateLabel">days left</span>
+        <div class="life-update-bar" aria-hidden="true"><span id="lifeUpdateBar"></span></div>
+        <div class="life-update-dots" id="lifeUpdateDots" aria-hidden="true"></div>
       </article>
     </div>
 
@@ -5103,13 +5333,48 @@
         setTimeout(animateLifeClockIfNeeded, 180);
       }
 
-      function animateLifeClockIfNeeded() {
+      function showLifeUpdateOverlay(previous, currentStats) {
+        const overlay = document.getElementById("lifeUpdateOverlay");
+        if (!overlay) return Promise.resolve();
+        const previousDays = Math.max(currentStats.daysLeft + 1, Number(previous.daysLeft) || 0);
+        document.getElementById("lifeUpdateKicker").textContent = uiText("lifeClock");
+        document.getElementById("lifeUpdateOldDays").textContent = formatNumber(previousDays);
+        document.getElementById("lifeUpdateNewDays").textContent = formatNumber(currentStats.daysLeft);
+        document.getElementById("lifeUpdateLabel").textContent = uiText("daysLeft");
+        const bar = document.getElementById("lifeUpdateBar");
+        bar.style.width = `${Math.max(4, Number(previous.usedPercent || 0))}%`;
+        document.getElementById("lifeUpdateDots").innerHTML = Array.from({ length: 18 }, (_, index) =>
+          `<span class="${index === 17 ? "hot" : ""}"></span>`
+        ).join("");
+        overlay.classList.remove("open");
+        overlay.setAttribute("aria-hidden", "false");
+        void overlay.offsetWidth;
+        overlay.classList.add("open");
+        requestAnimationFrame(() => {
+          bar.style.width = `${Math.max(4, Number(currentStats.usedPercent || 0))}%`;
+        });
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            overlay.classList.remove("open");
+            overlay.setAttribute("aria-hidden", "true");
+            resolve();
+          }, 2450);
+        });
+      }
+
+      async function animateLifeClockIfNeeded() {
         if (!state.lifeProfile.complete || currentView !== "today") return;
         const dateKey = todayKey();
         if (state.lifeProfile.lastAnimatedDate === dateKey) return;
 
         const currentStats = getLifeStats();
-        const previous = state.lifeProfile.lastSnapshot || lifeSnapshot(currentStats);
+        const previous = state.lifeProfile.lastSnapshot || {
+          ...lifeSnapshot(currentStats),
+          daysLeft: currentStats.daysLeft + 1,
+          weeksLeft: Math.max(currentStats.weeksLeft, Math.round((currentStats.daysLeft + 1) / 7)),
+          spentMonths: Math.max(0, currentStats.spentMonths - 1),
+          usedPercent: Math.max(0, currentStats.usedPercent - 1)
+        };
         const monthChanged = previous.spentMonths !== currentStats.spentMonths;
         const dayChanged = previous.daysLeft !== currentStats.daysLeft;
         const weekChanged = previous.weeksLeft !== currentStats.weeksLeft;
@@ -5117,13 +5382,14 @@
         const percentChanged = Math.round(previous.usedPercent) !== Math.round(currentStats.usedPercent);
 
         if (!dayChanged && !weekChanged && !monthValueChanged && !percentChanged && !monthChanged) {
-          state.lifeProfile.lastAnimatedDate = dateKey;
-          state.lifeProfile.lastSnapshot = lifeSnapshot(currentStats);
-          saveWithoutSyncBump();
-          return;
+          previous.daysLeft = currentStats.daysLeft + 1;
         }
 
+        state.lifeProfile.lastAnimatedDate = dateKey;
+        state.lifeProfile.lastSnapshot = lifeSnapshot(currentStats);
+        saveWithoutSyncBump();
         renderLifeStatsValues({ ...currentStats, ...previous }, { animateMonth: false });
+        await showLifeUpdateOverlay(previous, currentStats);
         requestAnimationFrame(() => {
           document.getElementById("lifeProgressBar").style.width = `${currentStats.usedPercent}%`;
           animateNumberValue(document.getElementById("lifeDaysLeft"), previous.daysLeft, currentStats.daysLeft);
@@ -5143,9 +5409,6 @@
           }).join("");
         });
 
-        state.lifeProfile.lastAnimatedDate = dateKey;
-        state.lifeProfile.lastSnapshot = lifeSnapshot(currentStats);
-        saveWithoutSyncBump();
       }
 
       function renderLifeClock() {

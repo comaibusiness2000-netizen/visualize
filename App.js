@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
+  AppState,
   Image,
   KeyboardAvoidingView,
   Modal,
@@ -60,6 +61,13 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+function todayKey() {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${now.getFullYear()}-${month}-${day}`;
+}
+
 const blankState = {
   storageVersion: STORAGE_VERSION,
   localInstallId: uid("install"),
@@ -69,7 +77,9 @@ const blankState = {
     age: "",
     expectancy: 85,
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    lastAnimatedDate: "",
+    lastSnapshot: null
   },
   dailyTasks: [],
   longGoals: [],
@@ -328,6 +338,17 @@ function lifeStats(profile) {
   return { age, expectancy, daysLeft, weeksLeft, monthsLeft, totalMonths, spentMonths, usedPercent };
 }
 
+function lifeSnapshot(stats) {
+  return {
+    daysLeft: stats.daysLeft,
+    weeksLeft: stats.weeksLeft,
+    monthsLeft: stats.monthsLeft,
+    totalMonths: stats.totalMonths,
+    spentMonths: stats.spentMonths,
+    usedPercent: stats.usedPercent
+  };
+}
+
 function ProgressScrubber({ value, onChange }) {
   const widthRef = useRef(1);
   const commit = (locationX) => {
@@ -370,7 +391,10 @@ export default function App() {
   const [profileDraft, setProfileDraft] = useState(blankState.profile);
   const [profileOpen, setProfileOpen] = useState(false);
   const [player, setPlayer] = useState(null);
+  const [lifeUpdate, setLifeUpdate] = useState(null);
   const setupPulse = useRef(new Animated.Value(0)).current;
+  const lifeUpdatePulse = useRef(new Animated.Value(0)).current;
+  const appStateRef = useRef("active");
 
   const theme = appState.settings.darkMode ? darkTheme : lightTheme;
   const language = appState.settings.language || "en";
@@ -440,6 +464,23 @@ export default function App() {
     return () => clearInterval(timer);
   }, [player, appState.visionSlides, appState.antiSlides]);
 
+  useEffect(() => {
+    if (!hydrated || !profileComplete) return undefined;
+    const timer = setTimeout(() => maybeRunDailyLifeUpdate(), 550);
+    return () => clearTimeout(timer);
+  }, [hydrated, profileComplete, appState.profile.lastAnimatedDate]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextState) => {
+      const wasAway = appStateRef.current === "inactive" || appStateRef.current === "background";
+      appStateRef.current = nextState;
+      if (wasAway && nextState === "active") {
+        setTimeout(() => maybeRunDailyLifeUpdate(), 260);
+      }
+    });
+    return () => subscription.remove();
+  }, [hydrated, profileComplete, appState.profile.lastAnimatedDate, appState.profile.lastSnapshot]);
+
   function updateState(mutator) {
     setAppState((current) => {
       const next = typeof mutator === "function" ? mutator(current) : mutator;
@@ -469,18 +510,59 @@ export default function App() {
       Alert.alert(t("alert.profile"), t("alert.addAge"));
       return;
     }
-    updateState((current) => ({
-      ...current,
-      profile: {
+    updateState((current) => {
+      const timestamp = nowIso();
+      const nextProfile = {
         complete: true,
         name,
         age,
         expectancy: Math.max(expectancy, age + 1),
-        createdAt: current.profile.createdAt || nowIso(),
-        updatedAt: nowIso()
+        createdAt: current.profile.createdAt || timestamp,
+        updatedAt: timestamp,
+        lastAnimatedDate: todayKey()
+      };
+      nextProfile.lastSnapshot = lifeSnapshot(lifeStats(nextProfile));
+      return { ...current, profile: nextProfile };
+    });
+    setProfileOpen(false);
+  }
+
+  function maybeRunDailyLifeUpdate() {
+    if (!hydrated || !appState.profile.complete || lifeUpdate) return;
+    const dateKey = todayKey();
+    if (appState.profile.lastAnimatedDate === dateKey) return;
+
+    const currentStats = lifeStats(appState.profile);
+    const currentSnapshot = lifeSnapshot(currentStats);
+    const storedSnapshot = appState.profile.lastSnapshot;
+    const fallbackPrevious = {
+      ...currentSnapshot,
+      daysLeft: currentSnapshot.daysLeft + 1,
+      weeksLeft: Math.max(currentSnapshot.weeksLeft, Math.round((currentSnapshot.daysLeft + 1) / 7)),
+      spentMonths: Math.max(0, currentSnapshot.spentMonths - 1),
+      usedPercent: Math.max(0, currentSnapshot.usedPercent - 1)
+    };
+    const previous = storedSnapshot && typeof storedSnapshot === "object" ? storedSnapshot : fallbackPrevious;
+
+    lifeUpdatePulse.setValue(0);
+    setTab("life");
+    setLifeUpdate({ previous, current: currentSnapshot });
+    updateState((current) => ({
+      ...current,
+      profile: {
+        ...current.profile,
+        lastAnimatedDate: dateKey,
+        lastSnapshot: currentSnapshot
       }
     }));
-    setProfileOpen(false);
+
+    Animated.sequence([
+      Animated.timing(lifeUpdatePulse, { toValue: 0.42, duration: 560, useNativeDriver: true }),
+      Animated.timing(lifeUpdatePulse, { toValue: 0.78, duration: 860, useNativeDriver: true }),
+      Animated.timing(lifeUpdatePulse, { toValue: 1, duration: 560, useNativeDriver: true })
+    ]).start(() => {
+      setTimeout(() => setLifeUpdate(null), 120);
+    });
   }
 
   function addGoal() {
@@ -997,6 +1079,68 @@ export default function App() {
     );
   }
 
+  function renderLifeUpdateOverlay() {
+    if (!lifeUpdate) return null;
+    const previousDays = Math.max(
+      lifeUpdate.current.daysLeft + 1,
+      Number(lifeUpdate.previous.daysLeft) || 0
+    );
+    const fade = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.12, 0.86, 1],
+      outputRange: [0, 1, 1, 0]
+    });
+    const stageTranslate = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.42, 0.78, 1],
+      outputRange: [20, 0, 0, -10]
+    });
+    const newScale = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.42, 0.78, 1],
+      outputRange: [0.84, 1, 1.05, 0.98]
+    });
+    const oldTranslate = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.42, 1],
+      outputRange: [0, -20, -26]
+    });
+    const fillScale = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.72, 1],
+      outputRange: [
+        Math.max(0.04, Number(lifeUpdate.previous.usedPercent || 0) / 100),
+        Math.max(0.04, Number(lifeUpdate.current.usedPercent || 0) / 100),
+        Math.max(0.04, Number(lifeUpdate.current.usedPercent || 0) / 100)
+      ]
+    });
+    const dots = Array.from({ length: 18 }, (_, index) => index);
+    return (
+      <Modal visible transparent animationType="none">
+        <Animated.View style={[styles.lifeUpdateOverlay, { opacity: fade }]}>
+          <Animated.View style={[styles.lifeUpdateStage, { transform: [{ translateY: stageTranslate }] }]}>
+            <View style={styles.lifeUpdateLogo}>
+              <View style={styles.logoSmallSlash} />
+              <View style={styles.logoSmallSlashSecond} />
+              <View style={styles.logoSmallDot} />
+            </View>
+            <Text style={styles.lifeUpdateKicker}>{t("life.kicker")}</Text>
+            <Animated.Text style={[styles.lifeUpdateOldNumber, { transform: [{ translateY: oldTranslate }] }]}>
+              {previousDays.toLocaleString("en-US")}
+            </Animated.Text>
+            <Animated.Text style={[styles.lifeUpdateNumber, { transform: [{ scale: newScale }] }]}>
+              {lifeUpdate.current.daysLeft.toLocaleString("en-US")}
+            </Animated.Text>
+            <Text style={styles.lifeUpdateLabel}>{t("life.days")}</Text>
+            <View style={styles.lifeUpdateBar}>
+              <Animated.View style={[styles.lifeUpdateBarFill, { transform: [{ scaleX: fillScale }] }]} />
+            </View>
+            <View style={styles.lifeUpdateDots}>
+              {dots.map((dot) => (
+                <View key={dot} style={[styles.lifeUpdateDot, dot === dots.length - 1 && styles.lifeUpdateDotHot]} />
+              ))}
+            </View>
+          </Animated.View>
+        </Animated.View>
+      </Modal>
+    );
+  }
+
   if (!hydrated) {
     return (
       <SafeAreaView style={[styles.screen, styles.loader]}>
@@ -1037,6 +1181,7 @@ export default function App() {
           </View>
           {renderProfileModal()}
           {renderPlayer()}
+          {renderLifeUpdateOverlay()}
         </>
       ) : (
         renderOnboarding()
@@ -1144,6 +1289,18 @@ const styles = StyleSheet.create({
   dotMap: { marginTop: 15, flexDirection: "row", flexWrap: "wrap", gap: 4 },
   lifeDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.28)" },
   lifeDotSpent: { backgroundColor: "#E8C468" },
+  lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(8,10,11,0.96)", alignItems: "center", justifyContent: "center", padding: 24 },
+  lifeUpdateStage: { width: "100%", minHeight: 520, borderRadius: 38, padding: 28, alignItems: "center", justifyContent: "center", backgroundColor: "#101418", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  lifeUpdateLogo: { width: 68, height: 48, marginBottom: 28, alignItems: "center", justifyContent: "center" },
+  lifeUpdateKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
+  lifeUpdateOldNumber: { marginTop: 30, color: "rgba(255,255,255,0.34)", fontSize: 36, lineHeight: 40, fontWeight: "900", textDecorationLine: "line-through" },
+  lifeUpdateNumber: { color: "#FFFFFF", fontSize: 76, lineHeight: 82, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
+  lifeUpdateLabel: { color: "rgba(255,255,255,0.76)", fontSize: 17, lineHeight: 22, fontWeight: "900", textAlign: "center" },
+  lifeUpdateBar: { width: "100%", height: 12, marginTop: 32, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.12)" },
+  lifeUpdateBarFill: { width: "100%", height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
+  lifeUpdateDots: { marginTop: 24, flexDirection: "row", gap: 7 },
+  lifeUpdateDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: "rgba(255,255,255,0.22)" },
+  lifeUpdateDotHot: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.55, shadowRadius: 12, shadowOffset: { width: 0, height: 0 } },
   segment: { flexDirection: "row", borderRadius: 999, padding: 5, marginBottom: 14 },
   segmentButton: { flex: 1, minHeight: 42, alignItems: "center", justifyContent: "center", borderRadius: 999 },
   segmentActive: { backgroundColor: "#E8C468" },
