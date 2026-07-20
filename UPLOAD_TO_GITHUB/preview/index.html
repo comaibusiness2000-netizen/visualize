@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=56" />
+    <link rel="manifest" href="./manifest.webmanifest?v=57" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-20-v56";
+      const VISUALIZE_APP_VERSION = "2026-07-20-v57";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=56")
+            .register("./service-worker.js?v=57")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3385,6 +3385,72 @@
         font-weight: 900;
       }
 
+      .life-update-stats {
+        z-index: 1;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .life-update-stat {
+        min-height: 76px;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 5px;
+        padding: 9px 6px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .life-update-stat.changed {
+        border-color: rgba(232, 196, 104, 0.46);
+        background: rgba(232, 196, 104, 0.12);
+      }
+
+      .life-update-stat span {
+        color: rgba(255, 250, 240, 0.62);
+        font-size: 10px;
+        line-height: 1.1;
+        font-weight: 950;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .life-update-stat-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      .life-update-stat em {
+        color: rgba(255, 255, 255, 0.42);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 950;
+        text-decoration: line-through;
+      }
+
+      .life-update-stat b {
+        color: var(--gold);
+        font-size: 11px;
+        font-weight: 950;
+      }
+
+      .life-update-stat strong {
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 950;
+      }
+
+      .life-update-scrim.open .life-update-stat.changed strong {
+        animation: numberTick 0.9s ease both;
+      }
+
       .life-update-bar {
         z-index: 1;
         width: 100%;
@@ -4000,6 +4066,7 @@
         <span class="life-update-old" id="lifeUpdateOldDays">0</span>
         <strong class="life-update-new" id="lifeUpdateNewDays">0</strong>
         <span class="life-update-label" id="lifeUpdateLabel">days left</span>
+        <div class="life-update-stats" id="lifeUpdateStats" aria-label="Life clock changes"></div>
         <div class="life-update-bar" aria-hidden="true"><span id="lifeUpdateBar"></span></div>
         <div class="life-update-dots" id="lifeUpdateDots" aria-hidden="true"></div>
       </article>
@@ -5341,6 +5408,43 @@
         document.getElementById("lifeUpdateOldDays").textContent = formatNumber(previousDays);
         document.getElementById("lifeUpdateNewDays").textContent = formatNumber(currentStats.daysLeft);
         document.getElementById("lifeUpdateLabel").textContent = uiText("daysLeft");
+        const safeNumber = (value, fallback) => {
+          const parsed = Number(value);
+          return Number.isFinite(parsed) ? parsed : fallback;
+        };
+        const updateStats = [
+          {
+            label: uiText("weeksLeft"),
+            previous: safeNumber(previous.weeksLeft, currentStats.weeksLeft),
+            current: Number(currentStats.weeksLeft),
+            format: formatNumber
+          },
+          {
+            label: uiText("monthsLeft"),
+            previous: safeNumber(previous.monthsLeft, currentStats.monthsLeft),
+            current: Number(currentStats.monthsLeft),
+            format: formatNumber
+          },
+          {
+            label: uiText("lifeUsed"),
+            previous: safeNumber(previous.usedPercent, currentStats.usedPercent),
+            current: Number(currentStats.usedPercent),
+            format: (value) => `${Math.round(value)}%`
+          }
+        ];
+        document.getElementById("lifeUpdateStats").innerHTML = updateStats.map((item) => {
+          const changed = Math.round(item.previous) !== Math.round(item.current);
+          return `
+            <div class="life-update-stat ${changed ? "changed" : ""}">
+              <span>${escapeHtml(item.label)}</span>
+              <div class="life-update-stat-row">
+                <em>${escapeHtml(item.format(item.previous))}</em>
+                <b>-&gt;</b>
+                <strong>${escapeHtml(item.format(item.current))}</strong>
+              </div>
+            </div>
+          `;
+        }).join("");
         const bar = document.getElementById("lifeUpdateBar");
         bar.style.width = `${Math.max(4, Number(previous.usedPercent || 0))}%`;
         document.getElementById("lifeUpdateDots").innerHTML = Array.from({ length: 18 }, (_, index) =>

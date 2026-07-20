@@ -1110,6 +1110,30 @@ export default function App() {
       ]
     });
     const dots = Array.from({ length: 18 }, (_, index) => index);
+    const safeNumber = (value, fallback) => {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    };
+    const updateStats = [
+      {
+        label: t("life.weeks"),
+        previous: safeNumber(lifeUpdate.previous.weeksLeft, lifeUpdate.current.weeksLeft),
+        current: Number(lifeUpdate.current.weeksLeft),
+        formatter: (value) => Math.round(value).toLocaleString("en-US")
+      },
+      {
+        label: t("life.months"),
+        previous: safeNumber(lifeUpdate.previous.monthsLeft, lifeUpdate.current.monthsLeft),
+        current: Number(lifeUpdate.current.monthsLeft),
+        formatter: (value) => Math.round(value).toLocaleString("en-US")
+      },
+      {
+        label: t("life.used"),
+        previous: safeNumber(lifeUpdate.previous.usedPercent, lifeUpdate.current.usedPercent),
+        current: Number(lifeUpdate.current.usedPercent),
+        formatter: (value) => `${Math.round(value)}%`
+      }
+    ];
     return (
       <Modal visible transparent animationType="none">
         <Animated.View style={[styles.lifeUpdateOverlay, { opacity: fade }]}>
@@ -1127,6 +1151,21 @@ export default function App() {
               {lifeUpdate.current.daysLeft.toLocaleString("en-US")}
             </Animated.Text>
             <Text style={styles.lifeUpdateLabel}>{t("life.days")}</Text>
+            <View style={styles.lifeUpdateStats}>
+              {updateStats.map((item) => {
+                const changed = Math.round(item.previous) !== Math.round(item.current);
+                return (
+                  <View key={item.label} style={[styles.lifeUpdateStat, changed && styles.lifeUpdateStatChanged]}>
+                    <Text style={styles.lifeUpdateStatLabel}>{item.label}</Text>
+                    <View style={styles.lifeUpdateStatRow}>
+                      <Text style={styles.lifeUpdateStatOld}>{item.formatter(item.previous)}</Text>
+                      <Text style={styles.lifeUpdateStatArrow}>-&gt;</Text>
+                      <Text style={styles.lifeUpdateStatNew}>{item.formatter(item.current)}</Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
             <View style={styles.lifeUpdateBar}>
               <Animated.View style={[styles.lifeUpdateBarFill, { transform: [{ scaleX: fillScale }] }]} />
             </View>
@@ -1290,13 +1329,21 @@ const styles = StyleSheet.create({
   lifeDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.28)" },
   lifeDotSpent: { backgroundColor: "#E8C468" },
   lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(8,10,11,0.96)", alignItems: "center", justifyContent: "center", padding: 24 },
-  lifeUpdateStage: { width: "100%", minHeight: 520, borderRadius: 38, padding: 28, alignItems: "center", justifyContent: "center", backgroundColor: "#101418", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  lifeUpdateStage: { width: "100%", minHeight: 560, borderRadius: 38, padding: 24, alignItems: "center", justifyContent: "center", backgroundColor: "#101418", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
   lifeUpdateLogo: { width: 68, height: 48, marginBottom: 28, alignItems: "center", justifyContent: "center" },
   lifeUpdateKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
   lifeUpdateOldNumber: { marginTop: 30, color: "rgba(255,255,255,0.34)", fontSize: 36, lineHeight: 40, fontWeight: "900", textDecorationLine: "line-through" },
   lifeUpdateNumber: { color: "#FFFFFF", fontSize: 76, lineHeight: 82, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
   lifeUpdateLabel: { color: "rgba(255,255,255,0.76)", fontSize: 17, lineHeight: 22, fontWeight: "900", textAlign: "center" },
-  lifeUpdateBar: { width: "100%", height: 12, marginTop: 32, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.12)" },
+  lifeUpdateStats: { width: "100%", flexDirection: "row", gap: 8, marginTop: 22 },
+  lifeUpdateStat: { flex: 1, minHeight: 76, borderRadius: 20, paddingHorizontal: 8, paddingVertical: 10, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  lifeUpdateStatChanged: { borderColor: "rgba(232,196,104,0.48)", backgroundColor: "rgba(232,196,104,0.12)" },
+  lifeUpdateStatLabel: { color: "rgba(255,255,255,0.64)", fontSize: 10, lineHeight: 13, fontWeight: "900", textAlign: "center", textTransform: "uppercase" },
+  lifeUpdateStatRow: { marginTop: 5, flexDirection: "row", alignItems: "center", gap: 4 },
+  lifeUpdateStatOld: { color: "rgba(255,255,255,0.42)", fontSize: 12, lineHeight: 15, fontWeight: "900", textDecorationLine: "line-through" },
+  lifeUpdateStatArrow: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900" },
+  lifeUpdateStatNew: { color: "#FFFFFF", fontSize: 15, lineHeight: 18, fontWeight: "900" },
+  lifeUpdateBar: { width: "100%", height: 12, marginTop: 22, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.12)" },
   lifeUpdateBarFill: { width: "100%", height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   lifeUpdateDots: { marginTop: 24, flexDirection: "row", gap: 7 },
   lifeUpdateDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: "rgba(255,255,255,0.22)" },
