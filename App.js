@@ -29,6 +29,7 @@ const STORAGE_VERSION = 2;
 const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
+const MAX_WHY_PEOPLE = 12;
 const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
 
 function normalizeLanguageId(locale) {
@@ -83,6 +84,7 @@ const blankState = {
   },
   dailyTasks: [],
   longGoals: [],
+  whyPeople: [],
   visionSlides: [],
   antiSlides: [],
   selfSpeeches: [],
@@ -123,13 +125,13 @@ const languages = [
 const copy = {
   en: {
     "tab.life": "Life",
-    "tab.goals": "Goals",
+    "tab.goals": "Why",
     "tab.vision": "Vision",
     "tab.anti": "Anti",
     "tab.speech": "Speech",
     "setup.kicker": "Profile setup",
     "setup.title": "Build your life clock first.",
-    "setup.body": "Visualize starts empty. Create your profile, then add your goals, images, and self speech step by step.",
+    "setup.body": "Visualize starts empty. Create your profile, then add your why, images, and self speech step by step.",
     "setup.name": "First name",
     "setup.age": "Age",
     "setup.estimate": "Life estimate, example 85",
@@ -152,6 +154,12 @@ const copy = {
     "goals.emptyTitle": "Nothing here yet.",
     "goals.emptyBody": "Start with one small action or one long-term goal.",
     "goals.complete": "{progress}% complete",
+    "why.title": "Who do you do it for?",
+    "why.body": "Upload photos of the people you refuse to let down: family, an ex you want to outgrow, the child you were, a future child, or anyone who makes the work matter.",
+    "why.examples": "family|your younger self|future child|someone who doubted you",
+    "why.add": "Add people",
+    "why.emptyTitle": "No faces here yet.",
+    "why.emptyBody": "Add the people, memories, or future people that make your goals personal.",
     "deck.visionTitle": "Create your Vision",
     "deck.antiTitle": "Create your Anti-vision",
     "deck.visionBody": "Add images of who you want to become, what you want to have, and who you want around you.",
@@ -202,30 +210,33 @@ const copy = {
     "alert.reset": "Reset"
   },
   es: {
-    "tab.life": "Vida", "tab.goals": "Metas", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voz",
+    "tab.life": "Vida", "tab.goals": "Por quien", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voz",
     "setup.kicker": "Crear perfil", "setup.title": "Crea primero tu reloj de vida.", "setup.body": "Visualize empieza vacio. Crea tu perfil y luego agrega metas, imagenes y self speech paso a paso.", "setup.name": "Nombre", "setup.age": "Edad", "setup.estimate": "Estimacion de vida, ejemplo 85", "setup.create": "Crear perfil",
     "life.kicker": "Reloj de vida", "life.days": "dias estimados restantes", "life.summary": "Basado en edad {age} y una estimacion de vida de {expectancy}. No es una prediccion, es un recordatorio.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada punto es un mes. Los puntos llenos ya pasaron.",
     "goals.daily": "Tareas diarias", "goals.long": "Metas a largo plazo", "goals.dailyTitle": "Que hace avanzar el dia?", "goals.longTitle": "Que estas construyendo este ano?", "goals.body": "Agrega hasta 5 items y mueve manualmente la barra de progreso.", "goals.addTask": "Agregar tarea", "goals.addGoal": "Agregar meta", "goals.emptyTitle": "Todavia no hay nada.", "goals.emptyBody": "Empieza con una pequena accion o una meta a largo plazo.", "goals.complete": "{progress}% completo",
+    "why.title": "Por quien haces esto?", "why.body": "Sube fotos de las personas a las que no quieres fallar: familia, un ex que quieres superar, tu yo de nino, un futuro hijo o cualquiera que haga que el esfuerzo importe.", "why.examples": "familia|tu yo pequeno|futuro hijo|alguien que dudo de ti", "why.add": "Agregar personas", "why.emptyTitle": "Aun no hay rostros.", "why.emptyBody": "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales.",
     "deck.visionTitle": "Crea tu Vision", "deck.antiTitle": "Crea tu Anti-vision", "deck.visionBody": "Agrega imagenes de quien quieres ser, lo que quieres tener y quien quieres cerca.", "deck.antiBody": "Agrega imagenes del futuro opuesto: lo que no quieres llegar a ser, perder o tolerar.", "deck.add": "Agregar imagenes", "deck.play": "Reproducir", "deck.emptyTitle": "Sin imagenes aun.", "deck.emptyBody": "El deck empieza vacio. Agrega fotos desde este iPhone para guardarlas localmente.",
     "speech.title": "Self speech", "speech.body": "Escribe el dialogo interno que quieres escuchar repetidamente. Hazlo personal, directo y creible.", "speech.titlePlaceholder": "Titulo", "speech.textPlaceholder": "Escribe tu self speech aqui", "speech.save": "Guardar", "speech.new": "Nuevo", "speech.listen": "Escuchar", "speech.stop": "Stop", "speech.emptyDraft": "Borrador vacio",
     "profile.kicker": "Perfil local", "profile.storageTitle": "Guardado en el dispositivo", "profile.storageBody": "Guardado solo en este iPhone. Al cerrar la app o reiniciar el telefono, los datos se mantienen. Si eliminas la app, se eliminan los datos locales.", "profile.cloudTitle": "Datos listos para cloud", "profile.cloudBody": "Tu perfil, metas, imagenes y speeches locales tienen IDs estables. Cuando agreguemos cloud sync, este dispositivo podra subir sus datos existentes antes de activar la sincronizacion.", "profile.deviceKey": "Clave dispositivo", "profile.appearance": "Apariencia", "profile.darkMode": "Modo oscuro", "profile.notifications": "Notificaciones luego", "profile.language": "Idioma", "profile.reset": "Resetear este dispositivo", "profile.close": "Cerrar", "player.close": "Cerrar",
     "alert.profile": "Perfil", "alert.addName": "Agrega tu nombre primero.", "alert.addAge": "Agrega tu edad primero.", "alert.goals": "Metas", "alert.maxGoals": "Mantén la lista enfocada: maximo 5 items.", "alert.photos": "Fotos", "alert.allowPhotos": "Permite acceso a fotos para agregarlas a tu deck.", "alert.deckFull": "Deck lleno", "alert.maxImages": "Maximo {max} imagenes por ahora.", "alert.deck": "Deck", "alert.addImagesFirst": "Agrega imagenes primero.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Escribe primero el texto que quieres escuchar.", "alert.writeSpeechPlay": "Escribe un speech primero.", "alert.resetTitle": "Resetear datos locales", "alert.resetBody": "Esto elimina perfil, metas, imagenes y self speeches de este dispositivo.", "alert.cancel": "Cancelar", "alert.reset": "Resetear"
   },
   fr: {
-    "tab.life": "Vie", "tab.goals": "Objectifs", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voix",
+    "tab.life": "Vie", "tab.goals": "Pourquoi", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voix",
     "setup.kicker": "Creation profil", "setup.title": "Commence par ton horloge.", "setup.body": "Visualize commence vide. Cree ton profil; puis ajoute objectifs, images et self speech.", "setup.name": "Prenom", "setup.age": "Age", "setup.estimate": "Estimation de vie, exemple 85", "setup.create": "Creer profil",
     "life.kicker": "Horloge de vie", "life.days": "jours estimes restants", "life.summary": "Base sur l'age {age} et une estimation de vie de {expectancy}. Ce n'est pas une prediction, c'est un rappel.", "life.weeks": "semaines", "life.months": "mois", "life.used": "utilise", "life.monthMap": "Vie par mois", "life.monthMapBody": "Chaque point est un mois. Les points remplis sont deja passes.",
     "goals.daily": "Taches du jour", "goals.long": "Objectifs long terme", "goals.dailyTitle": "Qu'est-ce qui fait avancer aujourd'hui?", "goals.longTitle": "Que construis-tu cette annee?", "goals.body": "Ajoute jusqu'a 5 elements et ajuste manuellement la progression.", "goals.addTask": "Ajouter tache", "goals.addGoal": "Ajouter objectif", "goals.emptyTitle": "Rien pour l'instant.", "goals.emptyBody": "Commence avec une petite action ou un objectif long terme.", "goals.complete": "{progress}% termine",
+    "why.title": "Pour qui fais-tu ca?", "why.body": "Ajoute les photos des personnes que tu refuses de decevoir: famille, un ex que tu veux depasser, l'enfant que tu etais, un futur enfant ou toute personne qui rend l'effort important.", "why.examples": "famille|toi enfant|futur enfant|quelqu'un qui doutait", "why.add": "Ajouter personnes", "why.emptyTitle": "Aucun visage encore.", "why.emptyBody": "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels.",
     "deck.visionTitle": "Cree ta Vision", "deck.antiTitle": "Cree ton Anti-vision", "deck.visionBody": "Ajoute des images de qui tu veux devenir, ce que tu veux avoir et qui tu veux autour de toi.", "deck.antiBody": "Ajoute les images du futur oppose: ce que tu refuses de devenir, perdre ou tolerer.", "deck.add": "Ajouter images", "deck.play": "Lire", "deck.emptyTitle": "Aucune image.", "deck.emptyBody": "Le deck commence vide. Ajoute des photos depuis cet iPhone pour les garder localement.",
     "speech.title": "Self speech", "speech.body": "Ecris le discours interieur que tu veux ecouter souvent. Personnel, direct, credible.", "speech.titlePlaceholder": "Titre", "speech.textPlaceholder": "Ecris ton self speech ici", "speech.save": "Sauver", "speech.new": "Nouveau", "speech.listen": "Ecouter", "speech.stop": "Stop", "speech.emptyDraft": "Brouillon vide",
     "profile.kicker": "Profil local", "profile.storageTitle": "Stockage appareil", "profile.storageBody": "Sauve seulement sur cet iPhone. Fermer l'app ou redemarrer le telephone garde les donnees. Supprimer l'app supprime les donnees locales.", "profile.cloudTitle": "Donnees pretes pour le cloud", "profile.cloudBody": "Profil, objectifs, images et speeches locaux ont des IDs stables. Quand le cloud sync arrivera, cet appareil pourra envoyer ses donnees existantes avant d'activer la sync.", "profile.deviceKey": "Cle appareil", "profile.appearance": "Apparence", "profile.darkMode": "Mode sombre", "profile.notifications": "Notifications plus tard", "profile.language": "Langue", "profile.reset": "Reinitialiser", "profile.close": "Fermer", "player.close": "Fermer",
     "alert.profile": "Profil", "alert.addName": "Ajoute ton prenom d'abord.", "alert.addAge": "Ajoute ton age d'abord.", "alert.goals": "Objectifs", "alert.maxGoals": "Garde la liste concentree: maximum 5 elements.", "alert.photos": "Photos", "alert.allowPhotos": "Autorise l'acces aux photos pour les ajouter au deck.", "alert.deckFull": "Deck plein", "alert.maxImages": "Maximum {max} images pour l'instant.", "alert.deck": "Deck", "alert.addImagesFirst": "Ajoute d'abord des images.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Ecris d'abord le texte a ecouter.", "alert.writeSpeechPlay": "Ecris d'abord un speech.", "alert.resetTitle": "Reinitialiser les donnees locales", "alert.resetBody": "Cela supprime le profil, les objectifs, les images et les self speeches de cet appareil.", "alert.cancel": "Annuler", "alert.reset": "Reinitialiser"
   },
   pt: {
-    "tab.life": "Vida", "tab.goals": "Metas", "tab.vision": "Visao", "tab.anti": "Anti", "tab.speech": "Voz",
+    "tab.life": "Vida", "tab.goals": "Por quem", "tab.vision": "Visao", "tab.anti": "Anti", "tab.speech": "Voz",
     "setup.kicker": "Criar perfil", "setup.title": "Comece pelo relogio de vida.", "setup.body": "Visualize comeca vazio. Crie seu perfil; depois adicione metas, imagens e self speech.", "setup.name": "Nome", "setup.age": "Idade", "setup.estimate": "Estimativa de vida, exemplo 85", "setup.create": "Criar perfil",
     "life.kicker": "Relogio de vida", "life.days": "dias estimados restantes", "life.summary": "Baseado na idade {age} e estimativa de vida de {expectancy}. Nao e previsao, e lembrete.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada ponto e um mes. Pontos preenchidos ja passaram.",
     "goals.daily": "Tarefas diarias", "goals.long": "Metas de longo prazo", "goals.dailyTitle": "O que move hoje para frente?", "goals.longTitle": "O que voce esta construindo este ano?", "goals.body": "Adicione ate 5 itens e mova manualmente a barra de progresso.", "goals.addTask": "Adicionar tarefa", "goals.addGoal": "Adicionar meta", "goals.emptyTitle": "Nada aqui ainda.", "goals.emptyBody": "Comece com uma pequena acao ou uma meta de longo prazo.", "goals.complete": "{progress}% completo",
+    "why.title": "Por quem voce faz isso?", "why.body": "Adicione fotos das pessoas que voce nao quer decepcionar: familia, um ex que quer superar, voce quando crianca, um futuro filho ou qualquer pessoa que torne o esforco importante.", "why.examples": "familia|voce crianca|futuro filho|alguem que duvidou", "why.add": "Adicionar pessoas", "why.emptyTitle": "Ainda sem rostos.", "why.emptyBody": "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais.",
     "deck.visionTitle": "Crie sua Visao", "deck.antiTitle": "Crie sua Anti-visao", "deck.visionBody": "Adicione imagens de quem voce quer ser, do que quer ter e de quem quer perto.", "deck.antiBody": "Adicione imagens do futuro oposto: o que voce nao quer se tornar, perder ou tolerar.", "deck.add": "Adicionar imagens", "deck.play": "Reproduzir", "deck.emptyTitle": "Sem imagens ainda.", "deck.emptyBody": "O deck comeca vazio. Adicione fotos deste iPhone para salva-las localmente.",
     "speech.title": "Self speech", "speech.body": "Escreva o dialogo interno que quer ouvir repetidamente. Pessoal, direto e crivel.", "speech.titlePlaceholder": "Titulo", "speech.textPlaceholder": "Escreva seu self speech aqui", "speech.save": "Salvar", "speech.new": "Novo", "speech.listen": "Ouvir", "speech.stop": "Parar", "speech.emptyDraft": "Rascunho vazio",
     "profile.kicker": "Perfil local", "profile.storageTitle": "Armazenamento no dispositivo", "profile.storageBody": "Salvo apenas neste iPhone. Fechar o app ou reiniciar o telefone mantem os dados. Apagar o app remove os dados locais.", "profile.cloudTitle": "Dados prontos para cloud", "profile.cloudBody": "Perfil, metas, imagens e speeches locais tem IDs estaveis. Quando adicionarmos cloud sync, este dispositivo podera enviar os dados existentes antes de ativar a sincronizacao.", "profile.deviceKey": "Chave do dispositivo", "profile.appearance": "Aparencia", "profile.darkMode": "Modo escuro", "profile.notifications": "Notificacoes depois", "profile.language": "Idioma", "profile.reset": "Resetar dispositivo", "profile.close": "Fechar", "player.close": "Fechar",
@@ -242,6 +253,16 @@ const copy = {
     "alert.profile": "资料", "alert.addName": "请先填写名字。", "alert.addAge": "请先填写年龄。", "alert.goals": "目标", "alert.maxGoals": "保持专注：最多 5 项。", "alert.photos": "照片", "alert.allowPhotos": "允许访问照片，才能添加到卡组。", "alert.deckFull": "卡组已满", "alert.maxImages": "目前最多 {max} 张图片。", "alert.deck": "卡组", "alert.addImagesFirst": "请先添加图片。", "alert.selfSpeech": "自我对话", "alert.writeSpeech": "请先写下要聆听的文字。", "alert.writeSpeechPlay": "请先写一段自我对话。", "alert.resetTitle": "重置本地数据", "alert.resetBody": "这会从此设备删除资料、目标、图片和自我对话。", "alert.cancel": "取消", "alert.reset": "重置"
   }
 };
+
+Object.assign(copy.zh, {
+  "tab.goals": "Why",
+  "why.title": "Who do you do it for?",
+  "why.body": "Upload photos of family, the child you were, a future child, or anyone who makes the work matter.",
+  "why.examples": "family|younger self|future child|someone who doubted you",
+  "why.add": "Add people",
+  "why.emptyTitle": "No faces here yet.",
+  "why.emptyBody": "Add the people, memories, or future people that make your goals personal."
+});
 
 function clamp(value, min, max) {
   const number = Number(value);
@@ -289,6 +310,9 @@ function mergeStoredState(saved) {
       : [],
     longGoals: Array.isArray(saved.longGoals)
       ? saved.longGoals.map((item) => normalizeLocalRecord(item, "goal", localInstallId))
+      : [],
+    whyPeople: Array.isArray(saved.whyPeople)
+      ? saved.whyPeople.map((item) => normalizeLocalRecord(item, "why", localInstallId))
       : [],
     visionSlides: Array.isArray(saved.visionSlides)
       ? saved.visionSlides.map((item) => normalizeLocalRecord(item, "vision", localInstallId))
@@ -609,6 +633,53 @@ export default function App() {
     }));
   }
 
+  async function addWhyPeople() {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert(t("alert.photos"), t("alert.allowPhotos"));
+      return;
+    }
+    const currentPeople = appState.whyPeople || [];
+    const remaining = MAX_WHY_PEOPLE - currentPeople.length;
+    if (remaining <= 0) {
+      Alert.alert(t("alert.photos"), t("alert.maxImages", { max: MAX_WHY_PEOPLE }));
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsMultipleSelection: true,
+      selectionLimit: remaining,
+      quality: 0.82,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images
+    });
+    if (result.canceled) return;
+    const assets = (result.assets || []).slice(0, remaining);
+    const savedPeople = [];
+    for (const asset of assets) {
+      if (!asset.uri) continue;
+      const timestamp = nowIso();
+      const localUri = await persistPickedImage(asset.uri, "why");
+      savedPeople.push({
+        id: uid("why"),
+        imageUri: localUri,
+        source: "local",
+        syncStatus: "local",
+        sourceInstallId: appState.localInstallId,
+        createdAt: timestamp,
+        updatedAt: timestamp
+      });
+    }
+    if (!savedPeople.length) return;
+    updateState((current) => ({ ...current, whyPeople: [...(current.whyPeople || []), ...savedPeople] }));
+  }
+
+  async function removeWhyPerson(id) {
+    const person = (appState.whyPeople || []).find((item) => item.id === id);
+    updateState((current) => ({ ...current, whyPeople: (current.whyPeople || []).filter((item) => item.id !== id) }));
+    if (person?.imageUri) {
+      FileSystem.deleteAsync(person.imageUri, { idempotent: true }).catch(() => {});
+    }
+  }
+
   async function addImages(kind) {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
@@ -844,51 +915,41 @@ export default function App() {
   }
 
   function renderGoals() {
+    const people = appState.whyPeople || [];
+    const examples = t("why.examples").split("|");
     return (
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.segment, { backgroundColor: theme.soft }]}>
-          <TouchableOpacity style={[styles.segmentButton, goalMode === "daily" && styles.segmentActive]} onPress={() => setGoalMode("daily")}>
-            <Text style={[styles.segmentText, goalMode === "daily" && styles.segmentTextActive]}>{t("goals.daily")}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.segmentButton, goalMode === "long" && styles.segmentActive]} onPress={() => setGoalMode("long")}>
-            <Text style={[styles.segmentText, goalMode === "long" && styles.segmentTextActive]}>{t("goals.long")}</Text>
-          </TouchableOpacity>
-        </View>
-
         <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.panelTitle, { color: theme.ink }]}>
-            {goalMode === "daily" ? t("goals.dailyTitle") : t("goals.longTitle")}
-          </Text>
-          <Text style={[styles.body, { color: theme.muted }]}>{t("goals.body")}</Text>
-          <View style={styles.addRow}>
-            <TextInput
-              value={draftGoal}
-              onChangeText={setDraftGoal}
-              placeholder={goalMode === "daily" ? t("goals.addTask") : t("goals.addGoal")}
-              placeholderTextColor={theme.placeholder}
-              style={[styles.addInput, { color: theme.ink, backgroundColor: theme.input }]}
-            />
-            <TouchableOpacity style={styles.roundButton} onPress={addGoal}>
-              <Text style={styles.roundButtonText}>+</Text>
-            </TouchableOpacity>
+          <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("why.title")}</Text>
+          <Text style={[styles.body, { color: theme.muted }]}>{t("why.body")}</Text>
+          <View style={styles.whyChips}>
+            {examples.map((example) => (
+              <View key={example} style={[styles.whyChip, { backgroundColor: theme.soft, borderColor: theme.line }]}>
+                <Text style={[styles.whyChipText, { color: theme.ink }]}>{example}</Text>
+              </View>
+            ))}
           </View>
+          <TouchableOpacity style={styles.primaryButton} onPress={addWhyPeople}>
+            <Text style={styles.primaryText}>{t("why.add")}</Text>
+          </TouchableOpacity>
         </View>
 
-        {!activeGoals.length ? (
-          <EmptyState theme={theme} title={t("goals.emptyTitle")} text={t("goals.emptyBody")} />
+        {!people.length ? (
+          <EmptyState theme={theme} title={t("why.emptyTitle")} text={t("why.emptyBody")} />
         ) : (
-          activeGoals.map((goal) => (
-            <View key={goal.id} style={[styles.goalCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
-              <View style={styles.goalHeader}>
-                <Text style={[styles.goalTitle, { color: theme.ink }]}>{goal.title}</Text>
-                <TouchableOpacity onPress={() => removeGoal(goal.id)}>
-                  <Text style={[styles.deleteText, { color: theme.muted }]}>x</Text>
+          <View style={styles.grid}>
+            {people.map((person, index) => (
+              <View key={person.id} style={[styles.imageTile, { borderColor: theme.line }]}>
+                <Image source={{ uri: person.imageUri }} style={styles.tileImage} />
+                <View style={styles.whyImageBadge}>
+                  <Text style={styles.whyImageBadgeText}>{index + 1}</Text>
+                </View>
+                <TouchableOpacity style={styles.removeImage} onPress={() => removeWhyPerson(person.id)}>
+                  <Text style={styles.removeImageText}>x</Text>
                 </TouchableOpacity>
               </View>
-              <ProgressScrubber value={goal.progress || 0} onChange={(progress) => updateGoalProgress(goal.id, progress)} />
-              <Text style={[styles.progressText, { color: theme.muted }]}>{t("goals.complete", { progress: goal.progress || 0 })}</Text>
-            </View>
-          ))
+            ))}
+          </View>
         )}
       </ScrollView>
     );
@@ -1367,9 +1428,14 @@ const styles = StyleSheet.create({
   progressKnob: { position: "absolute", width: 26, height: 26, marginLeft: -13, borderRadius: 13, backgroundColor: "#DA5A3A", borderWidth: 3, borderColor: "#FFFFFF" },
   progressText: { marginTop: 2, fontSize: 12, fontWeight: "900" },
   actionsRow: { flexDirection: "row", gap: 10, marginTop: 14 },
+  whyChips: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 16 },
+  whyChip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 8 },
+  whyChipText: { fontSize: 12, lineHeight: 15, fontWeight: "900" },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   imageTile: { width: "48%", aspectRatio: 0.74, overflow: "hidden", borderRadius: 24, borderWidth: 1, backgroundColor: "#24292C" },
   tileImage: { width: "100%", height: "100%" },
+  whyImageBadge: { position: "absolute", left: 9, bottom: 9, minWidth: 32, height: 32, borderRadius: 16, paddingHorizontal: 10, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(232,196,104,0.92)" },
+  whyImageBadgeText: { color: "#111315", fontSize: 13, fontWeight: "900" },
   removeImage: { position: "absolute", right: 8, top: 8, width: 32, height: 32, borderRadius: 16, backgroundColor: "rgba(0,0,0,0.58)", alignItems: "center", justifyContent: "center" },
   removeImageText: { color: "#FFFFFF", fontSize: 18, fontWeight: "900" },
   speechPill: { borderWidth: 1, borderRadius: 22, padding: 15, marginBottom: 10 },

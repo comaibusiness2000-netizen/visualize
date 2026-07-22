@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=57" />
+    <link rel="manifest" href="./manifest.webmanifest?v=58" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-20-v57";
+      const VISUALIZE_APP_VERSION = "2026-07-22-v58";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=57")
+            .register("./service-worker.js?v=58")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1153,6 +1153,147 @@
         background: #1b2023;
       }
 
+      .why-workbench {
+        display: grid;
+        gap: 16px;
+        padding: 22px;
+        border-radius: 28px;
+        color: var(--ink);
+        text-align: center;
+        background:
+          radial-gradient(circle at 88% 12%, rgba(232, 196, 104, 0.18), transparent 28%),
+          #ffffff;
+        box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
+        animation: panelPop 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      body[data-theme="dark"] .why-workbench {
+        background:
+          radial-gradient(circle at 88% 12%, rgba(232, 196, 104, 0.16), transparent 28%),
+          #1b2023;
+      }
+
+      .why-workbench-head h2 {
+        max-width: 310px;
+        margin: 6px auto 0;
+        font-size: 32px;
+        line-height: 1.02;
+        font-weight: 950;
+      }
+
+      .why-workbench-head p {
+        max-width: 330px;
+        margin: 10px auto 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.38;
+        font-weight: 800;
+      }
+
+      .why-prompts {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .why-prompts span {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 9px 12px;
+        color: var(--ink);
+        background: var(--soft);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .why-people-grid {
+        min-height: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-right: 2px;
+        scrollbar-width: none;
+      }
+
+      .why-people-grid::-webkit-scrollbar {
+        display: none;
+      }
+
+      .why-person-card {
+        min-height: 192px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--soft);
+        animation: panelPop 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .why-person-card.empty {
+        grid-column: 1 / -1;
+        min-height: 170px;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        text-align: center;
+      }
+
+      .why-person-card.empty strong {
+        display: block;
+        font-size: 20px;
+        line-height: 1.1;
+        font-weight: 950;
+      }
+
+      .why-person-card.empty span {
+        display: block;
+        max-width: 270px;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+        font-weight: 800;
+      }
+
+      .why-person-card img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .why-person-index {
+        position: absolute;
+        left: 9px;
+        bottom: 9px;
+        min-width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #111;
+        background: rgba(232, 196, 104, 0.94);
+        font-size: 13px;
+        font-weight: 950;
+      }
+
+      .why-person-delete {
+        position: absolute;
+        top: 9px;
+        right: 9px;
+        width: 32px;
+        height: 32px;
+        border: 0;
+        border-radius: 50%;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.58);
+        font-size: 18px;
+        font-weight: 950;
+      }
+
       .goal-mode {
         height: 46px;
         display: grid;
@@ -1373,7 +1514,7 @@
       }
 
       #goals.screen.active {
-        grid-template-rows: auto minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr);
         align-content: stretch;
       }
 
@@ -3755,24 +3896,22 @@
 
           <section class="screen" id="goals">
             <div class="helper-copy">
-              <span id="goalHint">Daily execution stays here. Vision stays for long-term goals.</span>
+              <span id="whyHint">Keep the people behind your effort visible.</span>
             </div>
 
-            <article class="goal-workbench">
-              <div class="goal-mode" aria-label="Goal mode">
-                <button class="active" id="goalModeDaily" type="button">Daily tasks</button>
-                <button id="goalModeShort" type="button">Long-term goals</button>
+            <article class="why-workbench">
+              <div class="why-workbench-head">
+                <span class="deck-kicker" id="whyKicker">Why</span>
+                <h2 id="whyPanelTitle">Who do you do it for?</h2>
+                <p id="whyPanelText">Upload photos of family, someone who doubted you, your younger self, a future child, or anyone who makes the work matter.</p>
               </div>
 
-              <div class="goal-workbench-head">
-                <span class="deck-kicker" id="goalModeKicker">Daily tasks</span>
-                <h2 id="goalPanelTitle">Move today forward.</h2>
-                <p id="goalPanelText">Keep a short list of what makes today count, then move the progress bar manually.</p>
-              </div>
-
-              <div class="progress-goal-list" id="progressGoalList"></div>
-              <button class="btn" id="addProgressGoal" type="button">Add task</button>
+              <div class="why-prompts" id="whyPrompts"></div>
+              <button class="btn" id="uploadWhyPhoto" type="button">Add people</button>
+              <input id="whyPhotoInput" type="file" accept="image/*" multiple hidden />
             </article>
+
+            <div class="why-people-grid" id="whyPeopleGrid"></div>
           </section>
 
           <section class="screen" id="vision">
@@ -4131,11 +4270,12 @@
       const defaults = {
         appVersion: "en-v2",
         goalTitle: "Write what you want to see before you live it.",
-        goalText: "Keep a few clear goals in sight. Vision and Anti-vision use this list to build your presentations.",
+        goalText: "Keep your real reasons in sight before Vision and Anti-vision.",
         goals: [],
         goalMode: "daily",
         dailyTasks: [],
         shortTermGoals: [],
+        whyPeople: [],
         mantra: "",
         selfTalk: "",
         selfTalkScripts: [],
@@ -4222,6 +4362,7 @@
         goalMode: savedState && ["daily", "short"].includes(savedState.goalMode) ? savedState.goalMode : defaults.goalMode,
         dailyTasks: Array.isArray(savedState && savedState.dailyTasks) ? savedState.dailyTasks : defaults.dailyTasks,
         shortTermGoals: Array.isArray(savedState && savedState.shortTermGoals) ? savedState.shortTermGoals : defaults.shortTermGoals,
+        whyPeople: Array.isArray(savedState && savedState.whyPeople) ? savedState.whyPeople : defaults.whyPeople,
         selfTalkScripts: initialSelfTalkScripts,
         activeSelfTalkIndex: initialSelfTalkIndex,
         lifeProfile: {
@@ -4343,7 +4484,16 @@
         howItWorks: "How it works",
         privacyOpen: "Open privacy policy draft",
         photos: "Photos",
-        done: "Done"
+        done: "Done",
+        navGoal: "Why",
+        whyKicker: "Why",
+        whyHint: "Keep the people behind your effort visible.",
+        whyTitle: "Who do you do it for?",
+        whyText: "Upload photos of the people you refuse to let down: family, an ex you want to outgrow, the child you were, a future child, or anyone who makes the work matter.",
+        whyChips: "family|your younger self|future child|someone who doubted you",
+        whyAdd: "Add people",
+        whyEmptyTitle: "No faces here yet.",
+        whyEmptyText: "Add the people, memories, or future people that make your goals personal."
       });
       Object.assign(UI_TEXT.es, {
         profileDefault: "Tu perfil",
@@ -4372,7 +4522,16 @@
         howItWorks: "Como funciona",
         privacyOpen: "Abrir borrador de privacidad",
         photos: "Fotos",
-        done: "Listo"
+        done: "Listo",
+        navGoal: "Por quien",
+        whyKicker: "Por quien",
+        whyHint: "Mantén visibles las personas detras de tu esfuerzo.",
+        whyTitle: "Por quien haces esto?",
+        whyText: "Sube fotos de las personas a las que no quieres fallar: familia, un ex que quieres superar, tu yo de nino, un futuro hijo o cualquiera que haga que el esfuerzo importe.",
+        whyChips: "familia|tu yo pequeno|futuro hijo|alguien que dudo de ti",
+        whyAdd: "Agregar personas",
+        whyEmptyTitle: "Aun no hay rostros.",
+        whyEmptyText: "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales."
       });
       Object.assign(UI_TEXT.fr, {
         profileDefault: "Ton profil",
@@ -4401,7 +4560,16 @@
         howItWorks: "Comment ca marche",
         privacyOpen: "Ouvrir brouillon confidentialite",
         photos: "Photos",
-        done: "Termine"
+        done: "Termine",
+        navGoal: "Pourquoi",
+        whyKicker: "Pourquoi",
+        whyHint: "Garde visibles les personnes derriere ton effort.",
+        whyTitle: "Pour qui fais-tu ca?",
+        whyText: "Ajoute les photos des personnes que tu refuses de decevoir: famille, un ex que tu veux depasser, l'enfant que tu etais, un futur enfant ou toute personne qui rend l'effort important.",
+        whyChips: "famille|toi enfant|futur enfant|quelqu'un qui doutait",
+        whyAdd: "Ajouter personnes",
+        whyEmptyTitle: "Aucun visage encore.",
+        whyEmptyText: "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels."
       });
       Object.assign(UI_TEXT.pt, {
         profileDefault: "Seu perfil",
@@ -4430,7 +4598,16 @@
         howItWorks: "Como funciona",
         privacyOpen: "Abrir rascunho de privacidade",
         photos: "Fotos",
-        done: "Concluido"
+        done: "Concluido",
+        navGoal: "Por quem",
+        whyKicker: "Por quem",
+        whyHint: "Mantenha visiveis as pessoas por tras do seu esforco.",
+        whyTitle: "Por quem voce faz isso?",
+        whyText: "Adicione fotos das pessoas que voce nao quer decepcionar: familia, um ex que quer superar, voce quando crianca, um futuro filho ou qualquer pessoa que torne o esforco importante.",
+        whyChips: "familia|voce crianca|futuro filho|alguem que duvidou",
+        whyAdd: "Adicionar pessoas",
+        whyEmptyTitle: "Ainda sem rostos.",
+        whyEmptyText: "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais."
       });
       Object.assign(UI_TEXT.zh, {
         profileDefault: "你的资料",
@@ -4459,7 +4636,16 @@
         howItWorks: "工作方式",
         privacyOpen: "打开隐私政策草稿",
         photos: "照片",
-        done: "完成"
+        done: "完成",
+        navGoal: "Why",
+        whyKicker: "Why",
+        whyHint: "Keep the people behind your effort visible.",
+        whyTitle: "Who do you do it for?",
+        whyText: "Upload photos of family, the child you were, a future child, or anyone who makes the work matter.",
+        whyChips: "family|younger self|future child|someone who doubted you",
+        whyAdd: "Add people",
+        whyEmptyTitle: "No faces here yet.",
+        whyEmptyText: "Add the people, memories, or future people that make your goals personal."
       });
 
       function uiText(key, values = {}) {
@@ -4502,8 +4688,11 @@
         setText("#reviewVisionFromLife", "navVision");
         setText("#editLifeInfo", "editInfo");
 
-        setText("#goalModeDaily", "dailyTasks");
-        setText("#goalModeShort", "longGoals");
+        setText("#whyHint", "whyHint");
+        setText("#whyKicker", "whyKicker");
+        setText("#whyPanelTitle", "whyTitle");
+        setText("#whyPanelText", "whyText");
+        setText("#uploadWhyPhoto", "whyAdd");
 
         setText("#visionEmpty .deck-kicker", "visionSetup");
         setText("#visionEmpty h2", "createVisionTitle");
@@ -4619,6 +4808,7 @@
       const IMAGE_STORE_NAME = "images";
       const STORED_IMAGE_PREFIX = "stored:";
       const MAX_DECK_SLIDES = 10;
+      const MAX_WHY_PEOPLE = 12;
       const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
       const MAX_LOCAL_IMAGE_SIDE = 1600;
       const PRODUCTION_BACKEND = {
@@ -4882,8 +5072,8 @@
       }
 
       function collectStoredImageKeys() {
-        return [...state.visionSlides, ...state.antiSlides]
-          .map((slide) => slide.image)
+        return [...state.visionSlides, ...state.antiSlides, ...state.whyPeople]
+          .map((item) => item.image)
           .filter(isStoredImageRef)
           .map(storedImageKey);
       }
@@ -5570,6 +5760,7 @@
 
       function renderProgressGoals() {
         const list = document.getElementById("progressGoalList");
+        if (!list) return;
         const goals = activeProgressGoals();
         const copy = goalModeCopy();
         document.getElementById("goalModeDaily").classList.toggle("active", state.goalMode === "daily");
@@ -5618,6 +5809,89 @@
         }).join("");
       }
 
+      function whyPersonImageUrl(person) {
+        if (!person || !person.image) return "";
+        if (isStoredImageRef(person.image)) return imageCache[storedImageKey(person.image)] || "";
+        return person.image;
+      }
+
+      function renderWhyPeople() {
+        const prompts = document.getElementById("whyPrompts");
+        const grid = document.getElementById("whyPeopleGrid");
+        if (!prompts || !grid) return;
+        prompts.innerHTML = uiText("whyChips").split("|").map((item) => `<span>${escapeHtml(item)}</span>`).join("");
+
+        if (!state.whyPeople.length) {
+          grid.innerHTML = `
+            <div class="why-person-card empty">
+              <div>
+                <strong>${escapeHtml(uiText("whyEmptyTitle"))}</strong>
+                <span>${escapeHtml(uiText("whyEmptyText"))}</span>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = state.whyPeople.map((person, index) => `
+          <div class="why-person-card" data-why-index="${index}">
+            <img src="${escapeHtml(whyPersonImageUrl(person))}" alt="" />
+            <span class="why-person-index">${index + 1}</span>
+            <button class="why-person-delete" type="button" data-delete-why="${index}" aria-label="Remove photo">x</button>
+          </div>
+        `).join("");
+      }
+
+      function uploadWhyPhoto() {
+        document.getElementById("whyPhotoInput").click();
+      }
+
+      async function handleWhyPhoto(event) {
+        const files = [...event.target.files].filter((file) => file && file.type.startsWith("image/"));
+        if (!files.length) return;
+        try {
+          notify("Saving photo...");
+          for (const file of files) {
+            if (file.size > MAX_IMAGE_BYTES) {
+              notify("Photo too large");
+              continue;
+            }
+            if (state.whyPeople.length >= MAX_WHY_PEOPLE) break;
+            const dataUrl = await compressImageFile(file);
+            const imageKey = makeImageKey("why", state.whyPeople.length);
+            const saved = await writeStoredImage(imageKey, dataUrl);
+            const imageRef = saved ? `${STORED_IMAGE_PREFIX}${imageKey}` : dataUrl;
+            if (saved) imageCache[imageKey] = dataUrl;
+            state.whyPeople.push({
+              image: imageRef,
+              source: "upload",
+              createdAt: new Date().toISOString()
+            });
+          }
+          save();
+          paint();
+          notify("Photo added");
+        } catch (error) {
+          notify("Photo could not be saved");
+        } finally {
+          event.target.value = "";
+        }
+      }
+
+      async function deleteWhyPerson(index) {
+        const person = state.whyPeople[index];
+        if (!person) return;
+        if (isStoredImageRef(person.image)) {
+          const key = storedImageKey(person.image);
+          delete imageCache[key];
+          await deleteStoredImage(key);
+        }
+        state.whyPeople.splice(index, 1);
+        save();
+        paint();
+        notify("Photo removed");
+      }
+
       function renderDeck(kind) {
         const deck = kind === "vision" ? state.visionSlides : state.antiSlides;
         const id = kind === "vision" ? "visionDeck" : "antiDeck";
@@ -5662,7 +5936,7 @@
         document.getElementById("visionTitle").textContent = state.visionTitle;
         document.getElementById("antiTitle").textContent = state.antiTitle;
         renderLifeClock();
-        renderProgressGoals();
+        renderWhyPeople();
         renderDeck("vision");
         renderDeck("anti");
         renderVisionState();
@@ -6638,48 +6912,12 @@
       document.getElementById("saveLifeProfile").addEventListener("click", saveLifeProfile);
       document.getElementById("editLifeInfo").addEventListener("click", editLifeInfo);
       document.getElementById("reviewVisionFromLife").addEventListener("click", () => setView("vision"));
-      document.getElementById("goalModeDaily").addEventListener("click", () => setGoalMode("daily"));
-      document.getElementById("goalModeShort").addEventListener("click", () => setGoalMode("short"));
-      document.getElementById("addProgressGoal").addEventListener("click", addProgressGoal);
-      document.getElementById("progressGoalList").addEventListener("input", (event) => {
-        if (event.target.type !== "range") return;
-        const row = event.target.closest("[data-progress-index]");
-        if (!row) return;
-        row.querySelector("output").textContent = `${event.target.value}%`;
-      });
-      document.getElementById("progressGoalList").addEventListener("change", (event) => {
-        if (event.target.type !== "range") return;
-        const row = event.target.closest("[data-progress-index]");
-        if (!row) return;
-        updateProgressGoal(Number(row.dataset.progressIndex), event.target.value);
-      });
-      document.getElementById("progressGoalList").addEventListener("click", (event) => {
-        const saveButton = event.target.closest("[data-save-progress]");
-        if (saveButton) {
-          saveProgressGoal(Number(saveButton.dataset.saveProgress));
-          return;
-        }
-        const cancelButton = event.target.closest("[data-cancel-progress]");
-        if (cancelButton) {
-          cancelProgressGoal(Number(cancelButton.dataset.cancelProgress));
-          return;
-        }
-        const editButton = event.target.closest("[data-edit-progress]");
-        if (!editButton) return;
-        editProgressGoal(Number(editButton.dataset.editProgress));
-      });
-      document.getElementById("progressGoalList").addEventListener("keydown", (event) => {
-        const input = event.target.closest("[data-inline-progress-title]");
-        if (!input) return;
-        const index = Number(input.dataset.inlineProgressTitle);
-        if (event.key === "Enter") {
-          event.preventDefault();
-          saveProgressGoal(index);
-        }
-        if (event.key === "Escape") {
-          event.preventDefault();
-          cancelProgressGoal(index);
-        }
+      document.getElementById("uploadWhyPhoto").addEventListener("click", uploadWhyPhoto);
+      document.getElementById("whyPhotoInput").addEventListener("change", handleWhyPhoto);
+      document.getElementById("whyPeopleGrid").addEventListener("click", (event) => {
+        const deleteButton = event.target.closest("[data-delete-why]");
+        if (!deleteButton) return;
+        deleteWhyPerson(Number(deleteButton.dataset.deleteWhy));
       });
       document.getElementById("createVision").addEventListener("click", createVision);
       document.getElementById("createAnti").addEventListener("click", createAnti);
