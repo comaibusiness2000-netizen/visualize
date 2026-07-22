@@ -25,13 +25,13 @@ Open `docs/app-store-prep.md` and review:
 
 Open:
 
-`https://comaibusiness2000-netizen.github.io/visualize/?v=50`
+`https://comaibusiness2000-netizen.github.io/visualize/?v=59`
 
 Check:
 
 1. First-run profile setup.
 2. Life clock.
-3. Daily tasks and long-term goals.
+3. Why tab photos.
 4. Vision image deck.
 5. Anti-vision image deck.
 6. Self Speech.

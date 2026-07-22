@@ -2,23 +2,29 @@
   "expo": {
     "name": "Visualize",
     "slug": "visualize",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "scheme": "visualize",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.visualize.app",
+      "buildNumber": "1",
+      "bundleIdentifier": "com.comaibusiness2000.visualize",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Visualize uses selected photos to create personal goal scenes.",
-        "NSCameraUsageDescription": "Visualize can use your camera to capture a new reference photo.",
-        "NSSpeechRecognitionUsageDescription": "Visualize may use voice features for guided mindset sessions."
+        "NSPhotoLibraryUsageDescription": "Visualize uses photos you select to create private Why, Vision, and Anti-vision photo decks saved on this device."
       }
     },
     "extra": {
       "eas": {
         "projectId": "replace-after-eas-init"
       }
-    }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }

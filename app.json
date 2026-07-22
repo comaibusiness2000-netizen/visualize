@@ -15,7 +15,7 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Visualize uses photos you select to create private Vision and Anti-vision decks saved on this device."
+        "NSPhotoLibraryUsageDescription": "Visualize uses photos you select to create private Why, Vision, and Anti-vision photo decks saved on this device."
       }
     },
     "extra": {
