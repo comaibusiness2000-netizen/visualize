@@ -30,6 +30,7 @@ const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
+const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v2";
 const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
 
 function normalizeLanguageId(locale) {
@@ -80,7 +81,8 @@ const blankState = {
     createdAt: "",
     updatedAt: "",
     lastAnimatedDate: "",
-    lastSnapshot: null
+    lastSnapshot: null,
+    lifeUpdateAnimationVersion: ""
   },
   dailyTasks: [],
   longGoals: [],
@@ -492,7 +494,7 @@ export default function App() {
     if (!hydrated || !profileComplete) return undefined;
     const timer = setTimeout(() => maybeRunDailyLifeUpdate(), 550);
     return () => clearTimeout(timer);
-  }, [hydrated, profileComplete, appState.profile.lastAnimatedDate]);
+  }, [hydrated, profileComplete, appState.profile.lastAnimatedDate, appState.profile.lifeUpdateAnimationVersion]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextState) => {
@@ -503,7 +505,7 @@ export default function App() {
       }
     });
     return () => subscription.remove();
-  }, [hydrated, profileComplete, appState.profile.lastAnimatedDate, appState.profile.lastSnapshot]);
+  }, [hydrated, profileComplete, appState.profile.lastAnimatedDate, appState.profile.lastSnapshot, appState.profile.lifeUpdateAnimationVersion]);
 
   function updateState(mutator) {
     setAppState((current) => {
@@ -543,7 +545,8 @@ export default function App() {
         expectancy: Math.max(expectancy, age + 1),
         createdAt: current.profile.createdAt || timestamp,
         updatedAt: timestamp,
-        lastAnimatedDate: todayKey()
+        lastAnimatedDate: todayKey(),
+        lifeUpdateAnimationVersion: LIFE_UPDATE_ANIMATION_VERSION
       };
       nextProfile.lastSnapshot = lifeSnapshot(lifeStats(nextProfile));
       return { ...current, profile: nextProfile };
@@ -554,7 +557,8 @@ export default function App() {
   function maybeRunDailyLifeUpdate() {
     if (!hydrated || !appState.profile.complete || lifeUpdate) return;
     const dateKey = todayKey();
-    if (appState.profile.lastAnimatedDate === dateKey) return;
+    const shouldForceReveal = appState.profile.lifeUpdateAnimationVersion !== LIFE_UPDATE_ANIMATION_VERSION;
+    if (appState.profile.lastAnimatedDate === dateKey && !shouldForceReveal) return;
 
     const currentStats = lifeStats(appState.profile);
     const currentSnapshot = lifeSnapshot(currentStats);
@@ -563,10 +567,11 @@ export default function App() {
       ...currentSnapshot,
       daysLeft: currentSnapshot.daysLeft + 1,
       weeksLeft: Math.max(currentSnapshot.weeksLeft, Math.round((currentSnapshot.daysLeft + 1) / 7)),
+      monthsLeft: Math.max(currentSnapshot.monthsLeft, Math.round((currentSnapshot.daysLeft + 1) / 30.44)),
       spentMonths: Math.max(0, currentSnapshot.spentMonths - 1),
       usedPercent: Math.max(0, currentSnapshot.usedPercent - 1)
     };
-    const previous = storedSnapshot && typeof storedSnapshot === "object" ? storedSnapshot : fallbackPrevious;
+    const previous = storedSnapshot && typeof storedSnapshot === "object" && !shouldForceReveal ? storedSnapshot : fallbackPrevious;
 
     lifeUpdatePulse.setValue(0);
     setTab("life");
@@ -576,16 +581,17 @@ export default function App() {
       profile: {
         ...current.profile,
         lastAnimatedDate: dateKey,
-        lastSnapshot: currentSnapshot
+        lastSnapshot: currentSnapshot,
+        lifeUpdateAnimationVersion: LIFE_UPDATE_ANIMATION_VERSION
       }
     }));
 
     Animated.sequence([
-      Animated.timing(lifeUpdatePulse, { toValue: 0.42, duration: 560, useNativeDriver: true }),
-      Animated.timing(lifeUpdatePulse, { toValue: 0.78, duration: 860, useNativeDriver: true }),
-      Animated.timing(lifeUpdatePulse, { toValue: 1, duration: 560, useNativeDriver: true })
+      Animated.timing(lifeUpdatePulse, { toValue: 0.42, duration: 780, useNativeDriver: true }),
+      Animated.timing(lifeUpdatePulse, { toValue: 0.78, duration: 1500, useNativeDriver: true }),
+      Animated.timing(lifeUpdatePulse, { toValue: 1, duration: 720, useNativeDriver: true })
     ]).start(() => {
-      setTimeout(() => setLifeUpdate(null), 120);
+      setTimeout(() => setLifeUpdate(null), 180);
     });
   }
 
@@ -1152,15 +1158,15 @@ export default function App() {
     });
     const stageTranslate = lifeUpdatePulse.interpolate({
       inputRange: [0, 0.42, 0.78, 1],
-      outputRange: [20, 0, 0, -10]
+      outputRange: [34, -6, -6, -18]
     });
     const newScale = lifeUpdatePulse.interpolate({
-      inputRange: [0, 0.42, 0.78, 1],
-      outputRange: [0.84, 1, 1.05, 0.98]
+      inputRange: [0, 0.32, 0.62, 0.86, 1],
+      outputRange: [0.64, 1.12, 1, 1.08, 0.98]
     });
     const oldTranslate = lifeUpdatePulse.interpolate({
       inputRange: [0, 0.42, 1],
-      outputRange: [0, -20, -26]
+      outputRange: [0, -30, -38]
     });
     const fillScale = lifeUpdatePulse.interpolate({
       inputRange: [0, 0.72, 1],
@@ -1389,13 +1395,13 @@ const styles = StyleSheet.create({
   dotMap: { marginTop: 15, flexDirection: "row", flexWrap: "wrap", gap: 4 },
   lifeDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.28)" },
   lifeDotSpent: { backgroundColor: "#E8C468" },
-  lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(8,10,11,0.96)", alignItems: "center", justifyContent: "center", padding: 24 },
-  lifeUpdateStage: { width: "100%", minHeight: 560, borderRadius: 38, padding: 24, alignItems: "center", justifyContent: "center", backgroundColor: "#101418", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
-  lifeUpdateLogo: { width: 68, height: 48, marginBottom: 28, alignItems: "center", justifyContent: "center" },
+  lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(6,8,9,0.99)", alignItems: "center", justifyContent: "center", padding: 12 },
+  lifeUpdateStage: { width: "100%", minHeight: "88%", borderRadius: 42, padding: 22, alignItems: "center", justifyContent: "center", backgroundColor: "#101418", borderWidth: 1, borderColor: "rgba(232,196,104,0.16)" },
+  lifeUpdateLogo: { width: 78, height: 56, marginBottom: 30, alignItems: "center", justifyContent: "center" },
   lifeUpdateKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
-  lifeUpdateOldNumber: { marginTop: 30, color: "rgba(255,255,255,0.34)", fontSize: 36, lineHeight: 40, fontWeight: "900", textDecorationLine: "line-through" },
-  lifeUpdateNumber: { color: "#FFFFFF", fontSize: 76, lineHeight: 82, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
-  lifeUpdateLabel: { color: "rgba(255,255,255,0.76)", fontSize: 17, lineHeight: 22, fontWeight: "900", textAlign: "center" },
+  lifeUpdateOldNumber: { marginTop: 34, color: "rgba(255,255,255,0.34)", fontSize: 42, lineHeight: 46, fontWeight: "900", textDecorationLine: "line-through" },
+  lifeUpdateNumber: { color: "#FFFFFF", fontSize: 96, lineHeight: 102, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
+  lifeUpdateLabel: { color: "rgba(255,255,255,0.82)", fontSize: 18, lineHeight: 23, fontWeight: "900", textAlign: "center" },
   lifeUpdateStats: { width: "100%", flexDirection: "row", gap: 8, marginTop: 22 },
   lifeUpdateStat: { flex: 1, minHeight: 76, borderRadius: 20, paddingHorizontal: 8, paddingVertical: 10, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
   lifeUpdateStatChanged: { borderColor: "rgba(232,196,104,0.48)", backgroundColor: "rgba(232,196,104,0.12)" },

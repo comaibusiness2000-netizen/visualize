@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=58" />
+    <link rel="manifest" href="./manifest.webmanifest?v=59" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-22-v58";
+      const VISUALIZE_APP_VERSION = "2026-07-22-v59";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=58")
+            .register("./service-worker.js?v=59")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -198,26 +198,30 @@
 
       @keyframes lifeUpdateScrimIn {
         0% { opacity: 0; }
-        14%, 84% { opacity: 1; }
+        10%, 90% { opacity: 1; }
         100% { opacity: 0; }
       }
 
       @keyframes lifeUpdateStageIn {
         0% {
           opacity: 0;
-          transform: translateY(22px) scale(0.94);
+          transform: translateY(40px) scale(0.84);
         }
         28% {
           opacity: 1;
+          transform: translateY(-8px) scale(1.035);
+        }
+        58% {
+          opacity: 1;
           transform: translateY(0) scale(1);
         }
-        74% {
+        78% {
           opacity: 1;
-          transform: translateY(0) scale(1.015);
+          transform: translateY(0) scale(1.025);
         }
         100% {
           opacity: 0;
-          transform: translateY(-10px) scale(0.98);
+          transform: translateY(-18px) scale(0.98);
         }
       }
 
@@ -235,15 +239,19 @@
       @keyframes lifeNewDayArrives {
         0% {
           opacity: 0;
-          transform: translateY(18px) scale(0.82);
+          transform: translateY(26px) scale(0.62);
         }
-        36% {
+        30% {
+          opacity: 1;
+          transform: translateY(-4px) scale(1.12);
+        }
+        54% {
           opacity: 1;
           transform: translateY(0) scale(1);
         }
-        62% {
+        76% {
           opacity: 1;
-          transform: translateY(-2px) scale(1.05);
+          transform: translateY(-2px) scale(1.07);
         }
         100% {
           opacity: 1;
@@ -3420,38 +3428,38 @@
         z-index: 92;
         display: none;
         place-items: center;
-        padding: 20px;
+        padding: 10px;
         color: #fff8ea;
         background:
-          radial-gradient(circle at 18% 16%, rgba(232, 196, 104, 0.2), transparent 30%),
-          radial-gradient(circle at 82% 78%, rgba(218, 90, 58, 0.18), transparent 32%),
-          rgba(8, 10, 11, 0.96);
-        backdrop-filter: blur(10px);
+          radial-gradient(circle at 18% 16%, rgba(232, 196, 104, 0.28), transparent 34%),
+          radial-gradient(circle at 82% 78%, rgba(218, 90, 58, 0.24), transparent 34%),
+          rgba(6, 8, 9, 0.99);
+        backdrop-filter: blur(14px);
       }
 
       .life-update-scrim.open {
         display: grid;
-        animation: lifeUpdateScrimIn 2.45s ease both;
+        animation: lifeUpdateScrimIn 3.55s ease both;
       }
 
       .life-update-stage {
-        width: min(100%, 410px);
-        min-height: min(74dvh, 600px);
+        width: min(100%, 430px);
+        min-height: min(88dvh, 720px);
         display: grid;
         justify-items: center;
         align-content: center;
         gap: 12px;
         overflow: hidden;
         position: relative;
-        padding: 30px 22px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 38px;
+        padding: 28px 22px;
+        border: 1px solid rgba(232, 196, 104, 0.16);
+        border-radius: 42px;
         background: linear-gradient(180deg, #15191c, #0d1012);
-        box-shadow: 0 34px 95px rgba(0, 0, 0, 0.48);
+        box-shadow: 0 44px 120px rgba(0, 0, 0, 0.58);
       }
 
       .life-update-scrim.open .life-update-stage {
-        animation: lifeUpdateStageIn 2.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation: lifeUpdateStageIn 3.55s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .life-update-stage::before {
@@ -3469,8 +3477,8 @@
       }
 
       .life-update-mark {
-        width: 68px;
-        height: 68px;
+        width: 82px;
+        height: 82px;
         display: grid;
         place-items: center;
         z-index: 1;
@@ -3480,8 +3488,8 @@
       }
 
       .life-update-mark img {
-        width: 38px;
-        height: 38px;
+        width: 46px;
+        height: 46px;
       }
 
       .life-update-kicker {
@@ -3496,33 +3504,33 @@
       .life-update-old {
         z-index: 1;
         color: rgba(255, 255, 255, 0.34);
-        font-size: 36px;
+        font-size: 42px;
         line-height: 0.95;
         font-weight: 950;
         text-decoration: line-through;
       }
 
       .life-update-scrim.open .life-update-old {
-        animation: lifeOldDayLeaves 2.1s ease both;
+        animation: lifeOldDayLeaves 3.05s ease both;
       }
 
       .life-update-new {
         z-index: 1;
         color: #ffffff;
-        font-size: clamp(68px, 18vw, 92px);
+        font-size: clamp(86px, 23vw, 122px);
         line-height: 0.92;
         font-weight: 950;
         letter-spacing: 0;
       }
 
       .life-update-scrim.open .life-update-new {
-        animation: lifeNewDayArrives 1.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation: lifeNewDayArrives 2.25s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .life-update-label {
         z-index: 1;
         color: rgba(255, 250, 240, 0.76);
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 900;
       }
 
@@ -3608,7 +3616,7 @@
         height: 100%;
         border-radius: inherit;
         background: var(--gold);
-        transition: width 1.25s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .life-update-dots {
@@ -4250,6 +4258,7 @@
 
     <script>
       const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
+      const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v2";
 
       function normalizeLanguageId(locale) {
         const normalized = String(locale || "").trim().toLowerCase();
@@ -4286,7 +4295,8 @@
           expectancy: 85,
           startedAt: "",
           lastAnimatedDate: "",
-          lastSnapshot: null
+          lastSnapshot: null,
+          lifeUpdateAnimationVersion: ""
         },
         visionTitle: "The version you are building",
         visionCreated: false,
@@ -5581,7 +5591,10 @@
       }
 
       function hasPendingDailyLifeUpdate() {
-        return state.lifeProfile.complete && state.lifeProfile.lastAnimatedDate !== todayKey();
+        return state.lifeProfile.complete && (
+          state.lifeProfile.lastAnimatedDate !== todayKey() ||
+          state.lifeProfile.lifeUpdateAnimationVersion !== LIFE_UPDATE_ANIMATION_VERSION
+        );
       }
 
       function showLifeClockForPendingUpdate() {
@@ -5652,23 +5665,28 @@
             overlay.classList.remove("open");
             overlay.setAttribute("aria-hidden", "true");
             resolve();
-          }, 2450);
+          }, 3550);
         });
       }
 
       async function animateLifeClockIfNeeded() {
         if (!state.lifeProfile.complete || currentView !== "today") return;
         const dateKey = todayKey();
-        if (state.lifeProfile.lastAnimatedDate === dateKey) return;
+        const shouldForceReveal = state.lifeProfile.lifeUpdateAnimationVersion !== LIFE_UPDATE_ANIMATION_VERSION;
+        if (state.lifeProfile.lastAnimatedDate === dateKey && !shouldForceReveal) return;
 
         const currentStats = getLifeStats();
-        const previous = state.lifeProfile.lastSnapshot || {
+        const fallbackPrevious = {
           ...lifeSnapshot(currentStats),
           daysLeft: currentStats.daysLeft + 1,
           weeksLeft: Math.max(currentStats.weeksLeft, Math.round((currentStats.daysLeft + 1) / 7)),
+          monthsLeft: Math.max(currentStats.monthsLeft, Math.round((currentStats.daysLeft + 1) / 30.44)),
           spentMonths: Math.max(0, currentStats.spentMonths - 1),
           usedPercent: Math.max(0, currentStats.usedPercent - 1)
         };
+        const previous = state.lifeProfile.lastSnapshot && !shouldForceReveal
+          ? state.lifeProfile.lastSnapshot
+          : fallbackPrevious;
         const monthChanged = previous.spentMonths !== currentStats.spentMonths;
         const dayChanged = previous.daysLeft !== currentStats.daysLeft;
         const weekChanged = previous.weeksLeft !== currentStats.weeksLeft;
@@ -5681,6 +5699,7 @@
 
         state.lifeProfile.lastAnimatedDate = dateKey;
         state.lifeProfile.lastSnapshot = lifeSnapshot(currentStats);
+        state.lifeProfile.lifeUpdateAnimationVersion = LIFE_UPDATE_ANIMATION_VERSION;
         saveWithoutSyncBump();
         renderLifeStatsValues({ ...currentStats, ...previous }, { animateMonth: false });
         await showLifeUpdateOverlay(previous, currentStats);
@@ -6230,7 +6249,8 @@
           expectancy: Math.max(expectancy, age + 1),
           startedAt: new Date().toISOString(),
           lastAnimatedDate: todayKey(),
-          lastSnapshot: null
+          lastSnapshot: null,
+          lifeUpdateAnimationVersion: LIFE_UPDATE_ANIMATION_VERSION
         };
         state.lifeProfile.lastSnapshot = lifeSnapshot(getLifeStats());
 
