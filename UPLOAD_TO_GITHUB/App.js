@@ -1124,7 +1124,12 @@ export default function App() {
   function renderOnboarding() {
     const scale = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.06] });
     const translateY = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [0, -6] });
-    const previewDots = Array.from({ length: 84 }, (_, index) => index);
+    const previewAge = clamp(Number(profileDraft.age) || 28, 1, 120);
+    const previewExpectancy = Math.max(clamp(Number(profileDraft.expectancy) || 85, 50, 120), previewAge + 1);
+    const previewMonths = 84;
+    const previewSpent = clamp(Math.round((previewAge / previewExpectancy) * previewMonths), 1, previewMonths - 1);
+    const previewRemainingYears = Math.max(1, Math.round(previewExpectancy - previewAge));
+    const previewDots = Array.from({ length: previewMonths }, (_, index) => index);
     return (
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={[styles.onboardingShell, { backgroundColor: theme.bg }]}>
         <ScrollView
@@ -1146,7 +1151,7 @@ export default function App() {
             <View style={styles.setupPreview}>
               <View style={styles.setupPreviewHeader}>
                 <Text style={styles.setupPreviewKicker}>{t("life.monthMap")}</Text>
-                <Text style={styles.setupPreviewAge}>85</Text>
+                <Text style={styles.setupPreviewAge}>{previewRemainingYears}y</Text>
               </View>
               <View style={styles.setupPreviewDots}>
                 {previewDots.map((dot) => (
@@ -1154,16 +1159,36 @@ export default function App() {
                     key={dot}
                     style={[
                       styles.setupPreviewDot,
-                      dot < 31 && styles.setupPreviewDotSpent,
-                      dot === 31 && styles.setupPreviewDotNow
+                      dot < previewSpent && styles.setupPreviewDotSpent,
+                      dot === previewSpent && styles.setupPreviewDotNow
                     ]}
                   />
                 ))}
+              </View>
+              <View style={styles.setupPreviewRail}>
+                <View style={[styles.setupPreviewRailFill, { width: `${Math.round((previewSpent / previewMonths) * 100)}%` }]} />
+                <Text style={styles.setupPreviewRailText}>{previewSpent}/{previewMonths}</Text>
               </View>
               <View style={styles.setupPreviewFooter}>
                 <Text style={styles.setupPreviewFootText}>{t("tab.life")}</Text>
                 <Text style={styles.setupPreviewFootText}>{t("tab.vision")}</Text>
                 <Text style={styles.setupPreviewFootText}>{t("tab.speech")}</Text>
+              </View>
+            </View>
+            <View style={styles.setupJourney}>
+              <View style={[styles.setupJourneyItem, styles.setupJourneyItemActive]}>
+                <Text style={styles.setupJourneyNumber}>1</Text>
+                <Text style={[styles.setupJourneyText, { color: theme.ink }]}>{t("tab.life")}</Text>
+              </View>
+              <View style={styles.setupJourneyLine} />
+              <View style={styles.setupJourneyItem}>
+                <Text style={[styles.setupJourneyNumber, styles.setupJourneyNumberMuted]}>2</Text>
+                <Text style={[styles.setupJourneyText, { color: theme.muted }]}>{t("tab.goals")}</Text>
+              </View>
+              <View style={styles.setupJourneyLine} />
+              <View style={styles.setupJourneyItem}>
+                <Text style={[styles.setupJourneyNumber, styles.setupJourneyNumberMuted]}>3</Text>
+                <Text style={[styles.setupJourneyText, { color: theme.muted }]}>{t("tab.vision")}</Text>
               </View>
             </View>
             <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.kicker")}</Text>
@@ -1973,7 +1998,7 @@ const styles = StyleSheet.create({
   loader: { alignItems: "center", justifyContent: "center", backgroundColor: "#101418" },
   centerFill: { flex: 1, justifyContent: "center", padding: 24 },
   onboardingShell: { flex: 1 },
-  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 16, paddingVertical: 18 },
+  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 16, paddingVertical: 16 },
   setupCard: {
     width: "100%",
     overflow: "hidden",
@@ -1982,7 +2007,7 @@ const styles = StyleSheet.create({
     borderRadius: 38,
     paddingHorizontal: 18,
     paddingTop: 18,
-    paddingBottom: 22,
+    paddingBottom: 20,
     shadowColor: "#000",
     shadowOpacity: 0.12,
     shadowRadius: 34,
@@ -2003,7 +2028,7 @@ const styles = StyleSheet.create({
   logoSlash: { position: "absolute", width: 7, height: 31, left: 17, top: 12, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
   logoSlashSecond: { position: "absolute", width: 7, height: 31, left: 27, top: 12, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
   logoDot: { position: "absolute", width: 11, height: 11, borderRadius: 6, right: 13, bottom: 14, backgroundColor: "#DA5A3A" },
-  setupPreview: { overflow: "hidden", borderRadius: 30, padding: 16, marginBottom: 18, backgroundColor: "#101418" },
+  setupPreview: { overflow: "hidden", borderRadius: 30, padding: 16, marginBottom: 13, backgroundColor: "#101418" },
   setupPreviewHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 },
   setupPreviewKicker: { color: "rgba(255,249,237,0.58)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.6, textTransform: "uppercase" },
   setupPreviewAge: { color: "#E8C468", fontSize: 22, lineHeight: 26, fontWeight: "900" },
@@ -2011,12 +2036,22 @@ const styles = StyleSheet.create({
   setupPreviewDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "rgba(255,249,237,0.16)" },
   setupPreviewDotSpent: { backgroundColor: "rgba(255,249,237,0.46)" },
   setupPreviewDotNow: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.45, shadowRadius: 10, shadowOffset: { width: 0, height: 0 } },
+  setupPreviewRail: { height: 28, marginTop: 14, borderRadius: 14, overflow: "hidden", justifyContent: "center", backgroundColor: "rgba(255,249,237,0.1)" },
+  setupPreviewRailFill: { position: "absolute", left: 0, top: 0, bottom: 0, width: "46%", borderRadius: 14, backgroundColor: "rgba(232,196,104,0.28)" },
+  setupPreviewRailText: { color: "rgba(255,249,237,0.78)", textAlign: "center", fontSize: 11, lineHeight: 14, fontWeight: "900" },
   setupPreviewFooter: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 16, paddingTop: 14, borderTopWidth: 1, borderTopColor: "rgba(255,249,237,0.1)" },
   setupPreviewFootText: { color: "#FFF9ED", fontSize: 12, lineHeight: 15, fontWeight: "900" },
+  setupJourney: { width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 13, paddingHorizontal: 4 },
+  setupJourneyItem: { minWidth: 58, alignItems: "center", gap: 5 },
+  setupJourneyItemActive: {},
+  setupJourneyNumber: { width: 25, height: 25, borderRadius: 13, overflow: "hidden", color: "#101418", backgroundColor: "#E8C468", textAlign: "center", fontSize: 12, lineHeight: 25, fontWeight: "900" },
+  setupJourneyNumberMuted: { color: "#807A70", backgroundColor: "rgba(128,128,128,0.16)" },
+  setupJourneyText: { maxWidth: 72, color: "#101418", textAlign: "center", fontSize: 10.5, lineHeight: 13, fontWeight: "900" },
+  setupJourneyLine: { flex: 1, maxWidth: 48, height: 1, marginTop: -15, backgroundColor: "rgba(128,128,128,0.22)" },
   setupKicker: { alignSelf: "center", maxWidth: "100%", textAlign: "center", fontSize: 10, lineHeight: 14, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
-  setupTitle: { alignSelf: "center", maxWidth: 316, marginTop: 7, textAlign: "center", fontSize: 29, lineHeight: 32, fontWeight: "900" },
-  setupText: { alignSelf: "center", maxWidth: 318, marginTop: 9, textAlign: "center", fontSize: 14, lineHeight: 19, fontWeight: "700" },
-  setupFields: { marginTop: 18, gap: 10 },
+  setupTitle: { alignSelf: "center", maxWidth: 316, marginTop: 7, textAlign: "center", fontSize: 28, lineHeight: 31, fontWeight: "900" },
+  setupText: { alignSelf: "center", maxWidth: 318, marginTop: 8, textAlign: "center", fontSize: 13.5, lineHeight: 18, fontWeight: "700" },
+  setupFields: { marginTop: 16, gap: 9 },
   setupField: { minWidth: 0 },
   setupFieldRow: { flexDirection: "row", gap: 10 },
   setupFieldHalf: { flex: 1 },

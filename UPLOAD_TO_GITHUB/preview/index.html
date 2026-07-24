@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=69" />
+    <link rel="manifest" href="./manifest.webmanifest?v=70" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v69";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v70";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=69")
+            .register("./service-worker.js?v=70")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -989,6 +989,35 @@
         box-shadow: 0 0 0 5px rgba(218, 90, 58, 0.16);
       }
 
+      .setup-progress {
+        height: 28px;
+        display: grid;
+        place-items: center;
+        position: relative;
+        overflow: hidden;
+        margin-top: 14px;
+        border-radius: 999px;
+        background: rgba(255, 249, 237, 0.1);
+      }
+
+      .setup-progress span {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 46%;
+        border-radius: inherit;
+        background: rgba(232, 196, 104, 0.28);
+        transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .setup-progress strong {
+        position: relative;
+        z-index: 1;
+        color: rgba(255, 249, 237, 0.78);
+        font-size: 11px;
+        line-height: 1;
+        font-weight: 950;
+      }
+
       .setup-showcase-foot {
         display: flex;
         justify-content: space-between;
@@ -1002,6 +1031,59 @@
         color: #fff9ed;
         font-size: 12px;
         font-weight: 950;
+      }
+
+      .setup-journey {
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto minmax(18px, 1fr) auto minmax(18px, 1fr) auto;
+        align-items: start;
+        gap: 8px;
+        margin-top: -2px;
+      }
+
+      .setup-journey-step {
+        display: grid;
+        justify-items: center;
+        gap: 5px;
+        min-width: 58px;
+      }
+
+      .setup-journey-step b {
+        width: 25px;
+        height: 25px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: #101418;
+        background: var(--gold);
+        font-size: 12px;
+        line-height: 1;
+        font-weight: 950;
+      }
+
+      .setup-journey-step:not(.active) b {
+        color: var(--muted);
+        background: var(--soft);
+      }
+
+      .setup-journey-step span {
+        max-width: 72px;
+        color: var(--muted);
+        font-size: 10.5px;
+        line-height: 1.2;
+        font-weight: 950;
+      }
+
+      .setup-journey-step.active span {
+        color: var(--ink);
+      }
+
+      .setup-journey-line {
+        height: 1px;
+        margin-top: 12px;
+        border-radius: 999px;
+        background: var(--line);
       }
 
       @keyframes setupCardFloat {
@@ -4585,14 +4667,25 @@
               <div class="setup-showcase" aria-hidden="true">
                 <div class="setup-showcase-head">
                   <span id="setupPreviewLabel">Life by months</span>
-                  <strong>85</strong>
+                  <strong id="setupPreviewYears">57y</strong>
                 </div>
                 <div class="setup-dot-map" id="setupDotMap"></div>
+                <div class="setup-progress" aria-hidden="true">
+                  <span id="setupPreviewProgress"></span>
+                  <strong id="setupPreviewRatio">27/84</strong>
+                </div>
                 <div class="setup-showcase-foot">
                   <span id="setupPreviewLife">Life</span>
                   <span id="setupPreviewVision">Vision</span>
                   <span id="setupPreviewSpeech">Voice</span>
                 </div>
+              </div>
+              <div class="setup-journey" aria-hidden="true">
+                <span class="setup-journey-step active"><b>1</b><span id="setupJourneyLife">Life</span></span>
+                <span class="setup-journey-line"></span>
+                <span class="setup-journey-step"><b>2</b><span id="setupJourneyGoal">For who</span></span>
+                <span class="setup-journey-line"></span>
+                <span class="setup-journey-step"><b>3</b><span id="setupJourneyVision">Vision</span></span>
               </div>
               <span class="deck-kicker">Profile setup</span>
               <h1>Build your life clock first.</h1>
@@ -5634,8 +5727,20 @@
       function renderSetupPreview() {
         const map = document.getElementById("setupDotMap");
         if (!map) return;
-        map.innerHTML = Array.from({ length: 84 }, (_, index) => {
-          const className = index === 31 ? "now" : index < 31 ? "spent" : "";
+        const age = clampNumber(document.getElementById("lifeAge")?.value || 28, 1, 120);
+        const estimateValue = clampNumber(document.getElementById("lifeExpectancy")?.value || 85, 50, 120);
+        const expectancy = Math.max(estimateValue, age + 1);
+        const months = 84;
+        const spent = Math.min(months - 1, Math.max(1, Math.round((age / expectancy) * months)));
+        const yearsLeft = Math.max(1, Math.round(expectancy - age));
+        const yearsLabel = document.getElementById("setupPreviewYears");
+        const progress = document.getElementById("setupPreviewProgress");
+        const ratio = document.getElementById("setupPreviewRatio");
+        if (yearsLabel) yearsLabel.textContent = `${yearsLeft}y`;
+        if (progress) progress.style.width = `${Math.round((spent / months) * 100)}%`;
+        if (ratio) ratio.textContent = `${spent}/${months}`;
+        map.innerHTML = Array.from({ length: months }, (_, index) => {
+          const className = index === spent ? "now" : index < spent ? "spent" : "";
           return `<span class="${className}"></span>`;
         }).join("");
       }
@@ -5651,6 +5756,9 @@
         setText("#setupPreviewLife", "navLife");
         setText("#setupPreviewVision", "navVision");
         setText("#setupPreviewSpeech", "navSpeech");
+        setText("#setupJourneyLife", "navLife");
+        setText("#setupJourneyGoal", "navGoal");
+        setText("#setupJourneyVision", "navVision");
         setText("#lifeOnboarding .field:nth-child(1) span", "firstName");
         setText("#lifeOnboarding .field:nth-child(2) span", "age");
         setText("#lifeOnboarding .field:nth-child(3) span", "estimate");
@@ -8013,6 +8121,11 @@
 
       document.querySelectorAll("[data-view]").forEach((button) => {
         button.addEventListener("click", () => setView(button.dataset.view));
+      });
+
+      ["lifeAge", "lifeExpectancy"].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) input.addEventListener("input", renderSetupPreview);
       });
 
       document.getElementById("profileTop").addEventListener("click", openProfile);
