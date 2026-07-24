@@ -323,6 +323,9 @@ const copy = {
     "speech.emptyDraft": "Empty draft",
     "speech.voice": "Voice",
     "speech.swipe": "Swipe to change voice",
+    "speech.ready": "Ready",
+    "speech.playing": "Playing",
+    "speech.words": "words",
     "profile.kicker": "Local-only profile",
     "profile.storageTitle": "Device storage",
     "profile.storageBody": "Saved on this iPhone only. Closing the app or restarting the phone will keep the data. Deleting the app removes the local data.",
@@ -411,6 +414,9 @@ Object.assign(copy.zh, {
   "speech.voice": "Voice",
   "speech.heading": "Script your inner voice.",
   "speech.swipe": "Swipe to change voice",
+  "speech.ready": "Ready",
+  "speech.playing": "Playing",
+  "speech.words": "words",
   "quote.kicker": "Daily quote",
   "quote.title": "Read it. Move.",
   "quote.open": "open",
@@ -429,6 +435,9 @@ Object.assign(copy.es, {
   "speech.heading": "Escribe tu voz interior.",
   "speech.voice": "Voz",
   "speech.swipe": "Desliza para cambiar voz",
+  "speech.ready": "Listo",
+  "speech.playing": "Reproduciendo",
+  "speech.words": "palabras",
   "quote.kicker": "Cita diaria",
   "quote.title": "Leela. Avanza.",
   "quote.open": "abrir",
@@ -441,6 +450,9 @@ Object.assign(copy.fr, {
   "speech.heading": "Ecris ta voix interieure.",
   "speech.voice": "Voix",
   "speech.swipe": "Glisse pour changer la voix",
+  "speech.ready": "Pret",
+  "speech.playing": "Lecture",
+  "speech.words": "mots",
   "quote.kicker": "Citation du jour",
   "quote.title": "Lis-la. Avance.",
   "quote.open": "ouvrir",
@@ -453,6 +465,9 @@ Object.assign(copy.pt, {
   "speech.heading": "Escreva sua voz interior.",
   "speech.voice": "Voz",
   "speech.swipe": "Deslize para mudar voz",
+  "speech.ready": "Pronto",
+  "speech.playing": "Tocando",
+  "speech.words": "palavras",
   "quote.kicker": "Citacao diaria",
   "quote.title": "Leia. Avance.",
   "quote.open": "abrir",
@@ -616,6 +631,7 @@ export default function App() {
   const [profileDraft, setProfileDraft] = useState(blankState.profile);
   const [profileOpen, setProfileOpen] = useState(false);
   const [player, setPlayer] = useState(null);
+  const [speechPlaying, setSpeechPlaying] = useState(false);
   const [lifeUpdate, setLifeUpdate] = useState(null);
   const [quoteRevealOpen, setQuoteRevealOpen] = useState(false);
   const setupPulse = useRef(new Animated.Value(0)).current;
@@ -623,6 +639,7 @@ export default function App() {
   const lifeUpdatePulse = useRef(new Animated.Value(0)).current;
   const playerPulse = useRef(new Animated.Value(0)).current;
   const quotePulse = useRef(new Animated.Value(0)).current;
+  const speechPulse = useRef(new Animated.Value(0)).current;
   const voiceScrollRef = useRef(null);
   const appStateRef = useRef("active");
 
@@ -680,6 +697,22 @@ export default function App() {
     if (!hydrated) return;
     FileSystem.writeAsStringAsync(STATE_FILE, JSON.stringify(appState)).catch(() => {});
   }, [appState, hydrated]);
+
+  useEffect(() => {
+    if (!speechPlaying) {
+      speechPulse.stopAnimation();
+      speechPulse.setValue(0);
+      return;
+    }
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(speechPulse, { toValue: 1, duration: 760, useNativeDriver: true }),
+        Animated.timing(speechPulse, { toValue: 0, duration: 620, useNativeDriver: true })
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [speechPlaying, speechPulse]);
 
   useEffect(() => {
     Animated.loop(
@@ -1044,6 +1077,7 @@ export default function App() {
   }
 
   function newSpeech() {
+    stopSpeech();
     const timestamp = nowIso();
     updateState((current) => ({
       ...current,
@@ -1064,6 +1098,7 @@ export default function App() {
   }
 
   function selectSpeech(index) {
+    stopSpeech();
     const speech = appState.selfSpeeches[index];
     updateState((current) => ({ ...current, activeSpeechIndex: index }));
     setDraftSpeechTitle(speech?.title || "");
@@ -1077,11 +1112,20 @@ export default function App() {
       return;
     }
     Speech.stop();
+    setSpeechPlaying(true);
     Speech.speak(text, {
       language: languageMeta.speech,
       rate: activeVoiceProfile.rate,
-      pitch: activeVoiceProfile.pitch
+      pitch: activeVoiceProfile.pitch,
+      onDone: () => setSpeechPlaying(false),
+      onStopped: () => setSpeechPlaying(false),
+      onError: () => setSpeechPlaying(false)
     });
+  }
+
+  function stopSpeech() {
+    setSpeechPlaying(false);
+    Speech.stop();
   }
 
   function selectVoiceProfile(index, { scroll = true } = {}) {
@@ -1140,6 +1184,7 @@ export default function App() {
           await FileSystem.deleteAsync(STATE_FILE, { idempotent: true }).catch(() => {});
           await FileSystem.deleteAsync(IMAGE_DIR, { idempotent: true }).catch(() => {});
           Speech.stop();
+          setSpeechPlaying(false);
           setAppState(blankState);
           setProfileDraft(blankState.profile);
           setDraftSpeechTitle("");
@@ -1473,24 +1518,45 @@ export default function App() {
     const waveform = [16, 30, 22, 42, 26, 36, 18, 32, 24];
     return (
       <ScrollView contentContainerStyle={styles.speechContent}>
-        <View style={styles.speechHero}>
+        <View style={[styles.speechHero, speechPlaying && styles.speechHeroPlaying]}>
           <View style={styles.speechHeroAuraTop} />
           <View style={styles.speechHeroAuraBottom} />
           <Text style={styles.speechHeroKicker}>{t("speech.title")}</Text>
           <Text style={styles.speechHeroTitle} numberOfLines={2}>{currentSpeechTitle}</Text>
           <Text style={styles.speechHeroBody}>{t("speech.body")}</Text>
           <View style={styles.speechHeroMeta}>
+            <Text style={styles.speechHeroMetaText}>{speechPlaying ? t("speech.playing") : t("speech.ready")}</Text>
+            <View style={styles.speechHeroDot} />
             <Text style={styles.speechHeroMetaText}>{activeVoiceProfile.name}</Text>
             <View style={styles.speechHeroDot} />
             <Text style={styles.speechHeroMetaText}>{speechMinutes} min</Text>
           </View>
           <View style={styles.speechWaveform}>
-            {waveform.map((height, index) => (
-              <View key={`${index}`} style={[styles.speechWaveBar, { height }]} />
-            ))}
+            {waveform.map((height, index) => {
+              const scaleY = speechPlaying
+                ? speechPulse.interpolate({
+                    inputRange: [0, 0.5, 1],
+                    outputRange: [
+                      0.68 + ((index % 3) * 0.06),
+                      1.18 - ((index % 4) * 0.04),
+                      0.78 + ((index % 2) * 0.08)
+                    ]
+                  })
+                : 1;
+              return (
+                <Animated.View
+                  key={`${index}`}
+                  style={[
+                    styles.speechWaveBar,
+                    { height, transform: [{ scaleY }] },
+                    speechPlaying && styles.speechWaveBarPlaying
+                  ]}
+                />
+              );
+            })}
           </View>
-          <TouchableOpacity style={styles.speechPlayButton} onPress={playSpeech} activeOpacity={0.88}>
-            <Text style={styles.speechPlayText}>{t("speech.listen")}</Text>
+          <TouchableOpacity style={[styles.speechPlayButton, speechPlaying && styles.speechPlayButtonActive]} onPress={playSpeech} activeOpacity={0.88}>
+            <Text style={styles.speechPlayText}>{speechPlaying ? t("speech.playing") : t("speech.listen")}</Text>
           </TouchableOpacity>
         </View>
 
@@ -1506,7 +1572,7 @@ export default function App() {
         <View style={[styles.speechEditorCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
           <View style={styles.speechEditorHeader}>
             <Text style={[styles.kicker, { color: theme.muted }]}>{t("speech.title")}</Text>
-            <Text style={[styles.speechEditorCount, { color: theme.muted }]}>{speechWords} words</Text>
+            <Text style={[styles.speechEditorCount, { color: theme.muted }]}>{speechWords} {t("speech.words")}</Text>
           </View>
           <TextInput
             value={draftSpeechTitle}
@@ -1573,7 +1639,7 @@ export default function App() {
             <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={newSpeech}>
               <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.new")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={() => Speech.stop()}>
+            <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={stopSpeech}>
               <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
             </TouchableOpacity>
         </View>
@@ -2299,6 +2365,7 @@ const styles = StyleSheet.create({
   deckTile: { aspectRatio: 0.68 },
   speechContent: { padding: 20, paddingBottom: 120 },
   speechHero: { minHeight: 286, overflow: "hidden", borderRadius: 38, paddingHorizontal: 22, paddingTop: 24, paddingBottom: 22, marginBottom: 14, alignItems: "center", backgroundColor: "#080B0D", shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
+  speechHeroPlaying: { shadowOpacity: 0.28, shadowRadius: 34 },
   speechHeroAuraTop: { position: "absolute", width: 190, height: 190, right: -64, top: -72, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.18)" },
   speechHeroAuraBottom: { position: "absolute", width: 190, height: 190, left: -84, bottom: -104, borderRadius: 95, backgroundColor: "rgba(218,90,58,0.13)" },
   speechHeroKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2.1, textTransform: "uppercase" },
@@ -2309,7 +2376,9 @@ const styles = StyleSheet.create({
   speechHeroDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: "#E8C468" },
   speechWaveform: { height: 54, marginTop: 18, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
   speechWaveBar: { width: 7, borderRadius: 999, backgroundColor: "#E8C468" },
+  speechWaveBarPlaying: { shadowColor: "#E8C468", shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 0 } },
   speechPlayButton: { minHeight: 54, minWidth: 184, marginTop: 13, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FFF9ED" },
+  speechPlayButtonActive: { backgroundColor: "#E8C468" },
   speechPlayText: { color: "#101418", fontSize: 16, lineHeight: 20, fontWeight: "900" },
   speechEditorCard: { borderWidth: 1, borderRadius: 32, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 4 },
   speechEditorHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 10 },

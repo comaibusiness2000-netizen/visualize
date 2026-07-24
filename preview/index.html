@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=75" />
+    <link rel="manifest" href="./manifest.webmanifest?v=76" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v75";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v76";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=75")
+            .register("./service-worker.js?v=76")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3326,6 +3326,12 @@
         animation: premiumPanelIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
+      .speech-workbench.playing .speech-head {
+        box-shadow:
+          0 34px 84px rgba(0, 0, 0, 0.22),
+          0 0 0 1px rgba(232, 196, 104, 0.14) inset;
+      }
+
       .speech-head::after {
         content: "";
         position: absolute;
@@ -3363,6 +3369,42 @@
         font-weight: 760;
       }
 
+      .speech-playback-meta {
+        position: relative;
+        z-index: 1;
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 12px;
+        border: 1px solid rgba(255, 249, 237, 0.1);
+        border-radius: 999px;
+        padding: 0 12px;
+        color: rgba(255, 249, 237, 0.78);
+        background: rgba(255, 255, 255, 0.07);
+        font-size: 11px;
+        font-weight: 950;
+      }
+
+      .speech-playback-meta span {
+        max-width: 92px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .speech-playback-meta i {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--gold);
+      }
+
+      .speech-workbench.playing .speech-playback-meta span:first-child {
+        color: var(--gold);
+      }
+
       .speech-meter {
         position: relative;
         z-index: 1;
@@ -3379,7 +3421,12 @@
         border-radius: 999px;
         background: var(--gold);
         box-shadow: 0 0 22px rgba(232, 196, 104, 0.24);
-        animation: speechMeter 1.85s ease-in-out infinite;
+        transform-origin: 50% 50%;
+        opacity: 0.72;
+      }
+
+      .speech-workbench.playing .speech-meter span {
+        animation: speechMeter 1.28s ease-in-out infinite;
       }
 
       .speech-meter span:nth-child(1) { height: 16px; animation-delay: 0s; }
@@ -3407,6 +3454,10 @@
 
       .speech-play-main:active {
         transform: scale(0.965);
+      }
+
+      .speech-workbench.playing .speech-play-main {
+        background: var(--gold);
       }
 
       .speech-list-row {
@@ -5050,8 +5101,15 @@
             <article class="speech-workbench">
               <div class="speech-head">
                 <span class="deck-kicker">Self speech</span>
-                <h2>Script your inner voice.</h2>
-                <p>Write the text you want to hear before you act, train, work, or visualize.</p>
+                <h2 id="speechHeroTitle">Script your inner voice.</h2>
+                <p id="speechHeroText">Write the text you want to hear before you act, train, work, or visualize.</p>
+                <div class="speech-playback-meta">
+                  <span id="speechPlaybackStatus">Ready</span>
+                  <i aria-hidden="true"></i>
+                  <span id="speechHeroVoice">Maya</span>
+                  <i aria-hidden="true"></i>
+                  <span id="speechHeroDuration">1 min</span>
+                </div>
                 <div class="speech-meter" aria-hidden="true">
                   <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                 </div>
@@ -5730,7 +5788,11 @@
         whyChips: "family|younger self|future child|prove them wrong",
         whyAdd: "Add people",
         whyEmptyTitle: "No faces here yet.",
-        whyEmptyText: "Add the people, memories, or future people that make your goals personal."
+        whyEmptyText: "Add the people, memories, or future people that make your goals personal.",
+        ready: "Ready",
+        playing: "Playing",
+        words: "words",
+        min: "min"
       });
       Object.assign(UI_TEXT.es, {
         "quote.kicker": "Cita diaria",
@@ -5782,7 +5844,11 @@
         whyChips: "familia|tu yo pequeno|futuro hijo|demostrarles",
         whyAdd: "Agregar personas",
         whyEmptyTitle: "Aun no hay rostros.",
-        whyEmptyText: "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales."
+        whyEmptyText: "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales.",
+        ready: "Listo",
+        playing: "Reproduciendo",
+        words: "palabras",
+        min: "min"
       });
       Object.assign(UI_TEXT.fr, {
         "quote.kicker": "Citation du jour",
@@ -5834,7 +5900,11 @@
         whyChips: "famille|toi enfant|futur enfant|leur prouver",
         whyAdd: "Ajouter personnes",
         whyEmptyTitle: "Aucun visage encore.",
-        whyEmptyText: "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels."
+        whyEmptyText: "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels.",
+        ready: "Pret",
+        playing: "Lecture",
+        words: "mots",
+        min: "min"
       });
       Object.assign(UI_TEXT.pt, {
         "quote.kicker": "Citacao diaria",
@@ -5886,7 +5956,11 @@
         whyChips: "familia|voce crianca|futuro filho|provar errado",
         whyAdd: "Adicionar pessoas",
         whyEmptyTitle: "Ainda sem rostos.",
-        whyEmptyText: "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais."
+        whyEmptyText: "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais.",
+        ready: "Pronto",
+        playing: "Tocando",
+        words: "palavras",
+        min: "min"
       });
       Object.assign(UI_TEXT.zh, {
         lifeUpdateTitle: "One day spent. Use the next one.",
@@ -5935,7 +6009,11 @@
         whyChips: "family|younger self|future child|prove them wrong",
         whyAdd: "Add people",
         whyEmptyTitle: "No faces here yet.",
-        whyEmptyText: "Add the people, memories, or future people that make your goals personal."
+        whyEmptyText: "Add the people, memories, or future people that make your goals personal.",
+        ready: "Ready",
+        playing: "Playing",
+        words: "words",
+        min: "min"
       });
 
       function uiText(key, values = {}) {
@@ -6128,6 +6206,7 @@
       let playerKind = "vision";
       let playerPaused = false;
       let selfTalkLoopActive = false;
+      let selfTalkPlaying = false;
       let voiceScrollTimer = null;
       let dailyQuoteTimer = null;
       let currentView = "today";
@@ -6791,6 +6870,7 @@
         name.textContent = profile.name;
         note.textContent = uiText("swipeVoice");
         renderVoiceCarousel({ preserveScroll });
+        updateSelfTalkPlaybackUI();
       }
 
       function renderVoiceCarousel({ preserveScroll = false } = {}) {
@@ -6864,6 +6944,42 @@
         `).join("");
       }
 
+      function selfTalkStats(script = activeSelfTalkScript()) {
+        const text = String(script && script.text ? script.text : "").trim();
+        const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+        return {
+          words,
+          minutes: Math.max(1, Math.ceil(words / 135))
+        };
+      }
+
+      function updateSelfTalkPlaybackUI() {
+        const script = activeSelfTalkScript();
+        const stats = selfTalkStats(script);
+        const title = String(script.title || "").trim() || uiText("speechTitle");
+        const workbench = document.querySelector(".speech-workbench");
+        const playButton = document.getElementById("playSelfTalk");
+        const heroTitle = document.getElementById("speechHeroTitle");
+        const heroText = document.getElementById("speechHeroText");
+        const status = document.getElementById("speechPlaybackStatus");
+        const voice = document.getElementById("speechHeroVoice");
+        const duration = document.getElementById("speechHeroDuration");
+        if (workbench) workbench.classList.toggle("playing", selfTalkPlaying);
+        if (playButton) playButton.textContent = selfTalkPlaying ? uiText("playing") : uiText("play");
+        if (heroTitle) heroTitle.textContent = title;
+        if (heroText) heroText.textContent = stats.words
+          ? `${stats.words} ${uiText("words")} - ${uiText("speechText")}`
+          : uiText("speechText");
+        if (status) status.textContent = selfTalkPlaying ? uiText("playing") : uiText("ready");
+        if (voice) voice.textContent = activeVoiceProfile().name;
+        if (duration) duration.textContent = `${stats.minutes} ${uiText("min")}`;
+      }
+
+      function setSelfTalkPlaying(nextValue) {
+        selfTalkPlaying = Boolean(nextValue);
+        updateSelfTalkPlaybackUI();
+      }
+
       function renderSelfSpeech() {
         const titleInput = document.getElementById("selfTalkTitle");
         const textInput = document.getElementById("selfTalkText");
@@ -6873,6 +6989,7 @@
         titleInput.value = script.title || "";
         textInput.value = script.text || "";
         state.selfTalk = script.text || defaults.selfTalk;
+        updateSelfTalkPlaybackUI();
       }
 
       function notificationsSupported() {
@@ -7507,6 +7624,18 @@
         speak(script);
       }
 
+      function syncSelfTalkDraft({ renderList = false } = {}) {
+        const titleInput = document.getElementById("selfTalkTitle");
+        const textInput = document.getElementById("selfTalkText");
+        if (!titleInput || !textInput) return;
+        const script = activeSelfTalkScript();
+        script.title = titleInput.value.trim();
+        script.text = textInput.value.trim();
+        state.selfTalk = script.text || defaults.selfTalk;
+        if (renderList) renderSelfTalkScripts();
+        updateSelfTalkPlaybackUI();
+      }
+
       function saveSelfTalkFromForm({ silent = false, syncBump = true } = {}) {
         const titleInput = document.getElementById("selfTalkTitle");
         const textInput = document.getElementById("selfTalkText");
@@ -7518,10 +7647,12 @@
         if (syncBump) save();
         else saveWithoutSyncBump();
         renderSelfTalkScripts();
+        updateSelfTalkPlaybackUI();
         if (!silent) notify("Self speech saved");
       }
 
       function addSelfTalkScript() {
+        stopSelfTalk({ silent: true });
         saveSelfTalkFromForm({ silent: true });
         const scripts = ensureSelfTalkScripts();
         scripts.push({
@@ -7543,6 +7674,7 @@
       function selectSelfTalkScript(index) {
         const scripts = ensureSelfTalkScripts();
         if (!scripts[index]) return;
+        stopSelfTalk({ silent: true });
         if (index !== state.activeSelfTalkIndex) saveSelfTalkFromForm({ silent: true });
         state.activeSelfTalkIndex = index;
         saveWithoutSyncBump();
@@ -7552,6 +7684,7 @@
       function deleteSelfTalkScript(index) {
         const scripts = ensureSelfTalkScripts();
         if (!scripts[index]) return;
+        stopSelfTalk({ silent: true });
         if (scripts.length === 1) {
           scripts[0] = { title: "Main self speech", text: "" };
           state.activeSelfTalkIndex = 0;
@@ -7579,20 +7712,26 @@
           return;
         }
         selfTalkLoopActive = false;
+        setSelfTalkPlaying(true);
         speak(text, {
           voice: selectedSelfTalkVoice(),
+          onend: () => {
+            setSelfTalkPlaying(false);
+          },
           onerror: () => {
             selfTalkLoopActive = false;
+            setSelfTalkPlaying(false);
             notify("Audio stopped");
           }
         });
         notify("Self speech playing");
       }
 
-      function stopSelfTalk() {
+      function stopSelfTalk({ silent = false } = {}) {
         selfTalkLoopActive = false;
+        setSelfTalkPlaying(false);
         if ("speechSynthesis" in window) speechSynthesis.cancel();
-        notify("Audio stopped");
+        if (!silent) notify("Audio stopped");
       }
 
       async function showLocalNotification(title, body) {
@@ -8506,6 +8645,14 @@
         clearTimeout(voiceScrollTimer);
         voiceScrollTimer = setTimeout(syncVoiceFromSwipe, 130);
       }, { passive: true });
+
+      document.getElementById("selfTalkText").addEventListener("input", () => {
+        syncSelfTalkDraft({ renderList: true });
+      });
+
+      document.getElementById("selfTalkTitle").addEventListener("input", () => {
+        syncSelfTalkDraft({ renderList: true });
+      });
 
       document.getElementById("selfTalkText").addEventListener("blur", () => {
         saveSelfTalkFromForm({ silent: true });
