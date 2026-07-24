@@ -30,7 +30,8 @@ const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
-const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v4";
+const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v5";
+const QUOTE_RITUAL_VERSION = "quote-ritual-v2";
 const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
 
 function normalizeLanguageId(locale) {
@@ -79,8 +80,12 @@ function dayNumberFromKey(dateKey) {
 }
 
 function quoteForDate(dateKey = todayKey()) {
-  const index = dayNumberFromKey(dateKey) % dailyQuotes.length;
-  return dailyQuotes[index];
+  return dailyQuotes[quoteIndexForDate(dateKey)];
+}
+
+function quoteIndexForDate(dateKey = todayKey()) {
+  if (!dailyQuotes.length) return 0;
+  return dayNumberFromKey(dateKey) % dailyQuotes.length;
 }
 
 const blankState = {
@@ -95,6 +100,7 @@ const blankState = {
     updatedAt: "",
     lastAnimatedDate: "",
     lastQuoteDate: "",
+    lastQuoteRitualVersion: "",
     lastSnapshot: null,
     lifeUpdateAnimationVersion: ""
   },
@@ -165,18 +171,18 @@ const dailyQuotes = [
   { text: "Begin, be bold, and venture to be wise.", author: "Horace", source: "Bartlett" },
   { text: "Rule your mind, or it will rule you.", author: "Horace", source: "Bartlett" },
   { text: "Seize the day.", author: "Horace", source: "Bartlett" },
-  { text: "Dripping water hollows out stone.", author: "Ovid", source: "Bartlett" },
+  { text: "Dream lofty dreams, and as you dream, so shall you become.", author: "James Allen", source: "Project Gutenberg" },
   { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu", source: "Project Gutenberg" },
   { text: "He who conquers himself is mighty.", author: "Lao Tzu", source: "Project Gutenberg" },
   { text: "Great acts are made up of small deeds.", author: "Lao Tzu", source: "Project Gutenberg" },
-  { text: "The beginning is the most important part of the work.", author: "Plato", source: "Bartlett" },
+  { text: "Your Vision is the promise of what you shall one day be.", author: "James Allen", source: "Project Gutenberg" },
   { text: "Well begun is half done.", author: "Aristotle", source: "Bartlett" },
-  { text: "While there is life, there is hope.", author: "Cicero", source: "Bartlett" },
+  { text: "You cannot travel within and stand still without.", author: "James Allen", source: "Project Gutenberg" },
   { text: "Small opportunities are often the beginning of great enterprises.", author: "Demosthenes", source: "Bartlett" },
   { text: "Practice is the best of all instructors.", author: "Publilius Syrus", source: "Bartlett" },
   { text: "To do two things at once is to do neither.", author: "Publilius Syrus", source: "Bartlett" },
   { text: "Valor grows by daring, fear by holding back.", author: "Publilius Syrus", source: "Bartlett" },
-  { text: "Slow but steady wins the race.", author: "Aesop", source: "Bartlett" },
+  { text: "Dreams are the seedlings of realities.", author: "James Allen", source: "Project Gutenberg" },
   { text: "The fault, dear Brutus, is not in our stars, but in ourselves.", author: "William Shakespeare", source: "Bartlett" },
   { text: "Action is eloquence.", author: "William Shakespeare", source: "Bartlett" },
   { text: "Strong reasons make strong actions.", author: "William Shakespeare", source: "Bartlett" },
@@ -195,7 +201,7 @@ const dailyQuotes = [
   { text: "Do the thing and you shall have the power.", author: "Ralph Waldo Emerson", source: "Bartlett" },
   { text: "Self-trust is the first secret of success.", author: "Ralph Waldo Emerson", source: "Bartlett" },
   { text: "Trust thyself: every heart vibrates to that iron string.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-  { text: "The reward of a thing well done is to have done it.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "The oak sleeps in the acorn.", author: "James Allen", source: "Project Gutenberg" },
   { text: "Go confidently in the direction of your dreams.", author: "Henry David Thoreau", source: "Project Gutenberg" },
   { text: "Live the life you have imagined.", author: "Henry David Thoreau", source: "Project Gutenberg" },
   { text: "First say to yourself what you would be; then do what you have to do.", author: "Epictetus", source: "Project Gutenberg" },
@@ -203,7 +209,7 @@ const dailyQuotes = [
   { text: "No man is free who is not master of himself.", author: "Epictetus", source: "Project Gutenberg" },
   { text: "Practice yourself in little things; then proceed to greater.", author: "Epictetus", source: "Project Gutenberg" },
   { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca", source: "Project Gutenberg" },
-  { text: "No man was ever wise by chance.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "Achievement is the crown of effort.", author: "James Allen", source: "Project Gutenberg" },
   { text: "It is not that we have little time, but that we waste much.", author: "Seneca", source: "Project Gutenberg" },
   { text: "As long as you live, keep learning how to live.", author: "Seneca", source: "Project Gutenberg" },
   { text: "He who is brave is free.", author: "Seneca", source: "Project Gutenberg" },
@@ -216,24 +222,24 @@ const dailyQuotes = [
   { text: "If it is not right, do not do it.", author: "Marcus Aurelius", source: "Project Gutenberg" },
   { text: "Do every act of your life as if it were your last.", author: "Marcus Aurelius", source: "Project Gutenberg" },
   { text: "Look well into thyself; there is a source of strength.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-  { text: "The universe is change; our life is what our thoughts make it.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "A man can only rise, conquer, and achieve by lifting up his thoughts.", author: "James Allen", source: "Project Gutenberg" },
   { text: "Let us, then, be up and doing.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
   { text: "Act in the living present.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
   { text: "Learn to labor and to wait.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
   { text: "Still achieving, still pursuing, learn to labor and to wait.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
   { text: "To strive, to seek, to find, and not to yield.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
   { text: "It is not too late to seek a newer world.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
-  { text: "I am a part of all that I have met.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
+  { text: "Do not wait for extraordinary opportunities; seize common occasions and make them great.", author: "Orison Swett Marden", source: "Project Gutenberg" },
   { text: "A man's reach should exceed his grasp.", author: "Robert Browning", source: "Bartlett" },
   { text: "The best is yet to be.", author: "Robert Browning", source: "Bartlett" },
   { text: "He never turned his back but marched breast forward.", author: "Robert Browning", source: "Bartlett" },
   { text: "Act well your part; there all the honor lies.", author: "Alexander Pope", source: "Bartlett" },
-  { text: "Hope springs eternal in the human breast.", author: "Alexander Pope", source: "Bartlett" },
+  { text: "The golden opportunity you are seeking is in yourself.", author: "Orison Swett Marden", source: "Project Gutenberg" },
   { text: "Great works are performed not by strength, but perseverance.", author: "Samuel Johnson", source: "Bartlett" },
   { text: "Few things are impossible to diligence and skill.", author: "Samuel Johnson", source: "Bartlett" },
-  { text: "Knowledge is power.", author: "Francis Bacon", source: "Bartlett" },
+  { text: "The will to do springs from the knowledge that we can do.", author: "James Allen", source: "Project Gutenberg" },
   { text: "A wise man will make more opportunities than he finds.", author: "Francis Bacon", source: "Bartlett" },
-  { text: "Not being able to govern events, I govern myself.", author: "Michel de Montaigne", source: "Project Gutenberg" },
+  { text: "Weak men wait for opportunities; strong men make them.", author: "Orison Swett Marden", source: "Project Gutenberg" },
   { text: "Where the willingness is great, the difficulties cannot be great.", author: "Niccolo Machiavelli", source: "Project Gutenberg" },
   { text: "Awake, arise, or be forever fallen.", author: "John Milton", source: "Bartlett" },
   { text: "Believe you can and you are halfway there.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
@@ -271,8 +277,9 @@ const copy = {
     "life.used": "used",
     "life.monthMap": "Life by months",
     "life.monthMapBody": "Each dot is one month. Filled dots are already spent.",
-    "quote.kicker": "Daily quote",
-    "quote.title": "Read this once today.",
+    "quote.kicker": "Today's standard",
+    "quote.title": "Carry this into the day.",
+    "quote.open": "open",
     "quote.close": "Carry it",
     "goals.daily": "Daily tasks",
     "goals.long": "Long-term goals",
@@ -398,8 +405,9 @@ Object.assign(copy.zh, {
   "speech.voice": "Voice",
   "speech.heading": "Script your inner voice.",
   "speech.swipe": "Swipe to change voice",
-  "quote.kicker": "Daily quote",
-  "quote.title": "Read this once today.",
+  "quote.kicker": "Today's standard",
+  "quote.title": "Carry this into the day.",
+  "quote.open": "open",
   "quote.close": "Carry it"
 });
 
@@ -407,8 +415,9 @@ Object.assign(copy.es, {
   "speech.heading": "Escribe tu voz interior.",
   "speech.voice": "Voz",
   "speech.swipe": "Desliza para cambiar voz",
-  "quote.kicker": "Cita diaria",
-  "quote.title": "Lee esto una vez hoy.",
+  "quote.kicker": "Estandar de hoy",
+  "quote.title": "Lleva esto a tu dia.",
+  "quote.open": "abrir",
   "quote.close": "Llevarlo"
 });
 
@@ -416,8 +425,9 @@ Object.assign(copy.fr, {
   "speech.heading": "Ecris ta voix interieure.",
   "speech.voice": "Voix",
   "speech.swipe": "Glisse pour changer la voix",
-  "quote.kicker": "Citation du jour",
-  "quote.title": "Lis ceci une fois aujourd'hui.",
+  "quote.kicker": "Standard du jour",
+  "quote.title": "Emporte ceci dans ta journee.",
+  "quote.open": "ouvrir",
   "quote.close": "Garder"
 });
 
@@ -425,8 +435,9 @@ Object.assign(copy.pt, {
   "speech.heading": "Escreva sua voz interior.",
   "speech.voice": "Voz",
   "speech.swipe": "Deslize para mudar voz",
-  "quote.kicker": "Citacao do dia",
-  "quote.title": "Leia isto uma vez hoje.",
+  "quote.kicker": "Padrao de hoje",
+  "quote.title": "Leve isto para o seu dia.",
+  "quote.open": "abrir",
   "quote.close": "Levar comigo"
 });
 
@@ -605,7 +616,10 @@ export default function App() {
   const profileComplete = appState.profile.complete;
   const activeGoals = goalMode === "daily" ? appState.dailyTasks : appState.longGoals;
   const activeSpeech = appState.selfSpeeches[appState.activeSpeechIndex] || null;
-  const dailyQuote = quoteForDate();
+  const dailyQuoteIndex = quoteIndexForDate();
+  const dailyQuote = dailyQuotes[dailyQuoteIndex] || quoteForDate();
+  const dailyQuoteOrdinal = `${dailyQuoteIndex + 1} / ${dailyQuotes.length}`;
+  const dailyQuoteProgress = `${Math.round(((dailyQuoteIndex + 1) / Math.max(dailyQuotes.length, 1)) * 100)}%`;
   const screenOpacity = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
   const screenTranslate = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [18, 0] });
 
@@ -713,13 +727,18 @@ export default function App() {
   useEffect(() => {
     if (!hydrated || !profileComplete || quoteRevealOpen) return undefined;
     const dateKey = todayKey();
-    if (appState.profile.lastQuoteDate === dateKey) return undefined;
+    if (
+      appState.profile.lastQuoteDate === dateKey &&
+      appState.profile.lastQuoteRitualVersion === QUOTE_RITUAL_VERSION
+    ) {
+      return undefined;
+    }
     const lifeRevealPending =
       appState.profile.lastAnimatedDate !== dateKey ||
       appState.profile.lifeUpdateAnimationVersion !== LIFE_UPDATE_ANIMATION_VERSION;
     const timer = setTimeout(() => maybeShowDailyQuote(), lifeRevealPending ? 5400 : 900);
     return () => clearTimeout(timer);
-  }, [hydrated, profileComplete, appState.profile.lastQuoteDate, appState.profile.lastAnimatedDate, appState.profile.lifeUpdateAnimationVersion, quoteRevealOpen]);
+  }, [hydrated, profileComplete, appState.profile.lastQuoteDate, appState.profile.lastQuoteRitualVersion, appState.profile.lastAnimatedDate, appState.profile.lifeUpdateAnimationVersion, quoteRevealOpen]);
 
   function updateState(mutator) {
     setAppState((current) => {
@@ -1051,14 +1070,24 @@ export default function App() {
     const force = Boolean(options.force);
     const dateKey = todayKey();
     if (!appState.profile.complete) return;
-    if (!force && appState.profile.lastQuoteDate === dateKey) return;
+    if (
+      !force &&
+      appState.profile.lastQuoteDate === dateKey &&
+      appState.profile.lastQuoteRitualVersion === QUOTE_RITUAL_VERSION
+    ) {
+      return;
+    }
     setQuoteRevealOpen(true);
-    if (appState.profile.lastQuoteDate !== dateKey) {
+    if (
+      appState.profile.lastQuoteDate !== dateKey ||
+      appState.profile.lastQuoteRitualVersion !== QUOTE_RITUAL_VERSION
+    ) {
       updateState((current) => ({
         ...current,
         profile: {
           ...current.profile,
-          lastQuoteDate: dateKey
+          lastQuoteDate: dateKey,
+          lastQuoteRitualVersion: QUOTE_RITUAL_VERSION
         }
       }));
     }
@@ -1176,16 +1205,24 @@ export default function App() {
 
         <TouchableOpacity
           activeOpacity={0.88}
-          style={[styles.quoteCard, { backgroundColor: theme.card, borderColor: theme.line }]}
+          style={[styles.quoteCard, appState.settings.darkMode ? styles.quoteCardDark : styles.quoteCardLight]}
           onPress={() => maybeShowDailyQuote({ force: true })}
         >
-          <View style={styles.quoteMark}>
-            <Text style={styles.quoteMarkText}>Q</Text>
+          <View style={styles.quoteCardGlow} />
+          <View style={styles.quoteCardTop}>
+            <View style={styles.quoteMark}>
+              <Text style={styles.quoteMarkText}>Q</Text>
+            </View>
+            <View style={styles.quoteMetaBlock}>
+              <Text style={styles.quoteCardKicker}>{t("quote.kicker")}</Text>
+              <Text style={styles.quoteCardDay}>{dailyQuoteOrdinal}</Text>
+            </View>
+            <Text style={styles.quoteOpenHint}>{t("quote.open")}</Text>
           </View>
-          <View style={styles.quoteCardCopy}>
-            <Text style={[styles.kicker, { color: theme.muted }]}>{t("quote.kicker")}</Text>
-            <Text style={[styles.quoteCardText, { color: theme.ink }]}>"{dailyQuote.text}"</Text>
-            <Text style={[styles.quoteAuthor, { color: theme.muted }]}>{dailyQuote.author} - {dailyQuote.source}</Text>
+          <Text style={styles.quoteCardText}>"{dailyQuote.text}"</Text>
+          <View style={styles.quoteCardFooter}>
+            <Text style={styles.quoteAuthor}>{dailyQuote.author}</Text>
+            <View style={styles.quoteFooterLine} />
           </View>
         </TouchableOpacity>
 
@@ -1601,19 +1638,34 @@ export default function App() {
 
   function renderQuoteReveal() {
     if (!quoteRevealOpen) return null;
-    const scale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.92, 1] });
-    const translateY = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [30, 0] });
+    const scale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.86, 1] });
+    const translateY = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [54, 0] });
     const opacity = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
+    const orbScale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.72, 1.12] });
     return (
       <Modal visible transparent animationType="fade" onRequestClose={() => setQuoteRevealOpen(false)}>
         <View style={styles.quoteOverlay}>
-          <Animated.View style={[styles.quoteRevealCard, { opacity, transform: [{ translateY }, { scale }] }]}>
-            <View style={styles.quoteRevealHalo} />
+          <Animated.View style={[styles.quoteRevealStage, { opacity, transform: [{ translateY }, { scale }] }]}>
+            <Animated.View style={[styles.quoteRevealOrbOne, { transform: [{ scale: orbScale }] }]} />
+            <Animated.View style={[styles.quoteRevealOrbTwo, { transform: [{ scale }] }]} />
+            <View style={styles.quoteRevealTop}>
+              <View style={styles.quoteRevealLogo}>
+                <View style={styles.logoSmallSlash} />
+                <View style={styles.logoSmallSlashSecond} />
+                <View style={styles.logoSmallDot} />
+              </View>
+              <Text style={styles.quoteRevealDay}>{dailyQuoteOrdinal}</Text>
+            </View>
+            <View style={styles.quoteRevealMeter}>
+              <View style={[styles.quoteRevealMeterFill, { width: dailyQuoteProgress }]} />
+            </View>
             <Text style={styles.quoteRevealKicker}>{t("quote.kicker")}</Text>
             <Text style={styles.quoteRevealTitle}>{t("quote.title")}</Text>
             <Text style={styles.quoteRevealText}>"{dailyQuote.text}"</Text>
-            <Text style={styles.quoteRevealAuthor}>{dailyQuote.author}</Text>
-            <Text style={styles.quoteRevealSource}>{dailyQuote.source}</Text>
+            <View style={styles.quoteRevealAuthorBox}>
+              <Text style={styles.quoteRevealAuthor}>{dailyQuote.author}</Text>
+              <Text style={styles.quoteRevealSource}>{dailyQuote.source}</Text>
+            </View>
             <TouchableOpacity style={styles.quoteCloseButton} onPress={() => setQuoteRevealOpen(false)}>
               <Text style={styles.quoteCloseText}>{t("quote.close")}</Text>
             </TouchableOpacity>
@@ -1808,12 +1860,21 @@ const styles = StyleSheet.create({
   statCard: { flex: 1, borderWidth: 1, borderRadius: 22, padding: 14 },
   statValue: { fontSize: 22, fontWeight: "900" },
   statLabel: { marginTop: 3, fontSize: 12, fontWeight: "900", textTransform: "uppercase" },
-  quoteCard: { minHeight: 124, flexDirection: "row", gap: 14, borderWidth: 1, borderRadius: 28, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.07, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 3 },
+  quoteCard: { minHeight: 164, overflow: "hidden", borderWidth: 1, borderRadius: 31, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
+  quoteCardLight: { backgroundColor: "#111418", borderColor: "rgba(17,20,24,0.1)" },
+  quoteCardDark: { backgroundColor: "#191F22", borderColor: "rgba(232,196,104,0.2)" },
+  quoteCardGlow: { position: "absolute", right: -38, top: -62, width: 152, height: 152, borderRadius: 76, backgroundColor: "rgba(232,196,104,0.18)" },
+  quoteCardTop: { flexDirection: "row", alignItems: "center", gap: 12 },
   quoteMark: { width: 42, height: 42, borderRadius: 21, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
   quoteMarkText: { color: "#101418", fontSize: 16, fontWeight: "900" },
-  quoteCardCopy: { flex: 1, minWidth: 0 },
-  quoteCardText: { marginTop: 7, fontSize: 20, lineHeight: 24, fontWeight: "900" },
-  quoteAuthor: { marginTop: 8, fontSize: 12, lineHeight: 16, fontWeight: "900" },
+  quoteMetaBlock: { flex: 1, minWidth: 0 },
+  quoteCardKicker: { color: "rgba(255,249,237,0.72)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
+  quoteCardDay: { color: "#E8C468", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "900" },
+  quoteOpenHint: { overflow: "hidden", minHeight: 32, paddingHorizontal: 13, paddingVertical: 8, borderRadius: 999, color: "#101418", backgroundColor: "#FFF9ED", fontSize: 12, lineHeight: 14, fontWeight: "900", textTransform: "lowercase" },
+  quoteCardText: { marginTop: 20, color: "#FFF9ED", fontSize: 22, lineHeight: 27, fontWeight: "900" },
+  quoteCardFooter: { marginTop: 18, flexDirection: "row", alignItems: "center", gap: 10 },
+  quoteAuthor: { color: "rgba(255,249,237,0.72)", fontSize: 12, lineHeight: 16, fontWeight: "900" },
+  quoteFooterLine: { flex: 1, height: 1, backgroundColor: "rgba(232,196,104,0.26)" },
   panel: { borderWidth: 1, borderRadius: 28, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 2 },
   monthPanel: { paddingBottom: 20 },
   panelHeaderRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: 12 },
@@ -1842,16 +1903,23 @@ const styles = StyleSheet.create({
   lifeUpdateDots: { marginTop: 28, flexDirection: "row", gap: 8 },
   lifeUpdateDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: "rgba(255,255,255,0.22)" },
   lifeUpdateDotHot: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.55, shadowRadius: 12, shadowOffset: { width: 0, height: 0 } },
-  quoteOverlay: { flex: 1, alignItems: "center", justifyContent: "center", padding: 18, backgroundColor: "rgba(6,8,9,0.72)" },
-  quoteRevealCard: { width: "100%", overflow: "hidden", borderRadius: 34, padding: 24, backgroundColor: "#FFF9ED", borderWidth: 1, borderColor: "rgba(232,196,104,0.44)", shadowColor: "#000", shadowOpacity: 0.34, shadowRadius: 42, shadowOffset: { width: 0, height: 24 }, elevation: 10 },
-  quoteRevealHalo: { position: "absolute", right: -42, top: -54, width: 150, height: 150, borderRadius: 75, backgroundColor: "rgba(232,196,104,0.28)" },
-  quoteRevealKicker: { color: "#9B7E30", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
-  quoteRevealTitle: { color: "#101418", marginTop: 12, fontSize: 30, lineHeight: 33, fontWeight: "900" },
-  quoteRevealText: { color: "#101418", marginTop: 18, fontSize: 24, lineHeight: 31, fontWeight: "900" },
-  quoteRevealAuthor: { color: "#3E403C", marginTop: 18, fontSize: 15, lineHeight: 20, fontWeight: "900" },
-  quoteRevealSource: { color: "#80796C", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "850" },
-  quoteCloseButton: { minHeight: 52, marginTop: 22, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#101418" },
-  quoteCloseText: { color: "#FFF9ED", fontSize: 15, fontWeight: "900" },
+  quoteOverlay: { flex: 1, justifyContent: "center", padding: 10, backgroundColor: "rgba(6,8,9,0.96)" },
+  quoteRevealStage: { position: "relative", width: "100%", minHeight: "94%", overflow: "hidden", borderRadius: 44, padding: 24, justifyContent: "center", backgroundColor: "#0B0E10", borderWidth: 1, borderColor: "rgba(232,196,104,0.24)", shadowColor: "#000", shadowOpacity: 0.44, shadowRadius: 54, shadowOffset: { width: 0, height: 28 }, elevation: 12 },
+  quoteRevealOrbOne: { position: "absolute", right: -86, top: -86, width: 236, height: 236, borderRadius: 118, backgroundColor: "rgba(232,196,104,0.2)" },
+  quoteRevealOrbTwo: { position: "absolute", left: -72, bottom: -74, width: 190, height: 190, borderRadius: 95, backgroundColor: "rgba(218,90,58,0.16)" },
+  quoteRevealTop: { position: "absolute", left: 24, right: 24, top: 24, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  quoteRevealLogo: { width: 50, height: 38, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.07)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  quoteRevealDay: { color: "rgba(255,249,237,0.6)", fontSize: 12, lineHeight: 16, fontWeight: "900" },
+  quoteRevealMeter: { position: "absolute", left: 24, right: 24, top: 78, height: 4, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.1)" },
+  quoteRevealMeterFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
+  quoteRevealKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
+  quoteRevealTitle: { color: "rgba(255,249,237,0.76)", marginTop: 16, fontSize: 18, lineHeight: 23, fontWeight: "900", textAlign: "center" },
+  quoteRevealText: { color: "#FFF9ED", marginTop: 24, fontSize: 35, lineHeight: 40, fontWeight: "900", textAlign: "center" },
+  quoteRevealAuthorBox: { alignSelf: "center", minWidth: 196, marginTop: 30, borderRadius: 26, paddingHorizontal: 18, paddingVertical: 13, alignItems: "center", backgroundColor: "rgba(255,255,255,0.07)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  quoteRevealAuthor: { color: "#FFF9ED", fontSize: 15, lineHeight: 20, fontWeight: "900", textAlign: "center" },
+  quoteRevealSource: { color: "rgba(255,249,237,0.56)", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "850", textAlign: "center" },
+  quoteCloseButton: { minHeight: 54, marginTop: 34, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FFF9ED" },
+  quoteCloseText: { color: "#101418", fontSize: 15, fontWeight: "900" },
   segment: { flexDirection: "row", borderRadius: 999, padding: 5, marginBottom: 14 },
   segmentButton: { flex: 1, minHeight: 42, alignItems: "center", justifyContent: "center", borderRadius: 999 },
   segmentActive: { backgroundColor: "#E8C468" },
