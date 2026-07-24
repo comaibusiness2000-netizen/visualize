@@ -1167,16 +1167,16 @@ export default function App() {
           contentContainerStyle={styles.onboardingContent}
         >
           <View style={[styles.setupCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
-            <View style={styles.setupTopRow}>
-              <Animated.View style={[styles.setupMiniLogo, { transform: [{ scale }, { translateY }] }]}>
-                <View style={styles.logoSlash} />
-                <View style={styles.logoSlashSecond} />
-                <View style={styles.logoDot} />
-              </Animated.View>
-              <View style={styles.setupStepPill}>
-                <Text style={styles.setupStepPillText}>01</Text>
-              </View>
-            </View>
+            <Animated.View style={[styles.setupMiniLogo, { transform: [{ scale }, { translateY }] }]}>
+              <View style={styles.logoSlash} />
+              <View style={styles.logoSlashSecond} />
+              <View style={styles.logoDot} />
+            </Animated.View>
+            <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.kicker")}</Text>
+            <Text style={[styles.setupTitle, { color: theme.ink }]}>{t("setup.title")}</Text>
+            <Text style={[styles.setupText, { color: theme.muted }]}>
+              {t("setup.body")}
+            </Text>
             <View style={styles.setupPreview}>
               <View style={styles.setupPreviewHeader}>
                 <Text style={styles.setupPreviewKicker}>{t("life.monthMap")}</Text>
@@ -1220,11 +1220,6 @@ export default function App() {
                 <Text style={[styles.setupJourneyText, { color: theme.muted }]}>{t("tab.vision")}</Text>
               </View>
             </View>
-            <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.kicker")}</Text>
-            <Text style={[styles.setupTitle, { color: theme.ink }]}>{t("setup.title")}</Text>
-            <Text style={[styles.setupText, { color: theme.muted }]}>
-              {t("setup.body")}
-            </Text>
             <View style={styles.setupFields}>
               <View style={styles.setupField}>
                 <Text style={[styles.setupFieldLabel, { color: theme.muted }]}>{t("setup.name")}</Text>
@@ -1293,12 +1288,22 @@ export default function App() {
           <Text style={styles.heroBody}>
             {t("life.summary", { age: stats.age, expectancy: stats.expectancy })}
           </Text>
-        </View>
-
-        <View style={styles.statsRow}>
-          <StatCard label={t("life.weeks")} value={stats.weeksLeft} theme={theme} />
-          <StatCard label={t("life.months")} value={stats.monthsLeft} theme={theme} />
-          <StatCard label={t("life.used")} value={`${stats.usedPercent}%`} theme={theme} />
+          <View style={styles.heroStatsStrip}>
+            <View style={styles.heroStatCell}>
+              <Text style={styles.heroStatValue}>{stats.weeksLeft.toLocaleString("en-US")}</Text>
+              <Text style={styles.heroStatLabel}>{t("life.weeks")}</Text>
+            </View>
+            <View style={styles.heroStatDivider} />
+            <View style={styles.heroStatCell}>
+              <Text style={styles.heroStatValue}>{stats.monthsLeft.toLocaleString("en-US")}</Text>
+              <Text style={styles.heroStatLabel}>{t("life.months")}</Text>
+            </View>
+            <View style={styles.heroStatDivider} />
+            <View style={styles.heroStatCell}>
+              <Text style={styles.heroStatValue}>{stats.usedPercent}%</Text>
+              <Text style={styles.heroStatLabel}>{t("life.used")}</Text>
+            </View>
+          </View>
         </View>
 
         <TouchableOpacity
@@ -2003,15 +2008,6 @@ function TabGlyph({ id, color, active }) {
   );
 }
 
-function StatCard({ label, value, theme }) {
-  return (
-    <View style={[styles.statCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
-      <Text style={[styles.statValue, { color: theme.ink }]}>{String(value).toLocaleString("en-US")}</Text>
-      <Text style={[styles.statLabel, { color: theme.muted }]}>{label}</Text>
-    </View>
-  );
-}
-
 function EmptyState({ theme, title, text }) {
   return (
     <View style={[styles.empty, { backgroundColor: theme.card, borderColor: theme.line }]}>
@@ -2056,37 +2052,36 @@ const styles = StyleSheet.create({
   loader: { alignItems: "center", justifyContent: "center", backgroundColor: "#101418" },
   centerFill: { flex: 1, justifyContent: "center", padding: 24 },
   onboardingShell: { flex: 1 },
-  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 16, paddingVertical: 16 },
+  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 18, paddingVertical: 18 },
   setupCard: {
     width: "100%",
     overflow: "hidden",
     alignSelf: "center",
     borderWidth: 1,
-    borderRadius: 38,
-    paddingHorizontal: 18,
-    paddingTop: 18,
-    paddingBottom: 20,
+    borderRadius: 40,
+    paddingHorizontal: 20,
+    paddingTop: 22,
+    paddingBottom: 22,
     shadowColor: "#000",
     shadowOpacity: 0.12,
     shadowRadius: 34,
     shadowOffset: { width: 0, height: 18 },
     elevation: 8
   },
-  setupTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 },
   setupMiniLogo: {
     width: 54,
     height: 54,
+    alignSelf: "center",
     borderRadius: 18,
     backgroundColor: "#101418",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    marginBottom: 14
   },
-  setupStepPill: { height: 34, minWidth: 56, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
-  setupStepPillText: { color: "#101418", fontSize: 13, lineHeight: 16, fontWeight: "900" },
   logoSlash: { position: "absolute", width: 7, height: 31, left: 17, top: 12, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
   logoSlashSecond: { position: "absolute", width: 7, height: 31, left: 27, top: 12, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
   logoDot: { position: "absolute", width: 11, height: 11, borderRadius: 6, right: 13, bottom: 14, backgroundColor: "#DA5A3A" },
-  setupPreview: { overflow: "hidden", borderRadius: 30, padding: 16, marginBottom: 13, backgroundColor: "#101418" },
+  setupPreview: { overflow: "hidden", borderRadius: 32, padding: 17, marginTop: 16, marginBottom: 14, backgroundColor: "#101418" },
   setupPreviewHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 },
   setupPreviewKicker: { color: "rgba(255,249,237,0.58)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.6, textTransform: "uppercase" },
   setupPreviewAge: { color: "#E8C468", fontSize: 22, lineHeight: 26, fontWeight: "900" },
@@ -2099,7 +2094,7 @@ const styles = StyleSheet.create({
   setupPreviewRailText: { color: "rgba(255,249,237,0.78)", textAlign: "center", fontSize: 11, lineHeight: 14, fontWeight: "900" },
   setupPreviewFooter: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 16, paddingTop: 14, borderTopWidth: 1, borderTopColor: "rgba(255,249,237,0.1)" },
   setupPreviewFootText: { color: "#FFF9ED", fontSize: 12, lineHeight: 15, fontWeight: "900" },
-  setupJourney: { width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 13, paddingHorizontal: 4 },
+  setupJourney: { width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 14, paddingHorizontal: 4 },
   setupJourneyItem: { minWidth: 58, alignItems: "center", gap: 5 },
   setupJourneyItemActive: {},
   setupJourneyNumber: { width: 25, height: 25, borderRadius: 13, overflow: "hidden", color: "#101418", backgroundColor: "#E8C468", textAlign: "center", fontSize: 12, lineHeight: 25, fontWeight: "900" },
@@ -2107,9 +2102,9 @@ const styles = StyleSheet.create({
   setupJourneyText: { maxWidth: 72, color: "#101418", textAlign: "center", fontSize: 10.5, lineHeight: 13, fontWeight: "900" },
   setupJourneyLine: { flex: 1, maxWidth: 48, height: 1, marginTop: -15, backgroundColor: "rgba(128,128,128,0.22)" },
   setupKicker: { alignSelf: "center", maxWidth: "100%", textAlign: "center", fontSize: 10, lineHeight: 14, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
-  setupTitle: { alignSelf: "center", maxWidth: 316, marginTop: 7, textAlign: "center", fontSize: 28, lineHeight: 31, fontWeight: "900" },
-  setupText: { alignSelf: "center", maxWidth: 318, marginTop: 8, textAlign: "center", fontSize: 13.5, lineHeight: 18, fontWeight: "700" },
-  setupFields: { marginTop: 16, gap: 9 },
+  setupTitle: { alignSelf: "center", maxWidth: 322, marginTop: 8, textAlign: "center", fontSize: 29, lineHeight: 32, fontWeight: "900" },
+  setupText: { alignSelf: "center", maxWidth: 322, marginTop: 9, textAlign: "center", fontSize: 14, lineHeight: 19, fontWeight: "700" },
+  setupFields: { marginTop: 4, gap: 10 },
   setupField: { minWidth: 0 },
   setupFieldRow: { flexDirection: "row", gap: 10 },
   setupFieldHalf: { flex: 1 },
@@ -2132,7 +2127,7 @@ const styles = StyleSheet.create({
   main: { flex: 1 },
   mainMotion: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
-  heroCard: { overflow: "hidden", borderWidth: 1, borderRadius: 34, padding: 24, marginBottom: 16, shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
+  heroCard: { overflow: "hidden", borderWidth: 1, borderRadius: 36, padding: 24, marginBottom: 16, shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
   heroGlow: { position: "absolute", right: -48, top: -68, width: 180, height: 180, borderRadius: 90, backgroundColor: "rgba(232,196,104,0.15)" },
   heroWatermark: { position: "absolute", left: 16, right: 16, bottom: -22, color: "rgba(255,249,237,0.055)", fontSize: 116, lineHeight: 122, fontWeight: "900", textAlign: "center" },
   heroTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 18 },
@@ -2145,12 +2140,13 @@ const styles = StyleSheet.create({
   bigProgressTrack: { height: 12, overflow: "hidden", borderRadius: 999, marginBottom: 14 },
   bigProgressFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   heroBody: { color: "rgba(255,249,237,0.72)", fontSize: 15, lineHeight: 22, fontWeight: "700", textAlign: "center" },
+  heroStatsStrip: { minHeight: 76, marginTop: 22, borderRadius: 24, paddingHorizontal: 10, flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255,249,237,0.075)", borderWidth: 1, borderColor: "rgba(255,249,237,0.08)" },
+  heroStatCell: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 4 },
+  heroStatValue: { color: "#FFF9ED", fontSize: 20, lineHeight: 24, fontWeight: "900", textAlign: "center" },
+  heroStatLabel: { color: "rgba(255,249,237,0.58)", marginTop: 3, fontSize: 10, lineHeight: 13, fontWeight: "900", textAlign: "center", letterSpacing: 1.1, textTransform: "uppercase" },
+  heroStatDivider: { width: 1, height: 36, backgroundColor: "rgba(255,249,237,0.11)" },
   body: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
   syncFootnote: { marginTop: 10, fontSize: 11, lineHeight: 16, fontWeight: "900", letterSpacing: 0.5 },
-  statsRow: { flexDirection: "row", gap: 10, marginBottom: 14 },
-  statCard: { flex: 1, borderWidth: 1, borderRadius: 22, padding: 14 },
-  statValue: { fontSize: 22, fontWeight: "900" },
-  statLabel: { marginTop: 3, fontSize: 12, fontWeight: "900", textTransform: "uppercase" },
   quoteCard: { minHeight: 190, overflow: "hidden", borderWidth: 1, borderRadius: 34, padding: 20, marginBottom: 16, shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
   quoteCardLight: { backgroundColor: "#111418", borderColor: "rgba(17,20,24,0.1)" },
   quoteCardDark: { backgroundColor: "#191F22", borderColor: "rgba(232,196,104,0.2)" },

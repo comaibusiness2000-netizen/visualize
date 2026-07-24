@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=72" />
+    <link rel="manifest" href="./manifest.webmanifest?v=73" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v72";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v73";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=72")
+            .register("./service-worker.js?v=73")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -881,10 +881,10 @@
         min-height: min(510px, calc(100dvh - 168px));
         display: grid;
         align-content: center;
-        gap: clamp(10px, 1.7vh, 14px);
-        padding: 18px;
+        gap: clamp(11px, 1.8vh, 15px);
+        padding: 20px;
         border: 1px solid rgba(17, 17, 17, 0.06);
-        border-radius: 32px;
+        border-radius: 36px;
         color: var(--ink);
         background: #fff;
         box-shadow: 0 28px 70px rgba(17, 17, 17, 0.1);
@@ -903,13 +903,6 @@
         position: relative;
       }
 
-      .setup-top-row {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
       .setup-mini-mark {
         width: 54px;
         height: 54px;
@@ -917,6 +910,7 @@
         place-items: center;
         border-radius: 18px;
         background: #101418;
+        margin-bottom: 2px;
         animation: setupCardFloat 3.8s ease-in-out infinite;
       }
 
@@ -925,25 +919,14 @@
         height: 32px;
       }
 
-      .setup-step-pill {
-        min-width: 56px;
-        height: 34px;
-        display: grid;
-        place-items: center;
-        border-radius: 999px;
-        color: #101418;
-        background: var(--gold);
-        font-size: 13px;
-        font-weight: 950;
-      }
-
       .setup-showcase {
         width: 100%;
         overflow: hidden;
-        border-radius: 30px;
-        padding: 16px;
+        border-radius: 32px;
+        padding: 17px;
         color: #fff9ed;
         background: #101418;
+        margin-top: 4px;
       }
 
       .setup-showcase-head {
@@ -1094,8 +1077,8 @@
       }
 
       .life-onboarding h1 {
-        max-width: min(100%, 292px);
-        font-size: clamp(25px, 6.8vw, 30px);
+        max-width: min(100%, 318px);
+        font-size: clamp(27px, 7vw, 32px);
         line-height: 1.06;
         font-weight: 950;
         text-align: center;
@@ -1113,8 +1096,8 @@
       .life-summary,
       .life-legend {
         color: var(--muted);
-        font-size: 14px;
-        line-height: 1.38;
+        font-size: 14.5px;
+        line-height: 1.42;
         font-weight: 760;
       }
 
@@ -1165,34 +1148,53 @@
       }
 
       .life-head {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(232, 196, 104, 0.18);
+        border-radius: 34px;
+        padding: 22px 18px 18px;
+        color: #fff9ed;
+        background:
+          radial-gradient(circle at 92% 0%, rgba(232, 196, 104, 0.14), transparent 34%),
+          linear-gradient(180deg, #11171a, #070a0c);
         text-align: center;
+      }
+
+      .life-head .deck-kicker {
+        color: var(--gold);
       }
 
       .life-head h1 {
         display: grid;
         gap: 2px;
-        margin-top: 6px;
+        margin-top: 8px;
       }
 
-      .life-head strong {
-        font-size: 48px;
+      .life-head h1 strong {
+        color: #ffffff;
+        font-size: 54px;
         line-height: 0.95;
         font-weight: 950;
         letter-spacing: 0;
       }
 
-      .life-head em {
-        color: var(--muted);
+      .life-head h1 em {
+        color: rgba(255, 249, 237, 0.76);
         font-size: 16px;
         font-style: normal;
         font-weight: 900;
+      }
+
+      .life-head .life-summary {
+        color: rgba(255, 249, 237, 0.68);
       }
 
       .life-progress {
         height: 10px;
         overflow: hidden;
         border-radius: 999px;
-        background: var(--soft);
+        margin-top: 17px;
+        background: rgba(255, 249, 237, 0.12);
       }
 
       .life-progress span {
@@ -1200,7 +1202,7 @@
         width: 0%;
         height: 100%;
         border-radius: inherit;
-        background: var(--ink);
+        background: var(--gold);
         transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
       }
 
@@ -1208,20 +1210,23 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
+        margin-top: 14px;
       }
 
       .life-stat {
-        min-height: 70px;
+        min-height: 72px;
         display: grid;
         align-content: center;
         gap: 3px;
         padding: 10px;
-        border-radius: 18px;
-        background: var(--soft);
+        border: 1px solid rgba(255, 249, 237, 0.08);
+        border-radius: 20px;
+        background: rgba(255, 249, 237, 0.075);
         text-align: center;
       }
 
       .life-stat strong {
+        color: #fff9ed;
         font-size: 20px;
         line-height: 1;
         font-weight: 950;
@@ -1233,7 +1238,7 @@
       }
 
       .life-stat span {
-        color: var(--muted);
+        color: rgba(255, 249, 237, 0.58);
         font-size: 11px;
         font-weight: 900;
       }
@@ -4685,10 +4690,10 @@
 
           <section class="screen active" id="today">
             <article class="life-onboarding" id="lifeOnboarding">
-              <div class="setup-top-row">
-                <span class="setup-mini-mark"><img src="./icon.svg" alt="" /></span>
-                <span class="setup-step-pill">01</span>
-              </div>
+              <span class="setup-mini-mark"><img src="./icon.svg" alt="" /></span>
+              <span class="deck-kicker">Profile setup</span>
+              <h1>Build your life clock first.</h1>
+              <p>Visualize starts empty. Create your profile, then add your why, images, and self speech step by step.</p>
               <div class="setup-showcase" aria-hidden="true">
                 <div class="setup-showcase-head">
                   <span id="setupPreviewLabel">Life by months</span>
@@ -4712,9 +4717,6 @@
                 <span class="setup-journey-line"></span>
                 <span class="setup-journey-step"><b>3</b><span id="setupJourneyVision">Vision</span></span>
               </div>
-              <span class="deck-kicker">Profile setup</span>
-              <h1>Build your life clock first.</h1>
-              <p>Visualize starts empty. Create your profile, then add your why, images, and self speech step by step.</p>
               <div class="field-stack">
                 <label class="field">
                   <span>Your first name</span>
@@ -4737,14 +4739,14 @@
                 <span class="deck-kicker">Life clock</span>
                 <h1><strong id="lifeDaysLeft">0</strong><em>days left</em></h1>
                 <p class="life-summary" id="lifeSummary">Based on your current age and life estimate.</p>
-              </div>
-              <div class="life-progress" aria-label="Estimated life used">
-                <span id="lifeProgressBar"></span>
-              </div>
-              <div class="life-stats">
-                <div class="life-stat"><strong id="lifeWeeksLeft">0</strong><span>weeks left</span></div>
-                <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
-                <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
+                <div class="life-progress" aria-label="Estimated life used">
+                  <span id="lifeProgressBar"></span>
+                </div>
+                <div class="life-stats">
+                  <div class="life-stat"><strong id="lifeWeeksLeft">0</strong><span>weeks left</span></div>
+                  <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
+                  <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
+                </div>
               </div>
               <button class="daily-quote-card" id="dailyQuoteCard" type="button" data-quote-index="01">
                 <span class="daily-quote-top">
