@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=79" />
+    <link rel="manifest" href="./manifest.webmanifest?v=80" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v79";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v80";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=79")
+            .register("./service-worker.js?v=80")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2347,9 +2347,36 @@
         font-weight: 900;
       }
 
+      .player-session {
+        min-height: 44px;
+        min-width: 128px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        padding: 6px 14px;
+        background: rgba(255, 255, 255, 0.11);
+        backdrop-filter: blur(14px);
+      }
+
+      .player-session small {
+        color: var(--gold);
+        font-size: 10px;
+        line-height: 1.15;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+
       .player-controls button {
         flex: 1;
         padding: 0 14px;
+      }
+
+      .player-controls button:nth-child(2) {
+        color: #101418;
+        background: #fff9ed;
+        border-color: #fff9ed;
       }
 
       .player-progress {
@@ -5437,9 +5464,13 @@
       </div>
       <div class="player-top">
         <button class="player-close" id="closePlayer" type="button" aria-label="Close presentation">x</button>
-        <span class="player-count" id="playerCount">0 / 0</span>
+        <span class="player-session">
+          <small id="playerSessionKind">Vision</small>
+          <span class="player-count" id="playerCount">0 / 0</span>
+        </span>
       </div>
       <div class="player-controls">
+        <button id="prevPlayerSlide" type="button">Prev</button>
         <button id="togglePlayer" type="button">Pause</button>
         <button id="nextPlayerSlide" type="button">Next</button>
       </div>
@@ -8492,10 +8523,17 @@
         document.getElementById("playerIndex").textContent = String(playerIndex + 1).padStart(2, "0");
         document.getElementById("playerKicker").textContent =
           `${playerKind === "vision" ? "Vision" : "Anti-vision"} ${playerIndex + 1}`;
+        document.getElementById("playerSessionKind").textContent = playerKind === "vision" ? "Vision" : "Anti";
         document.getElementById("playerTitle").textContent = slide.title;
         document.getElementById("playerCaption").textContent = slide.caption;
         document.getElementById("playerCount").textContent = `${playerIndex + 1} / ${deck.length}`;
         document.getElementById("playerProgress").style.width = `${((playerIndex + 1) / deck.length) * 100}%`;
+      }
+
+      function retreatPlayer() {
+        const deck = playerKind === "vision" ? state.visionSlides : state.antiSlides;
+        playerIndex = (playerIndex - 1 + deck.length) % deck.length;
+        renderPlayerSlide();
       }
 
       function advancePlayer() {
@@ -8582,6 +8620,7 @@
       document.getElementById("visionPhotoInput").addEventListener("change", (event) => handleDeckPhoto("vision", event));
       document.getElementById("antiPhotoInput").addEventListener("change", (event) => handleDeckPhoto("anti", event));
       document.getElementById("closePlayer").addEventListener("click", closeDeckPlayer);
+      document.getElementById("prevPlayerSlide").addEventListener("click", retreatPlayer);
       document.getElementById("nextPlayerSlide").addEventListener("click", advancePlayer);
       document.getElementById("togglePlayer").addEventListener("click", () => {
         playerPaused = !playerPaused;
