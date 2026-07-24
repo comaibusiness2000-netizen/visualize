@@ -70,6 +70,19 @@ function todayKey() {
   return `${now.getFullYear()}-${month}-${day}`;
 }
 
+function dayNumberFromKey(dateKey) {
+  const parts = String(dateKey || todayKey()).split("-").map(Number);
+  const year = parts[0] || 1970;
+  const month = parts[1] || 1;
+  const day = parts[2] || 1;
+  return Math.floor(Date.UTC(year, month - 1, day) / 86400000);
+}
+
+function quoteForDate(dateKey = todayKey()) {
+  const index = dayNumberFromKey(dateKey) % dailyQuotes.length;
+  return dailyQuotes[index];
+}
+
 const blankState = {
   storageVersion: STORAGE_VERSION,
   localInstallId: uid("install"),
@@ -81,6 +94,7 @@ const blankState = {
     createdAt: "",
     updatedAt: "",
     lastAnimatedDate: "",
+    lastQuoteDate: "",
     lastSnapshot: null,
     lifeUpdateAnimationVersion: ""
   },
@@ -132,6 +146,40 @@ const voiceProfiles = [
   { id: "matteo", name: "Matteo", note: "Steady male", rate: 0.82, pitch: 0.86 }
 ];
 
+const dailyQuotes = [
+  { text: "If there is no struggle, there is no progress.", author: "Frederick Douglass", source: "Wikiquote" },
+  { text: "Energy and persistence conquer all things.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Lost time is never found again.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Well done is better than well said.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Diligence is the mother of good luck.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Resolve to perform what you ought; perform without fail what you resolve.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Victory belongs to the most persevering.", author: "Napoleon Bonaparte", source: "Wikiquote" },
+  { text: "The harder the conflict, the more glorious the triumph.", author: "Thomas Paine", source: "Project Gutenberg" },
+  { text: "Either I will find a way, or make one.", author: "Hannibal", source: "Bartlett" },
+  { text: "Fortune favors the brave.", author: "Virgil", source: "Bartlett" },
+  { text: "The fault, dear Brutus, is not in our stars, but in ourselves.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Action is eloquence.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Strong reasons make strong actions.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "The readiness is all.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Things won are done; joy's soul lies in the doing.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Defer no time, delays have dangerous ends.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "To thine own self be true.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Hitch your wagon to a star.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Nothing great was ever achieved without enthusiasm.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Make the most of yourself, for that is all there is of you.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Always do what you are afraid to do.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Do the thing and you shall have the power.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "First say to yourself what you would be; then do what you have to do.", author: "Epictetus", source: "Project Gutenberg" },
+  { text: "No great thing is created suddenly.", author: "Epictetus", source: "Project Gutenberg" },
+  { text: "No man is free who is not master of himself.", author: "Epictetus", source: "Project Gutenberg" },
+  { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "No man was ever wise by chance.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "It is not that we have little time, but that we waste much.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "Waste no more time talking about what a good man ought to be. Be one.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "Confine yourself to the present.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "Because a thing seems difficult for you, do not think it impossible.", author: "Marcus Aurelius", source: "Project Gutenberg" }
+];
+
 const copy = {
   en: {
     "tab.life": "Life",
@@ -154,6 +202,9 @@ const copy = {
     "life.used": "used",
     "life.monthMap": "Life by months",
     "life.monthMapBody": "Each dot is one month. Filled dots are already spent.",
+    "quote.kicker": "Daily quote",
+    "quote.title": "Read this once today.",
+    "quote.close": "Carry it",
     "goals.daily": "Daily tasks",
     "goals.long": "Long-term goals",
     "goals.dailyTitle": "What moves today forward?",
@@ -277,25 +328,37 @@ Object.assign(copy.zh, {
   "why.emptyBody": "Add the people, memories, or future people that make your goals personal.",
   "speech.voice": "Voice",
   "speech.heading": "Script your inner voice.",
-  "speech.swipe": "Swipe to change voice"
+  "speech.swipe": "Swipe to change voice",
+  "quote.kicker": "Daily quote",
+  "quote.title": "Read this once today.",
+  "quote.close": "Carry it"
 });
 
 Object.assign(copy.es, {
   "speech.heading": "Escribe tu voz interior.",
   "speech.voice": "Voz",
-  "speech.swipe": "Desliza para cambiar voz"
+  "speech.swipe": "Desliza para cambiar voz",
+  "quote.kicker": "Cita diaria",
+  "quote.title": "Lee esto una vez hoy.",
+  "quote.close": "Llevarlo"
 });
 
 Object.assign(copy.fr, {
   "speech.heading": "Ecris ta voix interieure.",
   "speech.voice": "Voix",
-  "speech.swipe": "Glisse pour changer la voix"
+  "speech.swipe": "Glisse pour changer la voix",
+  "quote.kicker": "Citation du jour",
+  "quote.title": "Lis ceci une fois aujourd'hui.",
+  "quote.close": "Garder"
 });
 
 Object.assign(copy.pt, {
   "speech.heading": "Escreva sua voz interior.",
   "speech.voice": "Voz",
-  "speech.swipe": "Deslize para mudar voz"
+  "speech.swipe": "Deslize para mudar voz",
+  "quote.kicker": "Citacao do dia",
+  "quote.title": "Leia isto uma vez hoje.",
+  "quote.close": "Levar comigo"
 });
 
 function clamp(value, min, max) {
@@ -450,10 +513,12 @@ export default function App() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [player, setPlayer] = useState(null);
   const [lifeUpdate, setLifeUpdate] = useState(null);
+  const [quoteRevealOpen, setQuoteRevealOpen] = useState(false);
   const setupPulse = useRef(new Animated.Value(0)).current;
   const screenPulse = useRef(new Animated.Value(1)).current;
   const lifeUpdatePulse = useRef(new Animated.Value(0)).current;
   const playerPulse = useRef(new Animated.Value(0)).current;
+  const quotePulse = useRef(new Animated.Value(0)).current;
   const voiceScrollRef = useRef(null);
   const appStateRef = useRef("active");
 
@@ -471,6 +536,7 @@ export default function App() {
   const profileComplete = appState.profile.complete;
   const activeGoals = goalMode === "daily" ? appState.dailyTasks : appState.longGoals;
   const activeSpeech = appState.selfSpeeches[appState.activeSpeechIndex] || null;
+  const dailyQuote = quoteForDate();
   const screenOpacity = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
   const screenTranslate = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [18, 0] });
 
@@ -535,6 +601,17 @@ export default function App() {
   }, [player?.kind, player?.index, playerPulse]);
 
   useEffect(() => {
+    if (!quoteRevealOpen) return;
+    quotePulse.setValue(0);
+    Animated.spring(quotePulse, {
+      toValue: 1,
+      friction: 8,
+      tension: 72,
+      useNativeDriver: true
+    }).start();
+  }, [quoteRevealOpen, quotePulse]);
+
+  useEffect(() => {
     if (!player) return undefined;
     const timer = setInterval(() => {
       setPlayer((current) => {
@@ -563,6 +640,17 @@ export default function App() {
     });
     return () => subscription.remove();
   }, [hydrated, profileComplete, appState.profile.lastAnimatedDate, appState.profile.lastSnapshot, appState.profile.lifeUpdateAnimationVersion]);
+
+  useEffect(() => {
+    if (!hydrated || !profileComplete || quoteRevealOpen) return undefined;
+    const dateKey = todayKey();
+    if (appState.profile.lastQuoteDate === dateKey) return undefined;
+    const lifeRevealPending =
+      appState.profile.lastAnimatedDate !== dateKey ||
+      appState.profile.lifeUpdateAnimationVersion !== LIFE_UPDATE_ANIMATION_VERSION;
+    const timer = setTimeout(() => maybeShowDailyQuote(), lifeRevealPending ? 5400 : 900);
+    return () => clearTimeout(timer);
+  }, [hydrated, profileComplete, appState.profile.lastQuoteDate, appState.profile.lastAnimatedDate, appState.profile.lifeUpdateAnimationVersion, quoteRevealOpen]);
 
   function updateState(mutator) {
     setAppState((current) => {
@@ -890,6 +978,23 @@ export default function App() {
     selectVoiceProfile(index, { scroll: false });
   }
 
+  function maybeShowDailyQuote(options = {}) {
+    const force = Boolean(options.force);
+    const dateKey = todayKey();
+    if (!appState.profile.complete) return;
+    if (!force && appState.profile.lastQuoteDate === dateKey) return;
+    setQuoteRevealOpen(true);
+    if (appState.profile.lastQuoteDate !== dateKey) {
+      updateState((current) => ({
+        ...current,
+        profile: {
+          ...current.profile,
+          lastQuoteDate: dateKey
+        }
+      }));
+    }
+  }
+
   function resetLocalData() {
     Alert.alert(t("alert.resetTitle"), t("alert.resetBody"), [
       { text: t("alert.cancel"), style: "cancel" },
@@ -999,6 +1104,21 @@ export default function App() {
           <StatCard label={t("life.months")} value={stats.monthsLeft} theme={theme} />
           <StatCard label={t("life.used")} value={`${stats.usedPercent}%`} theme={theme} />
         </View>
+
+        <TouchableOpacity
+          activeOpacity={0.88}
+          style={[styles.quoteCard, { backgroundColor: theme.card, borderColor: theme.line }]}
+          onPress={() => maybeShowDailyQuote({ force: true })}
+        >
+          <View style={styles.quoteMark}>
+            <Text style={styles.quoteMarkText}>Q</Text>
+          </View>
+          <View style={styles.quoteCardCopy}>
+            <Text style={[styles.kicker, { color: theme.muted }]}>{t("quote.kicker")}</Text>
+            <Text style={[styles.quoteCardText, { color: theme.ink }]}>"{dailyQuote.text}"</Text>
+            <Text style={[styles.quoteAuthor, { color: theme.muted }]}>{dailyQuote.author} - {dailyQuote.source}</Text>
+          </View>
+        </TouchableOpacity>
 
         <View style={[styles.panel, styles.monthPanel, { backgroundColor: theme.card, borderColor: theme.line }]}>
           <View style={styles.panelHeaderRow}>
@@ -1410,6 +1530,30 @@ export default function App() {
     );
   }
 
+  function renderQuoteReveal() {
+    if (!quoteRevealOpen) return null;
+    const scale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.92, 1] });
+    const translateY = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [30, 0] });
+    const opacity = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
+    return (
+      <Modal visible transparent animationType="fade" onRequestClose={() => setQuoteRevealOpen(false)}>
+        <View style={styles.quoteOverlay}>
+          <Animated.View style={[styles.quoteRevealCard, { opacity, transform: [{ translateY }, { scale }] }]}>
+            <View style={styles.quoteRevealHalo} />
+            <Text style={styles.quoteRevealKicker}>{t("quote.kicker")}</Text>
+            <Text style={styles.quoteRevealTitle}>{t("quote.title")}</Text>
+            <Text style={styles.quoteRevealText}>"{dailyQuote.text}"</Text>
+            <Text style={styles.quoteRevealAuthor}>{dailyQuote.author}</Text>
+            <Text style={styles.quoteRevealSource}>{dailyQuote.source}</Text>
+            <TouchableOpacity style={styles.quoteCloseButton} onPress={() => setQuoteRevealOpen(false)}>
+              <Text style={styles.quoteCloseText}>{t("quote.close")}</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+      </Modal>
+    );
+  }
+
   if (!hydrated) {
     return (
       <SafeAreaView style={[styles.screen, styles.loader]}>
@@ -1453,6 +1597,7 @@ export default function App() {
           {renderProfileModal()}
           {renderPlayer()}
           {renderLifeUpdateOverlay()}
+          {renderQuoteReveal()}
         </>
       ) : (
         renderOnboarding()
@@ -1594,6 +1739,12 @@ const styles = StyleSheet.create({
   statCard: { flex: 1, borderWidth: 1, borderRadius: 22, padding: 14 },
   statValue: { fontSize: 22, fontWeight: "900" },
   statLabel: { marginTop: 3, fontSize: 12, fontWeight: "900", textTransform: "uppercase" },
+  quoteCard: { minHeight: 124, flexDirection: "row", gap: 14, borderWidth: 1, borderRadius: 28, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.07, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 3 },
+  quoteMark: { width: 42, height: 42, borderRadius: 21, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
+  quoteMarkText: { color: "#101418", fontSize: 16, fontWeight: "900" },
+  quoteCardCopy: { flex: 1, minWidth: 0 },
+  quoteCardText: { marginTop: 7, fontSize: 20, lineHeight: 24, fontWeight: "900" },
+  quoteAuthor: { marginTop: 8, fontSize: 12, lineHeight: 16, fontWeight: "900" },
   panel: { borderWidth: 1, borderRadius: 28, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 2 },
   monthPanel: { paddingBottom: 20 },
   panelHeaderRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: 12 },
@@ -1622,6 +1773,16 @@ const styles = StyleSheet.create({
   lifeUpdateDots: { marginTop: 28, flexDirection: "row", gap: 8 },
   lifeUpdateDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: "rgba(255,255,255,0.22)" },
   lifeUpdateDotHot: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.55, shadowRadius: 12, shadowOffset: { width: 0, height: 0 } },
+  quoteOverlay: { flex: 1, alignItems: "center", justifyContent: "center", padding: 18, backgroundColor: "rgba(6,8,9,0.72)" },
+  quoteRevealCard: { width: "100%", overflow: "hidden", borderRadius: 34, padding: 24, backgroundColor: "#FFF9ED", borderWidth: 1, borderColor: "rgba(232,196,104,0.44)", shadowColor: "#000", shadowOpacity: 0.34, shadowRadius: 42, shadowOffset: { width: 0, height: 24 }, elevation: 10 },
+  quoteRevealHalo: { position: "absolute", right: -42, top: -54, width: 150, height: 150, borderRadius: 75, backgroundColor: "rgba(232,196,104,0.28)" },
+  quoteRevealKicker: { color: "#9B7E30", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
+  quoteRevealTitle: { color: "#101418", marginTop: 12, fontSize: 30, lineHeight: 33, fontWeight: "900" },
+  quoteRevealText: { color: "#101418", marginTop: 18, fontSize: 24, lineHeight: 31, fontWeight: "900" },
+  quoteRevealAuthor: { color: "#3E403C", marginTop: 18, fontSize: 15, lineHeight: 20, fontWeight: "900" },
+  quoteRevealSource: { color: "#80796C", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "850" },
+  quoteCloseButton: { minHeight: 52, marginTop: 22, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#101418" },
+  quoteCloseText: { color: "#FFF9ED", fontSize: 15, fontWeight: "900" },
   segment: { flexDirection: "row", borderRadius: 999, padding: 5, marginBottom: 14 },
   segmentButton: { flex: 1, minHeight: 42, alignItems: "center", justifyContent: "center", borderRadius: 999 },
   segmentActive: { backgroundColor: "#E8C468" },

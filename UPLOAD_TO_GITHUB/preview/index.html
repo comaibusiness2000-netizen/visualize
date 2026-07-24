@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=61" />
+    <link rel="manifest" href="./manifest.webmanifest?v=62" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v61";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v62";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=61")
+            .register("./service-worker.js?v=62")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1076,6 +1076,70 @@
         color: var(--muted);
         font-size: 11px;
         font-weight: 900;
+      }
+
+      .daily-quote-card {
+        width: 100%;
+        min-height: 104px;
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr);
+        align-items: start;
+        gap: 14px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 15px;
+        color: var(--ink);
+        background: var(--control);
+        text-align: left;
+        box-shadow: 0 18px 36px rgba(17, 17, 17, 0.06);
+      }
+
+      body[data-theme="dark"] .daily-quote-card {
+        background:
+          radial-gradient(circle at 92% 18%, rgba(232, 196, 104, 0.12), transparent 32%),
+          #20262a;
+      }
+
+      .daily-quote-badge {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: #101418;
+        background: var(--gold);
+        font-size: 15px;
+        font-weight: 950;
+      }
+
+      .daily-quote-copy {
+        min-width: 0;
+        display: grid;
+        gap: 5px;
+      }
+
+      .daily-quote-copy small {
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.1;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+
+      .daily-quote-copy strong {
+        color: var(--ink);
+        font-size: 17px;
+        line-height: 1.18;
+        font-weight: 950;
+      }
+
+      .daily-quote-copy em {
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.25;
+        font-style: normal;
+        font-weight: 850;
       }
 
       .life-map {
@@ -3802,6 +3866,95 @@
         border-color: rgba(232, 196, 104, 0.72);
       }
 
+      .quote-scrim {
+        position: fixed;
+        inset: 0;
+        z-index: 88;
+        display: none;
+        place-items: center;
+        padding: 20px;
+        background: rgba(6, 8, 9, 0.72);
+        backdrop-filter: blur(12px);
+      }
+
+      .quote-scrim.open {
+        display: grid;
+        animation: insightScrimIn 0.22s ease both;
+      }
+
+      .quote-reveal-card {
+        width: min(100%, 390px);
+        position: relative;
+        display: grid;
+        gap: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(232, 196, 104, 0.44);
+        border-radius: 34px;
+        padding: 24px;
+        color: #101418;
+        background: #fff8ea;
+        box-shadow: 0 34px 92px rgba(0, 0, 0, 0.42);
+        animation: insightCardIn 0.58s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .quote-reveal-card::before {
+        content: "";
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        right: -44px;
+        top: -54px;
+        border-radius: 50%;
+        background: rgba(232, 196, 104, 0.28);
+        pointer-events: none;
+      }
+
+      .quote-reveal-kicker {
+        color: #9b7e30;
+        font-size: 11px;
+        line-height: 1.1;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+
+      .quote-reveal-card h2 {
+        max-width: 280px;
+        font-size: 30px;
+        line-height: 1.05;
+        font-weight: 950;
+      }
+
+      .quote-reveal-card p {
+        font-size: 24px;
+        line-height: 1.25;
+        font-weight: 950;
+      }
+
+      .quote-reveal-card strong {
+        margin-top: 4px;
+        color: #3e403c;
+        font-size: 15px;
+        font-weight: 950;
+      }
+
+      .quote-reveal-card small {
+        color: #80796c;
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .quote-reveal-close {
+        min-height: 52px;
+        margin-top: 8px;
+        border: 0;
+        border-radius: 999px;
+        color: #fff8ea;
+        background: #101418;
+        font-size: 15px;
+        font-weight: 950;
+      }
+
       .btn:active,
       .tiny-toggle:active,
       .deck-editor-close:active,
@@ -3906,6 +4059,14 @@
                 <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
                 <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
               </div>
+              <button class="daily-quote-card" id="dailyQuoteCard" type="button">
+                <span class="daily-quote-badge">Q</span>
+                <span class="daily-quote-copy">
+                  <small id="dailyQuoteKicker">Daily quote</small>
+                  <strong id="dailyQuoteText">Energy and persistence conquer all things.</strong>
+                  <em id="dailyQuoteAuthor">Benjamin Franklin - Bartlett</em>
+                </span>
+              </button>
               <div class="life-map" id="lifeMap" aria-label="Estimated life map"></div>
               <p class="life-legend" id="lifeLegend">Each dot is a small block of life. Dark dots are time already spent.</p>
               <div class="life-actions">
@@ -4217,6 +4378,17 @@
       </article>
     </div>
 
+    <div class="quote-scrim" id="dailyQuoteReveal" aria-hidden="true">
+      <article class="quote-reveal-card" role="dialog" aria-modal="true" aria-labelledby="dailyQuoteRevealTitle">
+        <span class="quote-reveal-kicker" id="dailyQuoteRevealKicker">Daily quote</span>
+        <h2 id="dailyQuoteRevealTitle">Read this once today.</h2>
+        <p id="dailyQuoteRevealText">Energy and persistence conquer all things.</p>
+        <strong id="dailyQuoteRevealAuthor">Benjamin Franklin</strong>
+        <small id="dailyQuoteRevealSource">Bartlett</small>
+        <button class="quote-reveal-close" id="closeDailyQuote" type="button">Carry it</button>
+      </article>
+    </div>
+
     <div class="life-update-scrim" id="lifeUpdateOverlay" aria-hidden="true">
       <article class="life-update-stage" aria-live="polite">
         <div class="life-update-mark" aria-hidden="true">
@@ -4289,6 +4461,40 @@
         return detected || "en";
       }
 
+      const DAILY_QUOTES = [
+        { text: "If there is no struggle, there is no progress.", author: "Frederick Douglass", source: "Wikiquote" },
+        { text: "Energy and persistence conquer all things.", author: "Benjamin Franklin", source: "Bartlett" },
+        { text: "Lost time is never found again.", author: "Benjamin Franklin", source: "Bartlett" },
+        { text: "Well done is better than well said.", author: "Benjamin Franklin", source: "Bartlett" },
+        { text: "Diligence is the mother of good luck.", author: "Benjamin Franklin", source: "Bartlett" },
+        { text: "Resolve to perform what you ought; perform without fail what you resolve.", author: "Benjamin Franklin", source: "Bartlett" },
+        { text: "Victory belongs to the most persevering.", author: "Napoleon Bonaparte", source: "Wikiquote" },
+        { text: "The harder the conflict, the more glorious the triumph.", author: "Thomas Paine", source: "Project Gutenberg" },
+        { text: "Either I will find a way, or make one.", author: "Hannibal", source: "Bartlett" },
+        { text: "Fortune favors the brave.", author: "Virgil", source: "Bartlett" },
+        { text: "The fault, dear Brutus, is not in our stars, but in ourselves.", author: "William Shakespeare", source: "Bartlett" },
+        { text: "Action is eloquence.", author: "William Shakespeare", source: "Bartlett" },
+        { text: "Strong reasons make strong actions.", author: "William Shakespeare", source: "Bartlett" },
+        { text: "The readiness is all.", author: "William Shakespeare", source: "Bartlett" },
+        { text: "Things won are done; joy's soul lies in the doing.", author: "William Shakespeare", source: "Bartlett" },
+        { text: "Defer no time, delays have dangerous ends.", author: "William Shakespeare", source: "Bartlett" },
+        { text: "To thine own self be true.", author: "William Shakespeare", source: "Bartlett" },
+        { text: "Hitch your wagon to a star.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+        { text: "Nothing great was ever achieved without enthusiasm.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+        { text: "Make the most of yourself, for that is all there is of you.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+        { text: "Always do what you are afraid to do.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+        { text: "Do the thing and you shall have the power.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+        { text: "First say to yourself what you would be; then do what you have to do.", author: "Epictetus", source: "Project Gutenberg" },
+        { text: "No great thing is created suddenly.", author: "Epictetus", source: "Project Gutenberg" },
+        { text: "No man is free who is not master of himself.", author: "Epictetus", source: "Project Gutenberg" },
+        { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca", source: "Project Gutenberg" },
+        { text: "No man was ever wise by chance.", author: "Seneca", source: "Project Gutenberg" },
+        { text: "It is not that we have little time, but that we waste much.", author: "Seneca", source: "Project Gutenberg" },
+        { text: "Waste no more time talking about what a good man ought to be. Be one.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+        { text: "Confine yourself to the present.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+        { text: "Because a thing seems difficult for you, do not think it impossible.", author: "Marcus Aurelius", source: "Project Gutenberg" }
+      ];
+
       const defaults = {
         appVersion: "en-v2",
         goalTitle: "Write what you want to see before you live it.",
@@ -4308,6 +4514,7 @@
           expectancy: 85,
           startedAt: "",
           lastAnimatedDate: "",
+          lastQuoteDate: "",
           lastSnapshot: null,
           lifeUpdateAnimationVersion: ""
         },
@@ -4481,6 +4688,9 @@
       };
 
       Object.assign(UI_TEXT.en, {
+        "quote.kicker": "Daily quote",
+        "quote.title": "Read this once today.",
+        "quote.close": "Carry it",
         profileDefault: "Your profile",
         accountSummaryLocal: "Prototype account. App Store builds will use Sign in with Apple and secure cloud sync.",
         accountStatusLocal: "Local prototype",
@@ -4519,6 +4729,9 @@
         whyEmptyText: "Add the people, memories, or future people that make your goals personal."
       });
       Object.assign(UI_TEXT.es, {
+        "quote.kicker": "Cita diaria",
+        "quote.title": "Lee esto una vez hoy.",
+        "quote.close": "Llevarlo contigo",
         profileDefault: "Tu perfil",
         accountSummaryLocal: "Cuenta prototipo. La version App Store usara Sign in with Apple y sincronizacion cloud segura.",
         accountStatusLocal: "Prototipo local",
@@ -4557,6 +4770,9 @@
         whyEmptyText: "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales."
       });
       Object.assign(UI_TEXT.fr, {
+        "quote.kicker": "Citation du jour",
+        "quote.title": "Lis ceci une fois aujourd'hui.",
+        "quote.close": "Garder avec moi",
         profileDefault: "Ton profil",
         accountSummaryLocal: "Compte prototype. La version App Store utilisera Sign in with Apple et une sync cloud securisee.",
         accountStatusLocal: "Prototype local",
@@ -4595,6 +4811,9 @@
         whyEmptyText: "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels."
       });
       Object.assign(UI_TEXT.pt, {
+        "quote.kicker": "Citacao do dia",
+        "quote.title": "Leia isto uma vez hoje.",
+        "quote.close": "Levar comigo",
         profileDefault: "Seu perfil",
         accountSummaryLocal: "Conta prototipo. A versao App Store usara Sign in with Apple e cloud sync seguro.",
         accountStatusLocal: "Prototipo local",
@@ -4708,6 +4927,10 @@
         setText(".life-stat:nth-child(1) span", "weeksLeft");
         setText(".life-stat:nth-child(2) span", "monthsLeft");
         setText(".life-stat:nth-child(3) span", "lifeUsed");
+        setText("#dailyQuoteKicker", "quote.kicker");
+        setText("#dailyQuoteRevealKicker", "quote.kicker");
+        setText("#dailyQuoteRevealTitle", "quote.title");
+        setText("#closeDailyQuote", "quote.close");
         setText("#reviewVisionFromLife", "navVision");
         setText("#editLifeInfo", "editInfo");
 
@@ -4818,6 +5041,7 @@
       let playerPaused = false;
       let selfTalkLoopActive = false;
       let voiceScrollTimer = null;
+      let dailyQuoteTimer = null;
       let currentView = "today";
       let editorKind = "vision";
       let editingProgressIndex = null;
@@ -5179,6 +5403,7 @@
         paint();
         updateBackButton();
         setTimeout(showLifeClockForPendingUpdate, 360);
+        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 5200 : 1100);
       }
 
       function notify(text) {
@@ -5213,6 +5438,65 @@
         const month = String(now.getMonth() + 1).padStart(2, "0");
         const day = String(now.getDate()).padStart(2, "0");
         return `${year}-${month}-${day}`;
+      }
+
+      function dayNumberFromKey(dateKey) {
+        const parts = String(dateKey || todayKey()).split("-").map(Number);
+        const year = parts[0] || 1970;
+        const month = parts[1] || 1;
+        const day = parts[2] || 1;
+        return Math.floor(Date.UTC(year, month - 1, day) / 86400000);
+      }
+
+      function dailyQuoteForDate(dateKey = todayKey()) {
+        if (!DAILY_QUOTES.length) return { text: "", author: "", source: "" };
+        const index = dayNumberFromKey(dateKey) % DAILY_QUOTES.length;
+        return DAILY_QUOTES[index];
+      }
+
+      function renderDailyQuote() {
+        const quote = dailyQuoteForDate();
+        const byline = `${quote.author} - ${quote.source}`;
+        const cardText = document.getElementById("dailyQuoteText");
+        const cardAuthor = document.getElementById("dailyQuoteAuthor");
+        const revealText = document.getElementById("dailyQuoteRevealText");
+        const revealAuthor = document.getElementById("dailyQuoteRevealAuthor");
+        const revealSource = document.getElementById("dailyQuoteRevealSource");
+        if (cardText) cardText.textContent = `"${quote.text}"`;
+        if (cardAuthor) cardAuthor.textContent = byline;
+        if (revealText) revealText.textContent = `"${quote.text}"`;
+        if (revealAuthor) revealAuthor.textContent = quote.author;
+        if (revealSource) revealSource.textContent = quote.source;
+      }
+
+      function openDailyQuote({ force = false } = {}) {
+        if (!DAILY_QUOTES.length) return;
+        if (!force && !state.lifeProfile.complete) return;
+        const dateKey = todayKey();
+        if (!force && state.lifeProfile.lastQuoteDate === dateKey) return;
+
+        renderDailyQuote();
+        const modal = document.getElementById("dailyQuoteReveal");
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+
+        if (state.lifeProfile.complete && state.lifeProfile.lastQuoteDate !== dateKey) {
+          state.lifeProfile.lastQuoteDate = dateKey;
+          saveWithoutSyncBump();
+        }
+      }
+
+      function closeDailyQuote() {
+        const modal = document.getElementById("dailyQuoteReveal");
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      function scheduleDailyQuote(delay = 900) {
+        clearTimeout(dailyQuoteTimer);
+        if (!state.lifeProfile.complete) return;
+        if (state.lifeProfile.lastQuoteDate === todayKey()) return;
+        dailyQuoteTimer = setTimeout(() => openDailyQuote(), delay);
       }
 
       function currentDailyInsight() {
@@ -5572,6 +5856,7 @@
           return `<span class="life-dot ${isSpent ? "spent" : ""} ${justSpent ? "just-spent" : ""}" aria-hidden="true"></span>`;
         }).join("");
         document.getElementById("lifeLegend").textContent = uiText("lifeLegend");
+        renderDailyQuote();
       }
 
       function animateNumberValue(element, fromValue, toValue, formatter = formatNumber) {
@@ -5716,6 +6001,7 @@
         saveWithoutSyncBump();
         renderLifeStatsValues({ ...currentStats, ...previous }, { animateMonth: false });
         await showLifeUpdateOverlay(previous, currentStats);
+        scheduleDailyQuote(520);
         requestAnimationFrame(() => {
           document.getElementById("lifeProgressBar").style.width = `${currentStats.usedPercent}%`;
           animateNumberValue(document.getElementById("lifeDaysLeft"), previous.daysLeft, currentStats.daysLeft);
@@ -6262,6 +6548,7 @@
           expectancy: Math.max(expectancy, age + 1),
           startedAt: new Date().toISOString(),
           lastAnimatedDate: "",
+          lastQuoteDate: "",
           lastSnapshot: null,
           lifeUpdateAnimationVersion: ""
         };
@@ -6946,6 +7233,11 @@
       document.getElementById("saveLifeProfile").addEventListener("click", saveLifeProfile);
       document.getElementById("editLifeInfo").addEventListener("click", editLifeInfo);
       document.getElementById("reviewVisionFromLife").addEventListener("click", () => setView("vision"));
+      document.getElementById("dailyQuoteCard").addEventListener("click", () => openDailyQuote({ force: true }));
+      document.getElementById("closeDailyQuote").addEventListener("click", closeDailyQuote);
+      document.getElementById("dailyQuoteReveal").addEventListener("click", (event) => {
+        if (event.target.id === "dailyQuoteReveal") closeDailyQuote();
+      });
       document.getElementById("uploadWhyPhoto").addEventListener("click", uploadWhyPhoto);
       document.getElementById("whyPhotoInput").addEventListener("change", handleWhyPhoto);
       document.getElementById("whyPeopleGrid").addEventListener("click", (event) => {
@@ -7113,10 +7405,19 @@
       });
 
       document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible") showLifeClockForPendingUpdate();
+        if (document.visibilityState === "visible") {
+          showLifeClockForPendingUpdate();
+          scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 5200 : 900);
+        }
       });
-      window.addEventListener("pageshow", showLifeClockForPendingUpdate);
-      window.addEventListener("focus", showLifeClockForPendingUpdate);
+      window.addEventListener("pageshow", () => {
+        showLifeClockForPendingUpdate();
+        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 5200 : 900);
+      });
+      window.addEventListener("focus", () => {
+        showLifeClockForPendingUpdate();
+        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 5200 : 900);
+      });
       if ("speechSynthesis" in window) {
         speechSynthesis.onvoiceschanged = populateVoiceOptions;
       }
