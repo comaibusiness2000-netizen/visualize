@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=81" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="manifest" href="./manifest.webmanifest?v=82" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,21 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v81";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v82";
+
+      function syncVisualViewport() {
+        const viewport = window.visualViewport;
+        const height = Math.max(420, Math.round(viewport?.height || window.innerHeight || 720));
+        document.documentElement.style.setProperty("--app-vh", `${height}px`);
+      }
+
+      syncVisualViewport();
+      window.addEventListener("resize", syncVisualViewport, { passive: true });
+      window.addEventListener("orientationchange", () => setTimeout(syncVisualViewport, 180), { passive: true });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", syncVisualViewport, { passive: true });
+        window.visualViewport.addEventListener("scroll", syncVisualViewport, { passive: true });
+      }
 
       if ("caches" in window) {
         try {
@@ -29,16 +43,9 @@
       }
 
       if ("serviceWorker" in navigator) {
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener("controllerchange", () => {
-          if (refreshing) return;
-          refreshing = true;
-          window.location.reload();
-        });
-
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=81")
+            .register("./service-worker.js?v=82")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -72,6 +79,7 @@
         --warm: #ffffff;
         --control: #ffffff;
         --screen-x: 0px;
+        --app-vh: 100vh;
       }
 
       body[data-theme="dark"] {
@@ -347,7 +355,7 @@
       }
 
       .stage {
-        min-height: 100vh;
+        min-height: var(--app-vh);
         display: grid;
         place-items: center;
         padding: 24px;
@@ -365,7 +373,7 @@
 
       .phone {
         width: min(100%, 430px);
-        height: min(920px, calc(100vh - 48px));
+        height: min(920px, calc(var(--app-vh) - 48px));
         min-height: 720px;
         position: relative;
         overflow: hidden;
@@ -4332,14 +4340,14 @@
 
       .life-update-stage {
         width: 100%;
-        min-height: 100dvh;
+        min-height: var(--app-vh);
         display: grid;
         justify-items: center;
         align-content: center;
         gap: 10px;
         overflow: hidden;
         position: relative;
-        padding: 60px 24px 34px;
+        padding: max(54px, env(safe-area-inset-top)) 24px max(34px, env(safe-area-inset-bottom));
         border: 0;
         border-radius: 0;
         background:
@@ -4769,7 +4777,7 @@
       .quote-reveal-card {
         position: relative;
         width: 100%;
-        min-height: 100dvh;
+        min-height: var(--app-vh);
         display: grid;
         align-content: center;
         justify-items: center;
@@ -5054,13 +5062,14 @@
 
       @media (max-width: 520px) {
         .stage {
+          min-height: var(--app-vh);
           padding: 0;
           background: var(--paper);
         }
 
         .phone {
           width: 100%;
-          height: 100dvh;
+          height: var(--app-vh);
           min-height: 0;
           border: 0;
           border-radius: 0;
@@ -5068,9 +5077,119 @@
         }
 
         .app {
-          height: 100dvh;
-          row-gap: 16px;
-          padding: 18px 20px 98px;
+          height: var(--app-vh);
+          row-gap: 12px;
+          padding: calc(14px + env(safe-area-inset-top)) 18px calc(106px + env(safe-area-inset-bottom)) 18px;
+        }
+
+        .nav {
+          bottom: max(10px, env(safe-area-inset-bottom));
+        }
+
+        .life-dashboard {
+          gap: 8px;
+          padding: 14px;
+          padding-bottom: 16px;
+        }
+
+        .life-head {
+          min-height: auto;
+          border-radius: 30px;
+          padding: 17px 15px 15px;
+        }
+
+        .life-head h1 {
+          gap: 3px;
+          margin-top: 7px;
+        }
+
+        .life-head h1 strong {
+          font-size: clamp(39px, 12.4vw, 52px);
+          line-height: 1.12;
+        }
+
+        .life-head h1 em {
+          font-size: 14px;
+          line-height: 1.15;
+        }
+
+        .life-head .life-summary {
+          margin-top: 8px;
+          font-size: 12.5px;
+          line-height: 1.28;
+        }
+
+        .life-progress {
+          height: 8px;
+          margin-top: 10px;
+        }
+
+        .life-stats {
+          gap: 6px;
+          margin-top: 10px;
+        }
+
+        .life-stat {
+          min-height: 55px;
+          border-radius: 17px;
+          padding: 7px 5px;
+        }
+
+        .life-stat strong {
+          font-size: 17px;
+        }
+
+        .life-stat span {
+          font-size: 9.5px;
+          line-height: 1.1;
+        }
+
+        .daily-quote-card {
+          min-height: 148px;
+          gap: 12px;
+          border-radius: 28px;
+          padding: 15px;
+        }
+
+        .daily-quote-badge {
+          width: 38px;
+          height: 38px;
+          font-size: 12px;
+        }
+
+        .daily-quote-open {
+          min-height: 30px;
+          padding: 0 11px;
+          font-size: 11px;
+        }
+
+        .daily-quote-copy strong {
+          font-size: 20px;
+          line-height: 1.16;
+        }
+
+        .daily-quote-author {
+          font-size: 10.5px;
+        }
+
+        .life-map {
+          grid-template-columns: repeat(36, 1fr);
+          gap: 3px;
+          padding-top: 6px;
+        }
+
+        .life-legend {
+          font-size: 12.5px;
+          line-height: 1.28;
+        }
+
+        .life-actions {
+          gap: 7px;
+        }
+
+        .life-actions .btn {
+          min-height: 46px;
+          font-size: 13px;
         }
       }
     </style>

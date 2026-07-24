@@ -1,5 +1,5 @@
-const CACHE_NAME = "visualize-preview-v81";
-const APP_VERSION = "81";
+const CACHE_NAME = "visualize-preview-v82";
+const APP_VERSION = "82";
 const APP_SHELL = [
   "./privacy.html",
   "./support.html",
@@ -22,17 +22,6 @@ self.addEventListener("activate", (event) => {
       const keys = await caches.keys();
       await Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)));
       await self.clients.claim();
-      const clientList = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
-      await Promise.all(
-        clientList.map((client) => {
-          if (!("navigate" in client)) return undefined;
-          const url = new URL(client.url);
-          if (!url.pathname.endsWith("/") && !url.pathname.endsWith("/index.html")) return undefined;
-          if (url.searchParams.get("v") === APP_VERSION) return undefined;
-          url.searchParams.set("v", APP_VERSION);
-          return client.navigate(url.href);
-        })
-      );
     })()
   );
 });
