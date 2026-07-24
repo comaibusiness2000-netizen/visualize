@@ -31,8 +31,8 @@ const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
-const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v6";
-const QUOTE_RITUAL_VERSION = "quote-ritual-v4";
+const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v7";
+const QUOTE_RITUAL_VERSION = "quote-ritual-v5";
 const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
 
 function normalizeLanguageId(locale) {
@@ -417,7 +417,15 @@ Object.assign(copy.zh, {
   "quote.close": "Carry it"
 });
 
+Object.assign(copy.en, {
+  "life.updateTitle": "One day spent. Use the next one.",
+  "life.updateSub": "Your clock moved. Make today earn its place.",
+  "quote.close": "Start today"
+});
+
 Object.assign(copy.es, {
+  "life.updateTitle": "Un dia paso. Usa el siguiente.",
+  "life.updateSub": "Tu reloj avanzo. Haz que hoy valga.",
   "speech.heading": "Escribe tu voz interior.",
   "speech.voice": "Voz",
   "speech.swipe": "Desliza para cambiar voz",
@@ -428,6 +436,8 @@ Object.assign(copy.es, {
 });
 
 Object.assign(copy.fr, {
+  "life.updateTitle": "Un jour est passe. Utilise le suivant.",
+  "life.updateSub": "Ton horloge avance. Fais compter aujourd'hui.",
   "speech.heading": "Ecris ta voix interieure.",
   "speech.voice": "Voix",
   "speech.swipe": "Glisse pour changer la voix",
@@ -438,6 +448,8 @@ Object.assign(copy.fr, {
 });
 
 Object.assign(copy.pt, {
+  "life.updateTitle": "Um dia passou. Use o proximo.",
+  "life.updateSub": "Seu relogio avancou. Faca hoje valer.",
   "speech.heading": "Escreva sua voz interior.",
   "speech.voice": "Voz",
   "speech.swipe": "Deslize para mudar voz",
@@ -445,6 +457,11 @@ Object.assign(copy.pt, {
   "quote.title": "Leia. Avance.",
   "quote.open": "abrir",
   "quote.close": "Levar comigo"
+});
+
+Object.assign(copy.zh, {
+  "life.updateTitle": "One day spent. Use the next one.",
+  "life.updateSub": "Your clock moved. Make today earn its place."
 });
 
 function clamp(value, min, max) {
@@ -746,7 +763,7 @@ export default function App() {
     const lifeRevealPending =
       appState.profile.lastAnimatedDate !== dateKey ||
       appState.profile.lifeUpdateAnimationVersion !== LIFE_UPDATE_ANIMATION_VERSION;
-    const timer = setTimeout(() => maybeShowDailyQuote(), lifeRevealPending ? 5400 : 900);
+    const timer = setTimeout(() => maybeShowDailyQuote(), lifeRevealPending ? 6900 : 900);
     return () => clearTimeout(timer);
   }, [hydrated, profileComplete, appState.profile.lastQuoteDate, appState.profile.lastQuoteRitualVersion, appState.profile.lastAnimatedDate, appState.profile.lifeUpdateAnimationVersion, quoteRevealOpen]);
 
@@ -827,6 +844,7 @@ export default function App() {
     lifeUpdatePulse.setValue(0);
     navigateTab("life");
     setLifeUpdate({ previous, current: currentSnapshot });
+    if (Platform.OS !== "web") Vibration.vibrate([0, 14, 70, 18]);
     updateState((current) => ({
       ...current,
       profile: {
@@ -838,9 +856,9 @@ export default function App() {
     }));
 
     Animated.sequence([
-      Animated.timing(lifeUpdatePulse, { toValue: 0.34, duration: 980, useNativeDriver: true }),
-      Animated.timing(lifeUpdatePulse, { toValue: 0.78, duration: 2100, useNativeDriver: true }),
-      Animated.timing(lifeUpdatePulse, { toValue: 1, duration: 980, useNativeDriver: true })
+      Animated.timing(lifeUpdatePulse, { toValue: 0.34, duration: 1180, useNativeDriver: true }),
+      Animated.timing(lifeUpdatePulse, { toValue: 0.78, duration: 3100, useNativeDriver: true }),
+      Animated.timing(lifeUpdatePulse, { toValue: 1, duration: 1250, useNativeDriver: true })
     ]).start(() => {
       setTimeout(() => setLifeUpdate(null), 220);
     });
@@ -1696,6 +1714,10 @@ export default function App() {
       inputRange: [0, 0.42, 0.78, 1],
       outputRange: [34, -6, -6, -18]
     });
+    const stageScale = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.34, 0.82, 1],
+      outputRange: [0.92, 1, 1, 0.98]
+    });
     const newScale = lifeUpdatePulse.interpolate({
       inputRange: [0, 0.32, 0.62, 0.86, 1],
       outputRange: [0.64, 1.12, 1, 1.08, 0.98]
@@ -1728,6 +1750,10 @@ export default function App() {
       inputRange: [0, 0.38, 0.86, 1],
       outputRange: [0, 1, 1, 0]
     });
+    const titleOpacity = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.2, 0.86, 1],
+      outputRange: [0, 1, 1, 0]
+    });
     const dots = Array.from({ length: 18 }, (_, index) => index);
     const safeNumber = (value, fallback) => {
       const parsed = Number(value);
@@ -1756,7 +1782,7 @@ export default function App() {
     return (
       <Modal visible transparent animationType="none">
         <Animated.View style={[styles.lifeUpdateOverlay, { opacity: fade }]}>
-          <Animated.View style={[styles.lifeUpdateStage, { transform: [{ translateY: stageTranslate }] }]}>
+          <Animated.View style={[styles.lifeUpdateStage, { transform: [{ translateY: stageTranslate }, { scale: stageScale }] }]}>
             <Animated.View style={[styles.lifeUpdateRing, { opacity: ringOpacity, transform: [{ scale: ringScale }] }]} />
             <View style={styles.lifeUpdateLogo}>
               <View style={styles.logoSmallSlash} />
@@ -1764,6 +1790,12 @@ export default function App() {
               <View style={styles.logoSmallDot} />
             </View>
             <Text style={styles.lifeUpdateKicker}>{t("life.kicker")}</Text>
+            <Animated.Text style={[styles.lifeUpdateTitle, { opacity: titleOpacity }]}>
+              {t("life.updateTitle")}
+            </Animated.Text>
+            <Animated.Text style={[styles.lifeUpdateSubtitle, { opacity: titleOpacity }]}>
+              {t("life.updateSub")}
+            </Animated.Text>
             <Animated.View style={[styles.lifeUpdateMinusBadge, { transform: [{ scale: minusScale }] }]}>
               <Text style={styles.lifeUpdateMinusText}>-1</Text>
             </Animated.View>
@@ -1810,6 +1842,8 @@ export default function App() {
     const opacity = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
     const sweepY = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [-120, 0] });
     const indexScale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.7, 1] });
+    const quoteTranslate = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [22, 0] });
+    const bottomTranslate = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [34, 0] });
     return (
       <Modal visible transparent animationType="fade" onRequestClose={() => setQuoteRevealOpen(false)}>
         <View style={styles.quoteOverlay}>
@@ -1829,16 +1863,29 @@ export default function App() {
             <View style={styles.quoteRevealMeter}>
               <View style={[styles.quoteRevealMeterFill, { width: dailyQuoteProgress }]} />
             </View>
-            <Text style={styles.quoteRevealKicker}>{t("quote.kicker")}</Text>
-            <Text style={styles.quoteRevealTitle}>{t("quote.title")}</Text>
-            <Text style={styles.quoteRevealText}>"{dailyQuote.text}"</Text>
-            <View style={styles.quoteRevealAuthorBox}>
-              <Text style={styles.quoteRevealAuthor}>{dailyQuote.author}</Text>
-              <Text style={styles.quoteRevealSource}>{dailyQuote.source}</Text>
+            <View style={styles.quoteRevealCenter}>
+              <Text style={styles.quoteRevealKicker}>{t("quote.kicker")}</Text>
+              <Text style={styles.quoteRevealTitle}>{t("quote.title")}</Text>
+              <Animated.View style={[styles.quoteRevealPlate, { transform: [{ translateY: quoteTranslate }] }]}>
+                <Text
+                  style={styles.quoteRevealText}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.68}
+                  numberOfLines={6}
+                >
+                  "{dailyQuote.text}"
+                </Text>
+              </Animated.View>
             </View>
-            <TouchableOpacity style={styles.quoteCloseButton} onPress={() => { softImpact(); setQuoteRevealOpen(false); }}>
-              <Text style={styles.quoteCloseText}>{t("quote.close")}</Text>
-            </TouchableOpacity>
+            <Animated.View style={[styles.quoteRevealBottom, { transform: [{ translateY: bottomTranslate }] }]}>
+              <View style={styles.quoteRevealAuthorBox}>
+                <Text style={styles.quoteRevealAuthor}>{dailyQuote.author}</Text>
+                <Text style={styles.quoteRevealSource}>{dailyQuote.source}</Text>
+              </View>
+              <TouchableOpacity style={styles.quoteCloseButton} onPress={() => { softImpact(); setQuoteRevealOpen(false); }}>
+                <Text style={styles.quoteCloseText}>{t("quote.close")}</Text>
+              </TouchableOpacity>
+            </Animated.View>
           </Animated.View>
         </View>
       </Modal>
@@ -2084,8 +2131,8 @@ const styles = StyleSheet.create({
   logoSmallDot: { position: "absolute", width: 10, height: 10, borderRadius: 5, right: 10, bottom: 5, backgroundColor: "#DA5A3A" },
   main: { flex: 1 },
   mainMotion: { flex: 1 },
-  content: { padding: 18, paddingBottom: 118 },
-  heroCard: { overflow: "hidden", borderWidth: 1, borderRadius: 34, padding: 24, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
+  content: { padding: 20, paddingBottom: 120 },
+  heroCard: { overflow: "hidden", borderWidth: 1, borderRadius: 34, padding: 24, marginBottom: 16, shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
   heroGlow: { position: "absolute", right: -48, top: -68, width: 180, height: 180, borderRadius: 90, backgroundColor: "rgba(232,196,104,0.15)" },
   heroWatermark: { position: "absolute", left: 16, right: 16, bottom: -22, color: "rgba(255,249,237,0.055)", fontSize: 116, lineHeight: 122, fontWeight: "900", textAlign: "center" },
   heroTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 18 },
@@ -2104,11 +2151,11 @@ const styles = StyleSheet.create({
   statCard: { flex: 1, borderWidth: 1, borderRadius: 22, padding: 14 },
   statValue: { fontSize: 22, fontWeight: "900" },
   statLabel: { marginTop: 3, fontSize: 12, fontWeight: "900", textTransform: "uppercase" },
-  quoteCard: { minHeight: 172, overflow: "hidden", borderWidth: 1, borderRadius: 31, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
+  quoteCard: { minHeight: 190, overflow: "hidden", borderWidth: 1, borderRadius: 34, padding: 20, marginBottom: 16, shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
   quoteCardLight: { backgroundColor: "#111418", borderColor: "rgba(17,20,24,0.1)" },
   quoteCardDark: { backgroundColor: "#191F22", borderColor: "rgba(232,196,104,0.2)" },
-  quoteCardGlow: { position: "absolute", right: -38, top: -62, width: 152, height: 152, borderRadius: 76, backgroundColor: "rgba(232,196,104,0.18)" },
-  quoteCardWatermark: { position: "absolute", right: 8, bottom: -19, color: "rgba(255,249,237,0.055)", fontSize: 116, lineHeight: 126, fontWeight: "900" },
+  quoteCardGlow: { position: "absolute", right: -38, top: -62, width: 164, height: 164, borderRadius: 82, backgroundColor: "rgba(232,196,104,0.16)" },
+  quoteCardWatermark: { position: "absolute", right: 6, bottom: -18, color: "rgba(255,249,237,0.05)", fontSize: 124, lineHeight: 130, fontWeight: "900" },
   quoteCardTop: { flexDirection: "row", alignItems: "center", gap: 12 },
   quoteMark: { width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
   quoteMarkText: { color: "#101418", fontSize: 14, lineHeight: 17, fontWeight: "900" },
@@ -2116,7 +2163,7 @@ const styles = StyleSheet.create({
   quoteCardKicker: { color: "rgba(255,249,237,0.72)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
   quoteCardDay: { color: "#E8C468", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "900" },
   quoteOpenHint: { overflow: "hidden", minHeight: 32, paddingHorizontal: 13, paddingVertical: 8, borderRadius: 999, color: "#101418", backgroundColor: "#FFF9ED", fontSize: 12, lineHeight: 14, fontWeight: "900", textTransform: "lowercase" },
-  quoteCardText: { marginTop: 20, color: "#FFF9ED", fontSize: 22, lineHeight: 27, fontWeight: "900" },
+  quoteCardText: { marginTop: 22, color: "#FFF9ED", fontSize: 24, lineHeight: 30, fontWeight: "900" },
   quoteCardFooter: { marginTop: 18, flexDirection: "row", alignItems: "center", gap: 10 },
   quoteAuthor: { color: "rgba(255,249,237,0.72)", fontSize: 12, lineHeight: 16, fontWeight: "900" },
   quoteFooterLine: { flex: 1, height: 1, backgroundColor: "rgba(232,196,104,0.26)" },
@@ -2128,18 +2175,20 @@ const styles = StyleSheet.create({
   dotMap: { marginTop: 15, flexDirection: "row", flexWrap: "wrap", gap: 5 },
   lifeDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.26)" },
   lifeDotSpent: { backgroundColor: "#E8C468" },
-  lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(6,8,9,0.995)", alignItems: "center", justifyContent: "center", padding: 10 },
-  lifeUpdateStage: { width: "100%", minHeight: "96%", overflow: "hidden", borderRadius: 46, padding: 24, alignItems: "center", justifyContent: "center", backgroundColor: "#0B0E10", borderWidth: 1, borderColor: "rgba(232,196,104,0.24)" },
-  lifeUpdateRing: { position: "absolute", width: 286, height: 286, borderRadius: 143, borderWidth: 1, borderColor: "rgba(232,196,104,0.34)", backgroundColor: "rgba(232,196,104,0.035)" },
-  lifeUpdateLogo: { width: 70, height: 50, marginBottom: 22, alignItems: "center", justifyContent: "center" },
+  lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(6,8,9,0.998)", alignItems: "center", justifyContent: "center" },
+  lifeUpdateStage: { width: "100%", minHeight: "100%", overflow: "hidden", paddingHorizontal: 24, paddingTop: 60, paddingBottom: 34, alignItems: "center", justifyContent: "center", backgroundColor: "#090D0F" },
+  lifeUpdateRing: { position: "absolute", width: 330, height: 330, borderRadius: 165, borderWidth: 1, borderColor: "rgba(232,196,104,0.34)", backgroundColor: "rgba(232,196,104,0.035)" },
+  lifeUpdateLogo: { width: 70, height: 50, marginBottom: 14, alignItems: "center", justifyContent: "center" },
   lifeUpdateKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
-  lifeUpdateMinusBadge: { marginTop: 26, minWidth: 78, height: 44, paddingHorizontal: 18, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.34, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 4 },
+  lifeUpdateTitle: { maxWidth: 330, marginTop: 16, color: "#FFF9ED", fontSize: 28, lineHeight: 33, fontWeight: "900", textAlign: "center" },
+  lifeUpdateSubtitle: { maxWidth: 290, marginTop: 8, color: "rgba(255,249,237,0.68)", fontSize: 15, lineHeight: 21, fontWeight: "800", textAlign: "center" },
+  lifeUpdateMinusBadge: { marginTop: 22, minWidth: 78, height: 44, paddingHorizontal: 18, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.34, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 4 },
   lifeUpdateMinusText: { color: "#FFF9ED", fontSize: 22, lineHeight: 25, fontWeight: "900" },
-  lifeUpdateOldNumber: { marginTop: 22, color: "rgba(255,255,255,0.28)", fontSize: 46, lineHeight: 50, fontWeight: "900", textDecorationLine: "line-through" },
-  lifeUpdateNumber: { color: "#FFFFFF", fontSize: 110, lineHeight: 116, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
+  lifeUpdateOldNumber: { marginTop: 20, color: "rgba(255,255,255,0.28)", fontSize: 40, lineHeight: 44, fontWeight: "900", textDecorationLine: "line-through" },
+  lifeUpdateNumber: { color: "#FFFFFF", fontSize: 100, lineHeight: 106, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
   lifeUpdateLabel: { color: "rgba(255,255,255,0.82)", fontSize: 18, lineHeight: 23, fontWeight: "900", textAlign: "center" },
-  lifeUpdateStats: { width: "100%", flexDirection: "row", gap: 8, marginTop: 28 },
-  lifeUpdateStat: { flex: 1, minHeight: 86, borderRadius: 22, paddingHorizontal: 8, paddingVertical: 12, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  lifeUpdateStats: { width: "100%", flexDirection: "row", gap: 8, marginTop: 24 },
+  lifeUpdateStat: { flex: 1, minHeight: 76, borderRadius: 22, paddingHorizontal: 8, paddingVertical: 10, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
   lifeUpdateStatChanged: { borderColor: "rgba(232,196,104,0.48)", backgroundColor: "rgba(232,196,104,0.12)" },
   lifeUpdateStatLabel: { color: "rgba(255,255,255,0.64)", fontSize: 10, lineHeight: 13, fontWeight: "900", textAlign: "center", textTransform: "uppercase" },
   lifeUpdateStatRow: { marginTop: 5, flexDirection: "row", alignItems: "center", gap: 4 },
@@ -2148,22 +2197,25 @@ const styles = StyleSheet.create({
   lifeUpdateStatNew: { color: "#FFFFFF", fontSize: 15, lineHeight: 18, fontWeight: "900" },
   lifeUpdateBar: { width: "100%", height: 13, marginTop: 26, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.12)" },
   lifeUpdateBarFill: { width: "100%", height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
-  lifeUpdateDots: { marginTop: 28, flexDirection: "row", gap: 8 },
+  lifeUpdateDots: { marginTop: 24, flexDirection: "row", gap: 8 },
   lifeUpdateDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: "rgba(255,255,255,0.22)" },
   lifeUpdateDotHot: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.55, shadowRadius: 12, shadowOffset: { width: 0, height: 0 } },
   quoteOverlay: { flex: 1, backgroundColor: "#070A0C" },
-  quoteRevealStage: { position: "relative", width: "100%", minHeight: "100%", overflow: "hidden", paddingHorizontal: 24, paddingTop: 54, paddingBottom: 30, justifyContent: "center", backgroundColor: "#080B0D" },
-  quoteRevealSweep: { position: "absolute", left: 24, right: 24, top: 116, height: 1, backgroundColor: "rgba(232,196,104,0.72)", shadowColor: "#E8C468", shadowOpacity: 0.5, shadowRadius: 22, shadowOffset: { width: 0, height: 8 } },
+  quoteRevealStage: { position: "relative", width: "100%", minHeight: "100%", overflow: "hidden", paddingHorizontal: 24, paddingTop: 56, paddingBottom: 30, justifyContent: "space-between", backgroundColor: "#080B0D" },
+  quoteRevealSweep: { position: "absolute", left: 24, right: 24, top: 124, height: 1, backgroundColor: "rgba(232,196,104,0.72)", shadowColor: "#E8C468", shadowOpacity: 0.5, shadowRadius: 22, shadowOffset: { width: 0, height: 8 } },
   quoteRevealTop: { position: "absolute", left: 24, right: 24, top: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   quoteRevealLogo: { width: 50, height: 38, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.07)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
   quoteRevealDay: { color: "rgba(255,249,237,0.6)", fontSize: 12, lineHeight: 16, fontWeight: "900" },
-  quoteRevealIndex: { position: "absolute", left: 20, right: 20, top: 116, color: "rgba(255,249,237,0.06)", fontSize: 150, lineHeight: 160, fontWeight: "900", textAlign: "center" },
-  quoteRevealMeter: { position: "absolute", left: 24, right: 24, top: 126, height: 4, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.1)" },
+  quoteRevealIndex: { position: "absolute", left: 20, right: 20, top: 112, color: "rgba(255,249,237,0.055)", fontSize: 158, lineHeight: 164, fontWeight: "900", textAlign: "center" },
+  quoteRevealMeter: { position: "absolute", left: 24, right: 24, top: 134, height: 4, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.1)" },
   quoteRevealMeterFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
-  quoteRevealKicker: { color: "#E8C468", marginTop: 72, fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
+  quoteRevealCenter: { flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 86, paddingBottom: 22 },
+  quoteRevealKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
   quoteRevealTitle: { color: "rgba(255,249,237,0.78)", marginTop: 14, fontSize: 18, lineHeight: 23, fontWeight: "900", textAlign: "center" },
-  quoteRevealText: { color: "#FFF9ED", marginTop: 26, fontSize: 36, lineHeight: 41, fontWeight: "900", textAlign: "center" },
-  quoteRevealAuthorBox: { alignSelf: "center", minWidth: 196, marginTop: 30, borderRadius: 26, paddingHorizontal: 18, paddingVertical: 13, alignItems: "center", backgroundColor: "rgba(255,255,255,0.07)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  quoteRevealPlate: { width: "100%", marginTop: 26, borderTopWidth: 1, borderBottomWidth: 1, borderColor: "rgba(255,249,237,0.1)", paddingVertical: 26 },
+  quoteRevealText: { color: "#FFF9ED", fontSize: 34, lineHeight: 40, fontWeight: "900", textAlign: "center" },
+  quoteRevealBottom: { alignItems: "center" },
+  quoteRevealAuthorBox: { alignSelf: "center", minWidth: 196, borderRadius: 26, paddingHorizontal: 18, paddingVertical: 13, alignItems: "center", backgroundColor: "rgba(255,255,255,0.07)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
   quoteRevealAuthor: { color: "#FFF9ED", fontSize: 15, lineHeight: 20, fontWeight: "900", textAlign: "center" },
   quoteRevealSource: { color: "rgba(255,249,237,0.56)", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "850", textAlign: "center" },
   quoteCloseButton: { minHeight: 54, marginTop: 34, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FFF9ED" },

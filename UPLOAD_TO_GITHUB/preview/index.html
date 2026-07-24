@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=71" />
+    <link rel="manifest" href="./manifest.webmanifest?v=72" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v71";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v72";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=71")
+            .register("./service-worker.js?v=72")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1241,16 +1241,16 @@
       .daily-quote-card {
         position: relative;
         width: 100%;
-        min-height: 172px;
+        min-height: 190px;
         display: grid;
-        gap: 18px;
+        gap: 20px;
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.2);
-        border-radius: 31px;
-        padding: 18px;
+        border-radius: 34px;
+        padding: 20px;
         color: #fff9ed;
         background:
-          radial-gradient(circle at 92% 8%, rgba(232, 196, 104, 0.18), transparent 32%),
+          radial-gradient(circle at 92% 8%, rgba(232, 196, 104, 0.16), transparent 34%),
           linear-gradient(145deg, #191f22, #0c0f11);
         text-align: left;
         box-shadow: 0 24px 54px rgba(0, 0, 0, 0.18);
@@ -1266,8 +1266,8 @@
       .daily-quote-card::before {
         content: "";
         position: absolute;
-        width: 152px;
-        height: 152px;
+        width: 164px;
+        height: 164px;
         right: -38px;
         top: -62px;
         border-radius: 50%;
@@ -1278,10 +1278,10 @@
       .daily-quote-card::after {
         content: attr(data-quote-index);
         position: absolute;
-        right: 8px;
-        bottom: -20px;
+        right: 6px;
+        bottom: -18px;
         color: rgba(255, 249, 237, 0.055);
-        font-size: 116px;
+        font-size: 124px;
         line-height: 1;
         font-weight: 950;
         pointer-events: none;
@@ -1349,8 +1349,8 @@
         position: relative;
         z-index: 1;
         color: #fff9ed;
-        font-size: 22px;
-        line-height: 1.22;
+        font-size: 24px;
+        line-height: 1.24;
         font-weight: 950;
       }
 
@@ -3978,42 +3978,42 @@
 
       .life-update-scrim.open {
         display: grid;
-        animation: lifeUpdateScrimIn 4.65s ease both;
+        animation: lifeUpdateScrimIn 5.7s ease both;
       }
 
       .life-update-stage {
-        width: min(100%, 430px);
-        min-height: min(96dvh, 810px);
+        width: 100%;
+        min-height: 100dvh;
         display: grid;
         justify-items: center;
         align-content: center;
-        gap: 14px;
+        gap: 10px;
         overflow: hidden;
         position: relative;
-        padding: 28px 22px;
-        border: 1px solid rgba(232, 196, 104, 0.22);
-        border-radius: 46px;
+        padding: 60px 24px 34px;
+        border: 0;
+        border-radius: 0;
         background:
           radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.05), transparent 36%),
           linear-gradient(180deg, #15191c, #090c0e);
-        box-shadow: 0 44px 120px rgba(0, 0, 0, 0.58);
+        box-shadow: none;
       }
 
       .life-update-scrim.open .life-update-stage {
-        animation: lifeUpdateStageIn 4.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation: lifeUpdateStageIn 5.7s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .life-update-ring {
         position: absolute;
-        width: 286px;
-        height: 286px;
+        width: 330px;
+        height: 330px;
         border: 1px solid rgba(232, 196, 104, 0.34);
         border-radius: 50%;
         background: rgba(232, 196, 104, 0.035);
       }
 
       .life-update-scrim.open .life-update-ring {
-        animation: lifeUpdateRing 4.65s ease both;
+        animation: lifeUpdateRing 5.7s ease both;
       }
 
       .life-update-stage::before {
@@ -4031,8 +4031,8 @@
       }
 
       .life-update-mark {
-        width: 74px;
-        height: 74px;
+        width: 68px;
+        height: 68px;
         display: grid;
         place-items: center;
         z-index: 1;
@@ -4075,10 +4075,30 @@
         text-transform: uppercase;
       }
 
+      .life-update-title {
+        z-index: 1;
+        width: min(330px, 100%);
+        color: #fff9ed;
+        font-size: 28px;
+        line-height: 1.18;
+        font-weight: 950;
+        text-align: center;
+      }
+
+      .life-update-sub {
+        z-index: 1;
+        width: min(290px, 100%);
+        color: rgba(255, 249, 237, 0.68);
+        font-size: 15px;
+        line-height: 1.38;
+        font-weight: 850;
+        text-align: center;
+      }
+
       .life-update-old {
         z-index: 1;
         color: rgba(255, 255, 255, 0.34);
-        font-size: 48px;
+        font-size: 40px;
         line-height: 0.95;
         font-weight: 950;
         text-decoration: line-through;
@@ -4091,7 +4111,7 @@
       .life-update-new {
         z-index: 1;
         color: #ffffff;
-        font-size: clamp(86px, 23vw, 122px);
+        font-size: clamp(82px, 22vw, 106px);
         line-height: 0.92;
         font-weight: 950;
         letter-spacing: 0;
@@ -4118,7 +4138,7 @@
       }
 
       .life-update-stat {
-        min-height: 86px;
+        min-height: 76px;
         display: grid;
         place-items: center;
         align-content: center;
@@ -4385,7 +4405,7 @@
         display: grid;
         align-content: center;
         justify-items: center;
-        gap: 16px;
+        gap: 14px;
         overflow: hidden;
         border: 0;
         border-radius: 0;
@@ -4401,7 +4421,7 @@
         position: absolute;
         left: 24px;
         right: 24px;
-        top: 116px;
+        top: 124px;
         height: 1px;
         border-radius: 999px;
         background: rgba(232, 196, 104, 0.72);
@@ -4446,7 +4466,7 @@
         position: absolute;
         left: 24px;
         right: 24px;
-        top: 126px;
+        top: 134px;
         z-index: 1;
         height: 4px;
         overflow: hidden;
@@ -4466,7 +4486,7 @@
       .quote-reveal-kicker {
         position: relative;
         z-index: 1;
-        margin-top: 72px;
+        margin-top: 86px;
         color: var(--gold);
         font-size: 12px;
         line-height: 1.1;
@@ -4491,19 +4511,23 @@
         position: relative;
         z-index: 1;
         max-width: 360px;
-        margin-top: 8px;
+        margin-top: 10px;
+        padding: 26px 0;
+        border-top: 1px solid rgba(255, 249, 237, 0.1);
+        border-bottom: 1px solid rgba(255, 249, 237, 0.1);
         color: #fff9ed;
-        font-size: clamp(30px, 9vw, 38px);
-        line-height: 1.08;
+        font-size: clamp(30px, 8.5vw, 38px);
+        line-height: 1.12;
         font-weight: 950;
         text-align: center;
+        text-wrap: balance;
       }
 
       .quote-reveal-index {
         position: absolute;
         left: 20px;
         right: 20px;
-        top: 116px;
+        top: 112px;
         z-index: 0;
         color: rgba(255, 249, 237, 0.06);
         font-size: clamp(118px, 38vw, 168px);
@@ -4533,7 +4557,7 @@
         display: grid;
         justify-items: center;
         gap: 2px;
-        margin-top: 8px;
+        margin-top: 10px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 26px;
         padding: 13px 18px;
@@ -4543,9 +4567,9 @@
       .quote-reveal-close {
         position: relative;
         z-index: 1;
-        min-height: 52px;
-        width: min(100%, 240px);
-        margin-top: 16px;
+        min-height: 56px;
+        width: min(100%, 280px);
+        margin-top: 18px;
         border: 0;
         border-radius: 999px;
         color: #101418;
@@ -5096,6 +5120,8 @@
           <img src="./icon.svg" alt="" />
         </div>
         <span class="life-update-kicker" id="lifeUpdateKicker">Life clock</span>
+        <strong class="life-update-title" id="lifeUpdateTitle">One day spent. Use the next one.</strong>
+        <span class="life-update-sub" id="lifeUpdateSub">Your clock moved. Make today earn its place.</span>
         <span class="life-update-minus" aria-hidden="true">-1</span>
         <span class="life-update-old" id="lifeUpdateOldDays">0</span>
         <strong class="life-update-new" id="lifeUpdateNewDays">0</strong>
@@ -5146,8 +5172,8 @@
 
     <script>
       const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
-      const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v6";
-      const QUOTE_RITUAL_VERSION = "quote-ritual-v4";
+      const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v7";
+      const QUOTE_RITUAL_VERSION = "quote-ritual-v5";
 
       function normalizeLanguageId(locale) {
         const normalized = String(locale || "").trim().toLowerCase();
@@ -5468,10 +5494,12 @@
       };
 
       Object.assign(UI_TEXT.en, {
-          "quote.kicker": "Daily quote",
-          "quote.title": "Read it. Move.",
+        "quote.kicker": "Daily quote",
+        "quote.title": "Read it. Move.",
         "quote.open": "open",
-        "quote.close": "Carry it",
+        "quote.close": "Start today",
+        lifeUpdateTitle: "One day spent. Use the next one.",
+        lifeUpdateSub: "Your clock moved. Make today earn its place.",
         profileDefault: "Your profile",
         accountSummaryLocal: "Prototype account. App Store builds will use Sign in with Apple and secure cloud sync.",
         accountStatusLocal: "Local prototype",
@@ -5513,7 +5541,9 @@
         "quote.kicker": "Cita diaria",
         "quote.title": "Leela. Avanza.",
         "quote.open": "abrir",
-        "quote.close": "Llevarlo contigo",
+        "quote.close": "Empezar hoy",
+        lifeUpdateTitle: "Un dia paso. Usa el siguiente.",
+        lifeUpdateSub: "Tu reloj avanzo. Haz que hoy valga.",
         profileDefault: "Tu perfil",
         accountSummaryLocal: "Cuenta prototipo. La version App Store usara Sign in with Apple y sincronizacion cloud segura.",
         accountStatusLocal: "Prototipo local",
@@ -5563,7 +5593,9 @@
         "quote.kicker": "Citation du jour",
         "quote.title": "Lis-la. Avance.",
         "quote.open": "ouvrir",
-        "quote.close": "Garder avec moi",
+        "quote.close": "Commencer",
+        lifeUpdateTitle: "Un jour est passe. Utilise le suivant.",
+        lifeUpdateSub: "Ton horloge avance. Fais compter aujourd'hui.",
         profileDefault: "Ton profil",
         accountSummaryLocal: "Compte prototype. La version App Store utilisera Sign in with Apple et une sync cloud securisee.",
         accountStatusLocal: "Prototype local",
@@ -5613,7 +5645,9 @@
         "quote.kicker": "Citacao diaria",
         "quote.title": "Leia. Avance.",
         "quote.open": "abrir",
-        "quote.close": "Levar comigo",
+        "quote.close": "Comecar hoje",
+        lifeUpdateTitle: "Um dia passou. Use o proximo.",
+        lifeUpdateSub: "Seu relogio avancou. Faca hoje valer.",
         profileDefault: "Seu perfil",
         accountSummaryLocal: "Conta prototipo. A versao App Store usara Sign in with Apple e cloud sync seguro.",
         accountStatusLocal: "Prototipo local",
@@ -5660,6 +5694,9 @@
         whyEmptyText: "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais."
       });
       Object.assign(UI_TEXT.zh, {
+        lifeUpdateTitle: "One day spent. Use the next one.",
+        lifeUpdateSub: "Your clock moved. Make today earn its place.",
+        "quote.close": "Start today",
         profileDefault: "你的资料",
         accountSummaryLocal: "原型账号。App Store 版本将使用 Apple 登录和安全云同步。",
         accountStatusLocal: "本地原型",
@@ -5777,6 +5814,8 @@
         setText("#dailyQuoteRevealKicker", "quote.kicker");
         setText("#dailyQuoteRevealTitle", "quote.title");
         setText("#closeDailyQuote", "quote.close");
+        setText("#lifeUpdateTitle", "lifeUpdateTitle");
+        setText("#lifeUpdateSub", "lifeUpdateSub");
         setText("#reviewVisionFromLife", "navVision");
         setText("#editLifeInfo", "editInfo");
 
@@ -6257,7 +6296,7 @@
         paint();
         updateBackButton();
         setTimeout(showLifeClockForPendingUpdate, 360);
-        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 5200 : 1100);
+        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 1100);
       }
 
       function notify(text) {
@@ -6803,6 +6842,8 @@
         if (!overlay) return Promise.resolve();
         const previousDays = Math.max(currentStats.daysLeft + 1, Number(previous.daysLeft) || 0);
         document.getElementById("lifeUpdateKicker").textContent = uiText("lifeClock");
+        document.getElementById("lifeUpdateTitle").textContent = uiText("lifeUpdateTitle");
+        document.getElementById("lifeUpdateSub").textContent = uiText("lifeUpdateSub");
         document.getElementById("lifeUpdateOldDays").textContent = formatNumber(previousDays);
         document.getElementById("lifeUpdateNewDays").textContent = formatNumber(currentStats.daysLeft);
         document.getElementById("lifeUpdateLabel").textContent = uiText("daysLeft");
@@ -6860,7 +6901,7 @@
             overlay.classList.remove("open");
             overlay.setAttribute("aria-hidden", "true");
             resolve();
-          }, 3550);
+          }, 5900);
         });
       }
 
@@ -8315,16 +8356,16 @@
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
           showLifeClockForPendingUpdate();
-          scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 5200 : 900);
+          scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
         }
       });
       window.addEventListener("pageshow", () => {
         showLifeClockForPendingUpdate();
-        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 5200 : 900);
+        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
       });
       window.addEventListener("focus", () => {
         showLifeClockForPendingUpdate();
-        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 5200 : 900);
+        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
       });
       if ("speechSynthesis" in window) {
         speechSynthesis.onvoiceschanged = populateVoiceOptions;
