@@ -136,11 +136,11 @@ const blankState = {
 };
 
 const tabs = [
-  { id: "life" },
-  { id: "goals" },
-  { id: "vision" },
-  { id: "anti" },
-  { id: "speech" }
+  { id: "life", glyph: "life" },
+  { id: "goals", glyph: "people" },
+  { id: "vision", glyph: "vision" },
+  { id: "anti", glyph: "anti" },
+  { id: "speech", glyph: "voice" }
 ];
 
 const languages = [
@@ -1842,12 +1842,24 @@ export default function App() {
             {tab === "speech" && renderSpeech()}
             </Animated.View>
           </View>
-          <View style={[styles.nav, { backgroundColor: theme.nav }]}>
-            {tabs.map((item) => (
-            <TouchableOpacity key={item.id} style={[styles.navItem, tab === item.id && styles.navActive]} onPress={() => { softImpact(); setTab(item.id); }}>
-                <Text style={[styles.navText, { color: tab === item.id ? "#101418" : theme.muted }]}>{t(`tab.${item.id}`)}</Text>
+          <View style={[styles.nav, { backgroundColor: theme.nav, borderColor: theme.line }]}>
+          {tabs.map((item) => {
+            const active = tab === item.id;
+            const glyphColor = active ? "#101418" : theme.muted;
+            return (
+              <TouchableOpacity
+                key={item.id}
+                activeOpacity={0.78}
+                style={[styles.navItem, active && styles.navActive]}
+                onPress={() => { softImpact(); setTab(item.id); }}
+              >
+                <TabGlyph id={item.glyph} color={glyphColor} active={active} />
+                <Text style={[styles.navText, { color: glyphColor }]} numberOfLines={1} adjustsFontSizeToFit>
+                  {t(`tab.${item.id}`)}
+                </Text>
               </TouchableOpacity>
-            ))}
+            );
+          })}
           </View>
           {renderProfileModal()}
           {renderPlayer()}
@@ -1858,6 +1870,53 @@ export default function App() {
         renderOnboarding()
       )}
     </SafeAreaView>
+  );
+}
+
+function TabGlyph({ id, color, active }) {
+  if (id === "life") {
+    return (
+      <View style={styles.navGlyph}>
+        <View style={[styles.navLifeRing, { borderColor: color }]}>
+          <View style={[styles.navLifeNeedle, { backgroundColor: color }]} />
+        </View>
+      </View>
+    );
+  }
+  if (id === "people") {
+    return (
+      <View style={styles.navGlyph}>
+        <View style={styles.navPeopleRow}>
+          <View style={[styles.navPeopleDot, { backgroundColor: color }]} />
+          <View style={[styles.navPeopleDot, styles.navPeopleDotSmall, { backgroundColor: color }]} />
+        </View>
+        <View style={[styles.navPeopleBase, { backgroundColor: color }]} />
+      </View>
+    );
+  }
+  if (id === "vision") {
+    return (
+      <View style={styles.navGlyph}>
+        <View style={[styles.navSlash, { backgroundColor: color }]} />
+        <View style={[styles.navSlash, styles.navSlashSecond, { backgroundColor: color }]} />
+        <View style={[styles.navDot, { backgroundColor: active ? "#DA5A3A" : color }]} />
+      </View>
+    );
+  }
+  if (id === "anti") {
+    return (
+      <View style={styles.navGlyph}>
+        <View style={[styles.navAntiFrame, { borderColor: color }]} />
+        <View style={[styles.navAntiSlash, { backgroundColor: active ? "#101418" : "#DA5A3A" }]} />
+      </View>
+    );
+  }
+  return (
+    <View style={styles.navGlyph}>
+      <View style={[styles.navVoiceLine, { backgroundColor: color, width: 19 }]} />
+      <View style={[styles.navVoiceLine, { backgroundColor: color, width: 13 }]} />
+      <View style={[styles.navVoiceLine, { backgroundColor: color, width: 17 }]} />
+    </View>
   );
 }
 
@@ -2142,10 +2201,23 @@ const styles = StyleSheet.create({
   modalHeader: { minHeight: 74, paddingHorizontal: 18, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   modalTitle: { fontSize: 26, fontWeight: "900" },
   closeText: { fontSize: 15, fontWeight: "900" },
-  nav: { position: "absolute", left: 14, right: 14, bottom: 14, height: 70, borderRadius: 35, flexDirection: "row", alignItems: "center", padding: 6 },
-  navItem: { flex: 1, height: 56, borderRadius: 28, alignItems: "center", justifyContent: "center" },
-  navActive: { backgroundColor: "#E8C468" },
-  navText: { fontSize: 12, fontWeight: "900" },
+  nav: { position: "absolute", left: 16, right: 16, bottom: 12, height: 78, borderRadius: 39, flexDirection: "row", alignItems: "center", padding: 7, borderWidth: 1, shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 10 },
+  navItem: { flex: 1, height: 64, borderRadius: 32, alignItems: "center", justifyContent: "center", gap: 4 },
+  navActive: { backgroundColor: "#E8C468", shadowColor: "#E8C468", shadowOpacity: 0.22, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 4 },
+  navText: { maxWidth: "100%", paddingHorizontal: 2, fontSize: 10.5, lineHeight: 13, fontWeight: "900", textAlign: "center" },
+  navGlyph: { width: 28, height: 24, alignItems: "center", justifyContent: "center" },
+  navLifeRing: { width: 21, height: 21, borderRadius: 11, borderWidth: 2, alignItems: "center", justifyContent: "center" },
+  navLifeNeedle: { width: 2, height: 8, borderRadius: 2, transform: [{ rotate: "38deg" }] },
+  navPeopleRow: { height: 13, flexDirection: "row", alignItems: "flex-end", gap: 3 },
+  navPeopleDot: { width: 11, height: 11, borderRadius: 6 },
+  navPeopleDotSmall: { width: 8, height: 8, borderRadius: 4, marginBottom: 1 },
+  navPeopleBase: { width: 22, height: 6, marginTop: 2, borderRadius: 6 },
+  navSlash: { position: "absolute", width: 4, height: 22, left: 9, top: 1, borderRadius: 2, transform: [{ skewX: "-18deg" }] },
+  navSlashSecond: { left: 16 },
+  navDot: { position: "absolute", width: 7, height: 7, right: 2, bottom: 2, borderRadius: 4 },
+  navAntiFrame: { width: 22, height: 16, borderWidth: 2, borderRadius: 7 },
+  navAntiSlash: { position: "absolute", width: 4, height: 24, borderRadius: 2, transform: [{ rotate: "38deg" }] },
+  navVoiceLine: { height: 3, borderRadius: 3, marginVertical: 2 },
   player: { flex: 1, backgroundColor: "#050607", justifyContent: "flex-end" },
   playerImage: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%" },
   playerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.42)" },

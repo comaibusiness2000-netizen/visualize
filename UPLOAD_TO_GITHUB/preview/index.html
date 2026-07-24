@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=68" />
+    <link rel="manifest" href="./manifest.webmanifest?v=69" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v68";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v69";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=68")
+            .register("./service-worker.js?v=69")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3633,40 +3633,199 @@
 
       .nav {
         position: absolute;
-        left: 22px;
-        right: 22px;
-        bottom: 14px;
-        height: 72px;
+        left: 16px;
+        right: 16px;
+        bottom: 12px;
+        height: 78px;
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 8px;
-        background: transparent;
+        gap: 6px;
+        padding: 7px;
+        border: 1px solid var(--line);
+        border-radius: 39px;
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 20px 54px rgba(17, 17, 17, 0.15);
+        backdrop-filter: blur(18px);
       }
 
       .nav button {
-        border: 1px solid transparent;
-        border-radius: 999px;
+        min-width: 0;
+        display: grid;
+        grid-template-rows: 25px 14px;
+        place-items: center;
+        align-content: center;
+        gap: 4px;
+        border: 0;
+        border-radius: 32px;
         color: #9a9a96;
         background: transparent;
-        font-size: 12px;
-        font-weight: 850;
+        font-size: 10.5px;
+        line-height: 1;
+        font-weight: 950;
       }
 
       .nav button.active {
-        color: var(--ink);
-        background: rgba(255, 255, 255, 0.58);
-        border-color: var(--line);
+        color: #101418;
+        background: var(--gold);
+        box-shadow: 0 10px 22px rgba(232, 196, 104, 0.25);
         animation: activeNavBounce 0.38s cubic-bezier(0.18, 1.2, 0.25, 1) both;
       }
 
+      body[data-theme="dark"] .nav {
+        border-color: rgba(255, 255, 255, 0.14);
+        background: rgba(27, 32, 35, 0.82);
+        box-shadow: 0 20px 54px rgba(0, 0, 0, 0.34);
+      }
+
       body[data-theme="dark"] .nav button.active {
-        color: #fffaf0;
-        background: rgba(255, 255, 255, 0.14);
-        border-color: rgba(255, 255, 255, 0.22);
+        color: #101418;
+        background: var(--gold);
       }
 
       body[data-theme="dark"] .nav button {
         color: #c9c4ba;
+      }
+
+      .nav-label {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .nav-glyph {
+        position: relative;
+        width: 28px;
+        height: 24px;
+        display: grid;
+        place-items: center;
+        color: currentColor;
+      }
+
+      .nav-life-ring {
+        width: 21px;
+        height: 21px;
+        display: grid;
+        place-items: center;
+        border: 2px solid currentColor;
+        border-radius: 50%;
+      }
+
+      .nav-life-ring::after {
+        content: "";
+        width: 2px;
+        height: 8px;
+        border-radius: 2px;
+        background: currentColor;
+        transform: rotate(38deg);
+      }
+
+      .nav-people::before,
+      .nav-people::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .nav-people::before {
+        width: 11px;
+        height: 11px;
+        left: 6px;
+      }
+
+      .nav-people::after {
+        width: 8px;
+        height: 8px;
+        right: 5px;
+        top: 6px;
+      }
+
+      .nav-people span {
+        width: 22px;
+        height: 6px;
+        margin-top: 12px;
+        border-radius: 999px;
+        background: currentColor;
+      }
+
+      .nav-vision::before,
+      .nav-vision::after {
+        content: "";
+        position: absolute;
+        top: 1px;
+        width: 4px;
+        height: 22px;
+        border-radius: 999px;
+        background: currentColor;
+        transform: skewX(-18deg);
+      }
+
+      .nav-vision::before {
+        left: 9px;
+      }
+
+      .nav-vision::after {
+        left: 16px;
+      }
+
+      .nav-vision span {
+        position: absolute;
+        right: 2px;
+        bottom: 2px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+
+      .nav-anti::before {
+        content: "";
+        width: 22px;
+        height: 16px;
+        border: 2px solid currentColor;
+        border-radius: 7px;
+      }
+
+      .nav-anti::after {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 24px;
+        border-radius: 999px;
+        background: var(--red);
+        transform: rotate(38deg);
+      }
+
+      .nav button.active .nav-anti::after {
+        background: #101418;
+      }
+
+      .nav-voice {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+      }
+
+      .nav-voice span {
+        height: 3px;
+        border-radius: 999px;
+        background: currentColor;
+      }
+
+      .nav-voice span:nth-child(1) {
+        width: 19px;
+      }
+
+      .nav-voice span:nth-child(2) {
+        width: 13px;
+      }
+
+      .nav-voice span:nth-child(3) {
+        width: 17px;
       }
 
       input,
@@ -4776,11 +4935,26 @@
         </aside>
 
         <nav class="nav" aria-label="Navigazione principale">
-          <button class="active" data-view="today">Life</button>
-          <button data-view="goals">Goal</button>
-          <button data-view="vision">Vision</button>
-          <button data-view="anti">Anti</button>
-          <button data-view="speech">Speech</button>
+          <button class="active" data-view="today">
+            <span class="nav-glyph nav-life" aria-hidden="true"><span class="nav-life-ring"></span></span>
+            <span class="nav-label">Life</span>
+          </button>
+          <button data-view="goals">
+            <span class="nav-glyph nav-people" aria-hidden="true"><span></span></span>
+            <span class="nav-label">Goal</span>
+          </button>
+          <button data-view="vision">
+            <span class="nav-glyph nav-vision" aria-hidden="true"><span></span></span>
+            <span class="nav-label">Vision</span>
+          </button>
+          <button data-view="anti">
+            <span class="nav-glyph nav-anti" aria-hidden="true"></span>
+            <span class="nav-label">Anti</span>
+          </button>
+          <button data-view="speech">
+            <span class="nav-glyph nav-voice" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="nav-label">Speech</span>
+          </button>
         </nav>
       </div>
     </div>
@@ -5600,7 +5774,8 @@
             anti: "navAnti",
             speech: "navSpeech"
           };
-          button.textContent = uiText(labels[button.dataset.view] || "navLife");
+          const label = button.querySelector(".nav-label");
+          if (label) label.textContent = uiText(labels[button.dataset.view] || "navLife");
         });
       }
       const toast = document.getElementById("toast");
