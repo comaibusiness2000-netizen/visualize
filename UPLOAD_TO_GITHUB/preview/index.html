@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=73" />
+    <link rel="manifest" href="./manifest.webmanifest?v=74" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v73";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v74";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=73")
+            .register("./service-worker.js?v=74")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1158,6 +1158,7 @@
           radial-gradient(circle at 92% 0%, rgba(232, 196, 104, 0.14), transparent 34%),
           linear-gradient(180deg, #11171a, #070a0c);
         text-align: center;
+        animation: premiumPanelIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .life-head .deck-kicker {
@@ -1246,21 +1247,23 @@
       .daily-quote-card {
         position: relative;
         width: 100%;
-        min-height: 190px;
+        min-height: 214px;
         display: grid;
-        gap: 20px;
+        gap: 22px;
         overflow: hidden;
-        border: 1px solid rgba(232, 196, 104, 0.2);
-        border-radius: 34px;
-        padding: 20px;
+        border: 1px solid rgba(232, 196, 104, 0.24);
+        border-radius: 38px;
+        padding: 22px;
         color: #fff9ed;
         background:
-          radial-gradient(circle at 92% 8%, rgba(232, 196, 104, 0.16), transparent 34%),
-          linear-gradient(145deg, #191f22, #0c0f11);
+          radial-gradient(circle at 92% 8%, rgba(232, 196, 104, 0.2), transparent 34%),
+          radial-gradient(circle at 8% 100%, rgba(218, 90, 58, 0.1), transparent 28%),
+          linear-gradient(145deg, #12181b, #070a0c);
         text-align: left;
-        box-shadow: 0 24px 54px rgba(0, 0, 0, 0.18);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.22);
         transform: translateZ(0);
         transition: transform 0.22s ease, box-shadow 0.22s ease;
+        animation: premiumPanelIn 0.78s 0.08s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .daily-quote-card:active {
@@ -1271,12 +1274,12 @@
       .daily-quote-card::before {
         content: "";
         position: absolute;
-        width: 164px;
-        height: 164px;
-        right: -38px;
-        top: -62px;
+        width: 190px;
+        height: 190px;
+        right: -48px;
+        top: -72px;
         border-radius: 50%;
-        background: rgba(232, 196, 104, 0.16);
+        background: rgba(232, 196, 104, 0.18);
         pointer-events: none;
       }
 
@@ -1285,8 +1288,8 @@
         position: absolute;
         right: 6px;
         bottom: -18px;
-        color: rgba(255, 249, 237, 0.055);
-        font-size: 124px;
+        color: rgba(255, 249, 237, 0.065);
+        font-size: 136px;
         line-height: 1;
         font-weight: 950;
         pointer-events: none;
@@ -1354,8 +1357,8 @@
         position: relative;
         z-index: 1;
         color: #fff9ed;
-        font-size: 24px;
-        line-height: 1.24;
+        font-size: 27px;
+        line-height: 1.18;
         font-weight: 950;
       }
 
@@ -1385,6 +1388,18 @@
         grid-template-columns: repeat(48, 1fr);
         gap: 3px;
         padding: 10px 0 2px;
+        animation: premiumPanelIn 0.78s 0.14s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      @keyframes premiumPanelIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px) scale(0.985);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
       }
 
       .life-dot {
@@ -3999,7 +4014,7 @@
         border: 0;
         border-radius: 0;
         background:
-          radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.05), transparent 36%),
+          radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.07), transparent 36%),
           linear-gradient(180deg, #15191c, #090c0e);
         box-shadow: none;
       }
@@ -4033,6 +4048,24 @@
           radial-gradient(circle at 38% 36%, rgba(232, 196, 104, 0.72), transparent 42%),
           radial-gradient(circle at 65% 64%, rgba(218, 90, 58, 0.62), transparent 42%);
         opacity: 0.35;
+      }
+
+      .life-update-stage::after {
+        content: "";
+        position: absolute;
+        inset: 18px;
+        border-radius: 34px;
+        background-image:
+          radial-gradient(circle, rgba(255, 249, 237, 0.18) 1.2px, transparent 1.2px);
+        background-size: 22px 22px;
+        -webkit-mask-image: linear-gradient(180deg, transparent, #000 22%, #000 68%, transparent);
+        mask-image: linear-gradient(180deg, transparent, #000 22%, #000 68%, transparent);
+        opacity: 0.24;
+        pointer-events: none;
+      }
+
+      .life-update-scrim.open .life-update-stage::after {
+        animation: lifeUpdateField 5.7s linear both;
       }
 
       .life-update-mark {
@@ -4115,11 +4148,12 @@
 
       .life-update-new {
         z-index: 1;
-        color: #ffffff;
+        color: var(--gold);
         font-size: clamp(82px, 22vw, 106px);
         line-height: 0.92;
         font-weight: 950;
         letter-spacing: 0;
+        text-shadow: 0 18px 56px rgba(232, 196, 104, 0.35);
       }
 
       .life-update-scrim.open .life-update-new {
@@ -4395,12 +4429,12 @@
         display: none;
         place-items: center;
         padding: 0;
-        background: #070a0c;
+        background: #060809;
       }
 
       .quote-scrim.open {
         display: grid;
-        animation: quoteScrimIn 0.24s ease both;
+        animation: quoteScrimIn 0.34s ease both;
       }
 
       .quote-reveal-card {
@@ -4410,15 +4444,18 @@
         display: grid;
         align-content: center;
         justify-items: center;
-        gap: 14px;
+        gap: 16px;
         overflow: hidden;
         border: 0;
         border-radius: 0;
         padding: max(54px, env(safe-area-inset-top)) 24px max(30px, env(safe-area-inset-bottom));
         color: #fff9ed;
-        background: #080b0d;
+        background:
+          radial-gradient(circle at 86% 8%, rgba(232, 196, 104, 0.18), transparent 34%),
+          radial-gradient(circle at 8% 92%, rgba(218, 90, 58, 0.14), transparent 34%),
+          #080b0d;
         box-shadow: none;
-        animation: quoteStageIn 0.82s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation: quoteStageIn 0.92s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .quote-reveal-card::before {
@@ -4427,12 +4464,12 @@
         left: 24px;
         right: 24px;
         top: 124px;
-        height: 1px;
+        height: 2px;
         border-radius: 999px;
         background: rgba(232, 196, 104, 0.72);
         box-shadow: 0 8px 22px rgba(232, 196, 104, 0.5);
         pointer-events: none;
-        animation: quoteSweep 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation: quoteSweep 1.08s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .quote-reveal-top {
@@ -4501,6 +4538,10 @@
         text-align: center;
       }
 
+      .quote-scrim.open .quote-reveal-kicker {
+        animation: quoteTextLift 0.76s 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
       .quote-reveal-card h2 {
         position: relative;
         z-index: 1;
@@ -4512,6 +4553,10 @@
         text-align: center;
       }
 
+      .quote-scrim.open .quote-reveal-card h2 {
+        animation: quoteTextLift 0.8s 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
       .quote-reveal-card p {
         position: relative;
         z-index: 1;
@@ -4521,11 +4566,15 @@
         border-top: 1px solid rgba(255, 249, 237, 0.1);
         border-bottom: 1px solid rgba(255, 249, 237, 0.1);
         color: #fff9ed;
-        font-size: clamp(30px, 8.5vw, 38px);
+        font-size: clamp(34px, 9.4vw, 42px);
         line-height: 1.12;
         font-weight: 950;
         text-align: center;
         text-wrap: balance;
+      }
+
+      .quote-scrim.open .quote-reveal-card p {
+        animation: quoteTextLift 0.9s 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .quote-reveal-index {
@@ -4534,8 +4583,8 @@
         right: 20px;
         top: 112px;
         z-index: 0;
-        color: rgba(255, 249, 237, 0.06);
-        font-size: clamp(118px, 38vw, 168px);
+        color: rgba(255, 249, 237, 0.075);
+        font-size: clamp(132px, 42vw, 190px);
         line-height: 0.95;
         font-weight: 950;
         text-align: center;
@@ -4567,6 +4616,11 @@
         border-radius: 26px;
         padding: 13px 18px;
         background: rgba(255, 255, 255, 0.07);
+      }
+
+      .quote-scrim.open .quote-reveal-author-box,
+      .quote-scrim.open .quote-reveal-close {
+        animation: quoteTextLift 0.8s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .quote-reveal-close {
@@ -4622,6 +4676,31 @@
         to {
           opacity: 1;
           transform: scale(1);
+        }
+      }
+
+      @keyframes quoteTextLift {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes lifeUpdateField {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        28% {
+          opacity: 0.24;
+        }
+        to {
+          opacity: 0.08;
+          transform: translateY(-34px);
         }
       }
 
@@ -5174,8 +5253,8 @@
 
     <script>
       const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
-      const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v7";
-      const QUOTE_RITUAL_VERSION = "quote-ritual-v5";
+      const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v8";
+      const QUOTE_RITUAL_VERSION = "quote-ritual-v6";
 
       function normalizeLanguageId(locale) {
         const normalized = String(locale || "").trim().toLowerCase();
@@ -5194,107 +5273,107 @@
       }
 
       const DAILY_QUOTES = [
-        { text: "If there is no struggle, there is no progress.", author: "Frederick Douglass", source: "Wikiquote" },
-        { text: "Energy and persistence conquer all things.", author: "Benjamin Franklin", source: "Bartlett" },
-        { text: "Lost time is never found again.", author: "Benjamin Franklin", source: "Bartlett" },
-        { text: "Well done is better than well said.", author: "Benjamin Franklin", source: "Bartlett" },
-        { text: "Diligence is the mother of good luck.", author: "Benjamin Franklin", source: "Bartlett" },
-        { text: "Resolve to perform what you ought; perform without fail what you resolve.", author: "Benjamin Franklin", source: "Bartlett" },
-        { text: "Dost thou love life? Then do not squander time.", author: "Benjamin Franklin", source: "Bartlett" },
-        { text: "He that can have patience can have what he will.", author: "Benjamin Franklin", source: "Bartlett" },
-        { text: "Never leave that till tomorrow which you can do today.", author: "Benjamin Franklin", source: "Bartlett" },
-        { text: "Little strokes fell great oaks.", author: "Benjamin Franklin", source: "Bartlett" },
-        { text: "Victory belongs to the most persevering.", author: "Napoleon Bonaparte", source: "Wikiquote" },
-        { text: "The harder the conflict, the more glorious the triumph.", author: "Thomas Paine", source: "Project Gutenberg" },
-        { text: "Either I will find a way, or make one.", author: "Hannibal", source: "Bartlett" },
-        { text: "Fortune favors the brave.", author: "Virgil", source: "Bartlett" },
-        { text: "He who has begun has half done.", author: "Horace", source: "Bartlett" },
-        { text: "Begin, be bold, and venture to be wise.", author: "Horace", source: "Bartlett" },
-        { text: "Rule your mind, or it will rule you.", author: "Horace", source: "Bartlett" },
-        { text: "Seize the day.", author: "Horace", source: "Bartlett" },
-        { text: "Dream lofty dreams, and as you dream, so shall you become.", author: "James Allen", source: "Project Gutenberg" },
-        { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu", source: "Project Gutenberg" },
-        { text: "He who conquers himself is mighty.", author: "Lao Tzu", source: "Project Gutenberg" },
-        { text: "Great acts are made up of small deeds.", author: "Lao Tzu", source: "Project Gutenberg" },
-        { text: "Cherish your visions; cherish your ideals.", author: "James Allen", source: "Project Gutenberg" },
-        { text: "Well begun is half done.", author: "Aristotle", source: "Bartlett" },
-        { text: "The greatest achievement was at first and for a time a dream.", author: "James Allen", source: "Project Gutenberg" },
-        { text: "Small opportunities are often the beginning of great enterprises.", author: "Demosthenes", source: "Bartlett" },
-        { text: "Practice is the best of all instructors.", author: "Publilius Syrus", source: "Bartlett" },
-        { text: "Strike while the iron is hot.", author: "Proverb", source: "Bartlett" },
-        { text: "Valor grows by daring, fear by holding back.", author: "Publilius Syrus", source: "Bartlett" },
-        { text: "Dreams are the seedlings of realities.", author: "James Allen", source: "Project Gutenberg" },
-        { text: "Our remedies oft in ourselves do lie.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Action is eloquence.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Strong reasons make strong actions.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "The readiness is all.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Things won are done; joy's soul lies in the doing.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Defer no time, delays have dangerous ends.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "To thine own self be true.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Our doubts are traitors, and make us lose the good we might win.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Be great in act, as you have been in thought.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Boldness be my friend.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Men at some time are masters of their fates.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Hitch your wagon to a star.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-        { text: "Nothing great was ever achieved without enthusiasm.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-        { text: "Make the most of yourself, for that is all there is of you.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-        { text: "Always do what you are afraid to do.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-        { text: "Do the thing and you shall have the power.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-        { text: "Self-trust is the first secret of success.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-        { text: "Trust thyself: every heart vibrates to that iron string.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-        { text: "The vision that you glorify in your mind is what you will build your life by.", author: "James Allen", source: "Project Gutenberg" },
-        { text: "Go confidently in the direction of your dreams.", author: "Henry David Thoreau", source: "Project Gutenberg" },
-        { text: "Live the life you have imagined.", author: "Henry David Thoreau", source: "Project Gutenberg" },
-        { text: "First say to yourself what you would be; then do what you have to do.", author: "Epictetus", source: "Project Gutenberg" },
-        { text: "No great thing is created suddenly.", author: "Epictetus", source: "Project Gutenberg" },
-        { text: "No man is free who is not master of himself.", author: "Epictetus", source: "Project Gutenberg" },
-        { text: "Practice yourself in little things; then proceed to greater.", author: "Epictetus", source: "Project Gutenberg" },
-        { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca", source: "Project Gutenberg" },
-        { text: "Achievement is the crown of effort.", author: "James Allen", source: "Project Gutenberg" },
-        { text: "It is not that we have little time, but that we waste much.", author: "Seneca", source: "Project Gutenberg" },
-        { text: "As long as you live, keep learning how to live.", author: "Seneca", source: "Project Gutenberg" },
-        { text: "He who is brave is free.", author: "Seneca", source: "Project Gutenberg" },
-        { text: "We suffer more often in imagination than in reality.", author: "Seneca", source: "Project Gutenberg" },
-        { text: "Begin at once to live.", author: "Seneca", source: "Project Gutenberg" },
-        { text: "While we wait for life, life passes.", author: "Seneca", source: "Project Gutenberg" },
-        { text: "Waste no more time talking about what a good man ought to be. Be one.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-        { text: "The impediment to action advances action.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-        { text: "Because a thing seems difficult for you, do not think it impossible.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-        { text: "If it is not right, do not do it.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-        { text: "Do every act of your life as if it were your last.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-        { text: "Look well into thyself; there is a source of strength.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-        { text: "A man can only rise, conquer, and achieve by lifting up his thoughts.", author: "James Allen", source: "Project Gutenberg" },
-        { text: "Let us, then, be up and doing.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-        { text: "Act in the living present.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-        { text: "The heights by great men reached and kept were not attained by sudden flight.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-        { text: "Still achieving, still pursuing, learn to labor and to wait.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-        { text: "To strive, to seek, to find, and not to yield.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
-        { text: "It is not too late to seek a newer world.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
-        { text: "Do not wait for extraordinary opportunities; seize common occasions and make them great.", author: "Orison Swett Marden", source: "Project Gutenberg" },
-        { text: "A man's reach should exceed his grasp.", author: "Robert Browning", source: "Bartlett" },
-        { text: "The best is yet to be.", author: "Robert Browning", source: "Bartlett" },
-        { text: "He never turned his back but marched breast forward.", author: "Robert Browning", source: "Bartlett" },
-        { text: "Act well your part; there all the honor lies.", author: "Alexander Pope", source: "Bartlett" },
-        { text: "The golden opportunity you are seeking is in yourself.", author: "Orison Swett Marden", source: "Project Gutenberg" },
-        { text: "Great works are performed not by strength, but perseverance.", author: "Samuel Johnson", source: "Bartlett" },
-        { text: "Few things are impossible to diligence and skill.", author: "Samuel Johnson", source: "Bartlett" },
-        { text: "The will to do springs from the knowledge that we can do.", author: "James Allen", source: "Project Gutenberg" },
-        { text: "A wise man will make more opportunities than he finds.", author: "Francis Bacon", source: "Bartlett" },
-        { text: "Weak men wait for opportunities; strong men make them.", author: "Orison Swett Marden", source: "Project Gutenberg" },
-        { text: "Where the willingness is great, the difficulties cannot be great.", author: "Niccolo Machiavelli", source: "Project Gutenberg" },
-        { text: "Awake, arise, or be forever fallen.", author: "John Milton", source: "Bartlett" },
-        { text: "Believe you can and you are halfway there.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
-        { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
-        { text: "It is hard to fail, but worse never to have tried to succeed.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
-        { text: "The credit belongs to the man who is actually in the arena.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
-        { text: "Always bear in mind your own resolution to succeed.", author: "Abraham Lincoln", source: "Wikiquote" },
-        { text: "Leave nothing for tomorrow which can be done today.", author: "Abraham Lincoln", source: "Wikiquote" },
-        { text: "That which does not kill us makes us stronger.", author: "Friedrich Nietzsche", source: "Project Gutenberg" },
-        { text: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche", source: "Project Gutenberg" },
-        { text: "Become who you are.", author: "Friedrich Nietzsche", source: "Project Gutenberg" },
-        { text: "The secret of getting ahead is getting started.", author: "Mark Twain", source: "Wikiquote" },
-        { text: "Courage is resistance to fear, mastery of fear, not absence of fear.", author: "Mark Twain", source: "Wikiquote" }
-      ];
+  { text: "If there is no struggle, there is no progress.", author: "Frederick Douglass", source: "Wikiquote" },
+  { text: "Energy and persistence conquer all things.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Lost time is never found again.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Well done is better than well said.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Diligence is the mother of good luck.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Resolve to perform what you ought; perform without fail what you resolve.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Dost thou love life? Then do not squander time.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "He that can have patience can have what he will.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Never leave that till tomorrow which you can do today.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Little strokes fell great oaks.", author: "Benjamin Franklin", source: "Bartlett" },
+  { text: "Victory belongs to the most persevering.", author: "Napoleon Bonaparte", source: "Wikiquote" },
+  { text: "The harder the conflict, the more glorious the triumph.", author: "Thomas Paine", source: "Project Gutenberg" },
+  { text: "Either I will find a way, or make one.", author: "Hannibal", source: "Bartlett" },
+  { text: "Fortune favors the brave.", author: "Virgil", source: "Bartlett" },
+  { text: "He who has begun has half done.", author: "Horace", source: "Bartlett" },
+  { text: "Begin, be bold, and venture to be wise.", author: "Horace", source: "Bartlett" },
+  { text: "Rule your mind, or it will rule you.", author: "Horace", source: "Bartlett" },
+  { text: "Seize the day.", author: "Horace", source: "Bartlett" },
+  { text: "Dream lofty dreams, and as you dream, so shall you become.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu", source: "Project Gutenberg" },
+  { text: "He who conquers himself is mighty.", author: "Lao Tzu", source: "Project Gutenberg" },
+  { text: "Great acts are made up of small deeds.", author: "Lao Tzu", source: "Project Gutenberg" },
+  { text: "Cherish your visions; cherish your ideals.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "Well begun is half done.", author: "Aristotle", source: "Bartlett" },
+  { text: "The greatest achievement was at first and for a time a dream.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "Small opportunities are often the beginning of great enterprises.", author: "Demosthenes", source: "Bartlett" },
+  { text: "Practice is the best of all instructors.", author: "Publilius Syrus", source: "Bartlett" },
+  { text: "Strike while the iron is hot.", author: "Proverb", source: "Bartlett" },
+  { text: "Valor grows by daring, fear by holding back.", author: "Publilius Syrus", source: "Bartlett" },
+  { text: "Dreams are the seedlings of realities.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "Our remedies oft in ourselves do lie.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Action is eloquence.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Strong reasons make strong actions.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Once more unto the breach.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Things won are done; joy's soul lies in the doing.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Defer no time, delays have dangerous ends.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "There is nothing either good or bad, but thinking makes it so.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Our doubts are traitors, and make us lose the good we might win.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Be great in act, as you have been in thought.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Boldness be my friend.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Men at some time are masters of their fates.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Without ambition one starts nothing.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Nothing great was ever achieved without enthusiasm.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Make the most of yourself, for that is all there is of you.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Always do what you are afraid to do.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Do the thing and you shall have the power.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Self-trust is the first secret of success.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "Trust thyself: every heart vibrates to that iron string.", author: "Ralph Waldo Emerson", source: "Bartlett" },
+  { text: "The vision that you glorify in your mind is what you will build your life by.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "Go confidently in the direction of your dreams.", author: "Henry David Thoreau", source: "Project Gutenberg" },
+  { text: "Live the life you have imagined.", author: "Henry David Thoreau", source: "Project Gutenberg" },
+  { text: "First say to yourself what you would be; then do what you have to do.", author: "Epictetus", source: "Project Gutenberg" },
+  { text: "No great thing is created suddenly.", author: "Epictetus", source: "Project Gutenberg" },
+  { text: "No man is free who is not master of himself.", author: "Epictetus", source: "Project Gutenberg" },
+  { text: "Practice yourself in little things; then proceed to greater.", author: "Epictetus", source: "Project Gutenberg" },
+  { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "Achievement is the crown of effort.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "It is not that we have little time, but that we waste much.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "No man was ever wise by chance.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "He who is brave is free.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "No prize fighter can go with high spirits into the strife if he has never been beaten black and blue.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "Begin at once to live.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "While we wait for life, life passes.", author: "Seneca", source: "Project Gutenberg" },
+  { text: "Waste no more time talking about what a good man ought to be. Be one.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "The impediment to action advances action.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "Because a thing seems difficult for you, do not think it impossible.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "The blazing fire makes flame and brightness out of everything thrown into it.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "Do every act of your life as if it were your last.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "What stands in the way becomes the way.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "A man can only rise, conquer, and achieve by lifting up his thoughts.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "Let us, then, be up and doing.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
+  { text: "Act in the living present.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
+  { text: "The heights by great men reached and kept were not attained by sudden flight.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
+  { text: "Still achieving, still pursuing, learn to labor and to wait.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
+  { text: "To strive, to seek, to find, and not to yield.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
+  { text: "It is not too late to seek a newer world.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
+  { text: "Do not wait for extraordinary opportunities; seize common occasions and make them great.", author: "Orison Swett Marden", source: "Project Gutenberg" },
+  { text: "Grow old along with me! The best is yet to be.", author: "Robert Browning", source: "Bartlett" },
+  { text: "The best is yet to be.", author: "Robert Browning", source: "Bartlett" },
+  { text: "He never turned his back but marched breast forward.", author: "Robert Browning", source: "Bartlett" },
+  { text: "Act well your part; there all the honour lies.", author: "Alexander Pope", source: "Bartlett" },
+  { text: "The golden opportunity you are seeking is in yourself.", author: "Orison Swett Marden", source: "Project Gutenberg" },
+  { text: "Great works are performed not by strength, but perseverance.", author: "Samuel Johnson", source: "Bartlett" },
+  { text: "Few things are impossible to diligence and skill.", author: "Samuel Johnson", source: "Bartlett" },
+  { text: "The will to do springs from the knowledge that we can do.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "A wise man will make more opportunities than he finds.", author: "Francis Bacon", source: "Bartlett" },
+  { text: "Weak men wait for opportunities; strong men make them.", author: "Orison Swett Marden", source: "Project Gutenberg" },
+  { text: "Where the willingness is great, the difficulties cannot be great.", author: "Niccolo Machiavelli", source: "Project Gutenberg" },
+  { text: "Awake, arise, or be forever fallen.", author: "John Milton", source: "Bartlett" },
+  { text: "Believe you can and you are halfway there.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
+  { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
+  { text: "It is hard to fail, but worse never to have tried to succeed.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
+  { text: "The credit belongs to the man who is actually in the arena.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
+  { text: "Always bear in mind your own resolution to succeed.", author: "Abraham Lincoln", source: "Wikiquote" },
+  { text: "Leave nothing for tomorrow which can be done today.", author: "Abraham Lincoln", source: "Wikiquote" },
+  { text: "That which does not kill us makes us stronger.", author: "Friedrich Nietzsche", source: "Project Gutenberg" },
+  { text: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche", source: "Project Gutenberg" },
+  { text: "Become who you are.", author: "Friedrich Nietzsche", source: "Project Gutenberg" },
+  { text: "The secret of getting ahead is getting started.", author: "Mark Twain", source: "Wikiquote" },
+  { text: "Courage is resistance to fear, mastery of fear, not absence of fear.", author: "Mark Twain", source: "Wikiquote" }
+];
 
       const defaults = {
         appVersion: "en-v2",
