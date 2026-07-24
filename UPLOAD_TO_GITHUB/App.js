@@ -31,8 +31,8 @@ const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
-const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v5";
-const QUOTE_RITUAL_VERSION = "quote-ritual-v3";
+const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v6";
+const QUOTE_RITUAL_VERSION = "quote-ritual-v4";
 const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
 
 function normalizeLanguageId(locale) {
@@ -1219,10 +1219,12 @@ export default function App() {
   function renderLife() {
     const stats = lifeStats(appState.profile);
     const dots = Array.from({ length: stats.totalMonths }, (_, index) => index < stats.spentMonths);
+    const quoteNumber = String(dailyQuoteIndex + 1).padStart(2, "0");
     return (
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.heroCard, { backgroundColor: theme.hero, borderColor: theme.heroLine }]}>
           <View style={styles.heroGlow} />
+          <Text style={styles.heroWatermark}>{Math.round(stats.usedPercent)}%</Text>
           <View style={styles.heroTopRow}>
             <Text style={styles.heroKicker}>{t("life.kicker")}</Text>
             <TouchableOpacity style={styles.heroMiniButton} onPress={() => setProfileOpen(true)}>
@@ -1254,9 +1256,10 @@ export default function App() {
           }}
         >
           <View style={styles.quoteCardGlow} />
+          <Text style={styles.quoteCardWatermark}>{quoteNumber}</Text>
           <View style={styles.quoteCardTop}>
             <View style={styles.quoteMark}>
-              <Text style={styles.quoteMarkText}>Q</Text>
+              <Text style={styles.quoteMarkText}>{quoteNumber}</Text>
             </View>
             <View style={styles.quoteMetaBlock}>
               <Text style={styles.quoteCardKicker}>{t("quote.kicker")}</Text>
@@ -1673,6 +1676,22 @@ export default function App() {
         Math.max(0.04, Number(lifeUpdate.current.usedPercent || 0) / 100)
       ]
     });
+    const ringScale = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.34, 0.74, 1],
+      outputRange: [0.56, 1.12, 1, 1.04]
+    });
+    const ringOpacity = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.16, 0.78, 1],
+      outputRange: [0, 0.62, 0.4, 0]
+    });
+    const minusScale = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.3, 0.58, 1],
+      outputRange: [0.72, 1.16, 1, 0.96]
+    });
+    const statsOpacity = lifeUpdatePulse.interpolate({
+      inputRange: [0, 0.38, 0.86, 1],
+      outputRange: [0, 1, 1, 0]
+    });
     const dots = Array.from({ length: 18 }, (_, index) => index);
     const safeNumber = (value, fallback) => {
       const parsed = Number(value);
@@ -1702,12 +1721,16 @@ export default function App() {
       <Modal visible transparent animationType="none">
         <Animated.View style={[styles.lifeUpdateOverlay, { opacity: fade }]}>
           <Animated.View style={[styles.lifeUpdateStage, { transform: [{ translateY: stageTranslate }] }]}>
+            <Animated.View style={[styles.lifeUpdateRing, { opacity: ringOpacity, transform: [{ scale: ringScale }] }]} />
             <View style={styles.lifeUpdateLogo}>
               <View style={styles.logoSmallSlash} />
               <View style={styles.logoSmallSlashSecond} />
               <View style={styles.logoSmallDot} />
             </View>
             <Text style={styles.lifeUpdateKicker}>{t("life.kicker")}</Text>
+            <Animated.View style={[styles.lifeUpdateMinusBadge, { transform: [{ scale: minusScale }] }]}>
+              <Text style={styles.lifeUpdateMinusText}>-1</Text>
+            </Animated.View>
             <Animated.Text style={[styles.lifeUpdateOldNumber, { transform: [{ translateY: oldTranslate }] }]}>
               {previousDays.toLocaleString("en-US")}
             </Animated.Text>
@@ -1715,7 +1738,7 @@ export default function App() {
               {lifeUpdate.current.daysLeft.toLocaleString("en-US")}
             </Animated.Text>
             <Text style={styles.lifeUpdateLabel}>{t("life.days")}</Text>
-            <View style={styles.lifeUpdateStats}>
+            <Animated.View style={[styles.lifeUpdateStats, { opacity: statsOpacity }]}>
               {updateStats.map((item) => {
                 const changed = Math.round(item.previous) !== Math.round(item.current);
                 return (
@@ -1729,7 +1752,7 @@ export default function App() {
                   </View>
                 );
               })}
-            </View>
+            </Animated.View>
             <View style={styles.lifeUpdateBar}>
               <Animated.View style={[styles.lifeUpdateBarFill, { transform: [{ scaleX: fillScale }] }]} />
             </View>
@@ -1959,6 +1982,7 @@ const styles = StyleSheet.create({
   content: { padding: 18, paddingBottom: 118 },
   heroCard: { overflow: "hidden", borderWidth: 1, borderRadius: 34, padding: 24, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
   heroGlow: { position: "absolute", right: -48, top: -68, width: 180, height: 180, borderRadius: 90, backgroundColor: "rgba(232,196,104,0.15)" },
+  heroWatermark: { position: "absolute", left: 16, right: 16, bottom: -22, color: "rgba(255,249,237,0.055)", fontSize: 116, lineHeight: 122, fontWeight: "900", textAlign: "center" },
   heroTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 18 },
   heroKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
   heroMiniButton: { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.12)", borderWidth: 1, borderColor: "rgba(255,255,255,0.14)" },
@@ -1975,13 +1999,14 @@ const styles = StyleSheet.create({
   statCard: { flex: 1, borderWidth: 1, borderRadius: 22, padding: 14 },
   statValue: { fontSize: 22, fontWeight: "900" },
   statLabel: { marginTop: 3, fontSize: 12, fontWeight: "900", textTransform: "uppercase" },
-  quoteCard: { minHeight: 164, overflow: "hidden", borderWidth: 1, borderRadius: 31, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
+  quoteCard: { minHeight: 172, overflow: "hidden", borderWidth: 1, borderRadius: 31, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
   quoteCardLight: { backgroundColor: "#111418", borderColor: "rgba(17,20,24,0.1)" },
   quoteCardDark: { backgroundColor: "#191F22", borderColor: "rgba(232,196,104,0.2)" },
   quoteCardGlow: { position: "absolute", right: -38, top: -62, width: 152, height: 152, borderRadius: 76, backgroundColor: "rgba(232,196,104,0.18)" },
+  quoteCardWatermark: { position: "absolute", right: 8, bottom: -19, color: "rgba(255,249,237,0.055)", fontSize: 116, lineHeight: 126, fontWeight: "900" },
   quoteCardTop: { flexDirection: "row", alignItems: "center", gap: 12 },
-  quoteMark: { width: 42, height: 42, borderRadius: 21, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
-  quoteMarkText: { color: "#101418", fontSize: 16, fontWeight: "900" },
+  quoteMark: { width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
+  quoteMarkText: { color: "#101418", fontSize: 14, lineHeight: 17, fontWeight: "900" },
   quoteMetaBlock: { flex: 1, minWidth: 0 },
   quoteCardKicker: { color: "rgba(255,249,237,0.72)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
   quoteCardDay: { color: "#E8C468", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "900" },
@@ -1999,10 +2024,13 @@ const styles = StyleSheet.create({
   lifeDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.26)" },
   lifeDotSpent: { backgroundColor: "#E8C468" },
   lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(6,8,9,0.995)", alignItems: "center", justifyContent: "center", padding: 10 },
-  lifeUpdateStage: { width: "100%", minHeight: "94%", borderRadius: 44, padding: 24, alignItems: "center", justifyContent: "center", backgroundColor: "#0B0E10", borderWidth: 1, borderColor: "rgba(232,196,104,0.22)" },
-  lifeUpdateLogo: { width: 84, height: 58, marginBottom: 34, alignItems: "center", justifyContent: "center" },
+  lifeUpdateStage: { width: "100%", minHeight: "96%", overflow: "hidden", borderRadius: 46, padding: 24, alignItems: "center", justifyContent: "center", backgroundColor: "#0B0E10", borderWidth: 1, borderColor: "rgba(232,196,104,0.24)" },
+  lifeUpdateRing: { position: "absolute", width: 286, height: 286, borderRadius: 143, borderWidth: 1, borderColor: "rgba(232,196,104,0.34)", backgroundColor: "rgba(232,196,104,0.035)" },
+  lifeUpdateLogo: { width: 70, height: 50, marginBottom: 22, alignItems: "center", justifyContent: "center" },
   lifeUpdateKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
-  lifeUpdateOldNumber: { marginTop: 38, color: "rgba(255,255,255,0.28)", fontSize: 46, lineHeight: 50, fontWeight: "900", textDecorationLine: "line-through" },
+  lifeUpdateMinusBadge: { marginTop: 26, minWidth: 78, height: 44, paddingHorizontal: 18, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.34, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 4 },
+  lifeUpdateMinusText: { color: "#FFF9ED", fontSize: 22, lineHeight: 25, fontWeight: "900" },
+  lifeUpdateOldNumber: { marginTop: 22, color: "rgba(255,255,255,0.28)", fontSize: 46, lineHeight: 50, fontWeight: "900", textDecorationLine: "line-through" },
   lifeUpdateNumber: { color: "#FFFFFF", fontSize: 110, lineHeight: 116, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
   lifeUpdateLabel: { color: "rgba(255,255,255,0.82)", fontSize: 18, lineHeight: 23, fontWeight: "900", textAlign: "center" },
   lifeUpdateStats: { width: "100%", flexDirection: "row", gap: 8, marginTop: 28 },

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=67" />
+    <link rel="manifest" href="./manifest.webmanifest?v=68" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v67";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v68";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=67")
+            .register("./service-worker.js?v=68")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -205,11 +205,11 @@
       @keyframes lifeUpdateStageIn {
         0% {
           opacity: 0;
-          transform: translateY(40px) scale(0.84);
+          transform: translateY(48px) scale(0.78);
         }
-        28% {
+        24% {
           opacity: 1;
-          transform: translateY(-8px) scale(1.035);
+          transform: translateY(-10px) scale(1.045);
         }
         58% {
           opacity: 1;
@@ -222,6 +222,40 @@
         100% {
           opacity: 0;
           transform: translateY(-18px) scale(0.98);
+        }
+      }
+
+      @keyframes lifeUpdateRing {
+        0% {
+          opacity: 0;
+          transform: scale(0.62);
+        }
+        24% {
+          opacity: 0.66;
+          transform: scale(1.08);
+        }
+        72% {
+          opacity: 0.42;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(1.14);
+        }
+      }
+
+      @keyframes lifeUpdateMinus {
+        0% {
+          opacity: 0;
+          transform: translateY(12px) scale(0.72);
+        }
+        26% {
+          opacity: 1;
+          transform: translateY(-3px) scale(1.16);
+        }
+        52%, 100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
         }
       }
 
@@ -1124,7 +1158,7 @@
       .daily-quote-card {
         position: relative;
         width: 100%;
-        min-height: 164px;
+        min-height: 172px;
         display: grid;
         gap: 18px;
         overflow: hidden;
@@ -1158,6 +1192,18 @@
         pointer-events: none;
       }
 
+      .daily-quote-card::after {
+        content: attr(data-quote-index);
+        position: absolute;
+        right: 8px;
+        bottom: -20px;
+        color: rgba(255, 249, 237, 0.055);
+        font-size: 116px;
+        line-height: 1;
+        font-weight: 950;
+        pointer-events: none;
+      }
+
       .daily-quote-top {
         position: relative;
         z-index: 1;
@@ -1167,14 +1213,14 @@
       }
 
       .daily-quote-badge {
-        width: 42px;
-        height: 42px;
+        width: 46px;
+        height: 46px;
         display: grid;
         place-items: center;
         border-radius: 50%;
         color: #101418;
         background: var(--gold);
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 950;
       }
 
@@ -3690,12 +3736,12 @@
 
       .life-update-scrim.open {
         display: grid;
-        animation: lifeUpdateScrimIn 4.35s ease both;
+        animation: lifeUpdateScrimIn 4.65s ease both;
       }
 
       .life-update-stage {
         width: min(100%, 430px);
-        min-height: min(94dvh, 790px);
+        min-height: min(96dvh, 810px);
         display: grid;
         justify-items: center;
         align-content: center;
@@ -3704,7 +3750,7 @@
         position: relative;
         padding: 28px 22px;
         border: 1px solid rgba(232, 196, 104, 0.22);
-        border-radius: 44px;
+        border-radius: 46px;
         background:
           radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.05), transparent 36%),
           linear-gradient(180deg, #15191c, #090c0e);
@@ -3712,7 +3758,20 @@
       }
 
       .life-update-scrim.open .life-update-stage {
-        animation: lifeUpdateStageIn 4.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation: lifeUpdateStageIn 4.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .life-update-ring {
+        position: absolute;
+        width: 286px;
+        height: 286px;
+        border: 1px solid rgba(232, 196, 104, 0.34);
+        border-radius: 50%;
+        background: rgba(232, 196, 104, 0.035);
+      }
+
+      .life-update-scrim.open .life-update-ring {
+        animation: lifeUpdateRing 4.65s ease both;
       }
 
       .life-update-stage::before {
@@ -3730,19 +3789,39 @@
       }
 
       .life-update-mark {
-        width: 88px;
-        height: 88px;
+        width: 74px;
+        height: 74px;
         display: grid;
         place-items: center;
         z-index: 1;
-        margin-bottom: 10px;
+        margin-bottom: 6px;
         border-radius: 24px;
         background: rgba(255, 255, 255, 0.06);
       }
 
       .life-update-mark img {
-        width: 46px;
-        height: 46px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .life-update-minus {
+        z-index: 1;
+        min-width: 78px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        margin-top: 10px;
+        border-radius: 999px;
+        color: #fff9ed;
+        background: var(--red);
+        box-shadow: 0 18px 42px rgba(218, 90, 58, 0.32);
+        font-size: 22px;
+        line-height: 1;
+        font-weight: 950;
+      }
+
+      .life-update-scrim.open .life-update-minus {
+        animation: lifeUpdateMinus 3.15s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .life-update-kicker {
@@ -4390,9 +4469,9 @@
                 <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
                 <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
               </div>
-              <button class="daily-quote-card" id="dailyQuoteCard" type="button">
+              <button class="daily-quote-card" id="dailyQuoteCard" type="button" data-quote-index="01">
                 <span class="daily-quote-top">
-                  <span class="daily-quote-badge">Q</span>
+                  <span class="daily-quote-badge" id="dailyQuoteBadge">01</span>
                   <span class="daily-quote-copy">
                     <small id="dailyQuoteKicker">Daily quote</small>
                     <em id="dailyQuoteDay">1 / 100</em>
@@ -4744,10 +4823,12 @@
 
     <div class="life-update-scrim" id="lifeUpdateOverlay" aria-hidden="true">
       <article class="life-update-stage" aria-live="polite">
+        <span class="life-update-ring" aria-hidden="true"></span>
         <div class="life-update-mark" aria-hidden="true">
           <img src="./icon.svg" alt="" />
         </div>
         <span class="life-update-kicker" id="lifeUpdateKicker">Life clock</span>
+        <span class="life-update-minus" aria-hidden="true">-1</span>
         <span class="life-update-old" id="lifeUpdateOldDays">0</span>
         <strong class="life-update-new" id="lifeUpdateNewDays">0</strong>
         <span class="life-update-label" id="lifeUpdateLabel">days left</span>
@@ -4797,8 +4878,8 @@
 
     <script>
       const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
-      const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v5";
-      const QUOTE_RITUAL_VERSION = "quote-ritual-v3";
+      const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v6";
+      const QUOTE_RITUAL_VERSION = "quote-ritual-v4";
 
       function normalizeLanguageId(locale) {
         const normalized = String(locale || "").trim().toLowerCase();
@@ -5951,6 +6032,9 @@
         const quote = dailyQuoteForDate();
         const ordinal = `${index + 1} / ${DAILY_QUOTES.length}`;
         const progress = `${Math.round(((index + 1) / Math.max(DAILY_QUOTES.length, 1)) * 100)}%`;
+        const displayIndex = String(index + 1).padStart(2, "0");
+        const card = document.getElementById("dailyQuoteCard");
+        const cardBadge = document.getElementById("dailyQuoteBadge");
         const cardText = document.getElementById("dailyQuoteText");
         const cardAuthor = document.getElementById("dailyQuoteAuthor");
         const cardDay = document.getElementById("dailyQuoteDay");
@@ -5960,6 +6044,8 @@
         const revealDay = document.getElementById("dailyQuoteRevealDay");
         const revealIndex = document.getElementById("dailyQuoteRevealIndex");
         const revealMeter = document.getElementById("dailyQuoteRevealMeter");
+        if (card) card.dataset.quoteIndex = displayIndex;
+        if (cardBadge) cardBadge.textContent = displayIndex;
         if (cardText) cardText.textContent = `"${quote.text}"`;
         if (cardAuthor) cardAuthor.textContent = quote.author;
         if (cardDay) cardDay.textContent = ordinal;
@@ -5967,7 +6053,7 @@
         if (revealAuthor) revealAuthor.textContent = quote.author;
         if (revealSource) revealSource.textContent = quote.source;
         if (revealDay) revealDay.textContent = ordinal;
-        if (revealIndex) revealIndex.textContent = String(index + 1).padStart(2, "0");
+        if (revealIndex) revealIndex.textContent = displayIndex;
         if (revealMeter) {
           revealMeter.style.width = "0";
           requestAnimationFrame(() => {
