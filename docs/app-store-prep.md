@@ -1,6 +1,6 @@
 # Visualize App Store Prep
 
-Last updated: July 22, 2026.
+Last updated: July 24, 2026.
 
 ## Current release target
 
@@ -23,7 +23,7 @@ Last updated: July 22, 2026.
 
 - Privacy Policy URL: `https://comaibusiness2000-netizen.github.io/visualize/privacy.html`
 - Support URL: `https://comaibusiness2000-netizen.github.io/visualize/support.html`
-- Web preview: `https://comaibusiness2000-netizen.github.io/visualize/?v=59`
+- Web preview: `https://comaibusiness2000-netizen.github.io/visualize/?v=60`
 
 Replace the support email in `preview/support.html` before App Store submission.
 

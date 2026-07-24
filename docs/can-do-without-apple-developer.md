@@ -25,7 +25,7 @@ Open `docs/app-store-prep.md` and review:
 
 Open:
 
-`https://comaibusiness2000-netizen.github.io/visualize/?v=59`
+`https://comaibusiness2000-netizen.github.io/visualize/?v=60`
 
 Check:
 

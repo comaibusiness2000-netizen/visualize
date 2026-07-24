@@ -44,7 +44,7 @@ Use this as the first TestFlight invite after the build is available.
 
 - Privacy Policy URL: `https://comaibusiness2000-netizen.github.io/visualize/privacy.html`
 - Support URL: `https://comaibusiness2000-netizen.github.io/visualize/support.html`
-- Web preview: `https://comaibusiness2000-netizen.github.io/visualize/?v=59`
+- Web preview: `https://comaibusiness2000-netizen.github.io/visualize/?v=60`
 
 ## TestFlight "What to Test"
 
