@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=83" />
+    <link rel="manifest" href="./manifest.webmanifest?v=84" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v83";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v84";
 
       function syncVisualViewport() {
         const viewport = window.visualViewport;
@@ -45,7 +45,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=83")
+            .register("./service-worker.js?v=84")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1158,11 +1158,20 @@
         min-height: 0;
         height: 100%;
         align-content: start;
-        gap: 10px;
+        gap: 12px;
         overflow-y: auto;
         overscroll-behavior: contain;
-        padding-bottom: 10px;
+        border: 0;
+        border-radius: 0;
+        padding: 0 0 10px;
+        background: transparent;
+        box-shadow: none;
         scrollbar-width: none;
+      }
+
+      body[data-theme="dark"] .life-dashboard {
+        border-color: transparent;
+        background: transparent;
       }
 
       .life-dashboard::-webkit-scrollbar {
@@ -1415,12 +1424,52 @@
         background: rgba(232, 196, 104, 0.26);
       }
 
+      .life-map-card {
+        display: grid;
+        gap: 12px;
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        padding: 18px;
+        background:
+          radial-gradient(circle at 92% 0%, rgba(232, 196, 104, 0.08), transparent 30%),
+          var(--control);
+        animation: premiumPanelIn 0.78s 0.14s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .life-map-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .life-map-top span {
+        color: var(--ink);
+        font-size: 18px;
+        line-height: 1.1;
+        font-weight: 950;
+      }
+
+      .life-map-top strong {
+        flex: 0 0 auto;
+        min-width: 54px;
+        min-height: 28px;
+        display: inline-grid;
+        place-items: center;
+        border-radius: 999px;
+        color: var(--muted);
+        background: var(--soft);
+        padding: 0 10px;
+        font-size: 12px;
+        line-height: 1;
+        font-weight: 950;
+      }
+
       .life-map {
         display: grid;
         grid-template-columns: repeat(42, 1fr);
         gap: 4px;
-        padding: 8px 0 2px;
-        animation: premiumPanelIn 0.78s 0.14s cubic-bezier(0.16, 1, 0.3, 1) both;
+        padding: 2px 0 0;
       }
 
       @keyframes premiumPanelIn {
@@ -5125,8 +5174,8 @@
         }
 
         .life-dashboard {
-          gap: 8px;
-          padding: 14px;
+          gap: 10px;
+          padding: 0;
           padding-bottom: 16px;
         }
 
@@ -5210,10 +5259,20 @@
           font-size: 10.5px;
         }
 
+        .life-map-card {
+          border-radius: 28px;
+          padding: 15px;
+          gap: 10px;
+        }
+
+        .life-map-top span {
+          font-size: 16px;
+        }
+
         .life-map {
           grid-template-columns: repeat(36, 1fr);
           gap: 3px;
-          padding-top: 6px;
+          padding-top: 2px;
         }
 
         .life-legend {
@@ -5325,8 +5384,14 @@
                 <strong id="dailyQuoteText">Energy and persistence conquer all things.</strong>
                 <em class="daily-quote-author" id="dailyQuoteAuthor">Benjamin Franklin</em>
               </button>
-              <div class="life-map" id="lifeMap" aria-label="Estimated life map"></div>
-              <p class="life-legend" id="lifeLegend">Each dot is a small block of life. Dark dots are time already spent.</p>
+              <div class="life-map-card">
+                <div class="life-map-top">
+                  <span id="lifeMapTitle">Life by months</span>
+                  <strong id="lifeMapCounter">0/0</strong>
+                </div>
+                <div class="life-map" id="lifeMap" aria-label="Estimated life map"></div>
+                <p class="life-legend" id="lifeLegend">Each dot is a month. Filled dots are time already spent.</p>
+              </div>
               <div class="life-actions">
                 <button class="btn" id="reviewVisionFromLife" type="button">Vision</button>
                 <button class="btn secondary" id="editLifeInfo" type="button">Edit info</button>
@@ -6010,6 +6075,7 @@
           weeksLeft: "weeks left",
           monthsLeft: "months left",
           lifeUsed: "life used",
+          lifeMapTitle: "Life by months",
           lifeLegend: "Each dot is a small block of life. Dark dots are time already spent.",
           editInfo: "Edit info",
           dailyTasks: "Daily tasks",
@@ -6184,6 +6250,7 @@
         whyAdd: "Agregar personas",
         whyEmptyTitle: "Aun no hay rostros.",
         whyEmptyText: "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales.",
+        lifeMapTitle: "Vida por meses",
         scripts: "Scripts",
         currentScript: "Script actual",
         ready: "Listo",
@@ -6242,6 +6309,7 @@
         whyAdd: "Ajouter personnes",
         whyEmptyTitle: "Aucun visage encore.",
         whyEmptyText: "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels.",
+        lifeMapTitle: "Vie par mois",
         scripts: "Scripts",
         currentScript: "Script actuel",
         ready: "Pret",
@@ -6300,6 +6368,7 @@
         whyAdd: "Adicionar pessoas",
         whyEmptyTitle: "Ainda sem rostos.",
         whyEmptyText: "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais.",
+        lifeMapTitle: "Vida por meses",
         scripts: "Scripts",
         currentScript: "Script atual",
         ready: "Pronto",
@@ -6355,6 +6424,7 @@
         whyAdd: "Add people",
         whyEmptyTitle: "No faces here yet.",
         whyEmptyText: "Add the people, memories, or future people that make your goals personal.",
+        lifeMapTitle: "Life by months",
         scripts: "Scripts",
         currentScript: "Current script",
         ready: "Ready",
@@ -6429,6 +6499,7 @@
         setText(".life-stat:nth-child(1) span", "weeksLeft");
         setText(".life-stat:nth-child(2) span", "monthsLeft");
         setText(".life-stat:nth-child(3) span", "lifeUsed");
+        setText("#lifeMapTitle", "lifeMapTitle");
         setText("#dailyQuoteKicker", "quote.kicker");
         setText("#dailyQuoteOpen", "quote.open");
         setText("#dailyQuoteRevealKicker", "quote.kicker");
@@ -7449,6 +7520,8 @@
           weeks: formatNumber(stats.weeksLeft)
         });
         document.getElementById("lifeProgressBar").style.width = `${stats.usedPercent}%`;
+        document.getElementById("lifeMapTitle").textContent = uiText("lifeMapTitle");
+        document.getElementById("lifeMapCounter").textContent = `${formatNumber(stats.spentMonths)}/${formatNumber(stats.totalMonths)}`;
 
         document.getElementById("lifeMap").innerHTML = Array.from({ length: stats.totalMonths }, (_, index) => {
           const isSpent = index < stats.spentMonths;
@@ -7606,6 +7679,7 @@
         scheduleDailyQuote(520);
         requestAnimationFrame(() => {
           document.getElementById("lifeProgressBar").style.width = `${currentStats.usedPercent}%`;
+          document.getElementById("lifeMapCounter").textContent = `${formatNumber(currentStats.spentMonths)}/${formatNumber(currentStats.totalMonths)}`;
           animateNumberValue(document.getElementById("lifeDaysLeft"), previous.daysLeft, currentStats.daysLeft);
           animateNumberValue(document.getElementById("lifeWeeksLeft"), previous.weeksLeft, currentStats.weeksLeft);
           animateNumberValue(document.getElementById("lifeMonthsLeft"), previous.monthsLeft, currentStats.monthsLeft);
