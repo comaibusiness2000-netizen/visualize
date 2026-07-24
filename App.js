@@ -1467,20 +1467,53 @@ export default function App() {
 
   function renderSpeech() {
     const activeVoiceIndex = Math.max(0, voiceProfiles.findIndex((item) => item.id === activeVoiceProfile.id));
+    const currentSpeechTitle = draftSpeechTitle.trim() || activeSpeech?.title || t("speech.heading");
+    const speechWords = (draftSpeechText.trim() || activeSpeech?.text || "").split(/\s+/).filter(Boolean).length;
+    const speechMinutes = Math.max(1, Math.ceil(speechWords / 135));
+    const waveform = [16, 30, 22, 42, 26, 36, 18, 32, 24];
     return (
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.speechPanel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.kicker, { color: theme.muted }]}>{t("speech.title")}</Text>
-          <Text style={[styles.speechTitle, { color: theme.ink }]}>{t("speech.heading")}</Text>
-          <Text style={[styles.body, { color: theme.muted }]}>
-            {t("speech.body")}
-          </Text>
+      <ScrollView contentContainerStyle={styles.speechContent}>
+        <View style={styles.speechHero}>
+          <View style={styles.speechHeroAuraTop} />
+          <View style={styles.speechHeroAuraBottom} />
+          <Text style={styles.speechHeroKicker}>{t("speech.title")}</Text>
+          <Text style={styles.speechHeroTitle} numberOfLines={2}>{currentSpeechTitle}</Text>
+          <Text style={styles.speechHeroBody}>{t("speech.body")}</Text>
+          <View style={styles.speechHeroMeta}>
+            <Text style={styles.speechHeroMetaText}>{activeVoiceProfile.name}</Text>
+            <View style={styles.speechHeroDot} />
+            <Text style={styles.speechHeroMetaText}>{speechMinutes} min</Text>
+          </View>
+          <View style={styles.speechWaveform}>
+            {waveform.map((height, index) => (
+              <View key={`${index}`} style={[styles.speechWaveBar, { height }]} />
+            ))}
+          </View>
+          <TouchableOpacity style={styles.speechPlayButton} onPress={playSpeech} activeOpacity={0.88}>
+            <Text style={styles.speechPlayText}>{t("speech.listen")}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.speechListRail}>
+          {appState.selfSpeeches.map((speech, index) => (
+            <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: index === appState.activeSpeechIndex ? "rgba(232,196,104,0.18)" : theme.card, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)} activeOpacity={0.88}>
+              <Text style={[styles.speechPillTitle, { color: theme.ink }]} numberOfLines={1}>{speech.title || `Self speech ${index + 1}`}</Text>
+              <Text style={[styles.speechPillBody, { color: theme.muted }]} numberOfLines={2}>{speech.text || t("speech.emptyDraft")}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        <View style={[styles.speechEditorCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <View style={styles.speechEditorHeader}>
+            <Text style={[styles.kicker, { color: theme.muted }]}>{t("speech.title")}</Text>
+            <Text style={[styles.speechEditorCount, { color: theme.muted }]}>{speechWords} words</Text>
+          </View>
           <TextInput
             value={draftSpeechTitle}
             onChangeText={setDraftSpeechTitle}
             placeholder={t("speech.titlePlaceholder")}
             placeholderTextColor={theme.placeholder}
-            style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+            style={[styles.speechTitleInput, { color: theme.ink, borderColor: theme.line }]}
           />
           <TextInput
             value={draftSpeechText}
@@ -1488,9 +1521,11 @@ export default function App() {
             placeholder={t("speech.textPlaceholder")}
             placeholderTextColor={theme.placeholder}
             multiline
-            style={[styles.input, styles.speechInput, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+            style={[styles.speechScriptInput, { color: theme.ink, borderColor: theme.line }]}
           />
-          <View style={[styles.voicePanel, { backgroundColor: theme.soft }]}>
+        </View>
+
+        <View style={[styles.voicePanel, styles.voicePanelPremium, { backgroundColor: theme.soft }]}>
             <View style={styles.voiceHeader}>
               <Text style={[styles.voiceLabel, { color: theme.muted }]}>{t("speech.voice")}</Text>
               <Text style={[styles.voiceHint, { color: theme.muted }]}>{t("speech.swipe")}</Text>
@@ -1529,33 +1564,19 @@ export default function App() {
                 <View key={profile.id} style={[styles.voiceDot, profile.id === activeVoiceProfile.id && styles.voiceDotActive]} />
               ))}
             </View>
-          </View>
-          <View style={styles.actionsRow}>
-            <TouchableOpacity style={styles.primaryButtonFlex} onPress={saveSpeech}>
-              <Text style={styles.primaryText}>{t("speech.save")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={newSpeech}>
-              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.new")}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.actionsRow}>
-            <TouchableOpacity style={styles.primaryButtonFlex} onPress={playSpeech}>
-              <Text style={styles.primaryText}>{t("speech.listen")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={() => Speech.stop()}>
-              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
-            </TouchableOpacity>
-          </View>
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.speechListRail}>
-          {appState.selfSpeeches.map((speech, index) => (
-            <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: theme.card, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)}>
-              <Text style={[styles.goalTitle, { color: theme.ink }]} numberOfLines={1}>{speech.title || `Self speech ${index + 1}`}</Text>
-              <Text style={[styles.body, { color: theme.muted }]} numberOfLines={2}>{speech.text || t("speech.emptyDraft")}</Text>
+        <View style={styles.speechActionDock}>
+            <TouchableOpacity style={[styles.speechDockButton, styles.speechDockPrimary]} onPress={saveSpeech}>
+              <Text style={styles.primaryText}>{t("speech.save")}</Text>
             </TouchableOpacity>
-          ))}
-        </ScrollView>
+            <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={newSpeech}>
+              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.new")}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={() => Speech.stop()}>
+              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
+            </TouchableOpacity>
+        </View>
       </ScrollView>
     );
   }
@@ -2276,9 +2297,27 @@ const styles = StyleSheet.create({
   deckFrameLabelAnti: { color: "rgba(255,220,210,0.82)" },
   deckRail: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 14 },
   deckTile: { aspectRatio: 0.68 },
-  speechPanel: { borderWidth: 1, borderRadius: 32, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 4 },
-  speechTitle: { marginTop: 8, marginBottom: 8, fontSize: 30, lineHeight: 33, fontWeight: "900" },
-  voicePanel: { marginTop: 14, borderRadius: 24, paddingVertical: 12, overflow: "hidden" },
+  speechContent: { padding: 20, paddingBottom: 120 },
+  speechHero: { minHeight: 286, overflow: "hidden", borderRadius: 38, paddingHorizontal: 22, paddingTop: 24, paddingBottom: 22, marginBottom: 14, alignItems: "center", backgroundColor: "#080B0D", shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
+  speechHeroAuraTop: { position: "absolute", width: 190, height: 190, right: -64, top: -72, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.18)" },
+  speechHeroAuraBottom: { position: "absolute", width: 190, height: 190, left: -84, bottom: -104, borderRadius: 95, backgroundColor: "rgba(218,90,58,0.13)" },
+  speechHeroKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2.1, textTransform: "uppercase" },
+  speechHeroTitle: { maxWidth: 316, marginTop: 10, color: "#FFF9ED", fontSize: 36, lineHeight: 39, fontWeight: "900", textAlign: "center" },
+  speechHeroBody: { maxWidth: 306, marginTop: 10, color: "rgba(255,249,237,0.68)", fontSize: 14, lineHeight: 20, fontWeight: "750", textAlign: "center" },
+  speechHeroMeta: { marginTop: 16, flexDirection: "row", alignItems: "center", gap: 9, borderRadius: 999, paddingHorizontal: 13, paddingVertical: 8, backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  speechHeroMetaText: { color: "rgba(255,249,237,0.78)", fontSize: 12, lineHeight: 15, fontWeight: "900" },
+  speechHeroDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: "#E8C468" },
+  speechWaveform: { height: 54, marginTop: 18, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  speechWaveBar: { width: 7, borderRadius: 999, backgroundColor: "#E8C468" },
+  speechPlayButton: { minHeight: 54, minWidth: 184, marginTop: 13, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FFF9ED" },
+  speechPlayText: { color: "#101418", fontSize: 16, lineHeight: 20, fontWeight: "900" },
+  speechEditorCard: { borderWidth: 1, borderRadius: 32, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 4 },
+  speechEditorHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 10 },
+  speechEditorCount: { fontSize: 11, lineHeight: 14, fontWeight: "900", textTransform: "uppercase" },
+  speechTitleInput: { minHeight: 54, borderWidth: 0, borderBottomWidth: 1, paddingHorizontal: 0, paddingVertical: 8, fontSize: 26, lineHeight: 31, fontWeight: "900" },
+  speechScriptInput: { minHeight: 228, marginTop: 12, borderWidth: 0, paddingHorizontal: 0, paddingVertical: 6, textAlignVertical: "top", fontSize: 17, lineHeight: 24, fontWeight: "750" },
+  voicePanel: { marginBottom: 14, borderRadius: 26, paddingVertical: 13, overflow: "hidden" },
+  voicePanelPremium: { borderWidth: 1, borderColor: "rgba(128,128,128,0.1)" },
   voiceHeader: { paddingHorizontal: 14, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 },
   voiceLabel: { fontSize: 11, lineHeight: 14, fontWeight: "900", letterSpacing: 1.4, textTransform: "uppercase" },
   voiceHint: { fontSize: 12, lineHeight: 15, fontWeight: "850" },
@@ -2289,8 +2328,13 @@ const styles = StyleSheet.create({
   voiceDots: { flexDirection: "row", justifyContent: "center", gap: 6, marginTop: 8 },
   voiceDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "rgba(128,128,128,0.34)" },
   voiceDotActive: { width: 18, backgroundColor: "#E8C468" },
-  speechListRail: { gap: 10, paddingBottom: 4 },
-  speechPill: { width: 230, borderWidth: 1, borderRadius: 22, padding: 15, marginBottom: 10 },
+  speechListRail: { gap: 10, paddingBottom: 10 },
+  speechPill: { width: 218, minHeight: 82, borderWidth: 1, borderRadius: 24, padding: 15, marginBottom: 4 },
+  speechPillTitle: { fontSize: 17, lineHeight: 21, fontWeight: "900" },
+  speechPillBody: { marginTop: 5, fontSize: 12, lineHeight: 16, fontWeight: "750" },
+  speechActionDock: { flexDirection: "row", gap: 8, marginTop: 2 },
+  speechDockButton: { flex: 1, minHeight: 52, borderRadius: 999, paddingHorizontal: 12, alignItems: "center", justifyContent: "center", borderWidth: 1 },
+  speechDockPrimary: { borderColor: "#DA5A3A", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.18, shadowRadius: 12, shadowOffset: { width: 0, height: 8 }, elevation: 3 },
   switchRow: { minHeight: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   languageGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 },
   languageButton: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 13, paddingVertical: 10 },

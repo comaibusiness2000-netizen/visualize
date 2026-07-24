@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=74" />
+    <link rel="manifest" href="./manifest.webmanifest?v=75" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v74";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v75";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=74")
+            .register("./service-worker.js?v=75")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3295,44 +3295,126 @@
         grid-template-rows: auto auto minmax(0, 1fr) auto auto;
         gap: 12px;
         overflow: hidden;
-        border: 1px solid rgba(17, 17, 17, 0.06);
-        border-radius: 32px;
-        padding: 18px;
+        border: 0;
+        border-radius: 0;
+        padding: 0;
         color: var(--ink);
-        background: #ffffff;
-        box-shadow: 0 28px 70px rgba(17, 17, 17, 0.1);
+        background: transparent;
+        box-shadow: none;
       }
 
       body[data-theme="dark"] .speech-workbench {
-        border-color: rgba(255, 255, 255, 0.08);
-        background: #1b2023;
+        background: transparent;
       }
 
       .speech-head {
+        position: relative;
+        min-height: 252px;
+        display: grid;
+        justify-items: center;
+        align-content: start;
+        overflow: hidden;
+        border-radius: 38px;
+        padding: 22px 20px 20px;
+        color: #fff9ed;
+        background:
+          radial-gradient(circle at 88% 0%, rgba(232, 196, 104, 0.2), transparent 36%),
+          radial-gradient(circle at 6% 100%, rgba(218, 90, 58, 0.14), transparent 34%),
+          linear-gradient(180deg, #11171a, #070a0c);
         text-align: center;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.16);
+        animation: premiumPanelIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .speech-head::after {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        border-radius: 28px;
+        border: 1px solid rgba(255, 249, 237, 0.08);
+        pointer-events: none;
+      }
+
+      .speech-head .deck-kicker {
+        position: relative;
+        z-index: 1;
+        color: var(--gold);
       }
 
       .speech-head h2 {
+        position: relative;
+        z-index: 1;
+        max-width: 320px;
         margin-top: 4px;
-        font-size: 24px;
-        line-height: 1.05;
+        color: #fff9ed;
+        font-size: 34px;
+        line-height: 0.98;
         font-weight: 950;
       }
 
       .speech-head p {
+        position: relative;
+        z-index: 1;
         max-width: 300px;
-        margin: 5px auto 0;
-        color: var(--muted);
-        font-size: 12px;
-        line-height: 1.32;
+        margin: 9px auto 0;
+        color: rgba(255, 249, 237, 0.68);
+        font-size: 13px;
+        line-height: 1.35;
         font-weight: 760;
       }
 
+      .speech-meter {
+        position: relative;
+        z-index: 1;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 18px;
+      }
+
+      .speech-meter span {
+        width: 7px;
+        border-radius: 999px;
+        background: var(--gold);
+        box-shadow: 0 0 22px rgba(232, 196, 104, 0.24);
+        animation: speechMeter 1.85s ease-in-out infinite;
+      }
+
+      .speech-meter span:nth-child(1) { height: 16px; animation-delay: 0s; }
+      .speech-meter span:nth-child(2) { height: 30px; animation-delay: 0.1s; }
+      .speech-meter span:nth-child(3) { height: 22px; animation-delay: 0.2s; }
+      .speech-meter span:nth-child(4) { height: 42px; animation-delay: 0.3s; }
+      .speech-meter span:nth-child(5) { height: 26px; animation-delay: 0.4s; }
+      .speech-meter span:nth-child(6) { height: 36px; animation-delay: 0.5s; }
+      .speech-meter span:nth-child(7) { height: 18px; animation-delay: 0.6s; }
+
+      .speech-play-main {
+        position: relative;
+        z-index: 1;
+        min-width: 178px;
+        min-height: 52px;
+        margin-top: 14px;
+        border: 0;
+        border-radius: 999px;
+        color: #101418;
+        background: #fff9ed;
+        font-size: 16px;
+        font-weight: 950;
+        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.24);
+      }
+
+      .speech-play-main:active {
+        transform: scale(0.965);
+      }
+
       .speech-list-row {
-        min-height: 44px;
+        min-height: 52px;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        gap: 8px;
+        gap: 10px;
+        animation: premiumPanelIn 0.72s 0.07s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .speech-list {
@@ -3349,16 +3431,16 @@
       }
 
       .speech-pill {
-        min-width: 124px;
-        max-width: 148px;
+        min-width: 164px;
+        max-width: 188px;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
         gap: 6px;
         border: 1px solid var(--line);
-        border-radius: 18px;
-        padding: 6px 7px 6px 10px;
-        background: var(--soft);
+        border-radius: 22px;
+        padding: 9px 8px 9px 12px;
+        background: var(--control);
       }
 
       .speech-pill.active {
@@ -3407,8 +3489,8 @@
       }
 
       .speech-new {
-        width: 44px;
-        height: 44px;
+        width: 52px;
+        height: 52px;
         border: 1px solid var(--line);
         border-radius: 50%;
         color: var(--ink);
@@ -3422,7 +3504,13 @@
         min-height: 0;
         display: grid;
         grid-template-rows: auto minmax(0, 1fr);
-        gap: 9px;
+        gap: 10px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        padding: 16px;
+        background: var(--control);
+        animation: premiumPanelIn 0.72s 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .speech-field {
@@ -3441,17 +3529,26 @@
 
       .speech-field input,
       .speech-field textarea {
-        border-radius: 16px;
+        border-width: 0;
+        border-bottom-width: 1px;
+        border-radius: 0;
         color: var(--ink);
-        background: var(--paper);
-        padding: 11px 12px;
+        background: transparent;
+        padding: 8px 0;
+      }
+
+      .speech-field input {
+        font-size: 24px;
+        line-height: 1.12;
+        font-weight: 950;
       }
 
       .speech-field textarea {
         height: 100%;
-        min-height: 150px;
+        min-height: 158px;
         resize: none;
-        line-height: 1.35;
+        border-bottom-width: 0;
+        line-height: 1.42;
         font-weight: 760;
       }
 
@@ -3466,11 +3563,12 @@
         grid-template-columns: minmax(0, 1fr) 132px;
         align-items: center;
         gap: 10px;
-        min-height: 58px;
+        min-height: 66px;
         border: 1px solid var(--line);
-        border-radius: 18px;
-        padding: 9px 10px 9px 13px;
-        background: var(--soft);
+        border-radius: 24px;
+        padding: 11px 12px 11px 15px;
+        background: var(--control);
+        animation: premiumPanelIn 0.72s 0.17s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .voice-line span,
@@ -3630,6 +3728,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
+        animation: premiumPanelIn 0.72s 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .speech-actions .btn {
@@ -3638,6 +3737,17 @@
         font-size: 14px;
         line-height: 1.05;
         white-space: normal;
+      }
+
+      @keyframes speechMeter {
+        0%, 100% {
+          transform: scaleY(0.72);
+          opacity: 0.58;
+        }
+        48% {
+          transform: scaleY(1.12);
+          opacity: 1;
+        }
       }
 
       .speech-workbench .audio-note {
@@ -4942,6 +5052,10 @@
                 <span class="deck-kicker">Self speech</span>
                 <h2>Script your inner voice.</h2>
                 <p>Write the text you want to hear before you act, train, work, or visualize.</p>
+                <div class="speech-meter" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <button class="speech-play-main" id="playSelfTalk" type="button">Play</button>
               </div>
 
               <div class="speech-list-row">
@@ -4973,7 +5087,7 @@
               </div>
 
               <div class="speech-actions">
-                <button class="btn" id="playSelfTalk" type="button">Play</button>
+                <button class="btn" id="saveSelfTalk" type="button">Save</button>
                 <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
               </div>
             </article>
@@ -5942,6 +6056,7 @@
         setText(".voice-line > div:first-child > span", "voice");
         setText("#voiceQualityNote", "swipeVoice");
         setText("#playSelfTalk", "play");
+        setText("#saveSelfTalk", "save");
         setText("#stopSelfTalk", "stop");
 
         setText(".drawer-head h2", "profile");
@@ -8412,6 +8527,7 @@
 
       document.getElementById("addSelfTalkScript").addEventListener("click", addSelfTalkScript);
       document.getElementById("playSelfTalk").addEventListener("click", playSelfTalk);
+      document.getElementById("saveSelfTalk").addEventListener("click", () => saveSelfTalkFromForm());
       document.getElementById("stopSelfTalk").addEventListener("click", stopSelfTalk);
       document.getElementById("closeDailyInsight").addEventListener("click", closeDailyInsight);
       document.getElementById("dismissDailyInsight").addEventListener("click", closeDailyInsight);
