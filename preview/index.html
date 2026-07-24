@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=64" />
+    <link rel="manifest" href="./manifest.webmanifest?v=65" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v64";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v65";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=64")
+            .register("./service-worker.js?v=65")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1695,38 +1695,90 @@
         display: grid;
         align-content: center;
         justify-items: center;
-        gap: 18px;
+        gap: 16px;
         padding: 30px 24px;
         border: 1px solid rgba(17, 17, 17, 0.06);
         border-radius: 32px;
         color: #111;
         text-align: center;
-        background:
-          radial-gradient(circle at 50% 18%, rgba(17, 17, 17, 0.035), transparent 30%),
-          #ffffff;
+        background: #ffffff;
         box-shadow: 0 28px 70px rgba(17, 17, 17, 0.1);
       }
 
       .anti-empty {
         color: #fff;
-        background:
-          radial-gradient(circle at 50% 18%, rgba(218, 90, 58, 0.13), transparent 34%),
-          linear-gradient(145deg, #181818, #050505);
+        background: linear-gradient(145deg, #181818, #050505);
       }
 
       body[data-theme="dark"] .vision-empty,
       body[data-theme="dark"] .anti-empty {
         border-color: rgba(255, 255, 255, 0.08);
         color: #f4f4f1;
-        background:
-          radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.05), transparent 32%),
-          #1b2023;
+        background: #1b2023;
       }
 
       body[data-theme="dark"] .anti-empty {
+        background: linear-gradient(145deg, #171717, #050505);
+      }
+
+      .deck-frame-stack {
+        position: relative;
+        width: min(100%, 312px);
+        height: 142px;
+        margin-bottom: 2px;
+      }
+
+      .deck-frame {
+        position: absolute;
+        display: grid;
+        align-content: end;
+        overflow: hidden;
+        border: 1px solid rgba(17, 17, 17, 0.09);
+        border-radius: 24px;
+        padding: 13px;
+        color: rgba(17, 17, 17, 0.72);
         background:
-          radial-gradient(circle at 50% 18%, rgba(218, 90, 58, 0.12), transparent 34%),
-          linear-gradient(145deg, #171717, #050505);
+          linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(17, 17, 17, 0.05)),
+          #f2f1ed;
+        box-shadow: 0 18px 34px rgba(17, 17, 17, 0.08);
+      }
+
+      .deck-frame:nth-child(1) {
+        left: 0;
+        top: 18px;
+        width: 47%;
+        height: 112px;
+        transform: rotate(-4deg);
+      }
+
+      .deck-frame:nth-child(2) {
+        left: 27%;
+        top: 0;
+        width: 47%;
+        height: 132px;
+        transform: rotate(2deg);
+      }
+
+      .deck-frame:nth-child(3) {
+        right: 0;
+        top: 26px;
+        width: 42%;
+        height: 106px;
+        transform: rotate(5deg);
+      }
+
+      .deck-frame span {
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .anti-empty .deck-frame {
+        border-color: rgba(218, 90, 58, 0.25);
+        color: rgba(255, 220, 210, 0.82);
+        background:
+          linear-gradient(180deg, rgba(218, 90, 58, 0.12), rgba(0, 0, 0, 0.08)),
+          #241816;
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22);
       }
 
       .vision-empty .deck-kicker,
@@ -1743,7 +1795,7 @@
       .vision-empty h2,
       .anti-empty h2 {
         max-width: 300px;
-        font-size: 31px;
+        font-size: 30px;
         line-height: 1.05;
         font-weight: 950;
       }
@@ -1777,21 +1829,18 @@
       .deck-stage.positive {
         color: #111111;
         background:
-          radial-gradient(circle at 18% 12%, rgba(232, 196, 104, 0.09), transparent 30%),
           #ffffff;
       }
 
       body[data-theme="dark"] .deck-stage.positive {
         color: #fffaf0;
         background:
-          radial-gradient(circle at 18% 12%, rgba(232, 196, 104, 0.1), transparent 30%),
           #1b2023;
       }
 
       .deck-stage.negative {
         color: #fff;
         background:
-          radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.08), transparent 32%),
           linear-gradient(145deg, #171717, #060606);
       }
 
@@ -1811,9 +1860,14 @@
 
       .deck-head h2 {
         margin-top: 5px;
+        color: #111111;
         font-size: 27px;
         line-height: 1.08;
         font-weight: 950;
+      }
+
+      body[data-theme="dark"] .deck-head h2 {
+        color: #fffaf0;
       }
 
       .deck-strip {
@@ -3933,9 +3987,8 @@
         z-index: 88;
         display: none;
         place-items: center;
-        padding: 10px;
-        background: rgba(6, 8, 9, 0.96);
-        backdrop-filter: blur(18px);
+        padding: 0;
+        background: #070a0c;
       }
 
       .quote-scrim.open {
@@ -3945,55 +3998,41 @@
 
       .quote-reveal-card {
         position: relative;
-        width: min(100%, 430px);
-        min-height: min(94dvh, 812px);
+        width: 100%;
+        min-height: 100dvh;
         display: grid;
         align-content: center;
         justify-items: center;
         gap: 16px;
         overflow: hidden;
-        border: 1px solid rgba(232, 196, 104, 0.24);
-        border-radius: 44px;
-        padding: 24px;
+        border: 0;
+        border-radius: 0;
+        padding: max(54px, env(safe-area-inset-top)) 24px max(30px, env(safe-area-inset-bottom));
         color: #fff9ed;
-        background:
-          radial-gradient(circle at 96% 2%, rgba(232, 196, 104, 0.2), transparent 28%),
-          radial-gradient(circle at 0% 104%, rgba(218, 90, 58, 0.16), transparent 30%),
-          #0b0e10;
-        box-shadow: 0 38px 112px rgba(0, 0, 0, 0.56);
-        animation: quoteStageIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+        background: #080b0d;
+        box-shadow: none;
+        animation: quoteStageIn 0.82s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .quote-reveal-card::before {
         content: "";
         position: absolute;
-        width: 236px;
-        height: 236px;
-        right: -86px;
-        top: -86px;
-        border-radius: 50%;
-        background: rgba(232, 196, 104, 0.18);
+        left: 24px;
+        right: 24px;
+        top: 116px;
+        height: 1px;
+        border-radius: 999px;
+        background: rgba(232, 196, 104, 0.72);
+        box-shadow: 0 8px 22px rgba(232, 196, 104, 0.5);
         pointer-events: none;
-        animation: quoteOrb 2.4s ease-in-out infinite alternate;
-      }
-
-      .quote-reveal-card::after {
-        content: "";
-        position: absolute;
-        width: 190px;
-        height: 190px;
-        left: -72px;
-        bottom: -74px;
-        border-radius: 50%;
-        background: rgba(218, 90, 58, 0.14);
-        pointer-events: none;
+        animation: quoteSweep 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .quote-reveal-top {
         position: absolute;
         left: 24px;
         right: 24px;
-        top: 24px;
+        top: max(54px, env(safe-area-inset-top));
         z-index: 1;
         display: flex;
         align-items: center;
@@ -4025,7 +4064,7 @@
         position: absolute;
         left: 24px;
         right: 24px;
-        top: 78px;
+        top: 126px;
         z-index: 1;
         height: 4px;
         overflow: hidden;
@@ -4045,6 +4084,7 @@
       .quote-reveal-kicker {
         position: relative;
         z-index: 1;
+        margin-top: 72px;
         color: var(--gold);
         font-size: 12px;
         line-height: 1.1;
@@ -4075,6 +4115,21 @@
         line-height: 1.08;
         font-weight: 950;
         text-align: center;
+      }
+
+      .quote-reveal-index {
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        top: 116px;
+        z-index: 0;
+        color: rgba(255, 249, 237, 0.06);
+        font-size: clamp(118px, 38vw, 168px);
+        line-height: 0.95;
+        font-weight: 950;
+        text-align: center;
+        transform-origin: center;
+        animation: quoteIndexIn 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .quote-reveal-card strong {
@@ -4129,7 +4184,7 @@
       @keyframes quoteStageIn {
         from {
           opacity: 0;
-          transform: translateY(44px) scale(0.9);
+          transform: translateY(76px) scale(0.94);
         }
         to {
           opacity: 1;
@@ -4137,12 +4192,25 @@
         }
       }
 
-      @keyframes quoteOrb {
+      @keyframes quoteSweep {
         from {
-          transform: scale(0.86);
+          opacity: 0;
+          transform: translateY(-120px);
         }
         to {
-          transform: scale(1.12);
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes quoteIndexIn {
+        from {
+          opacity: 0;
+          transform: scale(0.7);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
         }
       }
 
@@ -4254,7 +4322,7 @@
                 <span class="daily-quote-top">
                   <span class="daily-quote-badge">Q</span>
                   <span class="daily-quote-copy">
-                    <small id="dailyQuoteKicker">Today's standard</small>
+                    <small id="dailyQuoteKicker">Daily quote</small>
                     <em id="dailyQuoteDay">1 / 100</em>
                   </span>
                   <span class="daily-quote-open" id="dailyQuoteOpen">open</span>
@@ -4297,6 +4365,11 @@
             </div>
 
             <article class="vision-empty" id="visionEmpty">
+              <div class="deck-frame-stack" aria-hidden="true">
+                <div class="deck-frame"><span id="visionFrameIdentity">Identity</span></div>
+                <div class="deck-frame"><span id="visionFrameEnvironment">Environment</span></div>
+                <div class="deck-frame"><span id="visionFramePeople">People</span></div>
+              </div>
               <span class="deck-kicker">Vision setup</span>
               <h2>Create the future scene first.</h2>
               <p>Upload images of how you want to look, what you want to own or experience, the places you want to live in, and the kind of people you want around you.</p>
@@ -4326,6 +4399,11 @@
             </div>
 
             <article class="anti-empty" id="antiEmpty">
+              <div class="deck-frame-stack" aria-hidden="true">
+                <div class="deck-frame"><span id="antiFrameDrift">Drift</span></div>
+                <div class="deck-frame"><span id="antiFrameCost">Cost</span></div>
+                <div class="deck-frame"><span id="antiFrameRegret">Regret</span></div>
+              </div>
               <span class="deck-kicker">Anti-vision setup</span>
               <h2>Create the scene you refuse to live.</h2>
               <p>Upload images that show the opposite future: the body, environment, relationships, habits, stress, loneliness, or regret you do not want to end up with.</p>
@@ -4579,6 +4657,7 @@
           <span class="quote-logo-mark"><img src="./icon.svg" alt="" /></span>
           <span class="quote-reveal-day" id="dailyQuoteRevealDay">1 / 100</span>
         </div>
+        <span class="quote-reveal-index" id="dailyQuoteRevealIndex">01</span>
         <div class="quote-reveal-meter" aria-hidden="true"><span id="dailyQuoteRevealMeter"></span></div>
         <span class="quote-reveal-kicker" id="dailyQuoteRevealKicker">Daily quote</span>
         <h2 id="dailyQuoteRevealTitle">Read this once today.</h2>
@@ -4646,7 +4725,7 @@
     <script>
       const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
       const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v5";
-      const QUOTE_RITUAL_VERSION = "quote-ritual-v2";
+      const QUOTE_RITUAL_VERSION = "quote-ritual-v3";
 
       function normalizeLanguageId(locale) {
         const normalized = String(locale || "").trim().toLowerCase();
@@ -4687,15 +4766,15 @@
         { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu", source: "Project Gutenberg" },
         { text: "He who conquers himself is mighty.", author: "Lao Tzu", source: "Project Gutenberg" },
         { text: "Great acts are made up of small deeds.", author: "Lao Tzu", source: "Project Gutenberg" },
-        { text: "Your Vision is the promise of what you shall one day be.", author: "James Allen", source: "Project Gutenberg" },
+        { text: "Cherish your visions; cherish your ideals.", author: "James Allen", source: "Project Gutenberg" },
         { text: "Well begun is half done.", author: "Aristotle", source: "Bartlett" },
-        { text: "You cannot travel within and stand still without.", author: "James Allen", source: "Project Gutenberg" },
+        { text: "The greatest achievement was at first and for a time a dream.", author: "James Allen", source: "Project Gutenberg" },
         { text: "Small opportunities are often the beginning of great enterprises.", author: "Demosthenes", source: "Bartlett" },
         { text: "Practice is the best of all instructors.", author: "Publilius Syrus", source: "Bartlett" },
-        { text: "To do two things at once is to do neither.", author: "Publilius Syrus", source: "Bartlett" },
+        { text: "Strike while the iron is hot.", author: "Proverb", source: "Bartlett" },
         { text: "Valor grows by daring, fear by holding back.", author: "Publilius Syrus", source: "Bartlett" },
         { text: "Dreams are the seedlings of realities.", author: "James Allen", source: "Project Gutenberg" },
-        { text: "The fault, dear Brutus, is not in our stars, but in ourselves.", author: "William Shakespeare", source: "Bartlett" },
+        { text: "Our remedies oft in ourselves do lie.", author: "William Shakespeare", source: "Bartlett" },
         { text: "Action is eloquence.", author: "William Shakespeare", source: "Bartlett" },
         { text: "Strong reasons make strong actions.", author: "William Shakespeare", source: "Bartlett" },
         { text: "The readiness is all.", author: "William Shakespeare", source: "Bartlett" },
@@ -4704,7 +4783,7 @@
         { text: "To thine own self be true.", author: "William Shakespeare", source: "Bartlett" },
         { text: "Our doubts are traitors, and make us lose the good we might win.", author: "William Shakespeare", source: "Bartlett" },
         { text: "Be great in act, as you have been in thought.", author: "William Shakespeare", source: "Bartlett" },
-        { text: "Sweet are the uses of adversity.", author: "William Shakespeare", source: "Bartlett" },
+        { text: "Boldness be my friend.", author: "William Shakespeare", source: "Bartlett" },
         { text: "Men at some time are masters of their fates.", author: "William Shakespeare", source: "Bartlett" },
         { text: "Hitch your wagon to a star.", author: "Ralph Waldo Emerson", source: "Bartlett" },
         { text: "Nothing great was ever achieved without enthusiasm.", author: "Ralph Waldo Emerson", source: "Bartlett" },
@@ -4713,7 +4792,7 @@
         { text: "Do the thing and you shall have the power.", author: "Ralph Waldo Emerson", source: "Bartlett" },
         { text: "Self-trust is the first secret of success.", author: "Ralph Waldo Emerson", source: "Bartlett" },
         { text: "Trust thyself: every heart vibrates to that iron string.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-        { text: "The oak sleeps in the acorn.", author: "James Allen", source: "Project Gutenberg" },
+        { text: "The vision that you glorify in your mind is what you will build your life by.", author: "James Allen", source: "Project Gutenberg" },
         { text: "Go confidently in the direction of your dreams.", author: "Henry David Thoreau", source: "Project Gutenberg" },
         { text: "Live the life you have imagined.", author: "Henry David Thoreau", source: "Project Gutenberg" },
         { text: "First say to yourself what you would be; then do what you have to do.", author: "Epictetus", source: "Project Gutenberg" },
@@ -4729,7 +4808,7 @@
         { text: "Begin at once to live.", author: "Seneca", source: "Project Gutenberg" },
         { text: "While we wait for life, life passes.", author: "Seneca", source: "Project Gutenberg" },
         { text: "Waste no more time talking about what a good man ought to be. Be one.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-        { text: "Confine yourself to the present.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+        { text: "The impediment to action advances action.", author: "Marcus Aurelius", source: "Project Gutenberg" },
         { text: "Because a thing seems difficult for you, do not think it impossible.", author: "Marcus Aurelius", source: "Project Gutenberg" },
         { text: "If it is not right, do not do it.", author: "Marcus Aurelius", source: "Project Gutenberg" },
         { text: "Do every act of your life as if it were your last.", author: "Marcus Aurelius", source: "Project Gutenberg" },
@@ -4737,7 +4816,7 @@
         { text: "A man can only rise, conquer, and achieve by lifting up his thoughts.", author: "James Allen", source: "Project Gutenberg" },
         { text: "Let us, then, be up and doing.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
         { text: "Act in the living present.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-        { text: "Learn to labor and to wait.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
+        { text: "The heights by great men reached and kept were not attained by sudden flight.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
         { text: "Still achieving, still pursuing, learn to labor and to wait.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
         { text: "To strive, to seek, to find, and not to yield.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
         { text: "It is not too late to seek a newer world.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
@@ -4909,12 +4988,18 @@
           longHint: "Long-term goals bridge daily action and your Vision.",
           visionSetup: "Vision setup",
           createVisionTitle: "Create the future scene first.",
-          visionSetupText: "Upload images of how you want to look, what you want to own or experience, the places you want to live in, and the kind of people you want around you.",
+          visionSetupText: "Start with photos of identity, environment, people, and the future you want to make familiar.",
+          visionFrameIdentity: "Identity",
+          visionFrameEnvironment: "Environment",
+          visionFramePeople: "People",
           createVision: "Create vision",
           visionDeck: "Vision deck",
           antiSetup: "Anti-vision setup",
           createAntiTitle: "Create the warning scene first.",
-          antiSetupText: "Upload images of the life you refuse to drift into: what you do not want to become, lose, or tolerate.",
+          antiSetupText: "Start with photos of the drift, costs, and future you refuse to normalize.",
+          antiFrameDrift: "Drift",
+          antiFrameCost: "Cost",
+          antiFrameRegret: "Regret",
           createAnti: "Create anti-vision",
           antiDeck: "Anti-vision deck",
           play: "Play",
@@ -4939,7 +5024,7 @@
           light: "Light",
           dark: "Dark",
           navLife: "Life",
-          navGoal: "Goal",
+          navGoal: "For who",
           navVision: "Vision",
           navAnti: "Anti",
           navSpeech: "Speech",
@@ -4961,8 +5046,8 @@
       };
 
       Object.assign(UI_TEXT.en, {
-        "quote.kicker": "Today's standard",
-        "quote.title": "Carry this into the day.",
+          "quote.kicker": "Daily quote",
+          "quote.title": "Read it. Move.",
         "quote.open": "open",
         "quote.close": "Carry it",
         profileDefault: "Your profile",
@@ -4992,19 +5077,19 @@
         privacyOpen: "Open privacy policy draft",
         photos: "Photos",
         done: "Done",
-        navGoal: "Why",
+        navGoal: "For who",
         whyKicker: "Why",
         whyHint: "Keep the people behind your effort visible.",
-        whyTitle: "Who do you do it for?",
+        whyTitle: "Who are you doing this for?",
         whyText: "Upload photos of the people behind your effort: family, an ex you want to outgrow, the child you were, a future child, a rival, or someone you want to prove wrong.",
-        whyChips: "family|your younger self|future child|someone to prove wrong",
+        whyChips: "family|younger self|future child|prove them wrong",
         whyAdd: "Add people",
         whyEmptyTitle: "No faces here yet.",
         whyEmptyText: "Add the people, memories, or future people that make your goals personal."
       });
       Object.assign(UI_TEXT.es, {
-        "quote.kicker": "Estandar de hoy",
-        "quote.title": "Lleva esto a tu dia.",
+        "quote.kicker": "Cita diaria",
+        "quote.title": "Leela. Avanza.",
         "quote.open": "abrir",
         "quote.close": "Llevarlo contigo",
         profileDefault: "Tu perfil",
@@ -5036,17 +5121,25 @@
         done: "Listo",
         navGoal: "Por quien",
         whyKicker: "Por quien",
+        visionSetupText: "Empieza con fotos de identidad, ambiente, personas y el futuro que quieres volver familiar.",
+        visionFrameIdentity: "Identidad",
+        visionFrameEnvironment: "Ambiente",
+        visionFramePeople: "Personas",
+        antiSetupText: "Empieza con fotos del desvio, los costes y el futuro que te niegas a normalizar.",
+        antiFrameDrift: "Deriva",
+        antiFrameCost: "Coste",
+        antiFrameRegret: "Arrepentimiento",
         whyHint: "Mantén visibles las personas detras de tu esfuerzo.",
         whyTitle: "Por quien haces esto?",
         whyText: "Sube fotos de las personas detras de tu esfuerzo: familia, un ex que quieres superar, tu yo de nino, un futuro hijo, un rival o alguien a quien quieres demostrar que se equivoco.",
-        whyChips: "familia|tu yo pequeno|futuro hijo|alguien a quien demostrar",
+        whyChips: "familia|tu yo pequeno|futuro hijo|demostrarles",
         whyAdd: "Agregar personas",
         whyEmptyTitle: "Aun no hay rostros.",
         whyEmptyText: "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales."
       });
       Object.assign(UI_TEXT.fr, {
-        "quote.kicker": "Standard du jour",
-        "quote.title": "Emporte ceci dans ta journee.",
+        "quote.kicker": "Citation du jour",
+        "quote.title": "Lis-la. Avance.",
         "quote.open": "ouvrir",
         "quote.close": "Garder avec moi",
         profileDefault: "Ton profil",
@@ -5076,19 +5169,27 @@
         privacyOpen: "Ouvrir brouillon confidentialite",
         photos: "Photos",
         done: "Termine",
-        navGoal: "Pourquoi",
+        navGoal: "Pour qui",
         whyKicker: "Pourquoi",
+        visionSetupText: "Commence par des photos d'identite, de cadre, de personnes et du futur que tu veux rendre familier.",
+        visionFrameIdentity: "Identite",
+        visionFrameEnvironment: "Cadre",
+        visionFramePeople: "Personnes",
+        antiSetupText: "Commence par des photos de la derive, du cout et du futur que tu refuses de normaliser.",
+        antiFrameDrift: "Derive",
+        antiFrameCost: "Cout",
+        antiFrameRegret: "Regret",
         whyHint: "Garde visibles les personnes derriere ton effort.",
         whyTitle: "Pour qui fais-tu ca?",
         whyText: "Ajoute les photos des personnes derriere ton effort: famille, un ex que tu veux depasser, l'enfant que tu etais, un futur enfant, un rival ou quelqu'un a qui tu veux prouver qu'il avait tort.",
-        whyChips: "famille|toi enfant|futur enfant|quelqu'un a qui prouver",
+        whyChips: "famille|toi enfant|futur enfant|leur prouver",
         whyAdd: "Ajouter personnes",
         whyEmptyTitle: "Aucun visage encore.",
         whyEmptyText: "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels."
       });
       Object.assign(UI_TEXT.pt, {
-        "quote.kicker": "Padrao de hoje",
-        "quote.title": "Leve isto para o seu dia.",
+        "quote.kicker": "Citacao diaria",
+        "quote.title": "Leia. Avance.",
         "quote.open": "abrir",
         "quote.close": "Levar comigo",
         profileDefault: "Seu perfil",
@@ -5120,10 +5221,18 @@
         done: "Concluido",
         navGoal: "Por quem",
         whyKicker: "Por quem",
+        visionSetupText: "Comece com fotos de identidade, ambiente, pessoas e do futuro que quer tornar familiar.",
+        visionFrameIdentity: "Identidade",
+        visionFrameEnvironment: "Ambiente",
+        visionFramePeople: "Pessoas",
+        antiSetupText: "Comece com fotos do desvio, dos custos e do futuro que voce se recusa a normalizar.",
+        antiFrameDrift: "Desvio",
+        antiFrameCost: "Custo",
+        antiFrameRegret: "Arrependimento",
         whyHint: "Mantenha visiveis as pessoas por tras do seu esforco.",
         whyTitle: "Por quem voce faz isso?",
         whyText: "Adicione fotos das pessoas por tras do seu esforco: familia, um ex que quer superar, voce quando crianca, um futuro filho, um rival ou alguem a quem quer provar que estava errado.",
-        whyChips: "familia|voce crianca|futuro filho|alguem a quem provar",
+        whyChips: "familia|voce crianca|futuro filho|provar errado",
         whyAdd: "Adicionar pessoas",
         whyEmptyTitle: "Ainda sem rostos.",
         whyEmptyText: "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais."
@@ -5156,12 +5265,20 @@
         privacyOpen: "打开隐私政策草稿",
         photos: "照片",
         done: "完成",
-        navGoal: "Why",
+        navGoal: "For who",
         whyKicker: "Why",
+        visionSetupText: "Start with photos of identity, environment, people, and the future you want to make familiar.",
+        visionFrameIdentity: "Identity",
+        visionFrameEnvironment: "Environment",
+        visionFramePeople: "People",
+        antiSetupText: "Start with photos of the drift, costs, and future you refuse to normalize.",
+        antiFrameDrift: "Drift",
+        antiFrameCost: "Cost",
+        antiFrameRegret: "Regret",
         whyHint: "Keep the people behind your effort visible.",
-        whyTitle: "Who do you do it for?",
+        whyTitle: "Who are you doing this for?",
         whyText: "Upload photos of family, the child you were, a future child, a rival, or someone you want to prove wrong.",
-        whyChips: "family|younger self|future child|someone to prove wrong",
+        whyChips: "family|younger self|future child|prove them wrong",
         whyAdd: "Add people",
         whyEmptyTitle: "No faces here yet.",
         whyEmptyText: "Add the people, memories, or future people that make your goals personal."
@@ -5221,6 +5338,9 @@
         setText("#visionEmpty .deck-kicker", "visionSetup");
         setText("#visionEmpty h2", "createVisionTitle");
         setText("#visionEmpty p", "visionSetupText");
+        setText("#visionFrameIdentity", "visionFrameIdentity");
+        setText("#visionFrameEnvironment", "visionFrameEnvironment");
+        setText("#visionFramePeople", "visionFramePeople");
         setText("#createVision", "createVision");
         setText("#visionStage .deck-kicker", "visionDeck");
         setText("#playVisionDeck", "play");
@@ -5231,6 +5351,9 @@
         setText("#antiEmpty .deck-kicker", "antiSetup");
         setText("#antiEmpty h2", "createAntiTitle");
         setText("#antiEmpty p", "antiSetupText");
+        setText("#antiFrameDrift", "antiFrameDrift");
+        setText("#antiFrameCost", "antiFrameCost");
+        setText("#antiFrameRegret", "antiFrameRegret");
         setText("#createAnti", "createAnti");
         setText("#antiStage .deck-kicker", "antiDeck");
         setText("#playAntiDeck", "play");
@@ -5748,6 +5871,7 @@
         const revealAuthor = document.getElementById("dailyQuoteRevealAuthor");
         const revealSource = document.getElementById("dailyQuoteRevealSource");
         const revealDay = document.getElementById("dailyQuoteRevealDay");
+        const revealIndex = document.getElementById("dailyQuoteRevealIndex");
         const revealMeter = document.getElementById("dailyQuoteRevealMeter");
         if (cardText) cardText.textContent = `"${quote.text}"`;
         if (cardAuthor) cardAuthor.textContent = quote.author;
@@ -5756,6 +5880,7 @@
         if (revealAuthor) revealAuthor.textContent = quote.author;
         if (revealSource) revealSource.textContent = quote.source;
         if (revealDay) revealDay.textContent = ordinal;
+        if (revealIndex) revealIndex.textContent = String(index + 1).padStart(2, "0");
         if (revealMeter) {
           revealMeter.style.width = "0";
           requestAnimationFrame(() => {
@@ -5777,6 +5902,7 @@
         }
 
         renderDailyQuote();
+        if (navigator.vibrate) navigator.vibrate(8);
         const modal = document.getElementById("dailyQuoteReveal");
         modal.classList.add("open");
         modal.setAttribute("aria-hidden", "false");

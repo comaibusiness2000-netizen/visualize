@@ -19,6 +19,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Vibration,
   View
 } from "react-native";
 import * as FileSystem from "expo-file-system";
@@ -31,7 +32,7 @@ const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
 const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v5";
-const QUOTE_RITUAL_VERSION = "quote-ritual-v2";
+const QUOTE_RITUAL_VERSION = "quote-ritual-v3";
 const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
 
 function normalizeLanguageId(locale) {
@@ -86,6 +87,11 @@ function quoteForDate(dateKey = todayKey()) {
 function quoteIndexForDate(dateKey = todayKey()) {
   if (!dailyQuotes.length) return 0;
   return dayNumberFromKey(dateKey) % dailyQuotes.length;
+}
+
+function softImpact() {
+  if (Platform.OS === "web") return;
+  Vibration.vibrate(7);
 }
 
 const blankState = {
@@ -175,15 +181,15 @@ const dailyQuotes = [
   { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu", source: "Project Gutenberg" },
   { text: "He who conquers himself is mighty.", author: "Lao Tzu", source: "Project Gutenberg" },
   { text: "Great acts are made up of small deeds.", author: "Lao Tzu", source: "Project Gutenberg" },
-  { text: "Your Vision is the promise of what you shall one day be.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "Cherish your visions; cherish your ideals.", author: "James Allen", source: "Project Gutenberg" },
   { text: "Well begun is half done.", author: "Aristotle", source: "Bartlett" },
-  { text: "You cannot travel within and stand still without.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "The greatest achievement was at first and for a time a dream.", author: "James Allen", source: "Project Gutenberg" },
   { text: "Small opportunities are often the beginning of great enterprises.", author: "Demosthenes", source: "Bartlett" },
   { text: "Practice is the best of all instructors.", author: "Publilius Syrus", source: "Bartlett" },
-  { text: "To do two things at once is to do neither.", author: "Publilius Syrus", source: "Bartlett" },
+  { text: "Strike while the iron is hot.", author: "Proverb", source: "Bartlett" },
   { text: "Valor grows by daring, fear by holding back.", author: "Publilius Syrus", source: "Bartlett" },
   { text: "Dreams are the seedlings of realities.", author: "James Allen", source: "Project Gutenberg" },
-  { text: "The fault, dear Brutus, is not in our stars, but in ourselves.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Our remedies oft in ourselves do lie.", author: "William Shakespeare", source: "Bartlett" },
   { text: "Action is eloquence.", author: "William Shakespeare", source: "Bartlett" },
   { text: "Strong reasons make strong actions.", author: "William Shakespeare", source: "Bartlett" },
   { text: "The readiness is all.", author: "William Shakespeare", source: "Bartlett" },
@@ -192,7 +198,7 @@ const dailyQuotes = [
   { text: "To thine own self be true.", author: "William Shakespeare", source: "Bartlett" },
   { text: "Our doubts are traitors, and make us lose the good we might win.", author: "William Shakespeare", source: "Bartlett" },
   { text: "Be great in act, as you have been in thought.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Sweet are the uses of adversity.", author: "William Shakespeare", source: "Bartlett" },
+  { text: "Boldness be my friend.", author: "William Shakespeare", source: "Bartlett" },
   { text: "Men at some time are masters of their fates.", author: "William Shakespeare", source: "Bartlett" },
   { text: "Hitch your wagon to a star.", author: "Ralph Waldo Emerson", source: "Bartlett" },
   { text: "Nothing great was ever achieved without enthusiasm.", author: "Ralph Waldo Emerson", source: "Bartlett" },
@@ -201,7 +207,7 @@ const dailyQuotes = [
   { text: "Do the thing and you shall have the power.", author: "Ralph Waldo Emerson", source: "Bartlett" },
   { text: "Self-trust is the first secret of success.", author: "Ralph Waldo Emerson", source: "Bartlett" },
   { text: "Trust thyself: every heart vibrates to that iron string.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-  { text: "The oak sleeps in the acorn.", author: "James Allen", source: "Project Gutenberg" },
+  { text: "The vision that you glorify in your mind is what you will build your life by.", author: "James Allen", source: "Project Gutenberg" },
   { text: "Go confidently in the direction of your dreams.", author: "Henry David Thoreau", source: "Project Gutenberg" },
   { text: "Live the life you have imagined.", author: "Henry David Thoreau", source: "Project Gutenberg" },
   { text: "First say to yourself what you would be; then do what you have to do.", author: "Epictetus", source: "Project Gutenberg" },
@@ -217,7 +223,7 @@ const dailyQuotes = [
   { text: "Begin at once to live.", author: "Seneca", source: "Project Gutenberg" },
   { text: "While we wait for life, life passes.", author: "Seneca", source: "Project Gutenberg" },
   { text: "Waste no more time talking about what a good man ought to be. Be one.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-  { text: "Confine yourself to the present.", author: "Marcus Aurelius", source: "Project Gutenberg" },
+  { text: "The impediment to action advances action.", author: "Marcus Aurelius", source: "Project Gutenberg" },
   { text: "Because a thing seems difficult for you, do not think it impossible.", author: "Marcus Aurelius", source: "Project Gutenberg" },
   { text: "If it is not right, do not do it.", author: "Marcus Aurelius", source: "Project Gutenberg" },
   { text: "Do every act of your life as if it were your last.", author: "Marcus Aurelius", source: "Project Gutenberg" },
@@ -225,7 +231,7 @@ const dailyQuotes = [
   { text: "A man can only rise, conquer, and achieve by lifting up his thoughts.", author: "James Allen", source: "Project Gutenberg" },
   { text: "Let us, then, be up and doing.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
   { text: "Act in the living present.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-  { text: "Learn to labor and to wait.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
+  { text: "The heights by great men reached and kept were not attained by sudden flight.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
   { text: "Still achieving, still pursuing, learn to labor and to wait.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
   { text: "To strive, to seek, to find, and not to yield.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
   { text: "It is not too late to seek a newer world.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
@@ -258,7 +264,7 @@ const dailyQuotes = [
 const copy = {
   en: {
     "tab.life": "Life",
-    "tab.goals": "Why",
+    "tab.goals": "For who",
     "tab.vision": "Vision",
     "tab.anti": "Anti",
     "tab.speech": "Speech",
@@ -277,8 +283,8 @@ const copy = {
     "life.used": "used",
     "life.monthMap": "Life by months",
     "life.monthMapBody": "Each dot is one month. Filled dots are already spent.",
-    "quote.kicker": "Today's standard",
-    "quote.title": "Carry this into the day.",
+    "quote.kicker": "Daily quote",
+    "quote.title": "Read it. Move.",
     "quote.open": "open",
     "quote.close": "Carry it",
     "goals.daily": "Daily tasks",
@@ -291,16 +297,16 @@ const copy = {
     "goals.emptyTitle": "Nothing here yet.",
     "goals.emptyBody": "Start with one small action or one long-term goal.",
     "goals.complete": "{progress}% complete",
-    "why.title": "Who do you do it for?",
+    "why.title": "Who are you doing this for?",
     "why.body": "Upload photos of the people behind your effort: family, an ex you want to outgrow, the child you were, a future child, a rival, or someone you want to prove wrong.",
-    "why.examples": "family|your younger self|future child|someone to prove wrong",
+    "why.examples": "family|younger self|future child|prove them wrong",
     "why.add": "Add people",
     "why.emptyTitle": "No faces here yet.",
     "why.emptyBody": "Add the people, memories, or future people that make your goals personal.",
     "deck.visionTitle": "Create your Vision",
     "deck.antiTitle": "Create your Anti-vision",
-    "deck.visionBody": "Add images of who you want to become, what you want to have, and who you want around you.",
-    "deck.antiBody": "Add images of the opposite future: what you do not want to become, lose, or tolerate.",
+    "deck.visionBody": "Start with photos of identity, environment, people, and the future you want to make familiar.",
+    "deck.antiBody": "Start with photos of the drift, costs, and future you refuse to normalize.",
     "deck.add": "Add images",
     "deck.play": "Play",
     "deck.emptyTitle": "No images yet.",
@@ -354,8 +360,8 @@ const copy = {
     "setup.kicker": "Crear perfil", "setup.title": "Crea primero tu reloj de vida.", "setup.body": "Visualize empieza vacio. Crea tu perfil y luego agrega metas, imagenes y self speech paso a paso.", "setup.name": "Nombre", "setup.age": "Edad", "setup.estimate": "Estimacion de vida, ejemplo 85", "setup.create": "Crear perfil",
     "life.kicker": "Reloj de vida", "life.days": "dias estimados restantes", "life.summary": "Basado en edad {age} y una estimacion de vida de {expectancy}. No es una prediccion, es un recordatorio.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada punto es un mes. Los puntos llenos ya pasaron.",
     "goals.daily": "Tareas diarias", "goals.long": "Metas a largo plazo", "goals.dailyTitle": "Que hace avanzar el dia?", "goals.longTitle": "Que estas construyendo este ano?", "goals.body": "Agrega hasta 5 items y mueve manualmente la barra de progreso.", "goals.addTask": "Agregar tarea", "goals.addGoal": "Agregar meta", "goals.emptyTitle": "Todavia no hay nada.", "goals.emptyBody": "Empieza con una pequena accion o una meta a largo plazo.", "goals.complete": "{progress}% completo",
-    "why.title": "Por quien haces esto?", "why.body": "Sube fotos de las personas detras de tu esfuerzo: familia, un ex que quieres superar, tu yo de nino, un futuro hijo, un rival o alguien a quien quieres demostrar que se equivoco.", "why.examples": "familia|tu yo pequeno|futuro hijo|alguien a quien demostrar", "why.add": "Agregar personas", "why.emptyTitle": "Aun no hay rostros.", "why.emptyBody": "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales.",
-    "deck.visionTitle": "Crea tu Vision", "deck.antiTitle": "Crea tu Anti-vision", "deck.visionBody": "Agrega imagenes de quien quieres ser, lo que quieres tener y quien quieres cerca.", "deck.antiBody": "Agrega imagenes del futuro opuesto: lo que no quieres llegar a ser, perder o tolerar.", "deck.add": "Agregar imagenes", "deck.play": "Reproducir", "deck.emptyTitle": "Sin imagenes aun.", "deck.emptyBody": "El deck empieza vacio. Agrega fotos desde este iPhone para guardarlas localmente.",
+    "why.title": "Por quien haces esto?", "why.body": "Sube fotos de las personas detras de tu esfuerzo: familia, un ex que quieres superar, tu yo de nino, un futuro hijo, un rival o alguien a quien quieres demostrar que se equivoco.", "why.examples": "familia|tu yo pequeno|futuro hijo|demostrarles", "why.add": "Agregar personas", "why.emptyTitle": "Aun no hay rostros.", "why.emptyBody": "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales.",
+    "deck.visionTitle": "Crea tu Vision", "deck.antiTitle": "Crea tu Anti-vision", "deck.visionBody": "Empieza con fotos de identidad, ambiente, personas y el futuro que quieres volver familiar.", "deck.antiBody": "Empieza con fotos del desvio, los costes y el futuro que te niegas a normalizar.", "deck.add": "Agregar imagenes", "deck.play": "Reproducir", "deck.emptyTitle": "Sin imagenes aun.", "deck.emptyBody": "El deck empieza vacio. Agrega fotos desde este iPhone para guardarlas localmente.",
     "speech.title": "Self speech", "speech.body": "Escribe el dialogo interno que quieres escuchar repetidamente. Hazlo personal, directo y creible.", "speech.titlePlaceholder": "Titulo", "speech.textPlaceholder": "Escribe tu self speech aqui", "speech.save": "Guardar", "speech.new": "Nuevo", "speech.listen": "Escuchar", "speech.stop": "Stop", "speech.emptyDraft": "Borrador vacio",
     "profile.kicker": "Perfil local", "profile.storageTitle": "Guardado en el dispositivo", "profile.storageBody": "Guardado solo en este iPhone. Al cerrar la app o reiniciar el telefono, los datos se mantienen. Si eliminas la app, se eliminan los datos locales.", "profile.cloudTitle": "Datos listos para cloud", "profile.cloudBody": "Tu perfil, metas, imagenes y speeches locales tienen IDs estables. Cuando agreguemos cloud sync, este dispositivo podra subir sus datos existentes antes de activar la sincronizacion.", "profile.deviceKey": "Clave dispositivo", "profile.appearance": "Apariencia", "profile.darkMode": "Modo oscuro", "profile.notifications": "Notificaciones luego", "profile.language": "Idioma", "profile.reset": "Resetear este dispositivo", "profile.close": "Cerrar", "player.close": "Cerrar",
     "alert.profile": "Perfil", "alert.addName": "Agrega tu nombre primero.", "alert.addAge": "Agrega tu edad primero.", "alert.goals": "Metas", "alert.maxGoals": "Mantén la lista enfocada: maximo 5 items.", "alert.photos": "Fotos", "alert.allowPhotos": "Permite acceso a fotos para agregarlas a tu deck.", "alert.deckFull": "Deck lleno", "alert.maxImages": "Maximo {max} imagenes por ahora.", "alert.deck": "Deck", "alert.addImagesFirst": "Agrega imagenes primero.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Escribe primero el texto que quieres escuchar.", "alert.writeSpeechPlay": "Escribe un speech primero.", "alert.resetTitle": "Resetear datos locales", "alert.resetBody": "Esto elimina perfil, metas, imagenes y self speeches de este dispositivo.", "alert.cancel": "Cancelar", "alert.reset": "Resetear"
@@ -365,8 +371,8 @@ const copy = {
     "setup.kicker": "Creation profil", "setup.title": "Commence par ton horloge.", "setup.body": "Visualize commence vide. Cree ton profil; puis ajoute objectifs, images et self speech.", "setup.name": "Prenom", "setup.age": "Age", "setup.estimate": "Estimation de vie, exemple 85", "setup.create": "Creer profil",
     "life.kicker": "Horloge de vie", "life.days": "jours estimes restants", "life.summary": "Base sur l'age {age} et une estimation de vie de {expectancy}. Ce n'est pas une prediction, c'est un rappel.", "life.weeks": "semaines", "life.months": "mois", "life.used": "utilise", "life.monthMap": "Vie par mois", "life.monthMapBody": "Chaque point est un mois. Les points remplis sont deja passes.",
     "goals.daily": "Taches du jour", "goals.long": "Objectifs long terme", "goals.dailyTitle": "Qu'est-ce qui fait avancer aujourd'hui?", "goals.longTitle": "Que construis-tu cette annee?", "goals.body": "Ajoute jusqu'a 5 elements et ajuste manuellement la progression.", "goals.addTask": "Ajouter tache", "goals.addGoal": "Ajouter objectif", "goals.emptyTitle": "Rien pour l'instant.", "goals.emptyBody": "Commence avec une petite action ou un objectif long terme.", "goals.complete": "{progress}% termine",
-    "why.title": "Pour qui fais-tu ca?", "why.body": "Ajoute les photos des personnes derriere ton effort: famille, un ex que tu veux depasser, l'enfant que tu etais, un futur enfant, un rival ou quelqu'un a qui tu veux prouver qu'il avait tort.", "why.examples": "famille|toi enfant|futur enfant|quelqu'un a qui prouver", "why.add": "Ajouter personnes", "why.emptyTitle": "Aucun visage encore.", "why.emptyBody": "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels.",
-    "deck.visionTitle": "Cree ta Vision", "deck.antiTitle": "Cree ton Anti-vision", "deck.visionBody": "Ajoute des images de qui tu veux devenir, ce que tu veux avoir et qui tu veux autour de toi.", "deck.antiBody": "Ajoute les images du futur oppose: ce que tu refuses de devenir, perdre ou tolerer.", "deck.add": "Ajouter images", "deck.play": "Lire", "deck.emptyTitle": "Aucune image.", "deck.emptyBody": "Le deck commence vide. Ajoute des photos depuis cet iPhone pour les garder localement.",
+    "why.title": "Pour qui fais-tu ca?", "why.body": "Ajoute les photos des personnes derriere ton effort: famille, un ex que tu veux depasser, l'enfant que tu etais, un futur enfant, un rival ou quelqu'un a qui tu veux prouver qu'il avait tort.", "why.examples": "famille|toi enfant|futur enfant|leur prouver", "why.add": "Ajouter personnes", "why.emptyTitle": "Aucun visage encore.", "why.emptyBody": "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels.",
+    "deck.visionTitle": "Cree ta Vision", "deck.antiTitle": "Cree ton Anti-vision", "deck.visionBody": "Commence avec des photos d'identite, d'environnement, de personnes et du futur a rendre familier.", "deck.antiBody": "Commence avec des photos de la derive, du cout et du futur que tu refuses de normaliser.", "deck.add": "Ajouter images", "deck.play": "Lire", "deck.emptyTitle": "Aucune image.", "deck.emptyBody": "Le deck commence vide. Ajoute des photos depuis cet iPhone pour les garder localement.",
     "speech.title": "Self speech", "speech.body": "Ecris le discours interieur que tu veux ecouter souvent. Personnel, direct, credible.", "speech.titlePlaceholder": "Titre", "speech.textPlaceholder": "Ecris ton self speech ici", "speech.save": "Sauver", "speech.new": "Nouveau", "speech.listen": "Ecouter", "speech.stop": "Stop", "speech.emptyDraft": "Brouillon vide",
     "profile.kicker": "Profil local", "profile.storageTitle": "Stockage appareil", "profile.storageBody": "Sauve seulement sur cet iPhone. Fermer l'app ou redemarrer le telephone garde les donnees. Supprimer l'app supprime les donnees locales.", "profile.cloudTitle": "Donnees pretes pour le cloud", "profile.cloudBody": "Profil, objectifs, images et speeches locaux ont des IDs stables. Quand le cloud sync arrivera, cet appareil pourra envoyer ses donnees existantes avant d'activer la sync.", "profile.deviceKey": "Cle appareil", "profile.appearance": "Apparence", "profile.darkMode": "Mode sombre", "profile.notifications": "Notifications plus tard", "profile.language": "Langue", "profile.reset": "Reinitialiser", "profile.close": "Fermer", "player.close": "Fermer",
     "alert.profile": "Profil", "alert.addName": "Ajoute ton prenom d'abord.", "alert.addAge": "Ajoute ton age d'abord.", "alert.goals": "Objectifs", "alert.maxGoals": "Garde la liste concentree: maximum 5 elements.", "alert.photos": "Photos", "alert.allowPhotos": "Autorise l'acces aux photos pour les ajouter au deck.", "alert.deckFull": "Deck plein", "alert.maxImages": "Maximum {max} images pour l'instant.", "alert.deck": "Deck", "alert.addImagesFirst": "Ajoute d'abord des images.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Ecris d'abord le texte a ecouter.", "alert.writeSpeechPlay": "Ecris d'abord un speech.", "alert.resetTitle": "Reinitialiser les donnees locales", "alert.resetBody": "Cela supprime le profil, les objectifs, les images et les self speeches de cet appareil.", "alert.cancel": "Annuler", "alert.reset": "Reinitialiser"
@@ -376,8 +382,8 @@ const copy = {
     "setup.kicker": "Criar perfil", "setup.title": "Comece pelo relogio de vida.", "setup.body": "Visualize comeca vazio. Crie seu perfil; depois adicione metas, imagens e self speech.", "setup.name": "Nome", "setup.age": "Idade", "setup.estimate": "Estimativa de vida, exemplo 85", "setup.create": "Criar perfil",
     "life.kicker": "Relogio de vida", "life.days": "dias estimados restantes", "life.summary": "Baseado na idade {age} e estimativa de vida de {expectancy}. Nao e previsao, e lembrete.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada ponto e um mes. Pontos preenchidos ja passaram.",
     "goals.daily": "Tarefas diarias", "goals.long": "Metas de longo prazo", "goals.dailyTitle": "O que move hoje para frente?", "goals.longTitle": "O que voce esta construindo este ano?", "goals.body": "Adicione ate 5 itens e mova manualmente a barra de progresso.", "goals.addTask": "Adicionar tarefa", "goals.addGoal": "Adicionar meta", "goals.emptyTitle": "Nada aqui ainda.", "goals.emptyBody": "Comece com uma pequena acao ou uma meta de longo prazo.", "goals.complete": "{progress}% completo",
-    "why.title": "Por quem voce faz isso?", "why.body": "Adicione fotos das pessoas por tras do seu esforco: familia, um ex que quer superar, voce quando crianca, um futuro filho, um rival ou alguem a quem quer provar que estava errado.", "why.examples": "familia|voce crianca|futuro filho|alguem a quem provar", "why.add": "Adicionar pessoas", "why.emptyTitle": "Ainda sem rostos.", "why.emptyBody": "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais.",
-    "deck.visionTitle": "Crie sua Visao", "deck.antiTitle": "Crie sua Anti-visao", "deck.visionBody": "Adicione imagens de quem voce quer ser, do que quer ter e de quem quer perto.", "deck.antiBody": "Adicione imagens do futuro oposto: o que voce nao quer se tornar, perder ou tolerar.", "deck.add": "Adicionar imagens", "deck.play": "Reproduzir", "deck.emptyTitle": "Sem imagens ainda.", "deck.emptyBody": "O deck comeca vazio. Adicione fotos deste iPhone para salva-las localmente.",
+    "why.title": "Por quem voce faz isso?", "why.body": "Adicione fotos das pessoas por tras do seu esforco: familia, um ex que quer superar, voce quando crianca, um futuro filho, um rival ou alguem a quem quer provar que estava errado.", "why.examples": "familia|voce crianca|futuro filho|provar errado", "why.add": "Adicionar pessoas", "why.emptyTitle": "Ainda sem rostos.", "why.emptyBody": "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais.",
+    "deck.visionTitle": "Crie sua Visao", "deck.antiTitle": "Crie sua Anti-visao", "deck.visionBody": "Comece com fotos de identidade, ambiente, pessoas e do futuro que voce quer tornar familiar.", "deck.antiBody": "Comece com fotos do desvio, dos custos e do futuro que voce recusa normalizar.", "deck.add": "Adicionar imagens", "deck.play": "Reproduzir", "deck.emptyTitle": "Sem imagens ainda.", "deck.emptyBody": "O deck comeca vazio. Adicione fotos deste iPhone para salva-las localmente.",
     "speech.title": "Self speech", "speech.body": "Escreva o dialogo interno que quer ouvir repetidamente. Pessoal, direto e crivel.", "speech.titlePlaceholder": "Titulo", "speech.textPlaceholder": "Escreva seu self speech aqui", "speech.save": "Salvar", "speech.new": "Novo", "speech.listen": "Ouvir", "speech.stop": "Parar", "speech.emptyDraft": "Rascunho vazio",
     "profile.kicker": "Perfil local", "profile.storageTitle": "Armazenamento no dispositivo", "profile.storageBody": "Salvo apenas neste iPhone. Fechar o app ou reiniciar o telefone mantem os dados. Apagar o app remove os dados locais.", "profile.cloudTitle": "Dados prontos para cloud", "profile.cloudBody": "Perfil, metas, imagens e speeches locais tem IDs estaveis. Quando adicionarmos cloud sync, este dispositivo podera enviar os dados existentes antes de ativar a sincronizacao.", "profile.deviceKey": "Chave do dispositivo", "profile.appearance": "Aparencia", "profile.darkMode": "Modo escuro", "profile.notifications": "Notificacoes depois", "profile.language": "Idioma", "profile.reset": "Resetar dispositivo", "profile.close": "Fechar", "player.close": "Fechar",
     "alert.profile": "Perfil", "alert.addName": "Adicione seu nome primeiro.", "alert.addAge": "Adicione sua idade primeiro.", "alert.goals": "Metas", "alert.maxGoals": "Mantenha a lista focada: maximo 5 itens.", "alert.photos": "Fotos", "alert.allowPhotos": "Permita acesso as fotos para adiciona-las ao deck.", "alert.deckFull": "Deck cheio", "alert.maxImages": "Maximo {max} imagens por agora.", "alert.deck": "Deck", "alert.addImagesFirst": "Adicione imagens primeiro.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Escreva primeiro o texto que quer ouvir.", "alert.writeSpeechPlay": "Escreva um speech primeiro.", "alert.resetTitle": "Resetar dados locais", "alert.resetBody": "Isso remove perfil, metas, imagens e self speeches deste dispositivo.", "alert.cancel": "Cancelar", "alert.reset": "Resetar"
@@ -395,18 +401,18 @@ const copy = {
 };
 
 Object.assign(copy.zh, {
-  "tab.goals": "Why",
-  "why.title": "Who do you do it for?",
+  "tab.goals": "For who",
+  "why.title": "Who are you doing this for?",
   "why.body": "Upload photos of family, the child you were, a future child, a rival, or someone you want to prove wrong.",
-  "why.examples": "family|younger self|future child|someone to prove wrong",
+  "why.examples": "family|younger self|future child|prove them wrong",
   "why.add": "Add people",
   "why.emptyTitle": "No faces here yet.",
   "why.emptyBody": "Add the people, memories, or future people that make your goals personal.",
   "speech.voice": "Voice",
   "speech.heading": "Script your inner voice.",
   "speech.swipe": "Swipe to change voice",
-  "quote.kicker": "Today's standard",
-  "quote.title": "Carry this into the day.",
+  "quote.kicker": "Daily quote",
+  "quote.title": "Read it. Move.",
   "quote.open": "open",
   "quote.close": "Carry it"
 });
@@ -415,8 +421,8 @@ Object.assign(copy.es, {
   "speech.heading": "Escribe tu voz interior.",
   "speech.voice": "Voz",
   "speech.swipe": "Desliza para cambiar voz",
-  "quote.kicker": "Estandar de hoy",
-  "quote.title": "Lleva esto a tu dia.",
+  "quote.kicker": "Cita diaria",
+  "quote.title": "Leela. Avanza.",
   "quote.open": "abrir",
   "quote.close": "Llevarlo"
 });
@@ -425,8 +431,8 @@ Object.assign(copy.fr, {
   "speech.heading": "Ecris ta voix interieure.",
   "speech.voice": "Voix",
   "speech.swipe": "Glisse pour changer la voix",
-  "quote.kicker": "Standard du jour",
-  "quote.title": "Emporte ceci dans ta journee.",
+  "quote.kicker": "Citation du jour",
+  "quote.title": "Lis-la. Avance.",
   "quote.open": "ouvrir",
   "quote.close": "Garder"
 });
@@ -435,8 +441,8 @@ Object.assign(copy.pt, {
   "speech.heading": "Escreva sua voz interior.",
   "speech.voice": "Voz",
   "speech.swipe": "Deslize para mudar voz",
-  "quote.kicker": "Padrao de hoje",
-  "quote.title": "Leve isto para o seu dia.",
+  "quote.kicker": "Citacao diaria",
+  "quote.title": "Leia. Avance.",
   "quote.open": "abrir",
   "quote.close": "Levar comigo"
 });
@@ -1077,6 +1083,7 @@ export default function App() {
     ) {
       return;
     }
+    softImpact();
     setQuoteRevealOpen(true);
     if (
       appState.profile.lastQuoteDate !== dateKey ||
@@ -1206,7 +1213,10 @@ export default function App() {
         <TouchableOpacity
           activeOpacity={0.88}
           style={[styles.quoteCard, appState.settings.darkMode ? styles.quoteCardDark : styles.quoteCardLight]}
-          onPress={() => maybeShowDailyQuote({ force: true })}
+          onPress={() => {
+            softImpact();
+            maybeShowDailyQuote({ force: true });
+          }}
         >
           <View style={styles.quoteCardGlow} />
           <View style={styles.quoteCardTop}>
@@ -1258,7 +1268,7 @@ export default function App() {
               </View>
             ))}
           </View>
-          <TouchableOpacity style={styles.primaryButton} onPress={addWhyPeople}>
+          <TouchableOpacity style={styles.primaryButton} onPress={() => { softImpact(); addWhyPeople(); }}>
             <Text style={styles.primaryText}>{t("why.add")}</Text>
           </TouchableOpacity>
         </View>
@@ -1284,6 +1294,31 @@ export default function App() {
     );
   }
 
+  function renderDeckEmptyPreview(kind) {
+    const positive = kind === "vision";
+    const frames = positive
+      ? ["Identity", "Environment", "People"]
+      : ["Drift", "Cost", "Regret"];
+    return (
+      <View style={styles.deckFrameStack} pointerEvents="none">
+        {frames.map((label, index) => (
+          <View
+            key={label}
+            style={[
+              styles.deckFrame,
+              index === 0 && styles.deckFrameOne,
+              index === 1 && styles.deckFrameTwo,
+              index === 2 && styles.deckFrameThree,
+              !positive && styles.deckFrameAnti
+            ]}
+          >
+            <Text style={[styles.deckFrameLabel, !positive && styles.deckFrameLabelAnti]}>{label}</Text>
+          </View>
+        ))}
+      </View>
+    );
+  }
+
   function renderDeck(kind) {
     const positive = kind === "vision";
     const deck = positive ? appState.visionSlides : appState.antiSlides;
@@ -1292,10 +1327,11 @@ export default function App() {
     const body = positive ? t("deck.visionBody") : t("deck.antiBody");
     return (
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.deckHero, !positive && styles.deckHeroAnti, { backgroundColor: theme.card, borderColor: theme.line }]}>
+        <View style={[styles.deckHero, !cover?.imageUri && styles.deckHeroEmpty, !positive && styles.deckHeroAnti, { backgroundColor: theme.card, borderColor: theme.line }]}>
           {cover?.imageUri ? <Image source={{ uri: cover.imageUri }} style={styles.deckHeroImage} /> : null}
+          {!cover?.imageUri ? renderDeckEmptyPreview(kind) : null}
           <View style={[styles.deckHeroShade, !cover?.imageUri && { opacity: 0.25 }]} />
-          <View style={styles.deckHeroText}>
+          <View style={[styles.deckHeroText, !cover?.imageUri && styles.deckHeroTextEmpty]}>
             <Text style={styles.deckHeroKicker}>{positive ? t("tab.vision") : t("tab.anti")}</Text>
             <Text style={styles.deckHeroTitle}>{title}</Text>
             <Text style={styles.deckHeroBody}>{body}</Text>
@@ -1306,10 +1342,10 @@ export default function App() {
         </View>
 
         <View style={styles.actionsRow}>
-          <TouchableOpacity style={styles.primaryButtonFlex} onPress={() => addImages(kind)}>
+          <TouchableOpacity style={styles.primaryButtonFlex} onPress={() => { softImpact(); addImages(kind); }}>
             <Text style={styles.primaryText}>{t("deck.add")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line, backgroundColor: theme.control }]} onPress={() => (deck.length ? setPlayer({ kind, index: 0 }) : Alert.alert(t("alert.deck"), t("alert.addImagesFirst")))}>
+          <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line, backgroundColor: theme.control }]} onPress={() => { softImpact(); deck.length ? setPlayer({ kind, index: 0 }) : Alert.alert(t("alert.deck"), t("alert.addImagesFirst")); }}>
             <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("deck.play")}</Text>
           </TouchableOpacity>
         </View>
@@ -1638,16 +1674,16 @@ export default function App() {
 
   function renderQuoteReveal() {
     if (!quoteRevealOpen) return null;
-    const scale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.86, 1] });
-    const translateY = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [54, 0] });
+    const scale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.94, 1] });
+    const translateY = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [76, 0] });
     const opacity = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
-    const orbScale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.72, 1.12] });
+    const sweepY = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [-120, 0] });
+    const indexScale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.7, 1] });
     return (
       <Modal visible transparent animationType="fade" onRequestClose={() => setQuoteRevealOpen(false)}>
         <View style={styles.quoteOverlay}>
           <Animated.View style={[styles.quoteRevealStage, { opacity, transform: [{ translateY }, { scale }] }]}>
-            <Animated.View style={[styles.quoteRevealOrbOne, { transform: [{ scale: orbScale }] }]} />
-            <Animated.View style={[styles.quoteRevealOrbTwo, { transform: [{ scale }] }]} />
+            <Animated.View style={[styles.quoteRevealSweep, { transform: [{ translateY: sweepY }] }]} />
             <View style={styles.quoteRevealTop}>
               <View style={styles.quoteRevealLogo}>
                 <View style={styles.logoSmallSlash} />
@@ -1656,6 +1692,9 @@ export default function App() {
               </View>
               <Text style={styles.quoteRevealDay}>{dailyQuoteOrdinal}</Text>
             </View>
+            <Animated.Text style={[styles.quoteRevealIndex, { opacity, transform: [{ scale: indexScale }] }]}>
+              {String(dailyQuoteIndex + 1).padStart(2, "0")}
+            </Animated.Text>
             <View style={styles.quoteRevealMeter}>
               <View style={[styles.quoteRevealMeterFill, { width: dailyQuoteProgress }]} />
             </View>
@@ -1666,7 +1705,7 @@ export default function App() {
               <Text style={styles.quoteRevealAuthor}>{dailyQuote.author}</Text>
               <Text style={styles.quoteRevealSource}>{dailyQuote.source}</Text>
             </View>
-            <TouchableOpacity style={styles.quoteCloseButton} onPress={() => setQuoteRevealOpen(false)}>
+            <TouchableOpacity style={styles.quoteCloseButton} onPress={() => { softImpact(); setQuoteRevealOpen(false); }}>
               <Text style={styles.quoteCloseText}>{t("quote.close")}</Text>
             </TouchableOpacity>
           </Animated.View>
@@ -1710,7 +1749,7 @@ export default function App() {
           </View>
           <View style={[styles.nav, { backgroundColor: theme.nav }]}>
             {tabs.map((item) => (
-              <TouchableOpacity key={item.id} style={[styles.navItem, tab === item.id && styles.navActive]} onPress={() => setTab(item.id)}>
+            <TouchableOpacity key={item.id} style={[styles.navItem, tab === item.id && styles.navActive]} onPress={() => { softImpact(); setTab(item.id); }}>
                 <Text style={[styles.navText, { color: tab === item.id ? "#101418" : theme.muted }]}>{t(`tab.${item.id}`)}</Text>
               </TouchableOpacity>
             ))}
@@ -1903,18 +1942,18 @@ const styles = StyleSheet.create({
   lifeUpdateDots: { marginTop: 28, flexDirection: "row", gap: 8 },
   lifeUpdateDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: "rgba(255,255,255,0.22)" },
   lifeUpdateDotHot: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.55, shadowRadius: 12, shadowOffset: { width: 0, height: 0 } },
-  quoteOverlay: { flex: 1, justifyContent: "center", padding: 10, backgroundColor: "rgba(6,8,9,0.96)" },
-  quoteRevealStage: { position: "relative", width: "100%", minHeight: "94%", overflow: "hidden", borderRadius: 44, padding: 24, justifyContent: "center", backgroundColor: "#0B0E10", borderWidth: 1, borderColor: "rgba(232,196,104,0.24)", shadowColor: "#000", shadowOpacity: 0.44, shadowRadius: 54, shadowOffset: { width: 0, height: 28 }, elevation: 12 },
-  quoteRevealOrbOne: { position: "absolute", right: -86, top: -86, width: 236, height: 236, borderRadius: 118, backgroundColor: "rgba(232,196,104,0.2)" },
-  quoteRevealOrbTwo: { position: "absolute", left: -72, bottom: -74, width: 190, height: 190, borderRadius: 95, backgroundColor: "rgba(218,90,58,0.16)" },
-  quoteRevealTop: { position: "absolute", left: 24, right: 24, top: 24, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  quoteOverlay: { flex: 1, backgroundColor: "#070A0C" },
+  quoteRevealStage: { position: "relative", width: "100%", minHeight: "100%", overflow: "hidden", paddingHorizontal: 24, paddingTop: 54, paddingBottom: 30, justifyContent: "center", backgroundColor: "#080B0D" },
+  quoteRevealSweep: { position: "absolute", left: 24, right: 24, top: 116, height: 1, backgroundColor: "rgba(232,196,104,0.72)", shadowColor: "#E8C468", shadowOpacity: 0.5, shadowRadius: 22, shadowOffset: { width: 0, height: 8 } },
+  quoteRevealTop: { position: "absolute", left: 24, right: 24, top: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   quoteRevealLogo: { width: 50, height: 38, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.07)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
   quoteRevealDay: { color: "rgba(255,249,237,0.6)", fontSize: 12, lineHeight: 16, fontWeight: "900" },
-  quoteRevealMeter: { position: "absolute", left: 24, right: 24, top: 78, height: 4, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.1)" },
+  quoteRevealIndex: { position: "absolute", left: 20, right: 20, top: 116, color: "rgba(255,249,237,0.06)", fontSize: 150, lineHeight: 160, fontWeight: "900", textAlign: "center" },
+  quoteRevealMeter: { position: "absolute", left: 24, right: 24, top: 126, height: 4, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.1)" },
   quoteRevealMeterFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
-  quoteRevealKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
-  quoteRevealTitle: { color: "rgba(255,249,237,0.76)", marginTop: 16, fontSize: 18, lineHeight: 23, fontWeight: "900", textAlign: "center" },
-  quoteRevealText: { color: "#FFF9ED", marginTop: 24, fontSize: 35, lineHeight: 40, fontWeight: "900", textAlign: "center" },
+  quoteRevealKicker: { color: "#E8C468", marginTop: 72, fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
+  quoteRevealTitle: { color: "rgba(255,249,237,0.78)", marginTop: 14, fontSize: 18, lineHeight: 23, fontWeight: "900", textAlign: "center" },
+  quoteRevealText: { color: "#FFF9ED", marginTop: 26, fontSize: 36, lineHeight: 41, fontWeight: "900", textAlign: "center" },
   quoteRevealAuthorBox: { alignSelf: "center", minWidth: 196, marginTop: 30, borderRadius: 26, paddingHorizontal: 18, paddingVertical: 13, alignItems: "center", backgroundColor: "rgba(255,255,255,0.07)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
   quoteRevealAuthor: { color: "#FFF9ED", fontSize: 15, lineHeight: 20, fontWeight: "900", textAlign: "center" },
   quoteRevealSource: { color: "rgba(255,249,237,0.56)", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "850", textAlign: "center" },
@@ -1954,16 +1993,26 @@ const styles = StyleSheet.create({
   whyImageBadgeText: { color: "#111315", fontSize: 13, fontWeight: "900" },
   removeImage: { position: "absolute", right: 8, top: 8, width: 32, height: 32, borderRadius: 16, backgroundColor: "rgba(0,0,0,0.58)", alignItems: "center", justifyContent: "center" },
   removeImageText: { color: "#FFFFFF", fontSize: 18, fontWeight: "900" },
-  deckHero: { minHeight: 310, overflow: "hidden", borderWidth: 1, borderRadius: 34, marginBottom: 14, backgroundColor: "#101418", shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
+  deckHero: { minHeight: 318, overflow: "hidden", borderWidth: 1, borderRadius: 34, marginBottom: 14, backgroundColor: "#101418", shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
+  deckHeroEmpty: { backgroundColor: "#111417" },
   deckHeroAnti: { backgroundColor: "#171412" },
   deckHeroImage: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%" },
   deckHeroShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.48)" },
   deckHeroText: { flex: 1, justifyContent: "flex-end", padding: 22 },
+  deckHeroTextEmpty: { paddingTop: 168 },
   deckHeroKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
-  deckHeroTitle: { color: "#FFFFFF", marginTop: 8, fontSize: 34, lineHeight: 37, fontWeight: "900" },
-  deckHeroBody: { color: "rgba(255,249,237,0.78)", marginTop: 10, fontSize: 15, lineHeight: 21, fontWeight: "750" },
+  deckHeroTitle: { color: "#FFFFFF", marginTop: 8, fontSize: 33, lineHeight: 36, fontWeight: "900" },
+  deckHeroBody: { color: "rgba(255,249,237,0.78)", marginTop: 10, fontSize: 14, lineHeight: 20, fontWeight: "700" },
   deckCountBadge: { position: "absolute", right: 14, top: 14, minWidth: 50, height: 34, paddingHorizontal: 10, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.14)", borderWidth: 1, borderColor: "rgba(255,255,255,0.16)" },
   deckCountText: { color: "#FFFFFF", fontSize: 12, fontWeight: "900" },
+  deckFrameStack: { position: "absolute", left: 20, right: 20, top: 20, height: 144 },
+  deckFrame: { position: "absolute", overflow: "hidden", borderWidth: 1, borderColor: "rgba(255,249,237,0.12)", borderRadius: 24, padding: 13, justifyContent: "flex-end", backgroundColor: "rgba(255,249,237,0.08)" },
+  deckFrameOne: { left: 0, top: 18, width: "47%", height: 112, transform: [{ rotate: "-4deg" }] },
+  deckFrameTwo: { left: "27%", top: 0, width: "47%", height: 132, transform: [{ rotate: "2deg" }] },
+  deckFrameThree: { right: 0, top: 26, width: "42%", height: 106, transform: [{ rotate: "5deg" }] },
+  deckFrameAnti: { borderColor: "rgba(218,90,58,0.24)", backgroundColor: "rgba(218,90,58,0.08)" },
+  deckFrameLabel: { color: "rgba(255,249,237,0.78)", fontSize: 12, lineHeight: 15, fontWeight: "900" },
+  deckFrameLabelAnti: { color: "rgba(255,220,210,0.82)" },
   deckRail: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 14 },
   deckTile: { aspectRatio: 0.68 },
   speechPanel: { borderWidth: 1, borderRadius: 32, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 4 },
