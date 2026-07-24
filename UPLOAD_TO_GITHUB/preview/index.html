@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=80" />
+    <link rel="manifest" href="./manifest.webmanifest?v=81" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v80";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v81";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=80")
+            .register("./service-worker.js?v=81")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1505,11 +1505,13 @@
       }
 
       .why-workbench {
+        position: relative;
         display: grid;
         gap: 16px;
+        overflow: hidden;
         padding: 22px;
         border: 1px solid rgba(17, 17, 17, 0.06);
-        border-radius: 32px;
+        border-radius: 38px;
         color: var(--ink);
         text-align: center;
         background:
@@ -1519,11 +1521,41 @@
         animation: panelPop 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
+      .why-workbench::before,
+      .why-workbench::after {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      .why-workbench::before {
+        width: 190px;
+        height: 190px;
+        right: -72px;
+        top: -86px;
+        background: rgba(232, 196, 104, 0.12);
+      }
+
+      .why-workbench::after {
+        width: 210px;
+        height: 210px;
+        left: -104px;
+        bottom: -116px;
+        background: rgba(218, 90, 58, 0.08);
+      }
+
       body[data-theme="dark"] .why-workbench {
         border-color: rgba(255, 255, 255, 0.08);
         background:
           radial-gradient(circle at 88% 12%, rgba(232, 196, 104, 0.16), transparent 28%),
           #1b2023;
+      }
+
+      .why-workbench > * {
+        position: relative;
+        z-index: 1;
       }
 
       .why-workbench-head h2 {
@@ -1541,6 +1573,75 @@
         font-size: 14px;
         line-height: 1.38;
         font-weight: 800;
+      }
+
+      .why-motive-stack {
+        position: relative;
+        width: min(100%, 260px);
+        height: 130px;
+        margin: 1px auto -2px;
+      }
+
+      .why-motive-card {
+        position: absolute;
+        width: 96px;
+        height: 120px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border: 2px solid rgba(255, 249, 237, 0.78);
+        border-radius: 30px;
+        color: var(--ink);
+        background: var(--soft);
+        box-shadow: 0 18px 36px rgba(17, 17, 17, 0.14);
+      }
+
+      .why-motive-card:nth-child(1) {
+        left: 4px;
+        top: 18px;
+        transform: rotate(-7deg);
+      }
+
+      .why-motive-card:nth-child(2) {
+        left: 82px;
+        top: 0;
+        transform: rotate(1deg);
+      }
+
+      .why-motive-card:nth-child(3) {
+        right: 4px;
+        top: 18px;
+        transform: rotate(7deg);
+      }
+
+      .why-motive-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .why-motive-card span {
+        padding: 0 10px;
+        font-size: 12px;
+        line-height: 1.2;
+        font-weight: 950;
+      }
+
+      .why-motive-count {
+        position: absolute;
+        right: 2px;
+        top: 6px;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border: 2px solid #fff9ed;
+        border-radius: 50%;
+        color: #101418;
+        background: var(--gold);
+        font-size: 13px;
+        font-weight: 950;
+        box-shadow: 0 12px 22px rgba(17, 17, 17, 0.18);
       }
 
       .why-prompts {
@@ -5088,6 +5189,7 @@
                 <p id="whyPanelText">Upload photos of family, your younger self, a future child, a rival, or someone you want to prove wrong.</p>
               </div>
 
+              <div class="why-motive-stack" id="whyMotiveStack" aria-hidden="true"></div>
               <div class="why-prompts" id="whyPrompts"></div>
               <button class="btn" id="uploadWhyPhoto" type="button">Add people</button>
               <input id="whyPhotoInput" type="file" accept="image/*" multiple hidden />
@@ -7458,8 +7560,21 @@
       function renderWhyPeople() {
         const prompts = document.getElementById("whyPrompts");
         const grid = document.getElementById("whyPeopleGrid");
-        if (!prompts || !grid) return;
-        prompts.innerHTML = uiText("whyChips").split("|").map((item) => `<span>${escapeHtml(item)}</span>`).join("");
+        const motiveStack = document.getElementById("whyMotiveStack");
+        if (!prompts || !grid || !motiveStack) return;
+        const chips = uiText("whyChips").split("|");
+        prompts.innerHTML = chips.map((item) => `<span>${escapeHtml(item)}</span>`).join("");
+        const motiveItems = state.whyPeople.length
+          ? state.whyPeople.slice(0, 3).map((person) => ({ image: whyPersonImageUrl(person), label: "" }))
+          : chips.slice(0, 3).map((label) => ({ image: "", label }));
+        motiveStack.innerHTML = `
+          ${motiveItems.map((item) => `
+            <span class="why-motive-card">
+              ${item.image ? `<img src="${escapeHtml(item.image)}" alt="" />` : `<span>${escapeHtml(item.label)}</span>`}
+            </span>
+          `).join("")}
+          ${state.whyPeople.length ? `<b class="why-motive-count">${state.whyPeople.length}</b>` : ""}
+        `;
 
         if (!state.whyPeople.length) {
           grid.innerHTML = `

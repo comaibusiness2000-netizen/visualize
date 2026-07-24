@@ -1397,12 +1397,43 @@ export default function App() {
   function renderGoals() {
     const people = appState.whyPeople || [];
     const examples = t("why.examples").split("|");
+    const motiveSlots = people.length ? people.slice(0, 3) : examples.slice(0, 3).map((label, index) => ({ id: `empty-${index}`, label }));
     return (
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.whyHero, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <View style={styles.whyAuraTop} />
+          <View style={styles.whyAuraBottom} />
           <Text style={[styles.kicker, { color: theme.muted }]}>{t("tab.goals")}</Text>
           <Text style={[styles.whyTitle, { color: theme.ink }]}>{t("why.title")}</Text>
           <Text style={[styles.body, styles.centerText, { color: theme.muted }]}>{t("why.body")}</Text>
+          <View style={styles.whyMotiveStack} pointerEvents="none">
+            {motiveSlots.map((slot, index) => {
+              const imageUri = slot.imageUri;
+              return (
+                <View
+                  key={slot.id}
+                  style={[
+                    styles.whyMotiveCard,
+                    index === 0 && styles.whyMotiveCardOne,
+                    index === 1 && styles.whyMotiveCardTwo,
+                    index === 2 && styles.whyMotiveCardThree,
+                    { borderColor: imageUri ? "rgba(255,249,237,0.78)" : theme.line, backgroundColor: imageUri ? "#222629" : theme.soft }
+                  ]}
+                >
+                  {imageUri ? (
+                    <Image source={{ uri: imageUri }} style={styles.whyMotiveImage} />
+                  ) : (
+                    <Text style={[styles.whyMotivePlaceholder, { color: theme.ink }]} numberOfLines={2}>{slot.label}</Text>
+                  )}
+                </View>
+              );
+            })}
+            {people.length ? (
+              <View style={styles.whyMotiveCount}>
+                <Text style={styles.whyMotiveCountText}>{people.length}</Text>
+              </View>
+            ) : null}
+          </View>
           <View style={styles.whyChips}>
             {examples.map((example) => (
               <View key={example} style={[styles.whyChip, { backgroundColor: theme.soft, borderColor: theme.line }]}>
@@ -2333,9 +2364,20 @@ const styles = StyleSheet.create({
   progressText: { marginTop: 2, fontSize: 12, fontWeight: "900" },
   actionsRow: { flexDirection: "row", gap: 10, marginTop: 14 },
   centerText: { textAlign: "center" },
-  whyHero: { overflow: "hidden", borderWidth: 1, borderRadius: 32, padding: 22, marginBottom: 14, alignItems: "center", shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 4 },
-  whyTitle: { marginTop: 8, fontSize: 32, lineHeight: 35, fontWeight: "900", textAlign: "center" },
-  whyChips: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 16 },
+  whyHero: { overflow: "hidden", borderWidth: 1, borderRadius: 38, padding: 22, marginBottom: 14, alignItems: "center", shadowColor: "#000", shadowOpacity: 0.1, shadowRadius: 26, shadowOffset: { width: 0, height: 14 }, elevation: 5 },
+  whyAuraTop: { position: "absolute", width: 190, height: 190, right: -72, top: -86, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.16)" },
+  whyAuraBottom: { position: "absolute", width: 210, height: 210, left: -104, bottom: -116, borderRadius: 105, backgroundColor: "rgba(218,90,58,0.1)" },
+  whyTitle: { maxWidth: 320, marginTop: 8, fontSize: 32, lineHeight: 35, fontWeight: "900", textAlign: "center" },
+  whyMotiveStack: { width: 260, height: 130, marginTop: 18, marginBottom: 4, alignSelf: "center" },
+  whyMotiveCard: { position: "absolute", width: 96, height: 120, overflow: "hidden", borderWidth: 2, borderRadius: 30, alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 4 },
+  whyMotiveCardOne: { left: 4, top: 18, transform: [{ rotate: "-7deg" }] },
+  whyMotiveCardTwo: { left: 82, top: 0, transform: [{ rotate: "1deg" }] },
+  whyMotiveCardThree: { right: 4, top: 18, transform: [{ rotate: "7deg" }] },
+  whyMotiveImage: { width: "100%", height: "100%" },
+  whyMotivePlaceholder: { paddingHorizontal: 10, fontSize: 12, lineHeight: 15, fontWeight: "900", textAlign: "center" },
+  whyMotiveCount: { position: "absolute", right: 2, top: 6, width: 34, height: 34, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468", borderWidth: 2, borderColor: "#FFF9ED" },
+  whyMotiveCountText: { color: "#101418", fontSize: 13, fontWeight: "900" },
+  whyChips: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 8, marginTop: 15 },
   whyChip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 8 },
   whyChipText: { fontSize: 12, lineHeight: 15, fontWeight: "900" },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
