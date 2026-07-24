@@ -314,6 +314,8 @@ const copy = {
     "speech.title": "Self speech",
     "speech.heading": "Script your inner voice.",
     "speech.body": "Write the self-talk you want to hear repeatedly. Keep it personal, direct, and believable.",
+    "speech.library": "Scripts",
+    "speech.current": "Current script",
     "speech.titlePlaceholder": "Title",
     "speech.textPlaceholder": "Write your speech here",
     "speech.save": "Save",
@@ -413,6 +415,8 @@ Object.assign(copy.zh, {
   "why.emptyBody": "Add the people, memories, or future people that make your goals personal.",
   "speech.voice": "Voice",
   "speech.heading": "Script your inner voice.",
+  "speech.library": "Scripts",
+  "speech.current": "Current script",
   "speech.swipe": "Swipe to change voice",
   "speech.ready": "Ready",
   "speech.playing": "Playing",
@@ -421,6 +425,21 @@ Object.assign(copy.zh, {
   "quote.title": "Read it. Move.",
   "quote.open": "open",
   "quote.close": "Carry it"
+});
+
+Object.assign(copy.es, {
+  "speech.library": "Scripts",
+  "speech.current": "Script actual"
+});
+
+Object.assign(copy.fr, {
+  "speech.library": "Scripts",
+  "speech.current": "Script actuel"
+});
+
+Object.assign(copy.pt, {
+  "speech.library": "Scripts",
+  "speech.current": "Script atual"
 });
 
 Object.assign(copy.en, {
@@ -1591,18 +1610,26 @@ export default function App() {
           </TouchableOpacity>
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.speechListRail}>
-          {appState.selfSpeeches.map((speech, index) => (
-            <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: index === appState.activeSpeechIndex ? "rgba(232,196,104,0.18)" : theme.card, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)} activeOpacity={0.88}>
-              <Text style={[styles.speechPillTitle, { color: theme.ink }]} numberOfLines={1}>{speech.title || `Self speech ${index + 1}`}</Text>
-              <Text style={[styles.speechPillBody, { color: theme.muted }]} numberOfLines={2}>{speech.text || t("speech.emptyDraft")}</Text>
+        <View style={[styles.speechLibraryPanel, { backgroundColor: theme.soft, borderColor: theme.line }]}>
+          <View style={styles.speechLibraryHeader}>
+            <Text style={[styles.speechLibraryLabel, { color: theme.muted }]}>{t("speech.library")}</Text>
+            <TouchableOpacity style={[styles.speechNewButton, { backgroundColor: theme.card, borderColor: theme.line }]} onPress={newSpeech} activeOpacity={0.88}>
+              <Text style={[styles.speechNewButtonText, { color: theme.ink }]}>+</Text>
             </TouchableOpacity>
-          ))}
-        </ScrollView>
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.speechListRail}>
+            {appState.selfSpeeches.map((speech, index) => (
+              <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: index === appState.activeSpeechIndex ? "rgba(232,196,104,0.18)" : theme.card, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)} activeOpacity={0.88}>
+                <Text style={[styles.speechPillTitle, { color: theme.ink }]} numberOfLines={1}>{speech.title || `Self speech ${index + 1}`}</Text>
+                <Text style={[styles.speechPillBody, { color: theme.muted }]} numberOfLines={2}>{speech.text || t("speech.emptyDraft")}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
 
         <View style={[styles.speechEditorCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
           <View style={styles.speechEditorHeader}>
-            <Text style={[styles.kicker, { color: theme.muted }]}>{t("speech.title")}</Text>
+            <Text style={[styles.kicker, { color: theme.muted }]}>{t("speech.current")}</Text>
             <Text style={[styles.speechEditorCount, { color: theme.muted }]}>{speechWords} {t("speech.words")}</Text>
           </View>
           <TextInput
@@ -1667,12 +1694,11 @@ export default function App() {
             <TouchableOpacity style={[styles.speechDockButton, styles.speechDockPrimary]} onPress={saveSpeech}>
               <Text style={styles.primaryText}>{t("speech.save")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={newSpeech}>
-              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.new")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={stopSpeech}>
-              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
-            </TouchableOpacity>
+            {speechPlaying ? (
+              <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={stopSpeech}>
+                <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
+              </TouchableOpacity>
+            ) : null}
         </View>
       </ScrollView>
     );
@@ -2412,7 +2438,7 @@ const styles = StyleSheet.create({
   deckRail: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 14 },
   deckTile: { aspectRatio: 0.68 },
   speechContent: { padding: 20, paddingBottom: 132 },
-  speechHero: { minHeight: 246, overflow: "hidden", borderRadius: 34, paddingHorizontal: 20, paddingTop: 20, paddingBottom: 18, marginBottom: 12, alignItems: "center", backgroundColor: "#080B0D", shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
+  speechHero: { minHeight: 244, overflow: "hidden", borderRadius: 34, paddingHorizontal: 20, paddingTop: 20, paddingBottom: 18, marginBottom: 13, alignItems: "center", backgroundColor: "#080B0D", shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
   speechHeroPlaying: { shadowOpacity: 0.28, shadowRadius: 34 },
   speechHeroAuraTop: { position: "absolute", width: 190, height: 190, right: -64, top: -72, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.18)" },
   speechHeroAuraBottom: { position: "absolute", width: 190, height: 190, left: -84, bottom: -104, borderRadius: 95, backgroundColor: "rgba(218,90,58,0.13)" },
@@ -2428,11 +2454,16 @@ const styles = StyleSheet.create({
   speechPlayButton: { minHeight: 50, minWidth: 176, marginTop: 11, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FFF9ED" },
   speechPlayButtonActive: { backgroundColor: "#E8C468" },
   speechPlayText: { color: "#101418", fontSize: 16, lineHeight: 20, fontWeight: "900" },
+  speechLibraryPanel: { borderWidth: 1, borderRadius: 28, paddingHorizontal: 14, paddingTop: 13, paddingBottom: 14, marginBottom: 12 },
+  speechLibraryHeader: { minHeight: 34, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 8 },
+  speechLibraryLabel: { fontSize: 11, lineHeight: 14, fontWeight: "900", letterSpacing: 1.4, textTransform: "uppercase" },
+  speechNewButton: { width: 34, height: 34, borderWidth: 1, borderRadius: 17, alignItems: "center", justifyContent: "center" },
+  speechNewButtonText: { marginTop: -2, fontSize: 23, lineHeight: 25, fontWeight: "850" },
   speechEditorCard: { borderWidth: 1, borderRadius: 30, padding: 18, marginBottom: 12, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 4 },
   speechEditorHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 10 },
   speechEditorCount: { fontSize: 11, lineHeight: 14, fontWeight: "900", textTransform: "uppercase" },
   speechTitleInput: { minHeight: 50, borderWidth: 0, borderBottomWidth: 1, paddingHorizontal: 0, paddingVertical: 8, fontSize: 24, lineHeight: 29, fontWeight: "900" },
-  speechScriptInput: { minHeight: 170, marginTop: 12, borderWidth: 0, paddingHorizontal: 0, paddingVertical: 6, textAlignVertical: "top", fontSize: 16, lineHeight: 23, fontWeight: "750" },
+  speechScriptInput: { minHeight: 156, marginTop: 12, borderWidth: 0, paddingHorizontal: 0, paddingVertical: 6, textAlignVertical: "top", fontSize: 16, lineHeight: 23, fontWeight: "750" },
   voicePanel: { marginBottom: 12, borderRadius: 26, paddingVertical: 13, overflow: "hidden" },
   voicePanelPremium: { borderWidth: 1, borderColor: "rgba(128,128,128,0.1)" },
   voiceHeader: { paddingHorizontal: 14, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 },
@@ -2445,12 +2476,12 @@ const styles = StyleSheet.create({
   voiceDots: { flexDirection: "row", justifyContent: "center", gap: 6, marginTop: 8 },
   voiceDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "rgba(128,128,128,0.34)" },
   voiceDotActive: { width: 18, backgroundColor: "#E8C468" },
-  speechListRail: { gap: 10, paddingBottom: 10 },
-  speechPill: { width: 208, minHeight: 74, borderWidth: 1, borderRadius: 24, padding: 14, marginBottom: 4 },
-  speechPillTitle: { fontSize: 17, lineHeight: 21, fontWeight: "900" },
+  speechListRail: { gap: 10, paddingRight: 2 },
+  speechPill: { width: 190, minHeight: 68, borderWidth: 1, borderRadius: 23, paddingHorizontal: 14, paddingVertical: 12 },
+  speechPillTitle: { fontSize: 16, lineHeight: 20, fontWeight: "900" },
   speechPillBody: { marginTop: 5, fontSize: 12, lineHeight: 16, fontWeight: "750" },
-  speechActionDock: { flexDirection: "row", gap: 8, marginTop: 2 },
-  speechDockButton: { flex: 1, minHeight: 52, borderRadius: 999, paddingHorizontal: 12, alignItems: "center", justifyContent: "center", borderWidth: 1 },
+  speechActionDock: { flexDirection: "row", gap: 10, marginTop: 2 },
+  speechDockButton: { flex: 1, minHeight: 54, borderRadius: 999, paddingHorizontal: 12, alignItems: "center", justifyContent: "center", borderWidth: 1 },
   speechDockPrimary: { borderColor: "#DA5A3A", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.18, shadowRadius: 12, shadowOffset: { width: 0, height: 8 }, elevation: 3 },
   switchRow: { minHeight: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   languageGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 },

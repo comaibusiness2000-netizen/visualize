@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=82" />
+    <link rel="manifest" href="./manifest.webmanifest?v=83" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v82";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v83";
 
       function syncVisualViewport() {
         const viewport = window.visualViewport;
@@ -45,7 +45,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=82")
+            .register("./service-worker.js?v=83")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3627,19 +3627,37 @@
         background: var(--gold);
       }
 
-      .speech-list-row {
+      .speech-script-panel {
         flex: 0 0 auto;
-        min-height: 52px;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 10px;
+        gap: 8px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 12px 12px 13px;
+        background: var(--soft);
         animation: premiumPanelIn 0.72s 0.07s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
-      .speech-list {
-        min-height: 44px;
+      .speech-script-top {
+        min-height: 34px;
         display: flex;
-        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .speech-script-top span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+      }
+
+      .speech-list {
+        min-height: 60px;
+        display: flex;
+        gap: 9px;
         overflow-x: auto;
         overscroll-behavior-inline: contain;
         scrollbar-width: none;
@@ -3650,15 +3668,15 @@
       }
 
       .speech-pill {
-        min-width: 164px;
-        max-width: 188px;
+        min-width: 176px;
+        max-width: 200px;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
         gap: 6px;
         border: 1px solid var(--line);
         border-radius: 22px;
-        padding: 9px 8px 9px 12px;
+        padding: 10px 8px 10px 12px;
         background: var(--control);
       }
 
@@ -3708,22 +3726,22 @@
       }
 
       .speech-new {
-        width: 52px;
-        height: 52px;
+        width: 36px;
+        height: 36px;
         border: 1px solid var(--line);
         border-radius: 50%;
         color: var(--ink);
         background: var(--soft);
-        font-size: 26px;
+        font-size: 22px;
         line-height: 1;
         font-weight: 850;
       }
 
       .speech-editor {
         flex: 0 0 auto;
-        min-height: 248px;
+        min-height: 234px;
         display: grid;
-        grid-template-rows: auto auto;
+        grid-template-rows: auto auto auto;
         gap: 10px;
         overflow: visible;
         border: 1px solid var(--line);
@@ -3731,6 +3749,26 @@
         padding: 16px;
         background: var(--control);
         animation: premiumPanelIn 0.72s 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .speech-editor-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .speech-editor-top span,
+      .speech-editor-top small {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+      }
+
+      .speech-editor-top small {
+        white-space: nowrap;
       }
 
       .speech-field {
@@ -5404,12 +5442,19 @@
                 <button class="speech-play-main" id="playSelfTalk" type="button">Play</button>
               </div>
 
-              <div class="speech-list-row">
+              <div class="speech-script-panel">
+                <div class="speech-script-top">
+                  <span id="speechScriptsLabel">Scripts</span>
+                  <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
+                </div>
                 <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
-                <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
               </div>
 
               <div class="speech-editor">
+                <div class="speech-editor-top">
+                  <span id="speechCurrentLabel">Current script</span>
+                  <small id="speechEditorCount">0 words</small>
+                </div>
                 <label class="speech-field">
                   <span>Title</span>
                   <input id="selfTalkTitle" type="text" maxlength="56" placeholder="Example: Morning identity" />
@@ -6004,6 +6049,8 @@
           selfSpeech: "Self speech",
           speechTitle: "Script your inner voice.",
           speechText: "Write the text you want to hear before you act, train, work, or visualize.",
+          scripts: "Scripts",
+          currentScript: "Current script",
           title: "Title",
           script: "Script",
           voice: "Voice",
@@ -6137,6 +6184,8 @@
         whyAdd: "Agregar personas",
         whyEmptyTitle: "Aun no hay rostros.",
         whyEmptyText: "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales.",
+        scripts: "Scripts",
+        currentScript: "Script actual",
         ready: "Listo",
         playing: "Reproduciendo",
         words: "palabras",
@@ -6193,6 +6242,8 @@
         whyAdd: "Ajouter personnes",
         whyEmptyTitle: "Aucun visage encore.",
         whyEmptyText: "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels.",
+        scripts: "Scripts",
+        currentScript: "Script actuel",
         ready: "Pret",
         playing: "Lecture",
         words: "mots",
@@ -6249,6 +6300,8 @@
         whyAdd: "Adicionar pessoas",
         whyEmptyTitle: "Ainda sem rostos.",
         whyEmptyText: "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais.",
+        scripts: "Scripts",
+        currentScript: "Script atual",
         ready: "Pronto",
         playing: "Tocando",
         words: "palavras",
@@ -6302,6 +6355,8 @@
         whyAdd: "Add people",
         whyEmptyTitle: "No faces here yet.",
         whyEmptyText: "Add the people, memories, or future people that make your goals personal.",
+        scripts: "Scripts",
+        currentScript: "Current script",
         ready: "Ready",
         playing: "Playing",
         words: "words",
@@ -6419,8 +6474,10 @@
         setText("#speech .speech-head .deck-kicker", "selfSpeech");
         setText("#speech .speech-head h2", "speechTitle");
         setText("#speech .speech-head p", "speechText");
-        setText("#speech .speech-field:nth-child(1) span", "title");
-        setText("#speech .speech-field:nth-child(2) span", "script");
+        setText("#speechScriptsLabel", "scripts");
+        setText("#speechCurrentLabel", "currentScript");
+        setText("#speech .speech-field:nth-of-type(1) span", "title");
+        setText("#speech .speech-field:nth-of-type(2) span", "script");
         setPlaceholder("#selfTalkTitle", "title");
         setPlaceholder("#selfTalkText", "script");
         setText(".voice-line > div:first-child > span", "voice");
@@ -7256,6 +7313,7 @@
         const status = document.getElementById("speechPlaybackStatus");
         const voice = document.getElementById("speechHeroVoice");
         const duration = document.getElementById("speechHeroDuration");
+        const editorCount = document.getElementById("speechEditorCount");
         if (workbench) workbench.classList.toggle("playing", selfTalkPlaying);
         if (playButton) playButton.textContent = selfTalkPlaying ? uiText("playing") : uiText("play");
         if (heroTitle) heroTitle.textContent = title;
@@ -7265,6 +7323,7 @@
         if (status) status.textContent = selfTalkPlaying ? uiText("playing") : uiText("ready");
         if (voice) voice.textContent = activeVoiceProfile().name;
         if (duration) duration.textContent = `${stats.minutes} ${uiText("min")}`;
+        if (editorCount) editorCount.textContent = `${stats.words} ${uiText("words")}`;
       }
 
       function setSelfTalkPlaying(nextValue) {
