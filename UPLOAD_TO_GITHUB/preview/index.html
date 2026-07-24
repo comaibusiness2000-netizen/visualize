@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=76" />
+    <link rel="manifest" href="./manifest.webmanifest?v=77" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v76";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v77";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=76")
+            .register("./service-worker.js?v=77")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1143,16 +1143,27 @@
       }
 
       .life-dashboard {
+        min-height: 0;
+        height: 100%;
         align-content: start;
         gap: 12px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .life-dashboard::-webkit-scrollbar {
+        display: none;
       }
 
       .life-head {
         position: relative;
+        min-height: 282px;
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.18);
         border-radius: 34px;
-        padding: 22px 18px 18px;
+        padding: 24px 18px 18px;
         color: #fff9ed;
         background:
           radial-gradient(circle at 92% 0%, rgba(232, 196, 104, 0.14), transparent 34%),
@@ -1167,16 +1178,19 @@
 
       .life-head h1 {
         display: grid;
-        gap: 2px;
-        margin-top: 8px;
+        gap: 6px;
+        margin-top: 14px;
+        padding-bottom: 2px;
       }
 
       .life-head h1 strong {
+        display: block;
         color: #ffffff;
-        font-size: 54px;
-        line-height: 0.95;
+        font-size: clamp(48px, 13.8vw, 62px);
+        line-height: 1.02;
         font-weight: 950;
         letter-spacing: 0;
+        white-space: nowrap;
       }
 
       .life-head h1 em {
@@ -1187,6 +1201,7 @@
       }
 
       .life-head .life-summary {
+        margin-top: 12px;
         color: rgba(255, 249, 237, 0.68);
       }
 
