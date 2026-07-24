@@ -13,8 +13,8 @@ Last updated: July 24, 2026.
 ## App identity
 
 - App name: Visualize
-- Bundle ID: `com.comaibusiness2000.visualize`
-- SKU suggestion: `com.comaibusiness2000.visualize`
+- Bundle ID: `com.samuelecomai.visualize`
+- SKU suggestion: `com.samuelecomai.visualize`
 - Primary language: English
 - Category suggestion: Productivity
 - Secondary category suggestion: Health & Fitness or Lifestyle

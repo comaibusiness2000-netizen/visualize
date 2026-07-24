@@ -7,7 +7,7 @@ Use this when the Apple Developer Program membership is active.
 1. Confirm the Apple Developer Program is active.
 2. Tell Codex the Apple Team Name.
 3. Tell Codex the Apple Team ID.
-4. Confirm the Bundle ID: `com.comaibusiness2000.visualize`.
+4. Confirm the Bundle ID: `com.samuelecomai.visualize`.
 5. Provide the real support email to replace `support@example.com`.
 6. Confirm whether the app name `Visualize` is available in App Store Connect.
 7. Log in to Expo/EAS on this PC when prompted.
@@ -36,8 +36,8 @@ Use this as the first TestFlight invite after the build is available.
 - Platform: iOS
 - Name: Visualize
 - Primary language: English
-- Bundle ID: `com.comaibusiness2000.visualize`
-- SKU: `com.comaibusiness2000.visualize`
+- Bundle ID: `com.samuelecomai.visualize`
+- SKU: `com.samuelecomai.visualize`
 - User Access: Full Access
 
 ## URLs

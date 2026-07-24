@@ -69,7 +69,7 @@ This repository is prepared for that path.
 
 Current TestFlight prep:
 
-- Bundle ID: `com.comaibusiness2000.visualize`
+- Bundle ID: `com.samuelecomai.visualize`
 - App version: `0.2.0`
 - iOS build number: `1`
 - EAS config: `eas.json`
