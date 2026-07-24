@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=66" />
+    <link rel="manifest" href="./manifest.webmanifest?v=67" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v66";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v67";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=66")
+            .register("./service-worker.js?v=67")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2591,6 +2591,24 @@
         text-align: left;
       }
 
+      .player-index {
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        top: 126px;
+        z-index: 1;
+        color: rgba(255, 249, 237, 0.08);
+        font-size: clamp(118px, 36vw, 158px);
+        line-height: 0.95;
+        font-weight: 950;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      .player-slide.is-anti .player-index {
+        color: rgba(218, 90, 58, 0.14);
+      }
+
       .article-title {
         max-width: 340px;
         margin-top: 78px;
@@ -4742,6 +4760,7 @@
     <div class="player" id="deckPlayer" aria-hidden="true">
       <div class="player-slide" id="playerSlide">
         <div class="player-media" aria-hidden="true"></div>
+        <span class="player-index" id="playerIndex">01</span>
         <div class="player-copy">
           <span class="player-kicker" id="playerKicker">Vision 1</span>
           <h2 id="playerTitle">Identity</h2>
@@ -7675,9 +7694,11 @@
         const slide = deck[playerIndex % deck.length];
         const playerSlide = document.getElementById("playerSlide");
         playerSlide.setAttribute("style", slideBackground(playerKind, playerIndex, slideImageUrl(slide)));
+        playerSlide.classList.toggle("is-anti", playerKind === "anti");
         playerSlide.classList.remove("is-animating");
         void playerSlide.offsetWidth;
         playerSlide.classList.add("is-animating");
+        document.getElementById("playerIndex").textContent = String(playerIndex + 1).padStart(2, "0");
         document.getElementById("playerKicker").textContent =
           `${playerKind === "vision" ? "Vision" : "Anti-vision"} ${playerIndex + 1}`;
         document.getElementById("playerTitle").textContent = slide.title;

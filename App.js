@@ -705,6 +705,7 @@ export default function App() {
     const timer = setInterval(() => {
       setPlayer((current) => {
         if (!current) return current;
+        if (current.paused) return current;
         const deck = current.kind === "vision" ? appState.visionSlides : appState.antiSlides;
         if (!deck.length) return null;
         return { ...current, index: (current.index + 1) % deck.length };
@@ -1379,7 +1380,7 @@ export default function App() {
           <TouchableOpacity style={styles.primaryButtonFlex} onPress={() => { softImpact(); addImages(kind); }}>
             <Text style={styles.primaryText}>{t("deck.add")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line, backgroundColor: theme.control }]} onPress={() => { softImpact(); deck.length ? setPlayer({ kind, index: 0 }) : Alert.alert(t("alert.deck"), t("alert.addImagesFirst")); }}>
+          <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line, backgroundColor: theme.control }]} onPress={() => { softImpact(); deck.length ? setPlayer({ kind, index: 0, paused: false }) : Alert.alert(t("alert.deck"), t("alert.addImagesFirst")); }}>
             <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("deck.play")}</Text>
           </TouchableOpacity>
         </View>
@@ -1572,34 +1573,71 @@ export default function App() {
   function renderPlayer() {
     if (!player) return null;
     const deck = player.kind === "vision" ? appState.visionSlides : appState.antiSlides;
-    const slide = deck[player.index % Math.max(deck.length, 1)];
-    const imageOpacity = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [0.34, 1] });
-    const imageScale = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [1.08, 1] });
+    const count = Math.max(deck.length, 1);
+    const currentIndex = player.index % count;
+    const slide = deck[currentIndex];
+    const positive = player.kind === "vision";
+    const imageOpacity = playerPulse.interpolate({ inputRange: [0, 0.18, 1], outputRange: [0.26, 1, 1] });
+    const imageScale = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [1.13, 1.04] });
+    const imageTranslateY = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [18, -8] });
+    const copyOpacity = playerPulse.interpolate({ inputRange: [0, 0.34, 1], outputRange: [0, 0, 1] });
+    const copyTranslateY = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [28, 0] });
+    const progress = `${Math.round(((currentIndex + 1) / count) * 100)}%`;
+    const shiftPlayer = (direction) => {
+      softImpact();
+      setPlayer((current) => {
+        if (!current) return current;
+        const activeDeck = current.kind === "vision" ? appState.visionSlides : appState.antiSlides;
+        if (!activeDeck.length) return null;
+        return { ...current, index: (current.index + direction + activeDeck.length) % activeDeck.length };
+      });
+    };
+    const togglePause = () => {
+      softImpact();
+      setPlayer((current) => current ? { ...current, paused: !current.paused } : current);
+    };
+    const closePlayer = () => {
+      softImpact();
+      setPlayer(null);
+    };
     return (
-      <Modal visible animationType="fade" onRequestClose={() => setPlayer(null)}>
+      <Modal visible animationType="fade" onRequestClose={closePlayer}>
         <View style={styles.player}>
           {slide?.imageUri ? (
             <Animated.Image
               source={{ uri: slide.imageUri }}
-              style={[styles.playerImage, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]}
+              style={[styles.playerImage, { opacity: imageOpacity, transform: [{ translateY: imageTranslateY }, { scale: imageScale }] }]}
             />
           ) : null}
           <View style={[styles.playerShade, player.kind === "anti" && styles.playerShadeAnti]} />
-          <View style={styles.playerProgress}>
-            {deck.map((item, index) => (
-              <View key={item.id} style={styles.playerProgressTrack}>
-                <View style={[styles.playerProgressFill, index <= player.index && { width: "100%" }]} />
-              </View>
-            ))}
+          <View style={styles.playerTop}>
+            <TouchableOpacity style={styles.playerIconButton} onPress={closePlayer}>
+              <Text style={styles.playerIconText}>x</Text>
+            </TouchableOpacity>
+            <Text style={styles.playerCount}>{currentIndex + 1} / {deck.length}</Text>
           </View>
-          <View style={styles.playerText}>
-            <Text style={styles.playerKicker}>{player.kind === "vision" ? t("tab.vision") : t("tab.anti")}</Text>
+          <View style={styles.playerProgressBar}>
+            <View style={[styles.playerProgressFill, !positive && styles.playerProgressFillAnti, { width: progress }]} />
+          </View>
+          <Animated.Text style={[styles.playerIndex, !positive && styles.playerIndexAnti, { opacity: copyOpacity }]}>
+            {String(currentIndex + 1).padStart(2, "0")}
+          </Animated.Text>
+          <Animated.View style={[styles.playerText, { opacity: copyOpacity, transform: [{ translateY: copyTranslateY }] }]}>
+            <Text style={[styles.playerKicker, !positive && styles.playerKickerAnti]}>{positive ? t("tab.vision") : t("tab.anti")}</Text>
             <Text style={styles.playerTitle}>{slide?.title || "Your deck"}</Text>
             <Text style={styles.playerCaption}>{slide?.caption || ""}</Text>
+          </Animated.View>
+          <View style={styles.playerControls}>
+            <TouchableOpacity style={styles.playerControl} onPress={() => shiftPlayer(-1)}>
+              <Text style={styles.playerControlText}>‹</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.playerControl, styles.playerControlPrimary]} onPress={togglePause}>
+              <Text style={styles.playerControlPrimaryText}>{player.paused ? "▶" : "Ⅱ"}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.playerControl} onPress={() => shiftPlayer(1)}>
+              <Text style={styles.playerControlText}>›</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.playerClose} onPress={() => setPlayer(null)}>
-            <Text style={styles.playerCloseText}>{t("player.close")}</Text>
-          </TouchableOpacity>
         </View>
       </Modal>
     );
@@ -2080,17 +2118,27 @@ const styles = StyleSheet.create({
   navItem: { flex: 1, height: 56, borderRadius: 28, alignItems: "center", justifyContent: "center" },
   navActive: { backgroundColor: "#E8C468" },
   navText: { fontSize: 12, fontWeight: "900" },
-  player: { flex: 1, backgroundColor: "#000000", justifyContent: "flex-end" },
+  player: { flex: 1, backgroundColor: "#050607", justifyContent: "flex-end" },
   playerImage: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%" },
-  playerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.34)" },
-  playerShadeAnti: { backgroundColor: "rgba(18,8,4,0.48)" },
-  playerProgress: { position: "absolute", left: 18, right: 18, top: 58, flexDirection: "row", gap: 5 },
-  playerProgressTrack: { flex: 1, height: 3, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.24)" },
+  playerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.42)" },
+  playerShadeAnti: { backgroundColor: "rgba(18,8,4,0.56)" },
+  playerTop: { position: "absolute", left: 20, right: 20, top: 58, zIndex: 4, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  playerIconButton: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.13)", borderWidth: 1, borderColor: "rgba(255,255,255,0.16)" },
+  playerIconText: { color: "#FFFFFF", fontSize: 18, lineHeight: 20, fontWeight: "900" },
+  playerCount: { color: "rgba(255,249,237,0.78)", fontSize: 13, lineHeight: 16, fontWeight: "900" },
+  playerProgressBar: { position: "absolute", left: 20, right: 20, top: 116, zIndex: 3, height: 4, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.18)" },
   playerProgressFill: { width: "0%", height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
-  playerText: { padding: 28, paddingBottom: 88 },
-  playerKicker: { color: "#E8C468", fontSize: 12, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
-  playerTitle: { color: "#FFFFFF", fontSize: 38, lineHeight: 42, fontWeight: "900", marginTop: 8 },
-  playerCaption: { color: "#F4EFE4", fontSize: 17, lineHeight: 24, fontWeight: "700", marginTop: 10 },
-  playerClose: { position: "absolute", right: 18, top: 76, minHeight: 42, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.18)" },
-  playerCloseText: { color: "#FFFFFF", fontWeight: "900" }
+  playerProgressFillAnti: { backgroundColor: "#DA5A3A" },
+  playerIndex: { position: "absolute", left: 18, right: 18, top: 128, color: "rgba(255,249,237,0.08)", fontSize: 138, lineHeight: 148, fontWeight: "900", textAlign: "center" },
+  playerIndexAnti: { color: "rgba(218,90,58,0.14)" },
+  playerText: { marginHorizontal: 20, marginBottom: 18, borderWidth: 1, borderColor: "rgba(255,255,255,0.16)", borderRadius: 30, paddingHorizontal: 20, paddingTop: 19, paddingBottom: 21, backgroundColor: "rgba(5,6,7,0.54)" },
+  playerKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
+  playerKickerAnti: { color: "#F09A76" },
+  playerTitle: { color: "#FFFFFF", fontSize: 36, lineHeight: 38, fontWeight: "900", marginTop: 8 },
+  playerCaption: { color: "rgba(255,249,237,0.82)", fontSize: 16, lineHeight: 23, fontWeight: "750", marginTop: 10 },
+  playerControls: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 12, paddingHorizontal: 20, paddingBottom: 32 },
+  playerControl: { width: 58, height: 48, borderRadius: 24, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.12)", borderWidth: 1, borderColor: "rgba(255,255,255,0.16)" },
+  playerControlPrimary: { width: 86, backgroundColor: "#FFF9ED", borderColor: "#FFF9ED" },
+  playerControlText: { color: "#FFFFFF", fontSize: 30, lineHeight: 32, fontWeight: "800" },
+  playerControlPrimaryText: { color: "#101418", fontSize: 20, lineHeight: 22, fontWeight: "900" }
 });
