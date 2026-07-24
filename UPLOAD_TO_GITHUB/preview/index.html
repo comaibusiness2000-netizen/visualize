@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=70" />
+    <link rel="manifest" href="./manifest.webmanifest?v=71" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v70";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v71";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=70")
+            .register("./service-worker.js?v=71")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -71,6 +71,7 @@
         --rust: #da5a3a;
         --warm: #ffffff;
         --control: #ffffff;
+        --screen-x: 0px;
       }
 
       body[data-theme="dark"] {
@@ -116,15 +117,15 @@
       @keyframes screenArrives {
         0% {
           opacity: 0;
-          transform: translateY(18px) scale(0.985);
+          transform: translate3d(var(--screen-x, 0px), 14px, 0) scale(0.985);
         }
         64% {
           opacity: 1;
-          transform: translateY(-2px) scale(1.004);
+          transform: translate3d(calc(var(--screen-x, 0px) * -0.08), -2px, 0) scale(1.004);
         }
         100% {
           opacity: 1;
-          transform: translateY(0) scale(1);
+          transform: translate3d(0, 0, 0) scale(1);
         }
       }
 
@@ -5898,7 +5899,8 @@
       let editorKind = "vision";
       let editingProgressIndex = null;
       let editingSlideIndex = null;
-      const MAIN_VIEWS = new Set(["today", "goals", "vision", "anti", "speech"]);
+      const MAIN_VIEW_ORDER = ["today", "goals", "vision", "anti", "speech"];
+      const MAIN_VIEWS = new Set(MAIN_VIEW_ORDER);
       let contextualBackTarget = null;
       let contextualBackAction = "";
       let lifeEditSnapshot = null;
@@ -7187,6 +7189,10 @@
           contextualBackTarget = options.backTo || (MAIN_VIEWS.has(currentView) ? currentView : "today");
         }
 
+        const currentIndex = MAIN_VIEW_ORDER.indexOf(currentView);
+        const nextIndex = MAIN_VIEW_ORDER.indexOf(name);
+        const direction = currentIndex >= 0 && nextIndex >= 0 && nextIndex < currentIndex ? -1 : 1;
+        document.documentElement.style.setProperty("--screen-x", `${direction * 24}px`);
         currentView = name;
         document.querySelectorAll(".screen").forEach((view) => view.classList.toggle("active", view.id === name));
         const activeNavView = isMainView ? name : contextualBackTarget;

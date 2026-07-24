@@ -591,6 +591,7 @@ export default function App() {
   const [appState, setAppState] = useState(blankState);
   const [hydrated, setHydrated] = useState(false);
   const [tab, setTab] = useState("life");
+  const [tabDirection, setTabDirection] = useState(1);
   const [goalMode, setGoalMode] = useState("daily");
   const [draftGoal, setDraftGoal] = useState("");
   const [draftSpeechTitle, setDraftSpeechTitle] = useState("");
@@ -626,8 +627,10 @@ export default function App() {
   const dailyQuote = dailyQuotes[dailyQuoteIndex] || quoteForDate();
   const dailyQuoteOrdinal = `${dailyQuoteIndex + 1} / ${dailyQuotes.length}`;
   const dailyQuoteProgress = `${Math.round(((dailyQuoteIndex + 1) / Math.max(dailyQuotes.length, 1)) * 100)}%`;
-  const screenOpacity = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
-  const screenTranslate = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [18, 0] });
+  const screenOpacity = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [0.72, 1] });
+  const screenTranslate = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [12, 0] });
+  const screenTranslateX = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [tabDirection * 26, 0] });
+  const screenScale = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [0.985, 1] });
 
   useEffect(() => {
     let mounted = true;
@@ -764,6 +767,14 @@ export default function App() {
     });
   }
 
+  function navigateTab(nextTab) {
+    if (!nextTab || nextTab === tab) return;
+    const currentIndex = tabs.findIndex((item) => item.id === tab);
+    const nextIndex = tabs.findIndex((item) => item.id === nextTab);
+    setTabDirection(nextIndex >= currentIndex ? 1 : -1);
+    setTab(nextTab);
+  }
+
   function saveProfile() {
     const name = String(profileDraft.name || "").trim();
     const age = clamp(profileDraft.age, 0, 120);
@@ -814,7 +825,7 @@ export default function App() {
     const previous = storedSnapshot && typeof storedSnapshot === "object" && !shouldForceReveal ? storedSnapshot : fallbackPrevious;
 
     lifeUpdatePulse.setValue(0);
-    setTab("life");
+    navigateTab("life");
     setLifeUpdate({ previous, current: currentSnapshot });
     updateState((current) => ({
       ...current,
@@ -1115,7 +1126,7 @@ export default function App() {
           setProfileDraft(blankState.profile);
           setDraftSpeechTitle("");
           setDraftSpeechText("");
-          setTab("life");
+          navigateTab("life");
         }
       }
     ]);
@@ -1859,7 +1870,7 @@ export default function App() {
             <View style={styles.headerSpacer} />
           </View>
           <View style={styles.main}>
-            <Animated.View style={[styles.mainMotion, { opacity: screenOpacity, transform: [{ translateY: screenTranslate }] }]}>
+            <Animated.View style={[styles.mainMotion, { opacity: screenOpacity, transform: [{ translateX: screenTranslateX }, { translateY: screenTranslate }, { scale: screenScale }] }]}>
             {tab === "life" && renderLife()}
             {tab === "goals" && renderGoals()}
             {tab === "vision" && renderDeck("vision")}
@@ -1876,7 +1887,7 @@ export default function App() {
                 key={item.id}
                 activeOpacity={0.78}
                 style={[styles.navItem, active && styles.navActive]}
-                onPress={() => { softImpact(); setTab(item.id); }}
+                onPress={() => { softImpact(); navigateTab(item.id); }}
               >
                 <TabGlyph id={item.glyph} color={glyphColor} active={active} />
                 <Text style={[styles.navText, { color: glyphColor }]} numberOfLines={1} adjustsFontSizeToFit>
