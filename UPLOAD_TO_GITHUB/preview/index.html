@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=78" />
+    <link rel="manifest" href="./manifest.webmanifest?v=79" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v78";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v79";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=78")
+            .register("./service-worker.js?v=79")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -881,19 +881,23 @@
         min-height: min(510px, calc(100dvh - 168px));
         display: grid;
         align-content: center;
-        gap: clamp(11px, 1.8vh, 15px);
-        padding: 20px;
+        gap: clamp(10px, 1.55vh, 14px);
+        padding: 18px;
         border: 1px solid rgba(17, 17, 17, 0.06);
-        border-radius: 36px;
+        border-radius: 40px;
         color: var(--ink);
-        background: #fff;
-        box-shadow: 0 28px 70px rgba(17, 17, 17, 0.1);
+        background:
+          radial-gradient(circle at 92% 4%, rgba(232, 196, 104, 0.1), transparent 30%),
+          linear-gradient(180deg, #ffffff, #f3f0ea);
+        box-shadow: 0 30px 72px rgba(17, 17, 17, 0.1);
       }
 
       body[data-theme="dark"] .life-onboarding,
       body[data-theme="dark"] .life-dashboard {
         border-color: rgba(255, 255, 255, 0.08);
-        background: #1b2023;
+        background:
+          radial-gradient(circle at 92% 4%, rgba(232, 196, 104, 0.09), transparent 32%),
+          linear-gradient(180deg, #151b1e, #101418);
       }
 
       .life-onboarding {
@@ -1146,10 +1150,10 @@
         min-height: 0;
         height: 100%;
         align-content: start;
-        gap: 12px;
+        gap: 10px;
         overflow-y: auto;
         overscroll-behavior: contain;
-        padding-bottom: 4px;
+        padding-bottom: 10px;
         scrollbar-width: none;
       }
 
@@ -1159,16 +1163,18 @@
 
       .life-head {
         position: relative;
-        min-height: 282px;
+        min-height: 268px;
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.18);
         border-radius: 34px;
-        padding: 24px 18px 18px;
+        padding: 21px 18px 17px;
         color: #fff9ed;
         background:
-          radial-gradient(circle at 92% 0%, rgba(232, 196, 104, 0.14), transparent 34%),
+          radial-gradient(circle at 92% 0%, rgba(232, 196, 104, 0.16), transparent 34%),
+          radial-gradient(circle at 12% 100%, rgba(218, 90, 58, 0.1), transparent 28%),
           linear-gradient(180deg, #11171a, #070a0c);
         text-align: center;
+        box-shadow: 0 22px 54px rgba(0, 0, 0, 0.18);
         animation: premiumPanelIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
@@ -1178,8 +1184,8 @@
 
       .life-head h1 {
         display: grid;
-        gap: 6px;
-        margin-top: 14px;
+        gap: 5px;
+        margin-top: 12px;
         padding-bottom: 2px;
       }
 
@@ -1190,6 +1196,8 @@
         line-height: 1.02;
         font-weight: 950;
         letter-spacing: 0;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 20px 54px rgba(0, 0, 0, 0.36);
         white-space: nowrap;
       }
 
@@ -1201,15 +1209,16 @@
       }
 
       .life-head .life-summary {
-        margin-top: 12px;
+        max-width: 318px;
+        margin: 10px auto 0;
         color: rgba(255, 249, 237, 0.68);
       }
 
       .life-progress {
-        height: 10px;
+        height: 9px;
         overflow: hidden;
         border-radius: 999px;
-        margin-top: 17px;
+        margin-top: 15px;
         background: rgba(255, 249, 237, 0.12);
       }
 
@@ -1226,11 +1235,11 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
-        margin-top: 14px;
+        margin-top: 12px;
       }
 
       .life-stat {
-        min-height: 72px;
+        min-height: 66px;
         display: grid;
         align-content: center;
         gap: 3px;
@@ -1262,20 +1271,20 @@
       .daily-quote-card {
         position: relative;
         width: 100%;
-        min-height: 214px;
+        min-height: 176px;
         display: grid;
-        gap: 22px;
+        gap: 16px;
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.24);
-        border-radius: 38px;
-        padding: 22px;
+        border-radius: 32px;
+        padding: 18px;
         color: #fff9ed;
         background:
           radial-gradient(circle at 92% 8%, rgba(232, 196, 104, 0.2), transparent 34%),
           radial-gradient(circle at 8% 100%, rgba(218, 90, 58, 0.1), transparent 28%),
           linear-gradient(145deg, #12181b, #070a0c);
         text-align: left;
-        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.22);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
         transform: translateZ(0);
         transition: transform 0.22s ease, box-shadow 0.22s ease;
         animation: premiumPanelIn 0.78s 0.08s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -1289,10 +1298,10 @@
       .daily-quote-card::before {
         content: "";
         position: absolute;
-        width: 190px;
-        height: 190px;
-        right: -48px;
-        top: -72px;
+        width: 166px;
+        height: 166px;
+        right: -46px;
+        top: -64px;
         border-radius: 50%;
         background: rgba(232, 196, 104, 0.18);
         pointer-events: none;
@@ -1301,10 +1310,10 @@
       .daily-quote-card::after {
         content: attr(data-quote-index);
         position: absolute;
-        right: 6px;
-        bottom: -18px;
+        right: 2px;
+        bottom: -14px;
         color: rgba(255, 249, 237, 0.065);
-        font-size: 136px;
+        font-size: 112px;
         line-height: 1;
         font-weight: 950;
         pointer-events: none;
@@ -1319,8 +1328,8 @@
       }
 
       .daily-quote-badge {
-        width: 46px;
-        height: 46px;
+        width: 42px;
+        height: 42px;
         display: grid;
         place-items: center;
         border-radius: 50%;
@@ -1372,8 +1381,8 @@
         position: relative;
         z-index: 1;
         color: #fff9ed;
-        font-size: 27px;
-        line-height: 1.18;
+        font-size: 23px;
+        line-height: 1.16;
         font-weight: 950;
       }
 
@@ -1400,9 +1409,9 @@
 
       .life-map {
         display: grid;
-        grid-template-columns: repeat(48, 1fr);
-        gap: 3px;
-        padding: 10px 0 2px;
+        grid-template-columns: repeat(42, 1fr);
+        gap: 4px;
+        padding: 8px 0 2px;
         animation: premiumPanelIn 0.78s 0.14s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 

@@ -1315,7 +1315,7 @@ export default function App() {
     const dots = Array.from({ length: stats.totalMonths }, (_, index) => index < stats.spentMonths);
     const quoteNumber = String(dailyQuoteIndex + 1).padStart(2, "0");
     return (
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={styles.lifeContent}>
         <View style={[styles.heroCard, { backgroundColor: theme.hero, borderColor: theme.heroLine }]}>
           <View style={styles.heroGlow} />
           <Text style={styles.heroWatermark}>{Math.round(stats.usedPercent)}%</Text>
@@ -1325,7 +1325,7 @@ export default function App() {
               <Text style={styles.heroMiniButtonText}>{(appState.profile.name || "V").slice(0, 1).toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.daysNumber}>{stats.daysLeft.toLocaleString("en-US")}</Text>
+          <Text style={styles.daysNumber} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.72}>{stats.daysLeft.toLocaleString("en-US")}</Text>
           <Text style={styles.daysLabel}>{t("life.days")}</Text>
           <View style={[styles.bigProgressTrack, { backgroundColor: theme.soft }]}>
             <View style={[styles.bigProgressFill, { width: `${stats.usedPercent}%` }]} />
@@ -2216,49 +2216,50 @@ const styles = StyleSheet.create({
   main: { flex: 1 },
   mainMotion: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
-  heroCard: { minHeight: 356, overflow: "hidden", borderWidth: 1, borderRadius: 36, padding: 24, marginBottom: 16, shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
+  lifeContent: { padding: 20, paddingBottom: 132 },
+  heroCard: { minHeight: 336, overflow: "hidden", borderWidth: 1, borderRadius: 38, padding: 22, marginBottom: 12, shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
   heroGlow: { position: "absolute", right: -48, top: -68, width: 180, height: 180, borderRadius: 90, backgroundColor: "rgba(232,196,104,0.15)" },
   heroWatermark: { position: "absolute", left: 16, right: 16, bottom: -22, color: "rgba(255,249,237,0.055)", fontSize: 116, lineHeight: 122, fontWeight: "900", textAlign: "center" },
-  heroTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 18 },
+  heroTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 },
   heroKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
   heroMiniButton: { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.12)", borderWidth: 1, borderColor: "rgba(255,255,255,0.14)" },
   heroMiniButtonText: { color: "#FFF9ED", fontSize: 15, fontWeight: "900" },
   kicker: { fontSize: 11, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
-  daysNumber: { color: "#FFFFFF", marginTop: 4, fontSize: 56, lineHeight: 61, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
-  daysLabel: { color: "rgba(255,249,237,0.76)", fontSize: 16, lineHeight: 21, fontWeight: "850", marginBottom: 20, textAlign: "center" },
-  bigProgressTrack: { height: 12, overflow: "hidden", borderRadius: 999, marginBottom: 14 },
+  daysNumber: { color: "#FFFFFF", marginTop: 2, fontSize: 58, lineHeight: 63, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
+  daysLabel: { color: "rgba(255,249,237,0.76)", fontSize: 16, lineHeight: 21, fontWeight: "850", marginBottom: 18, textAlign: "center" },
+  bigProgressTrack: { height: 11, overflow: "hidden", borderRadius: 999, marginBottom: 13 },
   bigProgressFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   heroBody: { color: "rgba(255,249,237,0.72)", fontSize: 15, lineHeight: 22, fontWeight: "700", textAlign: "center" },
-  heroStatsStrip: { minHeight: 76, marginTop: 22, borderRadius: 24, paddingHorizontal: 10, flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255,249,237,0.075)", borderWidth: 1, borderColor: "rgba(255,249,237,0.08)" },
+  heroStatsStrip: { minHeight: 72, marginTop: 18, borderRadius: 24, paddingHorizontal: 10, flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255,249,237,0.075)", borderWidth: 1, borderColor: "rgba(255,249,237,0.08)" },
   heroStatCell: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 4 },
   heroStatValue: { color: "#FFF9ED", fontSize: 20, lineHeight: 24, fontWeight: "900", textAlign: "center" },
   heroStatLabel: { color: "rgba(255,249,237,0.58)", marginTop: 3, fontSize: 10, lineHeight: 13, fontWeight: "900", textAlign: "center", letterSpacing: 1.1, textTransform: "uppercase" },
   heroStatDivider: { width: 1, height: 36, backgroundColor: "rgba(255,249,237,0.11)" },
   body: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
   syncFootnote: { marginTop: 10, fontSize: 11, lineHeight: 16, fontWeight: "900", letterSpacing: 0.5 },
-  quoteCard: { minHeight: 214, overflow: "hidden", borderWidth: 1, borderRadius: 38, padding: 22, marginBottom: 16, shadowColor: "#000", shadowOpacity: 0.22, shadowRadius: 34, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
+  quoteCard: { minHeight: 184, overflow: "hidden", borderWidth: 1, borderRadius: 34, padding: 20, marginBottom: 12, shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
   quoteCardLight: { backgroundColor: "#0D1113", borderColor: "rgba(232,196,104,0.18)" },
   quoteCardDark: { backgroundColor: "#11171A", borderColor: "rgba(232,196,104,0.24)" },
-  quoteCardGlow: { position: "absolute", right: -48, top: -72, width: 190, height: 190, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.18)" },
-  quoteCardWatermark: { position: "absolute", right: -2, bottom: -23, color: "rgba(255,249,237,0.06)", fontSize: 136, lineHeight: 142, fontWeight: "900" },
+  quoteCardGlow: { position: "absolute", right: -46, top: -64, width: 166, height: 166, borderRadius: 83, backgroundColor: "rgba(232,196,104,0.18)" },
+  quoteCardWatermark: { position: "absolute", right: 0, bottom: -17, color: "rgba(255,249,237,0.06)", fontSize: 112, lineHeight: 118, fontWeight: "900" },
   quoteCardTop: { flexDirection: "row", alignItems: "center", gap: 12 },
-  quoteMark: { width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
+  quoteMark: { width: 42, height: 42, borderRadius: 21, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
   quoteMarkText: { color: "#101418", fontSize: 14, lineHeight: 17, fontWeight: "900" },
   quoteMetaBlock: { flex: 1, minWidth: 0 },
   quoteCardKicker: { color: "rgba(255,249,237,0.72)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
   quoteCardDay: { color: "#E8C468", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "900" },
   quoteOpenHint: { overflow: "hidden", minHeight: 32, paddingHorizontal: 13, paddingVertical: 8, borderRadius: 999, color: "#101418", backgroundColor: "#FFF9ED", fontSize: 12, lineHeight: 14, fontWeight: "900", textTransform: "lowercase" },
-  quoteCardText: { marginTop: 24, color: "#FFF9ED", fontSize: 27, lineHeight: 33, fontWeight: "900" },
-  quoteCardFooter: { marginTop: 22, flexDirection: "row", alignItems: "center", gap: 10 },
+  quoteCardText: { marginTop: 20, color: "#FFF9ED", fontSize: 24, lineHeight: 29, fontWeight: "900" },
+  quoteCardFooter: { marginTop: 18, flexDirection: "row", alignItems: "center", gap: 10 },
   quoteAuthor: { color: "rgba(255,249,237,0.72)", fontSize: 12, lineHeight: 16, fontWeight: "900" },
   quoteFooterLine: { flex: 1, height: 1, backgroundColor: "rgba(232,196,104,0.26)" },
   panel: { borderWidth: 1, borderRadius: 28, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 2 },
-  monthPanel: { paddingBottom: 20 },
+  monthPanel: { borderRadius: 34, padding: 20, paddingBottom: 20, marginBottom: 0 },
   panelHeaderRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: 12 },
   panelTitle: { fontSize: 22, lineHeight: 26, fontWeight: "900", marginBottom: 8 },
   monthCounter: { fontSize: 12, lineHeight: 16, fontWeight: "900" },
-  dotMap: { marginTop: 15, flexDirection: "row", flexWrap: "wrap", gap: 5 },
-  lifeDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.26)" },
+  dotMap: { marginTop: 14, flexDirection: "row", flexWrap: "wrap", gap: 4 },
+  lifeDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.24)" },
   lifeDotSpent: { backgroundColor: "#E8C468" },
   lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(6,8,9,0.998)", alignItems: "center", justifyContent: "center" },
   lifeUpdateStage: { width: "100%", minHeight: "100%", overflow: "hidden", paddingHorizontal: 24, paddingTop: 60, paddingBottom: 34, alignItems: "center", justifyContent: "center", backgroundColor: "#090D0F" },
