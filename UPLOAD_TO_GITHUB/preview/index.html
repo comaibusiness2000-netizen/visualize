@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.webmanifest?v=60" />
+    <link rel="manifest" href="./manifest.webmanifest?v=61" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-22-v59";
+      const VISUALIZE_APP_VERSION = "2026-07-24-v61";
 
       if ("caches" in window) {
         try {
@@ -38,7 +38,7 @@
 
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=60")
+            .register("./service-worker.js?v=61")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -337,7 +337,7 @@
         border: 8px solid #0b0b0b;
         border-radius: 34px;
         background: var(--paper);
-        box-shadow: 0 24px 62px rgba(17, 17, 17, 0.22);
+        box-shadow: 0 34px 90px rgba(17, 17, 17, 0.28);
         animation: phoneWake 0.52s cubic-bezier(0.2, 0.9, 0.18, 1) both;
       }
 
@@ -848,14 +848,16 @@
         align-content: center;
         gap: clamp(10px, 1.8vh, 14px);
         padding: 22px;
-        border-radius: 28px;
+        border: 1px solid rgba(17, 17, 17, 0.06);
+        border-radius: 32px;
         color: var(--ink);
         background: #fff;
-        box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
+        box-shadow: 0 28px 70px rgba(17, 17, 17, 0.1);
       }
 
       body[data-theme="dark"] .life-onboarding,
       body[data-theme="dark"] .life-dashboard {
+        border-color: rgba(255, 255, 255, 0.08);
         background: #1b2023;
       }
 
@@ -1165,17 +1167,19 @@
         display: grid;
         gap: 16px;
         padding: 22px;
-        border-radius: 28px;
+        border: 1px solid rgba(17, 17, 17, 0.06);
+        border-radius: 32px;
         color: var(--ink);
         text-align: center;
         background:
           radial-gradient(circle at 88% 12%, rgba(232, 196, 104, 0.18), transparent 28%),
           #ffffff;
-        box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
+        box-shadow: 0 28px 70px rgba(17, 17, 17, 0.1);
         animation: panelPop 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       body[data-theme="dark"] .why-workbench {
+        border-color: rgba(255, 255, 255, 0.08);
         background:
           radial-gradient(circle at 88% 12%, rgba(232, 196, 104, 0.16), transparent 28%),
           #1b2023;
@@ -1568,13 +1572,14 @@
         justify-items: center;
         gap: 18px;
         padding: 30px 24px;
-        border-radius: 28px;
+        border: 1px solid rgba(17, 17, 17, 0.06);
+        border-radius: 32px;
         color: #111;
         text-align: center;
         background:
           radial-gradient(circle at 50% 18%, rgba(17, 17, 17, 0.035), transparent 30%),
           #ffffff;
-        box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
+        box-shadow: 0 28px 70px rgba(17, 17, 17, 0.1);
       }
 
       .anti-empty {
@@ -1586,6 +1591,7 @@
 
       body[data-theme="dark"] .vision-empty,
       body[data-theme="dark"] .anti-empty {
+        border-color: rgba(255, 255, 255, 0.08);
         color: #f4f4f1;
         background:
           radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.05), transparent 32%),
@@ -1645,7 +1651,9 @@
 
       .deck-stage.positive {
         color: #111111;
-        background: #ffffff;
+        background:
+          radial-gradient(circle at 18% 12%, rgba(232, 196, 104, 0.09), transparent 30%),
+          #ffffff;
       }
 
       body[data-theme="dark"] .deck-stage.positive {
@@ -1678,7 +1686,7 @@
 
       .deck-head h2 {
         margin-top: 5px;
-        font-size: 25px;
+        font-size: 27px;
         line-height: 1.08;
         font-weight: 950;
       }
@@ -1699,15 +1707,15 @@
       }
 
       .deck-card {
-        min-width: 122px;
-        flex: 0 0 122px;
-        min-height: 228px;
+        min-width: 132px;
+        flex: 0 0 132px;
+        min-height: 244px;
         position: relative;
         display: grid;
         align-content: end;
         gap: 5px;
         overflow: hidden;
-        border-radius: 18px;
+        border-radius: 22px;
         padding: 10px;
         color: #fff;
         background:
@@ -1816,7 +1824,7 @@
         display: grid;
         align-content: end;
         gap: 12px;
-        padding: 92px 24px 124px;
+        padding: 104px 24px 128px;
         isolation: isolate;
         overflow: hidden;
         background: #050607;
@@ -1828,15 +1836,15 @@
         inset: 0;
         z-index: 0;
         background:
-          linear-gradient(180deg, rgba(5, 6, 7, 0.02), rgba(5, 6, 7, 0.78)),
+          linear-gradient(180deg, rgba(5, 6, 7, 0.04), rgba(5, 6, 7, 0.82)),
           var(--slide-bg, linear-gradient(145deg, #111, #565853 58%, #d9d9d6));
         background-size: cover;
         background-position: center;
-        transform: scale(1.02);
+        transform: scale(1.04);
       }
 
       .player-slide.is-animating .player-media {
-        animation: cinematicPhoto 3.25s ease both;
+        animation: cinematicPhoto 3.65s ease both;
       }
 
       .player-slide::before {
@@ -1854,26 +1862,26 @@
         position: relative;
         z-index: 2;
         display: grid;
-        gap: 8px;
+        gap: 9px;
         max-width: 360px;
-        padding: 16px 16px 18px;
+        padding: 18px 18px 20px;
         border: 1px solid rgba(255, 255, 255, 0.16);
-        border-radius: 24px;
-        background: rgba(5, 6, 7, 0.28);
-        backdrop-filter: blur(14px);
+        border-radius: 26px;
+        background: rgba(5, 6, 7, 0.32);
+        backdrop-filter: blur(18px);
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
       }
 
       .player-kicker {
-        color: rgba(255, 255, 255, 0.64);
+        color: var(--gold);
         font-size: 11px;
-        letter-spacing: 0;
+        letter-spacing: 1.6px;
         text-transform: uppercase;
         font-weight: 950;
       }
 
       .player-slide h2 {
-        font-size: 38px;
+        font-size: 40px;
         line-height: 1;
         font-weight: 950;
         text-shadow: 0 14px 34px rgba(0, 0, 0, 0.46);
@@ -1953,7 +1961,8 @@
         position: absolute;
         left: 24px;
         right: 24px;
-        bottom: 92px;
+        top: 82px;
+        bottom: auto;
         z-index: 2;
         height: 4px;
         overflow: hidden;
@@ -2897,14 +2906,16 @@
         grid-template-rows: auto auto minmax(0, 1fr) auto auto;
         gap: 12px;
         overflow: hidden;
-        border-radius: 28px;
+        border: 1px solid rgba(17, 17, 17, 0.06);
+        border-radius: 32px;
         padding: 18px;
         color: var(--ink);
         background: #ffffff;
-        box-shadow: 0 22px 48px rgba(17, 17, 17, 0.07);
+        box-shadow: 0 28px 70px rgba(17, 17, 17, 0.1);
       }
 
       body[data-theme="dark"] .speech-workbench {
+        border-color: rgba(255, 255, 255, 0.08);
         background: #1b2023;
       }
 
@@ -3439,27 +3450,29 @@
 
       .life-update-scrim.open {
         display: grid;
-        animation: lifeUpdateScrimIn 3.55s ease both;
+        animation: lifeUpdateScrimIn 4.35s ease both;
       }
 
       .life-update-stage {
         width: min(100%, 430px);
-        min-height: min(88dvh, 720px);
+        min-height: min(94dvh, 790px);
         display: grid;
         justify-items: center;
         align-content: center;
-        gap: 12px;
+        gap: 14px;
         overflow: hidden;
         position: relative;
         padding: 28px 22px;
-        border: 1px solid rgba(232, 196, 104, 0.16);
-        border-radius: 42px;
-        background: linear-gradient(180deg, #15191c, #0d1012);
+        border: 1px solid rgba(232, 196, 104, 0.22);
+        border-radius: 44px;
+        background:
+          radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.05), transparent 36%),
+          linear-gradient(180deg, #15191c, #090c0e);
         box-shadow: 0 44px 120px rgba(0, 0, 0, 0.58);
       }
 
       .life-update-scrim.open .life-update-stage {
-        animation: lifeUpdateStageIn 3.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation: lifeUpdateStageIn 4.35s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .life-update-stage::before {
@@ -3477,8 +3490,8 @@
       }
 
       .life-update-mark {
-        width: 82px;
-        height: 82px;
+        width: 88px;
+        height: 88px;
         display: grid;
         place-items: center;
         z-index: 1;
@@ -3504,14 +3517,14 @@
       .life-update-old {
         z-index: 1;
         color: rgba(255, 255, 255, 0.34);
-        font-size: 42px;
+        font-size: 48px;
         line-height: 0.95;
         font-weight: 950;
         text-decoration: line-through;
       }
 
       .life-update-scrim.open .life-update-old {
-        animation: lifeOldDayLeaves 3.05s ease both;
+        animation: lifeOldDayLeaves 3.75s ease both;
       }
 
       .life-update-new {
@@ -3524,7 +3537,7 @@
       }
 
       .life-update-scrim.open .life-update-new {
-        animation: lifeNewDayArrives 2.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation: lifeNewDayArrives 2.85s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .life-update-label {
@@ -3544,14 +3557,14 @@
       }
 
       .life-update-stat {
-        min-height: 76px;
+        min-height: 86px;
         display: grid;
         place-items: center;
         align-content: center;
         gap: 5px;
         padding: 9px 6px;
         border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 18px;
+        border-radius: 22px;
         background: rgba(255, 255, 255, 0.08);
       }
 
@@ -3603,9 +3616,9 @@
       .life-update-bar {
         z-index: 1;
         width: 100%;
-        height: 12px;
+        height: 13px;
         overflow: hidden;
-        margin-top: 18px;
+        margin-top: 22px;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.12);
       }
@@ -3616,19 +3629,19 @@
         height: 100%;
         border-radius: inherit;
         background: var(--gold);
-        transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: width 2.8s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .life-update-dots {
         z-index: 1;
         display: flex;
-        gap: 7px;
-        margin-top: 10px;
+        gap: 8px;
+        margin-top: 14px;
       }
 
       .life-update-dots span {
-        width: 9px;
-        height: 9px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.22);
       }
@@ -4258,7 +4271,7 @@
 
     <script>
       const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
-      const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v2";
+      const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v4";
 
       function normalizeLanguageId(locale) {
         const normalized = String(locale || "").trim().toLowerCase();
@@ -6248,15 +6261,16 @@
           age,
           expectancy: Math.max(expectancy, age + 1),
           startedAt: new Date().toISOString(),
-          lastAnimatedDate: todayKey(),
+          lastAnimatedDate: "",
           lastSnapshot: null,
-          lifeUpdateAnimationVersion: LIFE_UPDATE_ANIMATION_VERSION
+          lifeUpdateAnimationVersion: ""
         };
         state.lifeProfile.lastSnapshot = lifeSnapshot(getLifeStats());
 
         clearContextualBack();
         save();
         paint();
+        setTimeout(showLifeClockForPendingUpdate, 280);
         notify("Profile created");
       }
 

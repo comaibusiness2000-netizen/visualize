@@ -30,7 +30,7 @@ const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
-const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v2";
+const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v4";
 const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
 
 function normalizeLanguageId(locale) {
@@ -94,7 +94,8 @@ const blankState = {
   settings: {
     darkMode: true,
     notifications: false,
-    language: detectPreferredLanguage()
+    language: detectPreferredLanguage(),
+    voiceProfileId: "maya"
   },
   sync: {
     mode: "local",
@@ -122,6 +123,13 @@ const languages = [
   { id: "fr", label: "French", speech: "fr-FR" },
   { id: "pt", label: "Portuguese", speech: "pt-PT" },
   { id: "zh", label: "Chinese", speech: "zh-CN" }
+];
+
+const voiceProfiles = [
+  { id: "maya", name: "Maya", note: "Warm female", rate: 0.86, pitch: 1.04 },
+  { id: "elias", name: "Elias", note: "Calm male", rate: 0.84, pitch: 0.9 },
+  { id: "nora", name: "Nora", note: "Grounded female", rate: 0.88, pitch: 0.98 },
+  { id: "matteo", name: "Matteo", note: "Steady male", rate: 0.82, pitch: 0.86 }
 ];
 
 const copy = {
@@ -171,6 +179,7 @@ const copy = {
     "deck.emptyTitle": "No images yet.",
     "deck.emptyBody": "The deck starts empty. Add photos from this iPhone to keep them saved locally.",
     "speech.title": "Self speech",
+    "speech.heading": "Script your inner voice.",
     "speech.body": "Write the self-talk you want to hear repeatedly. Keep it personal, direct, and believable.",
     "speech.titlePlaceholder": "Title",
     "speech.textPlaceholder": "Write your speech here",
@@ -179,6 +188,8 @@ const copy = {
     "speech.listen": "Listen",
     "speech.stop": "Stop",
     "speech.emptyDraft": "Empty draft",
+    "speech.voice": "Voice",
+    "speech.swipe": "Swipe to change voice",
     "profile.kicker": "Local-only profile",
     "profile.storageTitle": "Device storage",
     "profile.storageBody": "Saved on this iPhone only. Closing the app or restarting the phone will keep the data. Deleting the app removes the local data.",
@@ -263,7 +274,28 @@ Object.assign(copy.zh, {
   "why.examples": "family|younger self|future child|someone to prove wrong",
   "why.add": "Add people",
   "why.emptyTitle": "No faces here yet.",
-  "why.emptyBody": "Add the people, memories, or future people that make your goals personal."
+  "why.emptyBody": "Add the people, memories, or future people that make your goals personal.",
+  "speech.voice": "Voice",
+  "speech.heading": "Script your inner voice.",
+  "speech.swipe": "Swipe to change voice"
+});
+
+Object.assign(copy.es, {
+  "speech.heading": "Escribe tu voz interior.",
+  "speech.voice": "Voz",
+  "speech.swipe": "Desliza para cambiar voz"
+});
+
+Object.assign(copy.fr, {
+  "speech.heading": "Ecris ta voix interieure.",
+  "speech.voice": "Voix",
+  "speech.swipe": "Glisse pour changer la voix"
+});
+
+Object.assign(copy.pt, {
+  "speech.heading": "Escreva sua voz interior.",
+  "speech.voice": "Voz",
+  "speech.swipe": "Deslize para mudar voz"
 });
 
 function clamp(value, min, max) {
@@ -419,12 +451,16 @@ export default function App() {
   const [player, setPlayer] = useState(null);
   const [lifeUpdate, setLifeUpdate] = useState(null);
   const setupPulse = useRef(new Animated.Value(0)).current;
+  const screenPulse = useRef(new Animated.Value(1)).current;
   const lifeUpdatePulse = useRef(new Animated.Value(0)).current;
+  const playerPulse = useRef(new Animated.Value(0)).current;
+  const voiceScrollRef = useRef(null);
   const appStateRef = useRef("active");
 
   const theme = appState.settings.darkMode ? darkTheme : lightTheme;
   const language = appState.settings.language || "en";
   const languageMeta = languages.find((item) => item.id === language) || languages[0];
+  const activeVoiceProfile = voiceProfiles.find((item) => item.id === appState.settings.voiceProfileId) || voiceProfiles[0];
   const t = (key, values = {}) => {
     const template = (copy[language] && copy[language][key]) || copy.en[key] || key;
     return Object.entries(values).reduce(
@@ -435,6 +471,8 @@ export default function App() {
   const profileComplete = appState.profile.complete;
   const activeGoals = goalMode === "daily" ? appState.dailyTasks : appState.longGoals;
   const activeSpeech = appState.selfSpeeches[appState.activeSpeechIndex] || null;
+  const screenOpacity = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
+  const screenTranslate = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [18, 0] });
 
   useEffect(() => {
     let mounted = true;
@@ -476,6 +514,25 @@ export default function App() {
       ])
     ).start();
   }, [setupPulse]);
+
+  useEffect(() => {
+    screenPulse.setValue(0);
+    Animated.timing(screenPulse, {
+      toValue: 1,
+      duration: 420,
+      useNativeDriver: true
+    }).start();
+  }, [tab, screenPulse]);
+
+  useEffect(() => {
+    if (!player) return;
+    playerPulse.setValue(0);
+    Animated.timing(playerPulse, {
+      toValue: 1,
+      duration: 620,
+      useNativeDriver: true
+    }).start();
+  }, [player?.kind, player?.index, playerPulse]);
 
   useEffect(() => {
     if (!player) return undefined;
@@ -545,8 +602,8 @@ export default function App() {
         expectancy: Math.max(expectancy, age + 1),
         createdAt: current.profile.createdAt || timestamp,
         updatedAt: timestamp,
-        lastAnimatedDate: todayKey(),
-        lifeUpdateAnimationVersion: LIFE_UPDATE_ANIMATION_VERSION
+        lastAnimatedDate: "",
+        lifeUpdateAnimationVersion: ""
       };
       nextProfile.lastSnapshot = lifeSnapshot(lifeStats(nextProfile));
       return { ...current, profile: nextProfile };
@@ -587,11 +644,11 @@ export default function App() {
     }));
 
     Animated.sequence([
-      Animated.timing(lifeUpdatePulse, { toValue: 0.42, duration: 780, useNativeDriver: true }),
-      Animated.timing(lifeUpdatePulse, { toValue: 0.78, duration: 1500, useNativeDriver: true }),
-      Animated.timing(lifeUpdatePulse, { toValue: 1, duration: 720, useNativeDriver: true })
+      Animated.timing(lifeUpdatePulse, { toValue: 0.34, duration: 980, useNativeDriver: true }),
+      Animated.timing(lifeUpdatePulse, { toValue: 0.78, duration: 2100, useNativeDriver: true }),
+      Animated.timing(lifeUpdatePulse, { toValue: 1, duration: 980, useNativeDriver: true })
     ]).start(() => {
-      setTimeout(() => setLifeUpdate(null), 180);
+      setTimeout(() => setLifeUpdate(null), 220);
     });
   }
 
@@ -808,7 +865,29 @@ export default function App() {
       return;
     }
     Speech.stop();
-    Speech.speak(text, { language: languageMeta.speech, rate: 0.88, pitch: 0.96 });
+    Speech.speak(text, {
+      language: languageMeta.speech,
+      rate: activeVoiceProfile.rate,
+      pitch: activeVoiceProfile.pitch
+    });
+  }
+
+  function selectVoiceProfile(index, { scroll = true } = {}) {
+    const nextIndex = clamp(index, 0, voiceProfiles.length - 1);
+    const profile = voiceProfiles[nextIndex];
+    updateState((current) => ({
+      ...current,
+      settings: { ...current.settings, voiceProfileId: profile.id }
+    }));
+    if (scroll && voiceScrollRef.current) {
+      voiceScrollRef.current.scrollTo({ x: nextIndex * 238, animated: true });
+    }
+  }
+
+  function handleVoiceMomentumEnd(event) {
+    const x = event.nativeEvent.contentOffset.x || 0;
+    const index = clamp(Math.round(x / 238), 0, voiceProfiles.length - 1);
+    selectVoiceProfile(index, { scroll: false });
   }
 
   function resetLocalData() {
@@ -835,50 +914,58 @@ export default function App() {
     const scale = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.06] });
     const translateY = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [0, -6] });
     return (
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.onboardingShell}>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={[styles.onboardingShell, { backgroundColor: theme.bg }]}>
         <ScrollView
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.onboardingContent}
         >
-          <Animated.View style={[styles.setupLogo, { transform: [{ scale }, { translateY }] }]}>
-            <View style={styles.logoSlash} />
-            <View style={styles.logoSlashSecond} />
-            <View style={styles.logoDot} />
-          </Animated.View>
-          <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.kicker")}</Text>
-          <Text style={[styles.setupTitle, { color: theme.ink }]}>{t("setup.title")}</Text>
-          <Text style={[styles.setupText, { color: theme.muted }]}>
-            {t("setup.body")}
-          </Text>
-          <View style={styles.setupFields}>
-            <TextInput
-              value={String(profileDraft.name || "")}
-              onChangeText={(name) => setProfileDraft((current) => ({ ...current, name }))}
-              placeholder={t("setup.name")}
-              placeholderTextColor={theme.placeholder}
-              style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
-            />
-            <TextInput
-              value={String(profileDraft.age || "")}
-              onChangeText={(age) => setProfileDraft((current) => ({ ...current, age }))}
-              keyboardType="number-pad"
-              placeholder={t("setup.age")}
-              placeholderTextColor={theme.placeholder}
-              style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
-            />
-            <TextInput
-              value={String(profileDraft.expectancy || "")}
-              onChangeText={(expectancy) => setProfileDraft((current) => ({ ...current, expectancy }))}
-              keyboardType="number-pad"
-              placeholder={t("setup.estimate")}
-              placeholderTextColor={theme.placeholder}
-              style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
-            />
+          <View style={[styles.setupCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
+            <View style={styles.setupGlow} />
+            <Animated.View style={[styles.setupLogo, { transform: [{ scale }, { translateY }] }]}>
+              <View style={styles.logoSlash} />
+              <View style={styles.logoSlashSecond} />
+              <View style={styles.logoDot} />
+            </Animated.View>
+            <View style={styles.setupSteps}>
+              <View style={[styles.setupStep, styles.setupStepActive]} />
+              <View style={[styles.setupStep, { backgroundColor: theme.soft }]} />
+              <View style={[styles.setupStep, { backgroundColor: theme.soft }]} />
+            </View>
+            <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.kicker")}</Text>
+            <Text style={[styles.setupTitle, { color: theme.ink }]}>{t("setup.title")}</Text>
+            <Text style={[styles.setupText, { color: theme.muted }]}>
+              {t("setup.body")}
+            </Text>
+            <View style={styles.setupFields}>
+              <TextInput
+                value={String(profileDraft.name || "")}
+                onChangeText={(name) => setProfileDraft((current) => ({ ...current, name }))}
+                placeholder={t("setup.name")}
+                placeholderTextColor={theme.placeholder}
+                style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+              />
+              <TextInput
+                value={String(profileDraft.age || "")}
+                onChangeText={(age) => setProfileDraft((current) => ({ ...current, age }))}
+                keyboardType="number-pad"
+                placeholder={t("setup.age")}
+                placeholderTextColor={theme.placeholder}
+                style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+              />
+              <TextInput
+                value={String(profileDraft.expectancy || "")}
+                onChangeText={(expectancy) => setProfileDraft((current) => ({ ...current, expectancy }))}
+                keyboardType="number-pad"
+                placeholder={t("setup.estimate")}
+                placeholderTextColor={theme.placeholder}
+                style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+              />
+            </View>
+            <TouchableOpacity style={styles.primaryButton} onPress={saveProfile}>
+              <Text style={styles.primaryText}>{t("setup.create")}</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.primaryButton} onPress={saveProfile}>
-            <Text style={styles.primaryText}>{t("setup.create")}</Text>
-          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     );
@@ -889,14 +976,20 @@ export default function App() {
     const dots = Array.from({ length: stats.totalMonths }, (_, index) => index < stats.spentMonths);
     return (
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.heroCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.kicker, { color: theme.muted }]}>{t("life.kicker")}</Text>
-          <Text style={[styles.daysNumber, { color: theme.ink }]}>{stats.daysLeft.toLocaleString("en-US")}</Text>
-          <Text style={[styles.daysLabel, { color: theme.muted }]}>{t("life.days")}</Text>
+        <View style={[styles.heroCard, { backgroundColor: theme.hero, borderColor: theme.heroLine }]}>
+          <View style={styles.heroGlow} />
+          <View style={styles.heroTopRow}>
+            <Text style={styles.heroKicker}>{t("life.kicker")}</Text>
+            <TouchableOpacity style={styles.heroMiniButton} onPress={() => setProfileOpen(true)}>
+              <Text style={styles.heroMiniButtonText}>{(appState.profile.name || "V").slice(0, 1).toUpperCase()}</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.daysNumber}>{stats.daysLeft.toLocaleString("en-US")}</Text>
+          <Text style={styles.daysLabel}>{t("life.days")}</Text>
           <View style={[styles.bigProgressTrack, { backgroundColor: theme.soft }]}>
             <View style={[styles.bigProgressFill, { width: `${stats.usedPercent}%` }]} />
           </View>
-          <Text style={[styles.body, { color: theme.muted }]}>
+          <Text style={styles.heroBody}>
             {t("life.summary", { age: stats.age, expectancy: stats.expectancy })}
           </Text>
         </View>
@@ -907,8 +1000,11 @@ export default function App() {
           <StatCard label={t("life.used")} value={`${stats.usedPercent}%`} theme={theme} />
         </View>
 
-        <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("life.monthMap")}</Text>
+        <View style={[styles.panel, styles.monthPanel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <View style={styles.panelHeaderRow}>
+            <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("life.monthMap")}</Text>
+            <Text style={[styles.monthCounter, { color: theme.muted }]}>{stats.spentMonths}/{stats.totalMonths}</Text>
+          </View>
           <Text style={[styles.body, { color: theme.muted }]}>{t("life.monthMapBody")}</Text>
           <View style={styles.dotMap}>
             {dots.map((spent, index) => (
@@ -925,9 +1021,10 @@ export default function App() {
     const examples = t("why.examples").split("|");
     return (
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("why.title")}</Text>
-          <Text style={[styles.body, { color: theme.muted }]}>{t("why.body")}</Text>
+        <View style={[styles.whyHero, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <Text style={[styles.kicker, { color: theme.muted }]}>{t("tab.goals")}</Text>
+          <Text style={[styles.whyTitle, { color: theme.ink }]}>{t("why.title")}</Text>
+          <Text style={[styles.body, styles.centerText, { color: theme.muted }]}>{t("why.body")}</Text>
           <View style={styles.whyChips}>
             {examples.map((example) => (
               <View key={example} style={[styles.whyChip, { backgroundColor: theme.soft, borderColor: theme.line }]}>
@@ -943,9 +1040,9 @@ export default function App() {
         {!people.length ? (
           <EmptyState theme={theme} title={t("why.emptyTitle")} text={t("why.emptyBody")} />
         ) : (
-          <View style={styles.grid}>
+          <View style={styles.photoWall}>
             {people.map((person, index) => (
-              <View key={person.id} style={[styles.imageTile, { borderColor: theme.line }]}>
+              <View key={person.id} style={[styles.imageTile, styles.whyTile, { borderColor: theme.line }]}>
                 <Image source={{ uri: person.imageUri }} style={styles.tileImage} />
                 <View style={styles.whyImageBadge}>
                   <Text style={styles.whyImageBadgeText}>{index + 1}</Text>
@@ -964,31 +1061,39 @@ export default function App() {
   function renderDeck(kind) {
     const positive = kind === "vision";
     const deck = positive ? appState.visionSlides : appState.antiSlides;
+    const cover = deck[0];
+    const title = positive ? t("deck.visionTitle") : t("deck.antiTitle");
+    const body = positive ? t("deck.visionBody") : t("deck.antiBody");
     return (
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.panelTitle, { color: theme.ink }]}>{positive ? t("deck.visionTitle") : t("deck.antiTitle")}</Text>
-          <Text style={[styles.body, { color: theme.muted }]}>
-            {positive
-              ? t("deck.visionBody")
-              : t("deck.antiBody")}
-          </Text>
-          <View style={styles.actionsRow}>
-            <TouchableOpacity style={styles.primaryButtonFlex} onPress={() => addImages(kind)}>
-              <Text style={styles.primaryText}>{t("deck.add")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line }]} onPress={() => (deck.length ? setPlayer({ kind, index: 0 }) : Alert.alert(t("alert.deck"), t("alert.addImagesFirst")))}>
-              <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("deck.play")}</Text>
-            </TouchableOpacity>
+        <View style={[styles.deckHero, !positive && styles.deckHeroAnti, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          {cover?.imageUri ? <Image source={{ uri: cover.imageUri }} style={styles.deckHeroImage} /> : null}
+          <View style={[styles.deckHeroShade, !cover?.imageUri && { opacity: 0.25 }]} />
+          <View style={styles.deckHeroText}>
+            <Text style={styles.deckHeroKicker}>{positive ? t("tab.vision") : t("tab.anti")}</Text>
+            <Text style={styles.deckHeroTitle}>{title}</Text>
+            <Text style={styles.deckHeroBody}>{body}</Text>
           </View>
+          <View style={styles.deckCountBadge}>
+            <Text style={styles.deckCountText}>{deck.length}/{MAX_DECK_SLIDES}</Text>
+          </View>
+        </View>
+
+        <View style={styles.actionsRow}>
+          <TouchableOpacity style={styles.primaryButtonFlex} onPress={() => addImages(kind)}>
+            <Text style={styles.primaryText}>{t("deck.add")}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.line, backgroundColor: theme.control }]} onPress={() => (deck.length ? setPlayer({ kind, index: 0 }) : Alert.alert(t("alert.deck"), t("alert.addImagesFirst")))}>
+            <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("deck.play")}</Text>
+          </TouchableOpacity>
         </View>
 
         {!deck.length ? (
           <EmptyState theme={theme} title={t("deck.emptyTitle")} text={t("deck.emptyBody")} />
         ) : (
-          <View style={styles.grid}>
+          <View style={styles.deckRail}>
             {deck.map((slide) => (
-              <View key={slide.id} style={[styles.imageTile, { borderColor: theme.line }]}>
+              <View key={slide.id} style={[styles.imageTile, styles.deckTile, { borderColor: theme.line }]}>
                 <Image source={{ uri: slide.imageUri }} style={styles.tileImage} />
                 <TouchableOpacity style={styles.removeImage} onPress={() => removeSlide(kind, slide.id)}>
                   <Text style={styles.removeImageText}>x</Text>
@@ -1002,10 +1107,12 @@ export default function App() {
   }
 
   function renderSpeech() {
+    const activeVoiceIndex = Math.max(0, voiceProfiles.findIndex((item) => item.id === activeVoiceProfile.id));
     return (
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("speech.title")}</Text>
+        <View style={[styles.speechPanel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <Text style={[styles.kicker, { color: theme.muted }]}>{t("speech.title")}</Text>
+          <Text style={[styles.speechTitle, { color: theme.ink }]}>{t("speech.heading")}</Text>
           <Text style={[styles.body, { color: theme.muted }]}>
             {t("speech.body")}
           </Text>
@@ -1014,7 +1121,7 @@ export default function App() {
             onChangeText={setDraftSpeechTitle}
             placeholder={t("speech.titlePlaceholder")}
             placeholderTextColor={theme.placeholder}
-            style={[styles.input, { color: theme.ink, backgroundColor: theme.input }]}
+            style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
           />
           <TextInput
             value={draftSpeechText}
@@ -1022,8 +1129,48 @@ export default function App() {
             placeholder={t("speech.textPlaceholder")}
             placeholderTextColor={theme.placeholder}
             multiline
-            style={[styles.input, styles.speechInput, { color: theme.ink, backgroundColor: theme.input }]}
+            style={[styles.input, styles.speechInput, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
           />
+          <View style={[styles.voicePanel, { backgroundColor: theme.soft }]}>
+            <View style={styles.voiceHeader}>
+              <Text style={[styles.voiceLabel, { color: theme.muted }]}>{t("speech.voice")}</Text>
+              <Text style={[styles.voiceHint, { color: theme.muted }]}>{t("speech.swipe")}</Text>
+            </View>
+            <ScrollView
+              ref={voiceScrollRef}
+              horizontal
+              pagingEnabled={false}
+              snapToInterval={238}
+              decelerationRate="fast"
+              showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={handleVoiceMomentumEnd}
+              contentOffset={{ x: activeVoiceIndex * 238, y: 0 }}
+              contentContainerStyle={styles.voiceRail}
+            >
+              {voiceProfiles.map((profile, index) => (
+                <TouchableOpacity
+                  key={profile.id}
+                  activeOpacity={0.88}
+                  style={[
+                    styles.voiceCard,
+                    {
+                      backgroundColor: profile.id === activeVoiceProfile.id ? "#101418" : theme.card,
+                      borderColor: profile.id === activeVoiceProfile.id ? "#E8C468" : theme.line
+                    }
+                  ]}
+                  onPress={() => selectVoiceProfile(index)}
+                >
+                  <Text style={[styles.voiceName, { color: profile.id === activeVoiceProfile.id ? "#FFF9ED" : theme.ink }]}>{profile.name}</Text>
+                  <Text style={[styles.voiceNote, { color: profile.id === activeVoiceProfile.id ? "#D8D1C2" : theme.muted }]}>{profile.note}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <View style={styles.voiceDots}>
+              {voiceProfiles.map((profile) => (
+                <View key={profile.id} style={[styles.voiceDot, profile.id === activeVoiceProfile.id && styles.voiceDotActive]} />
+              ))}
+            </View>
+          </View>
           <View style={styles.actionsRow}>
             <TouchableOpacity style={styles.primaryButtonFlex} onPress={saveSpeech}>
               <Text style={styles.primaryText}>{t("speech.save")}</Text>
@@ -1042,12 +1189,14 @@ export default function App() {
           </View>
         </View>
 
-        {appState.selfSpeeches.map((speech, index) => (
-          <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: theme.card, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)}>
-            <Text style={[styles.goalTitle, { color: theme.ink }]}>{speech.title || `Self speech ${index + 1}`}</Text>
-            <Text style={[styles.body, { color: theme.muted }]} numberOfLines={2}>{speech.text || t("speech.emptyDraft")}</Text>
-          </TouchableOpacity>
-        ))}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.speechListRail}>
+          {appState.selfSpeeches.map((speech, index) => (
+            <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: theme.card, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)}>
+              <Text style={[styles.goalTitle, { color: theme.ink }]} numberOfLines={1}>{speech.title || `Self speech ${index + 1}`}</Text>
+              <Text style={[styles.body, { color: theme.muted }]} numberOfLines={2}>{speech.text || t("speech.emptyDraft")}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </ScrollView>
     );
   }
@@ -1128,11 +1277,25 @@ export default function App() {
     if (!player) return null;
     const deck = player.kind === "vision" ? appState.visionSlides : appState.antiSlides;
     const slide = deck[player.index % Math.max(deck.length, 1)];
+    const imageOpacity = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [0.34, 1] });
+    const imageScale = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [1.08, 1] });
     return (
       <Modal visible animationType="fade" onRequestClose={() => setPlayer(null)}>
         <View style={styles.player}>
-          {slide?.imageUri ? <Image source={{ uri: slide.imageUri }} style={styles.playerImage} /> : null}
-          <View style={styles.playerShade} />
+          {slide?.imageUri ? (
+            <Animated.Image
+              source={{ uri: slide.imageUri }}
+              style={[styles.playerImage, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]}
+            />
+          ) : null}
+          <View style={[styles.playerShade, player.kind === "anti" && styles.playerShadeAnti]} />
+          <View style={styles.playerProgress}>
+            {deck.map((item, index) => (
+              <View key={item.id} style={styles.playerProgressTrack}>
+                <View style={[styles.playerProgressFill, index <= player.index && { width: "100%" }]} />
+              </View>
+            ))}
+          </View>
           <View style={styles.playerText}>
             <Text style={styles.playerKicker}>{player.kind === "vision" ? t("tab.vision") : t("tab.anti")}</Text>
             <Text style={styles.playerTitle}>{slide?.title || "Your deck"}</Text>
@@ -1272,11 +1435,13 @@ export default function App() {
             <View style={styles.headerSpacer} />
           </View>
           <View style={styles.main}>
+            <Animated.View style={[styles.mainMotion, { opacity: screenOpacity, transform: [{ translateY: screenTranslate }] }]}>
             {tab === "life" && renderLife()}
             {tab === "goals" && renderGoals()}
             {tab === "vision" && renderDeck("vision")}
             {tab === "anti" && renderDeck("anti")}
             {tab === "speech" && renderSpeech()}
+            </Animated.View>
           </View>
           <View style={[styles.nav, { backgroundColor: theme.nav }]}>
             {tabs.map((item) => (
@@ -1317,18 +1482,24 @@ function EmptyState({ theme, title, text }) {
 const darkTheme = {
   bg: "#101418",
   card: "#1B2023",
+  control: "#20262A",
+  hero: "#07090B",
+  heroLine: "rgba(232,196,104,0.18)",
   nav: "rgba(27,32,35,0.96)",
   soft: "#272C2E",
-  input: "#F4EFE4",
+  input: "#242A2D",
   ink: "#FFF9ED",
   muted: "#C9C4BA",
   line: "rgba(255,255,255,0.14)",
-  placeholder: "#847E75"
+  placeholder: "#A9A196"
 };
 
 const lightTheme = {
   bg: "#F4F2EE",
   card: "#FFFFFF",
+  control: "#FFFFFF",
+  hero: "#101418",
+  heroLine: "rgba(17,17,17,0.08)",
   nav: "rgba(255,255,255,0.96)",
   soft: "#ECE8DF",
   input: "#FFFFFF",
@@ -1343,7 +1514,30 @@ const styles = StyleSheet.create({
   loader: { alignItems: "center", justifyContent: "center", backgroundColor: "#101418" },
   centerFill: { flex: 1, justifyContent: "center", padding: 24 },
   onboardingShell: { flex: 1 },
-  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 24, paddingVertical: 28 },
+  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 18, paddingVertical: 24 },
+  setupCard: {
+    width: "100%",
+    overflow: "hidden",
+    alignSelf: "center",
+    borderWidth: 1,
+    borderRadius: 34,
+    paddingHorizontal: 24,
+    paddingVertical: 28,
+    shadowColor: "#000",
+    shadowOpacity: 0.12,
+    shadowRadius: 34,
+    shadowOffset: { width: 0, height: 18 },
+    elevation: 8
+  },
+  setupGlow: {
+    position: "absolute",
+    right: -56,
+    top: -74,
+    width: 176,
+    height: 176,
+    borderRadius: 88,
+    backgroundColor: "rgba(232,196,104,0.22)"
+  },
   setupLogo: {
     width: 76,
     height: 76,
@@ -1357,14 +1551,17 @@ const styles = StyleSheet.create({
   logoSlash: { position: "absolute", width: 9, height: 42, left: 24, top: 15, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
   logoSlashSecond: { position: "absolute", width: 9, height: 42, left: 37, top: 15, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
   logoDot: { position: "absolute", width: 15, height: 15, borderRadius: 8, right: 18, bottom: 19, backgroundColor: "#DA5A3A" },
-  setupKicker: { alignSelf: "center", maxWidth: "100%", textAlign: "center", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
-  setupTitle: { alignSelf: "center", maxWidth: 300, marginTop: 9, textAlign: "center", fontSize: 33, lineHeight: 36, fontWeight: "900" },
-  setupText: { alignSelf: "center", maxWidth: 318, marginTop: 10, textAlign: "center", fontSize: 15, lineHeight: 22, fontWeight: "700" },
-  setupFields: { marginTop: 20, gap: 9 },
-  input: { minHeight: 50, borderRadius: 18, paddingHorizontal: 15, paddingVertical: 12, fontSize: 16, fontWeight: "700" },
+  setupSteps: { flexDirection: "row", justifyContent: "center", gap: 7, marginBottom: 12 },
+  setupStep: { width: 8, height: 8, borderRadius: 4 },
+  setupStepActive: { width: 24, backgroundColor: "#E8C468" },
+  setupKicker: { alignSelf: "center", maxWidth: "100%", textAlign: "center", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
+  setupTitle: { alignSelf: "center", maxWidth: 326, marginTop: 8, textAlign: "center", fontSize: 31, lineHeight: 34, fontWeight: "900" },
+  setupText: { alignSelf: "center", maxWidth: 326, marginTop: 10, textAlign: "center", fontSize: 15, lineHeight: 21, fontWeight: "700" },
+  setupFields: { marginTop: 20, gap: 10 },
+  input: { minHeight: 52, borderRadius: 18, borderWidth: 1, paddingHorizontal: 15, paddingVertical: 12, fontSize: 16, fontWeight: "750" },
   speechInput: { minHeight: 220, textAlignVertical: "top", lineHeight: 22 },
-  primaryButton: { minHeight: 56, minWidth: 190, maxWidth: "100%", alignSelf: "center", borderRadius: 999, paddingHorizontal: 28, paddingVertical: 14, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 18 },
-  primaryButtonFlex: { flex: 1, minHeight: 50, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A" },
+  primaryButton: { minHeight: 56, minWidth: 190, maxWidth: "100%", alignSelf: "center", borderRadius: 999, paddingHorizontal: 28, paddingVertical: 14, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 18, shadowColor: "#DA5A3A", shadowOpacity: 0.22, shadowRadius: 16, shadowOffset: { width: 0, height: 10 }, elevation: 4 },
+  primaryButtonFlex: { flex: 1, minHeight: 52, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.18, shadowRadius: 12, shadowOffset: { width: 0, height: 8 }, elevation: 3 },
   primaryText: { color: "#FFFFFF", fontSize: 15, lineHeight: 19, textAlign: "center", fontWeight: "900" },
   secondaryButton: { flex: 1, minHeight: 50, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", borderWidth: 1 },
   secondaryText: { fontSize: 15, fontWeight: "900" },
@@ -1377,43 +1574,53 @@ const styles = StyleSheet.create({
   logoSmallSlashSecond: { position: "absolute", width: 6, height: 30, left: 29, top: 1, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
   logoSmallDot: { position: "absolute", width: 10, height: 10, borderRadius: 5, right: 10, bottom: 5, backgroundColor: "#DA5A3A" },
   main: { flex: 1 },
+  mainMotion: { flex: 1 },
   content: { padding: 18, paddingBottom: 118 },
-  heroCard: { borderWidth: 1, borderRadius: 30, padding: 22, marginBottom: 14 },
+  heroCard: { overflow: "hidden", borderWidth: 1, borderRadius: 34, padding: 24, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
+  heroGlow: { position: "absolute", right: -48, top: -68, width: 180, height: 180, borderRadius: 90, backgroundColor: "rgba(232,196,104,0.15)" },
+  heroTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 18 },
+  heroKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
+  heroMiniButton: { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.12)", borderWidth: 1, borderColor: "rgba(255,255,255,0.14)" },
+  heroMiniButtonText: { color: "#FFF9ED", fontSize: 15, fontWeight: "900" },
   kicker: { fontSize: 11, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
-  daysNumber: { marginTop: 14, fontSize: 48, lineHeight: 52, fontWeight: "900" },
-  daysLabel: { fontSize: 16, fontWeight: "850", marginBottom: 18 },
+  daysNumber: { color: "#FFFFFF", marginTop: 2, fontSize: 58, lineHeight: 61, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
+  daysLabel: { color: "rgba(255,249,237,0.76)", fontSize: 16, fontWeight: "850", marginBottom: 20, textAlign: "center" },
   bigProgressTrack: { height: 12, overflow: "hidden", borderRadius: 999, marginBottom: 14 },
   bigProgressFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
+  heroBody: { color: "rgba(255,249,237,0.72)", fontSize: 15, lineHeight: 22, fontWeight: "700", textAlign: "center" },
   body: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
   syncFootnote: { marginTop: 10, fontSize: 11, lineHeight: 16, fontWeight: "900", letterSpacing: 0.5 },
   statsRow: { flexDirection: "row", gap: 10, marginBottom: 14 },
   statCard: { flex: 1, borderWidth: 1, borderRadius: 22, padding: 14 },
   statValue: { fontSize: 22, fontWeight: "900" },
   statLabel: { marginTop: 3, fontSize: 12, fontWeight: "900", textTransform: "uppercase" },
-  panel: { borderWidth: 1, borderRadius: 26, padding: 18, marginBottom: 14 },
+  panel: { borderWidth: 1, borderRadius: 28, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 2 },
+  monthPanel: { paddingBottom: 20 },
+  panelHeaderRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: 12 },
   panelTitle: { fontSize: 22, lineHeight: 26, fontWeight: "900", marginBottom: 8 },
-  dotMap: { marginTop: 15, flexDirection: "row", flexWrap: "wrap", gap: 4 },
-  lifeDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.28)" },
+  monthCounter: { fontSize: 12, lineHeight: 16, fontWeight: "900" },
+  dotMap: { marginTop: 15, flexDirection: "row", flexWrap: "wrap", gap: 5 },
+  lifeDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "rgba(232,196,104,0.26)" },
   lifeDotSpent: { backgroundColor: "#E8C468" },
-  lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(6,8,9,0.99)", alignItems: "center", justifyContent: "center", padding: 12 },
-  lifeUpdateStage: { width: "100%", minHeight: "88%", borderRadius: 42, padding: 22, alignItems: "center", justifyContent: "center", backgroundColor: "#101418", borderWidth: 1, borderColor: "rgba(232,196,104,0.16)" },
-  lifeUpdateLogo: { width: 78, height: 56, marginBottom: 30, alignItems: "center", justifyContent: "center" },
+  lifeUpdateOverlay: { flex: 1, backgroundColor: "rgba(6,8,9,0.995)", alignItems: "center", justifyContent: "center", padding: 10 },
+  lifeUpdateStage: { width: "100%", minHeight: "94%", borderRadius: 44, padding: 24, alignItems: "center", justifyContent: "center", backgroundColor: "#0B0E10", borderWidth: 1, borderColor: "rgba(232,196,104,0.22)" },
+  lifeUpdateLogo: { width: 84, height: 58, marginBottom: 34, alignItems: "center", justifyContent: "center" },
   lifeUpdateKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
-  lifeUpdateOldNumber: { marginTop: 34, color: "rgba(255,255,255,0.34)", fontSize: 42, lineHeight: 46, fontWeight: "900", textDecorationLine: "line-through" },
-  lifeUpdateNumber: { color: "#FFFFFF", fontSize: 96, lineHeight: 102, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
+  lifeUpdateOldNumber: { marginTop: 38, color: "rgba(255,255,255,0.28)", fontSize: 46, lineHeight: 50, fontWeight: "900", textDecorationLine: "line-through" },
+  lifeUpdateNumber: { color: "#FFFFFF", fontSize: 110, lineHeight: 116, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
   lifeUpdateLabel: { color: "rgba(255,255,255,0.82)", fontSize: 18, lineHeight: 23, fontWeight: "900", textAlign: "center" },
-  lifeUpdateStats: { width: "100%", flexDirection: "row", gap: 8, marginTop: 22 },
-  lifeUpdateStat: { flex: 1, minHeight: 76, borderRadius: 20, paddingHorizontal: 8, paddingVertical: 10, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  lifeUpdateStats: { width: "100%", flexDirection: "row", gap: 8, marginTop: 28 },
+  lifeUpdateStat: { flex: 1, minHeight: 86, borderRadius: 22, paddingHorizontal: 8, paddingVertical: 12, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
   lifeUpdateStatChanged: { borderColor: "rgba(232,196,104,0.48)", backgroundColor: "rgba(232,196,104,0.12)" },
   lifeUpdateStatLabel: { color: "rgba(255,255,255,0.64)", fontSize: 10, lineHeight: 13, fontWeight: "900", textAlign: "center", textTransform: "uppercase" },
   lifeUpdateStatRow: { marginTop: 5, flexDirection: "row", alignItems: "center", gap: 4 },
   lifeUpdateStatOld: { color: "rgba(255,255,255,0.42)", fontSize: 12, lineHeight: 15, fontWeight: "900", textDecorationLine: "line-through" },
   lifeUpdateStatArrow: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900" },
   lifeUpdateStatNew: { color: "#FFFFFF", fontSize: 15, lineHeight: 18, fontWeight: "900" },
-  lifeUpdateBar: { width: "100%", height: 12, marginTop: 22, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.12)" },
+  lifeUpdateBar: { width: "100%", height: 13, marginTop: 26, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.12)" },
   lifeUpdateBarFill: { width: "100%", height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
-  lifeUpdateDots: { marginTop: 24, flexDirection: "row", gap: 7 },
-  lifeUpdateDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: "rgba(255,255,255,0.22)" },
+  lifeUpdateDots: { marginTop: 28, flexDirection: "row", gap: 8 },
+  lifeUpdateDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: "rgba(255,255,255,0.22)" },
   lifeUpdateDotHot: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.55, shadowRadius: 12, shadowOffset: { width: 0, height: 0 } },
   segment: { flexDirection: "row", borderRadius: 999, padding: 5, marginBottom: 14 },
   segmentButton: { flex: 1, minHeight: 42, alignItems: "center", justifyContent: "center", borderRadius: 999 },
@@ -1434,17 +1641,48 @@ const styles = StyleSheet.create({
   progressKnob: { position: "absolute", width: 26, height: 26, marginLeft: -13, borderRadius: 13, backgroundColor: "#DA5A3A", borderWidth: 3, borderColor: "#FFFFFF" },
   progressText: { marginTop: 2, fontSize: 12, fontWeight: "900" },
   actionsRow: { flexDirection: "row", gap: 10, marginTop: 14 },
+  centerText: { textAlign: "center" },
+  whyHero: { overflow: "hidden", borderWidth: 1, borderRadius: 32, padding: 22, marginBottom: 14, alignItems: "center", shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 4 },
+  whyTitle: { marginTop: 8, fontSize: 32, lineHeight: 35, fontWeight: "900", textAlign: "center" },
   whyChips: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 16 },
   whyChip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 8 },
   whyChipText: { fontSize: 12, lineHeight: 15, fontWeight: "900" },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+  photoWall: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   imageTile: { width: "48%", aspectRatio: 0.74, overflow: "hidden", borderRadius: 24, borderWidth: 1, backgroundColor: "#24292C" },
+  whyTile: { aspectRatio: 0.84 },
   tileImage: { width: "100%", height: "100%" },
   whyImageBadge: { position: "absolute", left: 9, bottom: 9, minWidth: 32, height: 32, borderRadius: 16, paddingHorizontal: 10, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(232,196,104,0.92)" },
   whyImageBadgeText: { color: "#111315", fontSize: 13, fontWeight: "900" },
   removeImage: { position: "absolute", right: 8, top: 8, width: 32, height: 32, borderRadius: 16, backgroundColor: "rgba(0,0,0,0.58)", alignItems: "center", justifyContent: "center" },
   removeImageText: { color: "#FFFFFF", fontSize: 18, fontWeight: "900" },
-  speechPill: { borderWidth: 1, borderRadius: 22, padding: 15, marginBottom: 10 },
+  deckHero: { minHeight: 310, overflow: "hidden", borderWidth: 1, borderRadius: 34, marginBottom: 14, backgroundColor: "#101418", shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
+  deckHeroAnti: { backgroundColor: "#171412" },
+  deckHeroImage: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%" },
+  deckHeroShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.48)" },
+  deckHeroText: { flex: 1, justifyContent: "flex-end", padding: 22 },
+  deckHeroKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
+  deckHeroTitle: { color: "#FFFFFF", marginTop: 8, fontSize: 34, lineHeight: 37, fontWeight: "900" },
+  deckHeroBody: { color: "rgba(255,249,237,0.78)", marginTop: 10, fontSize: 15, lineHeight: 21, fontWeight: "750" },
+  deckCountBadge: { position: "absolute", right: 14, top: 14, minWidth: 50, height: 34, paddingHorizontal: 10, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.14)", borderWidth: 1, borderColor: "rgba(255,255,255,0.16)" },
+  deckCountText: { color: "#FFFFFF", fontSize: 12, fontWeight: "900" },
+  deckRail: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 14 },
+  deckTile: { aspectRatio: 0.68 },
+  speechPanel: { borderWidth: 1, borderRadius: 32, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 4 },
+  speechTitle: { marginTop: 8, marginBottom: 8, fontSize: 30, lineHeight: 33, fontWeight: "900" },
+  voicePanel: { marginTop: 14, borderRadius: 24, paddingVertical: 12, overflow: "hidden" },
+  voiceHeader: { paddingHorizontal: 14, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 },
+  voiceLabel: { fontSize: 11, lineHeight: 14, fontWeight: "900", letterSpacing: 1.4, textTransform: "uppercase" },
+  voiceHint: { fontSize: 12, lineHeight: 15, fontWeight: "850" },
+  voiceRail: { paddingHorizontal: 14, paddingTop: 10, paddingBottom: 4, gap: 12 },
+  voiceCard: { width: 226, minHeight: 78, borderWidth: 1, borderRadius: 22, paddingHorizontal: 16, paddingVertical: 14, justifyContent: "center" },
+  voiceName: { fontSize: 21, lineHeight: 24, fontWeight: "900" },
+  voiceNote: { marginTop: 4, fontSize: 13, lineHeight: 16, fontWeight: "800" },
+  voiceDots: { flexDirection: "row", justifyContent: "center", gap: 6, marginTop: 8 },
+  voiceDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "rgba(128,128,128,0.34)" },
+  voiceDotActive: { width: 18, backgroundColor: "#E8C468" },
+  speechListRail: { gap: 10, paddingBottom: 4 },
+  speechPill: { width: 230, borderWidth: 1, borderRadius: 22, padding: 15, marginBottom: 10 },
   switchRow: { minHeight: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   languageGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 },
   languageButton: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 13, paddingVertical: 10 },
@@ -1459,11 +1697,15 @@ const styles = StyleSheet.create({
   navText: { fontSize: 12, fontWeight: "900" },
   player: { flex: 1, backgroundColor: "#000000", justifyContent: "flex-end" },
   playerImage: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%" },
-  playerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.32)" },
+  playerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.34)" },
+  playerShadeAnti: { backgroundColor: "rgba(18,8,4,0.48)" },
+  playerProgress: { position: "absolute", left: 18, right: 18, top: 58, flexDirection: "row", gap: 5 },
+  playerProgressTrack: { flex: 1, height: 3, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.24)" },
+  playerProgressFill: { width: "0%", height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   playerText: { padding: 28, paddingBottom: 88 },
   playerKicker: { color: "#E8C468", fontSize: 12, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase" },
   playerTitle: { color: "#FFFFFF", fontSize: 38, lineHeight: 42, fontWeight: "900", marginTop: 8 },
   playerCaption: { color: "#F4EFE4", fontSize: 17, lineHeight: 24, fontWeight: "700", marginTop: 10 },
-  playerClose: { position: "absolute", right: 18, top: 58, minHeight: 42, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.18)" },
+  playerClose: { position: "absolute", right: 18, top: 76, minHeight: 42, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.18)" },
   playerCloseText: { color: "#FFFFFF", fontWeight: "900" }
 });
