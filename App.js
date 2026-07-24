@@ -357,7 +357,7 @@ const copy = {
   },
   es: {
     "tab.life": "Vida", "tab.goals": "Por quien", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voz",
-    "setup.kicker": "Crear perfil", "setup.title": "Crea primero tu reloj de vida.", "setup.body": "Visualize empieza vacio. Crea tu perfil y luego agrega metas, imagenes y self speech paso a paso.", "setup.name": "Nombre", "setup.age": "Edad", "setup.estimate": "Estimacion de vida, ejemplo 85", "setup.create": "Crear perfil",
+    "setup.kicker": "Crear perfil", "setup.title": "Crea tu reloj de vida.", "setup.body": "Empieza vacio. Luego agregas tu por que, imagenes y self speech paso a paso.", "setup.name": "Nombre", "setup.age": "Edad", "setup.estimate": "Estimacion de vida, ejemplo 85", "setup.create": "Crear perfil",
     "life.kicker": "Reloj de vida", "life.days": "dias estimados restantes", "life.summary": "Basado en edad {age} y una estimacion de vida de {expectancy}. No es una prediccion, es un recordatorio.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada punto es un mes. Los puntos llenos ya pasaron.",
     "goals.daily": "Tareas diarias", "goals.long": "Metas a largo plazo", "goals.dailyTitle": "Que hace avanzar el dia?", "goals.longTitle": "Que estas construyendo este ano?", "goals.body": "Agrega hasta 5 items y mueve manualmente la barra de progreso.", "goals.addTask": "Agregar tarea", "goals.addGoal": "Agregar meta", "goals.emptyTitle": "Todavia no hay nada.", "goals.emptyBody": "Empieza con una pequena accion o una meta a largo plazo.", "goals.complete": "{progress}% completo",
     "why.title": "Por quien haces esto?", "why.body": "Sube fotos de las personas detras de tu esfuerzo: familia, un ex que quieres superar, tu yo de nino, un futuro hijo, un rival o alguien a quien quieres demostrar que se equivoco.", "why.examples": "familia|tu yo pequeno|futuro hijo|demostrarles", "why.add": "Agregar personas", "why.emptyTitle": "Aun no hay rostros.", "why.emptyBody": "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales.",
@@ -368,7 +368,7 @@ const copy = {
   },
   fr: {
     "tab.life": "Vie", "tab.goals": "Pourquoi", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voix",
-    "setup.kicker": "Creation profil", "setup.title": "Commence par ton horloge.", "setup.body": "Visualize commence vide. Cree ton profil; puis ajoute objectifs, images et self speech.", "setup.name": "Prenom", "setup.age": "Age", "setup.estimate": "Estimation de vie, exemple 85", "setup.create": "Creer profil",
+    "setup.kicker": "Creation profil", "setup.title": "Cree ton horloge de vie.", "setup.body": "L'app commence vide. Ajoute ensuite ton pourquoi, tes images et ton self speech.", "setup.name": "Prenom", "setup.age": "Age", "setup.estimate": "Estimation de vie, exemple 85", "setup.create": "Creer profil",
     "life.kicker": "Horloge de vie", "life.days": "jours estimes restants", "life.summary": "Base sur l'age {age} et une estimation de vie de {expectancy}. Ce n'est pas une prediction, c'est un rappel.", "life.weeks": "semaines", "life.months": "mois", "life.used": "utilise", "life.monthMap": "Vie par mois", "life.monthMapBody": "Chaque point est un mois. Les points remplis sont deja passes.",
     "goals.daily": "Taches du jour", "goals.long": "Objectifs long terme", "goals.dailyTitle": "Qu'est-ce qui fait avancer aujourd'hui?", "goals.longTitle": "Que construis-tu cette annee?", "goals.body": "Ajoute jusqu'a 5 elements et ajuste manuellement la progression.", "goals.addTask": "Ajouter tache", "goals.addGoal": "Ajouter objectif", "goals.emptyTitle": "Rien pour l'instant.", "goals.emptyBody": "Commence avec une petite action ou un objectif long terme.", "goals.complete": "{progress}% termine",
     "why.title": "Pour qui fais-tu ca?", "why.body": "Ajoute les photos des personnes derriere ton effort: famille, un ex que tu veux depasser, l'enfant que tu etais, un futur enfant, un rival ou quelqu'un a qui tu veux prouver qu'il avait tort.", "why.examples": "famille|toi enfant|futur enfant|leur prouver", "why.add": "Ajouter personnes", "why.emptyTitle": "Aucun visage encore.", "why.emptyBody": "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels.",
@@ -379,7 +379,7 @@ const copy = {
   },
   pt: {
     "tab.life": "Vida", "tab.goals": "Por quem", "tab.vision": "Visao", "tab.anti": "Anti", "tab.speech": "Voz",
-    "setup.kicker": "Criar perfil", "setup.title": "Comece pelo relogio de vida.", "setup.body": "Visualize comeca vazio. Crie seu perfil; depois adicione metas, imagens e self speech.", "setup.name": "Nome", "setup.age": "Idade", "setup.estimate": "Estimativa de vida, exemplo 85", "setup.create": "Criar perfil",
+    "setup.kicker": "Criar perfil", "setup.title": "Crie seu relogio de vida.", "setup.body": "O app comeca vazio. Depois adicione seu por que, imagens e self speech.", "setup.name": "Nome", "setup.age": "Idade", "setup.estimate": "Estimativa de vida, exemplo 85", "setup.create": "Criar perfil",
     "life.kicker": "Relogio de vida", "life.days": "dias estimados restantes", "life.summary": "Baseado na idade {age} e estimativa de vida de {expectancy}. Nao e previsao, e lembrete.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada ponto e um mes. Pontos preenchidos ja passaram.",
     "goals.daily": "Tarefas diarias", "goals.long": "Metas de longo prazo", "goals.dailyTitle": "O que move hoje para frente?", "goals.longTitle": "O que voce esta construindo este ano?", "goals.body": "Adicione ate 5 itens e mova manualmente a barra de progresso.", "goals.addTask": "Adicionar tarefa", "goals.addGoal": "Adicionar meta", "goals.emptyTitle": "Nada aqui ainda.", "goals.emptyBody": "Comece com uma pequena acao ou uma meta de longo prazo.", "goals.complete": "{progress}% completo",
     "why.title": "Por quem voce faz isso?", "why.body": "Adicione fotos das pessoas por tras do seu esforco: familia, um ex que quer superar, voce quando crianca, um futuro filho, um rival ou alguem a quem quer provar que estava errado.", "why.examples": "familia|voce crianca|futuro filho|provar errado", "why.add": "Adicionar pessoas", "why.emptyTitle": "Ainda sem rostos.", "why.emptyBody": "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais.",
@@ -1123,6 +1123,7 @@ export default function App() {
   function renderOnboarding() {
     const scale = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.06] });
     const translateY = setupPulse.interpolate({ inputRange: [0, 1], outputRange: [0, -6] });
+    const previewDots = Array.from({ length: 84 }, (_, index) => index);
     return (
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={[styles.onboardingShell, { backgroundColor: theme.bg }]}>
         <ScrollView
@@ -1131,16 +1132,38 @@ export default function App() {
           contentContainerStyle={styles.onboardingContent}
         >
           <View style={[styles.setupCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
-            <View style={styles.setupGlow} />
-            <Animated.View style={[styles.setupLogo, { transform: [{ scale }, { translateY }] }]}>
-              <View style={styles.logoSlash} />
-              <View style={styles.logoSlashSecond} />
-              <View style={styles.logoDot} />
-            </Animated.View>
-            <View style={styles.setupSteps}>
-              <View style={[styles.setupStep, styles.setupStepActive]} />
-              <View style={[styles.setupStep, { backgroundColor: theme.soft }]} />
-              <View style={[styles.setupStep, { backgroundColor: theme.soft }]} />
+            <View style={styles.setupTopRow}>
+              <Animated.View style={[styles.setupMiniLogo, { transform: [{ scale }, { translateY }] }]}>
+                <View style={styles.logoSlash} />
+                <View style={styles.logoSlashSecond} />
+                <View style={styles.logoDot} />
+              </Animated.View>
+              <View style={styles.setupStepPill}>
+                <Text style={styles.setupStepPillText}>01</Text>
+              </View>
+            </View>
+            <View style={styles.setupPreview}>
+              <View style={styles.setupPreviewHeader}>
+                <Text style={styles.setupPreviewKicker}>{t("life.monthMap")}</Text>
+                <Text style={styles.setupPreviewAge}>85</Text>
+              </View>
+              <View style={styles.setupPreviewDots}>
+                {previewDots.map((dot) => (
+                  <View
+                    key={dot}
+                    style={[
+                      styles.setupPreviewDot,
+                      dot < 31 && styles.setupPreviewDotSpent,
+                      dot === 31 && styles.setupPreviewDotNow
+                    ]}
+                  />
+                ))}
+              </View>
+              <View style={styles.setupPreviewFooter}>
+                <Text style={styles.setupPreviewFootText}>{t("tab.life")}</Text>
+                <Text style={styles.setupPreviewFootText}>{t("tab.vision")}</Text>
+                <Text style={styles.setupPreviewFootText}>{t("tab.speech")}</Text>
+              </View>
             </View>
             <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.kicker")}</Text>
             <Text style={[styles.setupTitle, { color: theme.ink }]}>{t("setup.title")}</Text>
@@ -1148,31 +1171,42 @@ export default function App() {
               {t("setup.body")}
             </Text>
             <View style={styles.setupFields}>
-              <TextInput
-                value={String(profileDraft.name || "")}
-                onChangeText={(name) => setProfileDraft((current) => ({ ...current, name }))}
-                placeholder={t("setup.name")}
-                placeholderTextColor={theme.placeholder}
-                style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
-              />
-              <TextInput
-                value={String(profileDraft.age || "")}
-                onChangeText={(age) => setProfileDraft((current) => ({ ...current, age }))}
-                keyboardType="number-pad"
-                placeholder={t("setup.age")}
-                placeholderTextColor={theme.placeholder}
-                style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
-              />
-              <TextInput
-                value={String(profileDraft.expectancy || "")}
-                onChangeText={(expectancy) => setProfileDraft((current) => ({ ...current, expectancy }))}
-                keyboardType="number-pad"
-                placeholder={t("setup.estimate")}
-                placeholderTextColor={theme.placeholder}
-                style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
-              />
+              <View style={styles.setupField}>
+                <Text style={[styles.setupFieldLabel, { color: theme.muted }]}>{t("setup.name")}</Text>
+                <TextInput
+                  value={String(profileDraft.name || "")}
+                  onChangeText={(name) => setProfileDraft((current) => ({ ...current, name }))}
+                  placeholder={t("setup.name")}
+                  placeholderTextColor={theme.placeholder}
+                  style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+                />
+              </View>
+              <View style={styles.setupFieldRow}>
+                <View style={[styles.setupField, styles.setupFieldHalf]}>
+                  <Text style={[styles.setupFieldLabel, { color: theme.muted }]}>{t("setup.age")}</Text>
+                  <TextInput
+                    value={String(profileDraft.age || "")}
+                    onChangeText={(age) => setProfileDraft((current) => ({ ...current, age }))}
+                    keyboardType="number-pad"
+                    placeholder="28"
+                    placeholderTextColor={theme.placeholder}
+                    style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+                  />
+                </View>
+                <View style={[styles.setupField, styles.setupFieldHalf]}>
+                  <Text style={[styles.setupFieldLabel, { color: theme.muted }]}>{t("setup.estimate")}</Text>
+                  <TextInput
+                    value={String(profileDraft.expectancy || "")}
+                    onChangeText={(expectancy) => setProfileDraft((current) => ({ ...current, expectancy }))}
+                    keyboardType="number-pad"
+                    placeholder="85"
+                    placeholderTextColor={theme.placeholder}
+                    style={[styles.input, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+                  />
+                </View>
+              </View>
             </View>
-            <TouchableOpacity style={styles.primaryButton} onPress={saveProfile}>
+            <TouchableOpacity style={styles.primaryButton} onPress={() => { softImpact(); saveProfile(); }}>
               <Text style={styles.primaryText}>{t("setup.create")}</Text>
             </TouchableOpacity>
           </View>
@@ -1819,50 +1853,54 @@ const styles = StyleSheet.create({
   loader: { alignItems: "center", justifyContent: "center", backgroundColor: "#101418" },
   centerFill: { flex: 1, justifyContent: "center", padding: 24 },
   onboardingShell: { flex: 1 },
-  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 18, paddingVertical: 24 },
+  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 16, paddingVertical: 18 },
   setupCard: {
     width: "100%",
     overflow: "hidden",
     alignSelf: "center",
     borderWidth: 1,
-    borderRadius: 34,
-    paddingHorizontal: 24,
-    paddingVertical: 28,
+    borderRadius: 38,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 22,
     shadowColor: "#000",
     shadowOpacity: 0.12,
     shadowRadius: 34,
     shadowOffset: { width: 0, height: 18 },
     elevation: 8
   },
-  setupGlow: {
-    position: "absolute",
-    right: -56,
-    top: -74,
-    width: 176,
-    height: 176,
-    borderRadius: 88,
-    backgroundColor: "rgba(232,196,104,0.22)"
-  },
-  setupLogo: {
-    width: 76,
-    height: 76,
-    alignSelf: "center",
-    marginBottom: 18,
-    borderRadius: 24,
+  setupTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 },
+  setupMiniLogo: {
+    width: 54,
+    height: 54,
+    borderRadius: 18,
     backgroundColor: "#101418",
     alignItems: "center",
     justifyContent: "center"
   },
-  logoSlash: { position: "absolute", width: 9, height: 42, left: 24, top: 15, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
-  logoSlashSecond: { position: "absolute", width: 9, height: 42, left: 37, top: 15, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
-  logoDot: { position: "absolute", width: 15, height: 15, borderRadius: 8, right: 18, bottom: 19, backgroundColor: "#DA5A3A" },
-  setupSteps: { flexDirection: "row", justifyContent: "center", gap: 7, marginBottom: 12 },
-  setupStep: { width: 8, height: 8, borderRadius: 4 },
-  setupStepActive: { width: 24, backgroundColor: "#E8C468" },
-  setupKicker: { alignSelf: "center", maxWidth: "100%", textAlign: "center", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
-  setupTitle: { alignSelf: "center", maxWidth: 326, marginTop: 8, textAlign: "center", fontSize: 31, lineHeight: 34, fontWeight: "900" },
-  setupText: { alignSelf: "center", maxWidth: 326, marginTop: 10, textAlign: "center", fontSize: 15, lineHeight: 21, fontWeight: "700" },
-  setupFields: { marginTop: 20, gap: 10 },
+  setupStepPill: { height: 34, minWidth: 56, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
+  setupStepPillText: { color: "#101418", fontSize: 13, lineHeight: 16, fontWeight: "900" },
+  logoSlash: { position: "absolute", width: 7, height: 31, left: 17, top: 12, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoSlashSecond: { position: "absolute", width: 7, height: 31, left: 27, top: 12, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoDot: { position: "absolute", width: 11, height: 11, borderRadius: 6, right: 13, bottom: 14, backgroundColor: "#DA5A3A" },
+  setupPreview: { overflow: "hidden", borderRadius: 30, padding: 16, marginBottom: 18, backgroundColor: "#101418" },
+  setupPreviewHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 },
+  setupPreviewKicker: { color: "rgba(255,249,237,0.58)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.6, textTransform: "uppercase" },
+  setupPreviewAge: { color: "#E8C468", fontSize: 22, lineHeight: 26, fontWeight: "900" },
+  setupPreviewDots: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
+  setupPreviewDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "rgba(255,249,237,0.16)" },
+  setupPreviewDotSpent: { backgroundColor: "rgba(255,249,237,0.46)" },
+  setupPreviewDotNow: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.45, shadowRadius: 10, shadowOffset: { width: 0, height: 0 } },
+  setupPreviewFooter: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 16, paddingTop: 14, borderTopWidth: 1, borderTopColor: "rgba(255,249,237,0.1)" },
+  setupPreviewFootText: { color: "#FFF9ED", fontSize: 12, lineHeight: 15, fontWeight: "900" },
+  setupKicker: { alignSelf: "center", maxWidth: "100%", textAlign: "center", fontSize: 10, lineHeight: 14, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
+  setupTitle: { alignSelf: "center", maxWidth: 316, marginTop: 7, textAlign: "center", fontSize: 29, lineHeight: 32, fontWeight: "900" },
+  setupText: { alignSelf: "center", maxWidth: 318, marginTop: 9, textAlign: "center", fontSize: 14, lineHeight: 19, fontWeight: "700" },
+  setupFields: { marginTop: 18, gap: 10 },
+  setupField: { minWidth: 0 },
+  setupFieldRow: { flexDirection: "row", gap: 10 },
+  setupFieldHalf: { flex: 1 },
+  setupFieldLabel: { marginBottom: 7, paddingLeft: 2, fontSize: 11, lineHeight: 14, fontWeight: "900", letterSpacing: 0.6, textTransform: "uppercase" },
   input: { minHeight: 52, borderRadius: 18, borderWidth: 1, paddingHorizontal: 15, paddingVertical: 12, fontSize: 16, fontWeight: "750" },
   speechInput: { minHeight: 220, textAlignVertical: "top", lineHeight: 22 },
   primaryButton: { minHeight: 56, minWidth: 190, maxWidth: "100%", alignSelf: "center", borderRadius: 999, paddingHorizontal: 28, paddingVertical: 14, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 18, shadowColor: "#DA5A3A", shadowOpacity: 0.22, shadowRadius: 16, shadowOffset: { width: 0, height: 10 }, elevation: 4 },
