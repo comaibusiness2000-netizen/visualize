@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=95" />
+    <link rel="manifest" href="./manifest.webmanifest?v=96" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v95";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v96";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -20,7 +20,12 @@
 
       function syncVisualViewport() {
         const viewport = window.visualViewport;
-        const height = Math.max(420, Math.round(viewport?.height || window.innerHeight || 720));
+        const height = Math.max(
+          420,
+          Math.round(viewport?.height || 0),
+          Math.round(window.innerHeight || 0),
+          Math.round(document.documentElement.clientHeight || 0)
+        );
         document.documentElement.style.setProperty("--app-vh", `${height}px`);
       }
 
@@ -49,7 +54,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=95")
+            .register("./service-worker.js?v=96")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -84,6 +89,9 @@
         --control: #ffffff;
         --screen-x: 0px;
         --app-vh: 100vh;
+        --nav-h: 78px;
+        --nav-bottom: 12px;
+        --nav-clearance: calc(var(--nav-h) + var(--nav-bottom) + 10px);
       }
 
       body[data-theme="dark"] {
@@ -394,7 +402,7 @@
         grid-template-rows: 48px minmax(0, 1fr);
         row-gap: 18px;
         overflow: hidden;
-        padding: 20px 22px 104px;
+        padding: 20px 22px 0;
       }
 
       .app::-webkit-scrollbar,
@@ -1179,8 +1187,8 @@
         overscroll-behavior: contain;
         border: 0;
         border-radius: 0;
-        padding: 0 0 126px;
-        scroll-padding-bottom: 126px;
+        padding: 0 0 var(--nav-clearance);
+        scroll-padding-bottom: var(--nav-clearance);
         background: transparent;
         box-shadow: none;
         scrollbar-width: none;
@@ -2057,6 +2065,26 @@
       #goals.screen.active {
         grid-template-rows: auto auto minmax(0, 1fr);
         align-content: stretch;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-bottom: var(--nav-clearance);
+        scroll-padding-bottom: var(--nav-clearance);
+        scrollbar-width: none;
+      }
+
+      #goals.screen.active::-webkit-scrollbar,
+      #vision.screen.active::-webkit-scrollbar,
+      #anti.screen.active::-webkit-scrollbar {
+        display: none;
+      }
+
+      #vision.screen.active,
+      #anti.screen.active {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-bottom: var(--nav-clearance);
+        scroll-padding-bottom: var(--nav-clearance);
+        scrollbar-width: none;
       }
 
       #addProgressGoal {
@@ -3612,7 +3640,7 @@
         overscroll-behavior: contain;
         border: 0;
         border-radius: 0;
-        padding: 0 0 18px;
+        padding: 0 0 var(--nav-clearance);
         color: var(--ink);
         background: transparent;
         box-shadow: none;
@@ -4423,8 +4451,8 @@
         position: absolute;
         left: 16px;
         right: 16px;
-        bottom: 12px;
-        height: 78px;
+        bottom: var(--nav-bottom);
+        height: var(--nav-h);
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         gap: 6px;
@@ -5409,6 +5437,12 @@
       }
 
       @media (max-width: 520px) {
+        :root {
+          --nav-h: 76px;
+          --nav-bottom: max(8px, env(safe-area-inset-bottom));
+          --nav-clearance: calc(var(--nav-h) + var(--nav-bottom) + 8px);
+        }
+
         .stage {
           min-height: var(--app-vh);
           padding: 0;
@@ -5427,19 +5461,19 @@
         .app {
           height: var(--app-vh);
           row-gap: 12px;
-          padding: calc(14px + env(safe-area-inset-top)) 18px calc(14px + env(safe-area-inset-bottom)) 18px;
+          padding: calc(14px + env(safe-area-inset-top)) 18px 0 18px;
         }
 
         .nav {
-          bottom: max(10px, env(safe-area-inset-bottom));
+          bottom: var(--nav-bottom);
           z-index: 40;
         }
 
         .life-dashboard {
           gap: 8px;
           padding: 0;
-          padding-bottom: calc(124px + env(safe-area-inset-bottom));
-          scroll-padding-bottom: calc(124px + env(safe-area-inset-bottom));
+          padding-bottom: var(--nav-clearance);
+          scroll-padding-bottom: var(--nav-clearance);
         }
 
         .life-onboarding {
@@ -5448,8 +5482,8 @@
           align-content: start;
           gap: 9px;
           border-radius: 32px;
-          padding: 14px 14px calc(112px + env(safe-area-inset-bottom));
-          scroll-padding-bottom: calc(112px + env(safe-area-inset-bottom));
+          padding: 14px 14px var(--nav-clearance);
+          scroll-padding-bottom: var(--nav-clearance);
         }
 
         .setup-mini-mark {
@@ -5642,7 +5676,7 @@
 
         .speech-workbench {
           gap: 8px;
-          padding-bottom: calc(14px + env(safe-area-inset-bottom));
+          padding-bottom: var(--nav-clearance);
         }
 
         .speech-head {
