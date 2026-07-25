@@ -1,5 +1,5 @@
-const CACHE_NAME = "visualize-preview-v97";
-const APP_VERSION = "97";
+const CACHE_NAME = "visualize-preview-v98";
+const APP_VERSION = "98";
 const APP_SHELL = [
   "./privacy.html",
   "./support.html",

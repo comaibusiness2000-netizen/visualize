@@ -1366,6 +1366,7 @@ export default function App() {
         ref={lifeScrollRef}
         contentContainerStyle={styles.lifeContent}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
         scrollEventThrottle={16}
       >
         <View style={[styles.heroCard, { backgroundColor: theme.hero, borderColor: theme.heroLine }]}>
@@ -1389,18 +1390,18 @@ export default function App() {
 
         <View style={styles.heroStatsStrip}>
           <View style={styles.heroStatCell}>
-            <Text style={styles.heroStatValue}>{stats.weeksLeft.toLocaleString("en-US")}</Text>
-            <Text style={styles.heroStatLabel}>{t("life.weeks")}</Text>
+            <Text style={styles.heroStatValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.72}>{stats.weeksLeft.toLocaleString("en-US")}</Text>
+            <Text style={styles.heroStatLabel} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.72}>{t("life.weeks")}</Text>
           </View>
           <View style={styles.heroStatDivider} />
           <View style={styles.heroStatCell}>
-            <Text style={styles.heroStatValue}>{stats.monthsLeft.toLocaleString("en-US")}</Text>
-            <Text style={styles.heroStatLabel}>{t("life.months")}</Text>
+            <Text style={styles.heroStatValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.72}>{stats.monthsLeft.toLocaleString("en-US")}</Text>
+            <Text style={styles.heroStatLabel} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.72}>{t("life.months")}</Text>
           </View>
           <View style={styles.heroStatDivider} />
           <View style={styles.heroStatCell}>
-            <Text style={styles.heroStatValue}>{stats.usedPercent}%</Text>
-            <Text style={styles.heroStatLabel}>{t("life.used")}</Text>
+            <Text style={styles.heroStatValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.72}>{stats.usedPercent}%</Text>
+            <Text style={styles.heroStatLabel} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.72}>{t("life.used")}</Text>
           </View>
         </View>
 
@@ -1422,7 +1423,7 @@ export default function App() {
               <Text style={styles.quoteCardKicker}>{t("quote.kicker")}</Text>
               <Text style={styles.quoteCardDay}>{dailyQuoteOrdinal}</Text>
             </View>
-            <Text style={styles.quoteOpenHint}>{t("quote.open")}</Text>
+            <Text style={styles.quoteOpenHint} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.72}>{t("quote.open")}</Text>
           </View>
           <Text style={styles.quoteCardText} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.88}>"{dailyQuote.text}"</Text>
           <View style={styles.quoteCardFooter}>
@@ -1602,19 +1603,19 @@ export default function App() {
     const speechMinutes = Math.max(1, Math.ceil(speechWords / 135));
     const waveform = [16, 30, 22, 42, 26, 36, 18, 32, 24];
     return (
-      <ScrollView contentContainerStyle={styles.speechContent}>
+      <ScrollView contentContainerStyle={styles.speechContent} keyboardShouldPersistTaps="handled">
         <View style={[styles.speechHero, speechPlaying && styles.speechHeroPlaying]}>
           <View style={styles.speechHeroAuraTop} />
           <View style={styles.speechHeroAuraBottom} />
           <Text style={styles.speechHeroKicker}>{t("speech.title")}</Text>
-          <Text style={styles.speechHeroTitle} numberOfLines={2}>{currentSpeechTitle}</Text>
+          <Text style={styles.speechHeroTitle} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.76}>{currentSpeechTitle}</Text>
           <Text style={styles.speechHeroBody}>{t("speech.body")}</Text>
           <View style={styles.speechHeroMeta}>
-            <Text style={styles.speechHeroMetaText}>{speechPlaying ? t("speech.playing") : t("speech.ready")}</Text>
+            <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechPlaying ? t("speech.playing") : t("speech.ready")}</Text>
             <View style={styles.speechHeroDot} />
-            <Text style={styles.speechHeroMetaText}>{activeVoiceProfile.name}</Text>
+            <Text style={styles.speechHeroMetaText} numberOfLines={1}>{activeVoiceProfile.name}</Text>
             <View style={styles.speechHeroDot} />
-            <Text style={styles.speechHeroMetaText}>{speechMinutes} min</Text>
+            <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechMinutes} min</Text>
           </View>
           <View style={styles.speechWaveform}>
             {waveform.map((height, index) => {
@@ -2374,15 +2375,15 @@ const styles = StyleSheet.create({
   heroMiniButton: { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.12)", borderWidth: 1, borderColor: "rgba(255,255,255,0.14)" },
   heroMiniButtonText: { color: "#FFF9ED", fontSize: 15, fontWeight: "900" },
   kicker: { fontSize: 11, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
-  daysNumber: { color: "#FFFFFF", marginTop: 0, fontSize: 47, lineHeight: 51, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
+  daysNumber: { color: "#FFFFFF", marginTop: 0, fontSize: 44, lineHeight: 49, fontWeight: "900", letterSpacing: 0, textAlign: "center" },
   daysLabel: { color: "rgba(255,249,237,0.76)", fontSize: 13, lineHeight: 16, fontWeight: "850", marginBottom: 9, textAlign: "center" },
   bigProgressTrack: { height: 8, overflow: "hidden", borderRadius: 999, marginBottom: 8 },
   bigProgressFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   heroBody: { color: "rgba(255,249,237,0.72)", fontSize: 12.2, lineHeight: 16, fontWeight: "700", textAlign: "center" },
-  heroStatsStrip: { minHeight: 54, marginBottom: 8, borderRadius: 22, paddingHorizontal: 6, flexDirection: "row", alignItems: "center", backgroundColor: "#11171A", borderWidth: 1, borderColor: "rgba(232,196,104,0.16)", shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 5 },
+  heroStatsStrip: { minHeight: 54, marginBottom: 8, borderRadius: 22, paddingHorizontal: 6, flexDirection: "row", alignItems: "stretch", backgroundColor: "#11171A", borderWidth: 1, borderColor: "rgba(232,196,104,0.16)", shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 5 },
   heroStatCell: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 4 },
   heroStatValue: { color: "#FFF9ED", fontSize: 16, lineHeight: 19, fontWeight: "900", textAlign: "center" },
-  heroStatLabel: { color: "rgba(255,249,237,0.58)", marginTop: 1, fontSize: 8.5, lineHeight: 10, fontWeight: "900", textAlign: "center", letterSpacing: 0.7, textTransform: "uppercase" },
+  heroStatLabel: { color: "rgba(255,249,237,0.58)", marginTop: 1, fontSize: 8.5, lineHeight: 10.5, fontWeight: "900", textAlign: "center", letterSpacing: 0.5, textTransform: "uppercase" },
   heroStatDivider: { width: 1, height: 28, backgroundColor: "rgba(255,249,237,0.11)" },
   body: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
   syncFootnote: { marginTop: 10, fontSize: 11, lineHeight: 16, fontWeight: "900", letterSpacing: 0.5 },
@@ -2397,7 +2398,7 @@ const styles = StyleSheet.create({
   quoteMetaBlock: { flex: 1, minWidth: 0 },
   quoteCardKicker: { color: "rgba(255,249,237,0.72)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
   quoteCardDay: { color: "#E8C468", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "900" },
-  quoteOpenHint: { overflow: "hidden", minHeight: 28, paddingHorizontal: 10, paddingVertical: 7, borderRadius: 999, color: "#101418", backgroundColor: "#FFF9ED", fontSize: 11, lineHeight: 13, fontWeight: "900", textTransform: "lowercase" },
+  quoteOpenHint: { overflow: "hidden", maxWidth: 76, minHeight: 28, paddingHorizontal: 10, paddingVertical: 7, borderRadius: 999, color: "#101418", backgroundColor: "#FFF9ED", fontSize: 11, lineHeight: 13, fontWeight: "900", textAlign: "center", textTransform: "lowercase" },
   quoteCardText: { marginTop: 8, color: "#FFF9ED", fontSize: 16.8, lineHeight: 20, fontWeight: "900" },
   quoteCardFooter: { marginTop: 7, flexDirection: "row", alignItems: "center", gap: 10 },
   quoteAuthor: { color: "rgba(255,249,237,0.72)", fontSize: 10.5, lineHeight: 14, fontWeight: "900" },
@@ -2525,15 +2526,15 @@ const styles = StyleSheet.create({
   deckRail: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 14 },
   deckTile: { aspectRatio: 0.68 },
   speechContent: { padding: 16, paddingBottom: 90 },
-  speechHero: { minHeight: 220, overflow: "hidden", borderRadius: 32, paddingHorizontal: 18, paddingTop: 18, paddingBottom: 16, marginBottom: 10, alignItems: "center", backgroundColor: "#080B0D", shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
+  speechHero: { minHeight: 0, overflow: "hidden", borderRadius: 32, paddingHorizontal: 18, paddingTop: 18, paddingBottom: 16, marginBottom: 10, alignItems: "center", backgroundColor: "#080B0D", shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
   speechHeroPlaying: { shadowOpacity: 0.28, shadowRadius: 34 },
   speechHeroAuraTop: { position: "absolute", width: 190, height: 190, right: -64, top: -72, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.18)" },
   speechHeroAuraBottom: { position: "absolute", width: 190, height: 190, left: -84, bottom: -104, borderRadius: 95, backgroundColor: "rgba(218,90,58,0.13)" },
   speechHeroKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2.1, textTransform: "uppercase" },
-  speechHeroTitle: { maxWidth: 316, marginTop: 5, color: "#FFF9ED", fontSize: 30, lineHeight: 32, fontWeight: "900", textAlign: "center" },
+  speechHeroTitle: { maxWidth: 316, marginTop: 5, color: "#FFF9ED", fontSize: 29, lineHeight: 32, fontWeight: "900", textAlign: "center" },
   speechHeroBody: { maxWidth: 306, marginTop: 7, color: "rgba(255,249,237,0.72)", fontSize: 12.5, lineHeight: 17, fontWeight: "750", textAlign: "center" },
-  speechHeroMeta: { marginTop: 10, flexDirection: "row", alignItems: "center", gap: 8, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 7, backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
-  speechHeroMetaText: { color: "rgba(255,249,237,0.78)", fontSize: 11.5, lineHeight: 14, fontWeight: "900" },
+  speechHeroMeta: { maxWidth: "100%", marginTop: 10, flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 8, borderRadius: 18, paddingHorizontal: 12, paddingVertical: 7, backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  speechHeroMetaText: { maxWidth: 92, color: "rgba(255,249,237,0.78)", fontSize: 11.5, lineHeight: 14, fontWeight: "900" },
   speechHeroDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: "#E8C468" },
   speechWaveform: { height: 36, marginTop: 10, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
   speechWaveBar: { width: 7, borderRadius: 999, backgroundColor: "#E8C468" },
@@ -2541,7 +2542,7 @@ const styles = StyleSheet.create({
   speechPlayButton: { minHeight: 48, minWidth: 172, marginTop: 9, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FFF9ED" },
   speechPlayButtonActive: { backgroundColor: "#E8C468" },
   speechPlayText: { color: "#101418", fontSize: 16, lineHeight: 20, fontWeight: "900" },
-  speechStudio: { overflow: "hidden", borderWidth: 1, borderRadius: 32, padding: 14, gap: 12, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 4 },
+  speechStudio: { overflow: "visible", borderWidth: 1, borderRadius: 32, padding: 14, gap: 12, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 4 },
   speechEditorStage: { gap: 12 },
   speechStageTop: { minHeight: 38, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
   speechBackButton: { minHeight: 36, borderWidth: 1, borderRadius: 999, paddingHorizontal: 15, alignItems: "center", justifyContent: "center" },

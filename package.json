@@ -9,7 +9,8 @@
     "doctor": "npx expo-doctor",
     "ios:build": "npx eas-cli build --platform ios",
     "ios:submit": "npx eas-cli submit --platform ios",
-    "web:preview": "node tools/serve-preview.mjs"
+    "web:preview": "node tools/serve-preview.mjs",
+    "preview:audit": "node tools/audit-preview-layout.mjs"
   },
   "dependencies": {
     "expo": "~55.0.28",
