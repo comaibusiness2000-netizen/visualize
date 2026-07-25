@@ -1631,46 +1631,47 @@ export default function App() {
           </TouchableOpacity>
         </View>
 
-        <View style={[styles.speechLibraryPanel, { backgroundColor: theme.soft, borderColor: theme.line }]}>
-          <View style={styles.speechLibraryHeader}>
-            <Text style={[styles.speechLibraryLabel, { color: theme.muted }]}>{t("speech.library")}</Text>
-            <TouchableOpacity style={[styles.speechNewButton, { backgroundColor: theme.card, borderColor: theme.line }]} onPress={newSpeech} activeOpacity={0.88}>
-              <Text style={[styles.speechNewButtonText, { color: theme.ink }]}>+</Text>
-            </TouchableOpacity>
-          </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.speechListRail}>
-            {appState.selfSpeeches.map((speech, index) => (
-              <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: index === appState.activeSpeechIndex ? "rgba(232,196,104,0.18)" : theme.card, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)} activeOpacity={0.88}>
-                <Text style={[styles.speechPillTitle, { color: theme.ink }]} numberOfLines={1}>{speech.title || `Self speech ${index + 1}`}</Text>
-                <Text style={[styles.speechPillBody, { color: theme.muted }]} numberOfLines={2}>{speech.text || t("speech.emptyDraft")}</Text>
+        <View style={[styles.speechStudio, { backgroundColor: theme.card, borderColor: theme.line }]}>
+          <View style={[styles.speechLibraryPanel, { borderColor: theme.line }]}>
+            <View style={styles.speechLibraryHeader}>
+              <Text style={[styles.speechLibraryLabel, { color: theme.muted }]}>{t("speech.library")}</Text>
+              <TouchableOpacity style={[styles.speechNewButton, { backgroundColor: theme.soft, borderColor: theme.line }]} onPress={newSpeech} activeOpacity={0.88}>
+                <Text style={[styles.speechNewButtonText, { color: theme.ink }]}>+</Text>
               </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-
-        <View style={[styles.speechEditorCard, { backgroundColor: theme.card, borderColor: theme.line }]}>
-          <View style={styles.speechEditorHeader}>
-            <Text style={[styles.kicker, { color: theme.muted }]}>{t("speech.current")}</Text>
-            <Text style={[styles.speechEditorCount, { color: theme.muted }]}>{speechWords} {t("speech.words")}</Text>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.speechListRail}>
+              {appState.selfSpeeches.map((speech, index) => (
+                <TouchableOpacity key={speech.id} style={[styles.speechPill, { backgroundColor: index === appState.activeSpeechIndex ? "rgba(232,196,104,0.18)" : theme.soft, borderColor: index === appState.activeSpeechIndex ? "#E8C468" : theme.line }]} onPress={() => selectSpeech(index)} activeOpacity={0.88}>
+                  <Text style={[styles.speechPillTitle, { color: theme.ink }]} numberOfLines={1}>{speech.title || `Self speech ${index + 1}`}</Text>
+                  <Text style={[styles.speechPillBody, { color: theme.muted }]} numberOfLines={2}>{speech.text || t("speech.emptyDraft")}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
-          <TextInput
-            value={draftSpeechTitle}
-            onChangeText={setDraftSpeechTitle}
-            placeholder={t("speech.titlePlaceholder")}
-            placeholderTextColor={theme.placeholder}
-            style={[styles.speechTitleInput, { color: theme.ink, borderColor: theme.line }]}
-          />
-          <TextInput
-            value={draftSpeechText}
-            onChangeText={setDraftSpeechText}
-            placeholder={t("speech.textPlaceholder")}
-            placeholderTextColor={theme.placeholder}
-            multiline
-            style={[styles.speechScriptInput, { color: theme.ink, borderColor: theme.line }]}
-          />
-        </View>
 
-        <View style={[styles.voicePanel, styles.voicePanelPremium, { backgroundColor: theme.soft }]}>
+          <View style={[styles.speechEditorCard, { borderColor: theme.line }]}>
+            <View style={styles.speechEditorHeader}>
+              <Text style={[styles.kicker, { color: theme.muted }]}>{t("speech.current")}</Text>
+              <Text style={[styles.speechEditorCount, { color: theme.muted }]}>{speechWords} {t("speech.words")}</Text>
+            </View>
+            <TextInput
+              value={draftSpeechTitle}
+              onChangeText={setDraftSpeechTitle}
+              placeholder={t("speech.titlePlaceholder")}
+              placeholderTextColor={theme.placeholder}
+              style={[styles.speechTitleInput, { color: theme.ink, borderColor: theme.line }]}
+            />
+            <TextInput
+              value={draftSpeechText}
+              onChangeText={setDraftSpeechText}
+              placeholder={t("speech.textPlaceholder")}
+              placeholderTextColor={theme.placeholder}
+              multiline
+              style={[styles.speechScriptInput, { color: theme.ink, borderColor: theme.line }]}
+            />
+          </View>
+
+          <View style={[styles.voicePanel, styles.voicePanelPremium, { backgroundColor: theme.soft, borderColor: theme.line }]}>
             <View style={styles.voiceHeader}>
               <Text style={[styles.voiceLabel, { color: theme.muted }]}>{t("speech.voice")}</Text>
               <Text style={[styles.voiceHint, { color: theme.muted }]}>{t("speech.swipe")}</Text>
@@ -1709,9 +1710,9 @@ export default function App() {
                 <View key={profile.id} style={[styles.voiceDot, profile.id === activeVoiceProfile.id && styles.voiceDotActive]} />
               ))}
             </View>
-        </View>
+          </View>
 
-        <View style={styles.speechActionDock}>
+          <View style={styles.speechActionDock}>
             <TouchableOpacity style={[styles.speechDockButton, styles.speechDockPrimary]} onPress={saveSpeech}>
               <Text style={styles.primaryText}>{t("speech.save")}</Text>
             </TouchableOpacity>
@@ -1720,6 +1721,7 @@ export default function App() {
                 <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
               </TouchableOpacity>
             ) : null}
+          </View>
         </View>
       </ScrollView>
     );
@@ -2458,51 +2460,52 @@ const styles = StyleSheet.create({
   deckFrameLabelAnti: { color: "rgba(255,220,210,0.82)" },
   deckRail: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 14 },
   deckTile: { aspectRatio: 0.68 },
-  speechContent: { padding: 20, paddingBottom: 132 },
-  speechHero: { minHeight: 244, overflow: "hidden", borderRadius: 34, paddingHorizontal: 20, paddingTop: 20, paddingBottom: 18, marginBottom: 13, alignItems: "center", backgroundColor: "#080B0D", shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
+  speechContent: { padding: 16, paddingBottom: 142 },
+  speechHero: { minHeight: 220, overflow: "hidden", borderRadius: 32, paddingHorizontal: 18, paddingTop: 18, paddingBottom: 16, marginBottom: 10, alignItems: "center", backgroundColor: "#080B0D", shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
   speechHeroPlaying: { shadowOpacity: 0.28, shadowRadius: 34 },
   speechHeroAuraTop: { position: "absolute", width: 190, height: 190, right: -64, top: -72, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.18)" },
   speechHeroAuraBottom: { position: "absolute", width: 190, height: 190, left: -84, bottom: -104, borderRadius: 95, backgroundColor: "rgba(218,90,58,0.13)" },
   speechHeroKicker: { color: "#E8C468", fontSize: 11, lineHeight: 15, fontWeight: "900", letterSpacing: 2.1, textTransform: "uppercase" },
-  speechHeroTitle: { maxWidth: 316, marginTop: 7, color: "#FFF9ED", fontSize: 32, lineHeight: 34, fontWeight: "900", textAlign: "center" },
-  speechHeroBody: { maxWidth: 306, marginTop: 8, color: "rgba(255,249,237,0.72)", fontSize: 13, lineHeight: 18, fontWeight: "750", textAlign: "center" },
-  speechHeroMeta: { marginTop: 12, flexDirection: "row", alignItems: "center", gap: 9, borderRadius: 999, paddingHorizontal: 13, paddingVertical: 8, backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
-  speechHeroMetaText: { color: "rgba(255,249,237,0.78)", fontSize: 12, lineHeight: 15, fontWeight: "900" },
+  speechHeroTitle: { maxWidth: 316, marginTop: 5, color: "#FFF9ED", fontSize: 30, lineHeight: 32, fontWeight: "900", textAlign: "center" },
+  speechHeroBody: { maxWidth: 306, marginTop: 7, color: "rgba(255,249,237,0.72)", fontSize: 12.5, lineHeight: 17, fontWeight: "750", textAlign: "center" },
+  speechHeroMeta: { marginTop: 10, flexDirection: "row", alignItems: "center", gap: 8, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 7, backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
+  speechHeroMetaText: { color: "rgba(255,249,237,0.78)", fontSize: 11.5, lineHeight: 14, fontWeight: "900" },
   speechHeroDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: "#E8C468" },
-  speechWaveform: { height: 42, marginTop: 13, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  speechWaveform: { height: 36, marginTop: 10, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
   speechWaveBar: { width: 7, borderRadius: 999, backgroundColor: "#E8C468" },
   speechWaveBarPlaying: { shadowColor: "#E8C468", shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 0 } },
-  speechPlayButton: { minHeight: 50, minWidth: 176, marginTop: 11, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FFF9ED" },
+  speechPlayButton: { minHeight: 48, minWidth: 172, marginTop: 9, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FFF9ED" },
   speechPlayButtonActive: { backgroundColor: "#E8C468" },
   speechPlayText: { color: "#101418", fontSize: 16, lineHeight: 20, fontWeight: "900" },
-  speechLibraryPanel: { borderWidth: 1, borderRadius: 28, paddingHorizontal: 14, paddingTop: 13, paddingBottom: 14, marginBottom: 12 },
+  speechStudio: { overflow: "hidden", borderWidth: 1, borderRadius: 32, padding: 14, gap: 12, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 24, shadowOffset: { width: 0, height: 14 }, elevation: 4 },
+  speechLibraryPanel: { borderBottomWidth: 1, paddingBottom: 12 },
   speechLibraryHeader: { minHeight: 34, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 8 },
   speechLibraryLabel: { fontSize: 11, lineHeight: 14, fontWeight: "900", letterSpacing: 1.4, textTransform: "uppercase" },
   speechNewButton: { width: 34, height: 34, borderWidth: 1, borderRadius: 17, alignItems: "center", justifyContent: "center" },
   speechNewButtonText: { marginTop: -2, fontSize: 23, lineHeight: 25, fontWeight: "850" },
-  speechEditorCard: { borderWidth: 1, borderRadius: 30, padding: 18, marginBottom: 12, shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 4 },
+  speechEditorCard: { borderWidth: 0, padding: 0 },
   speechEditorHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 10 },
   speechEditorCount: { fontSize: 11, lineHeight: 14, fontWeight: "900", textTransform: "uppercase" },
-  speechTitleInput: { minHeight: 50, borderWidth: 0, borderBottomWidth: 1, paddingHorizontal: 0, paddingVertical: 8, fontSize: 24, lineHeight: 29, fontWeight: "900" },
-  speechScriptInput: { minHeight: 156, marginTop: 12, borderWidth: 0, paddingHorizontal: 0, paddingVertical: 6, textAlignVertical: "top", fontSize: 16, lineHeight: 23, fontWeight: "750" },
-  voicePanel: { marginBottom: 12, borderRadius: 26, paddingVertical: 13, overflow: "hidden" },
-  voicePanelPremium: { borderWidth: 1, borderColor: "rgba(128,128,128,0.1)" },
+  speechTitleInput: { minHeight: 44, borderWidth: 0, borderBottomWidth: 1, paddingHorizontal: 0, paddingVertical: 7, fontSize: 22, lineHeight: 27, fontWeight: "900" },
+  speechScriptInput: { minHeight: 124, marginTop: 10, borderWidth: 0, paddingHorizontal: 0, paddingVertical: 6, textAlignVertical: "top", fontSize: 15.5, lineHeight: 22, fontWeight: "750" },
+  voicePanel: { borderRadius: 24, paddingVertical: 12, overflow: "hidden" },
+  voicePanelPremium: { borderWidth: 1 },
   voiceHeader: { paddingHorizontal: 14, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 },
   voiceLabel: { fontSize: 11, lineHeight: 14, fontWeight: "900", letterSpacing: 1.4, textTransform: "uppercase" },
   voiceHint: { fontSize: 12, lineHeight: 15, fontWeight: "850" },
-  voiceRail: { paddingHorizontal: 14, paddingTop: 10, paddingBottom: 4, gap: 12 },
-  voiceCard: { width: 226, minHeight: 78, borderWidth: 1, borderRadius: 22, paddingHorizontal: 16, paddingVertical: 14, justifyContent: "center" },
-  voiceName: { fontSize: 21, lineHeight: 24, fontWeight: "900" },
-  voiceNote: { marginTop: 4, fontSize: 13, lineHeight: 16, fontWeight: "800" },
-  voiceDots: { flexDirection: "row", justifyContent: "center", gap: 6, marginTop: 8 },
+  voiceRail: { paddingHorizontal: 14, paddingTop: 9, paddingBottom: 3, gap: 12 },
+  voiceCard: { width: 226, minHeight: 70, borderWidth: 1, borderRadius: 21, paddingHorizontal: 15, paddingVertical: 12, justifyContent: "center" },
+  voiceName: { fontSize: 20, lineHeight: 23, fontWeight: "900" },
+  voiceNote: { marginTop: 3, fontSize: 12.5, lineHeight: 15, fontWeight: "800" },
+  voiceDots: { flexDirection: "row", justifyContent: "center", gap: 6, marginTop: 7 },
   voiceDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "rgba(128,128,128,0.34)" },
   voiceDotActive: { width: 18, backgroundColor: "#E8C468" },
   speechListRail: { gap: 10, paddingRight: 2 },
   speechPill: { width: 190, minHeight: 68, borderWidth: 1, borderRadius: 23, paddingHorizontal: 14, paddingVertical: 12 },
   speechPillTitle: { fontSize: 16, lineHeight: 20, fontWeight: "900" },
   speechPillBody: { marginTop: 5, fontSize: 12, lineHeight: 16, fontWeight: "750" },
-  speechActionDock: { flexDirection: "row", gap: 10, marginTop: 2 },
-  speechDockButton: { flex: 1, minHeight: 54, borderRadius: 999, paddingHorizontal: 12, alignItems: "center", justifyContent: "center", borderWidth: 1 },
+  speechActionDock: { flexDirection: "row", gap: 10, marginTop: 0 },
+  speechDockButton: { flex: 1, minHeight: 50, borderRadius: 999, paddingHorizontal: 12, alignItems: "center", justifyContent: "center", borderWidth: 1 },
   speechDockPrimary: { borderColor: "#DA5A3A", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.18, shadowRadius: 12, shadowOffset: { width: 0, height: 8 }, elevation: 3 },
   switchRow: { minHeight: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   languageGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 },

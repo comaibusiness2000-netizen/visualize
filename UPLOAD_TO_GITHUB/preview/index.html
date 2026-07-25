@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=90" />
+    <link rel="manifest" href="./manifest.webmanifest?v=91" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v90";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v91";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -49,7 +49,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=90")
+            .register("./service-worker.js?v=91")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3524,12 +3524,12 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        gap: 11px;
+        gap: 10px;
         overflow-y: auto;
         overscroll-behavior: contain;
         border: 0;
         border-radius: 0;
-        padding: 0 0 4px;
+        padding: 0 0 18px;
         color: var(--ink);
         background: transparent;
         box-shadow: none;
@@ -3547,13 +3547,13 @@
       .speech-head {
         position: relative;
         flex: 0 0 auto;
-        min-height: 224px;
+        min-height: 214px;
         display: grid;
         justify-items: center;
         align-content: start;
         overflow: hidden;
         border-radius: 34px;
-        padding: 18px 18px 18px;
+        padding: 17px 18px 16px;
         color: #fff9ed;
         background:
           radial-gradient(circle at 88% 0%, rgba(232, 196, 104, 0.2), transparent 36%),
@@ -3591,7 +3591,7 @@
         max-width: 320px;
         margin-top: 3px;
         color: #fff9ed;
-        font-size: clamp(30px, 9.4vw, 38px);
+        font-size: clamp(29px, 8.8vw, 36px);
         line-height: 1.02;
         font-weight: 950;
       }
@@ -3600,7 +3600,7 @@
         position: relative;
         z-index: 1;
         max-width: 300px;
-        margin: 8px auto 0;
+        margin: 7px auto 0;
         color: rgba(255, 249, 237, 0.68);
         font-size: 12.5px;
         line-height: 1.32;
@@ -3615,7 +3615,7 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        margin-top: 10px;
+        margin-top: 9px;
         border: 1px solid rgba(255, 249, 237, 0.1);
         border-radius: 999px;
         padding: 0 12px;
@@ -3646,12 +3646,12 @@
       .speech-meter {
         position: relative;
         z-index: 1;
-        height: 38px;
+        height: 34px;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
-        margin-top: 12px;
+        margin-top: 10px;
       }
 
       .speech-meter span {
@@ -3679,8 +3679,8 @@
         position: relative;
         z-index: 1;
         min-width: 178px;
-        min-height: 50px;
-        margin-top: 12px;
+        min-height: 48px;
+        margin-top: 10px;
         border: 0;
         border-radius: 999px;
         color: #101418;
@@ -3698,19 +3698,28 @@
         background: var(--gold);
       }
 
-      .speech-script-panel {
+      .speech-studio {
         flex: 0 0 auto;
         display: grid;
-        gap: 8px;
+        gap: 12px;
         border: 1px solid var(--line);
-        border-radius: 28px;
-        padding: 12px 12px 13px;
-        background: var(--soft);
+        border-radius: 32px;
+        padding: 14px;
+        background:
+          radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.09), transparent 34%),
+          var(--control);
         animation: premiumPanelIn 0.72s 0.07s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
+      .speech-script-panel {
+        display: grid;
+        gap: 8px;
+        padding-bottom: 3px;
+        border-bottom: 1px solid var(--line);
+      }
+
       .speech-script-top {
-        min-height: 34px;
+        min-height: 32px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -3726,7 +3735,7 @@
       }
 
       .speech-list {
-        min-height: 60px;
+        min-height: 54px;
         display: flex;
         gap: 9px;
         overflow-x: auto;
@@ -3739,15 +3748,15 @@
       }
 
       .speech-pill {
-        min-width: 176px;
-        max-width: 200px;
+        min-width: 156px;
+        max-width: 184px;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
         gap: 6px;
         border: 1px solid var(--line);
-        border-radius: 22px;
-        padding: 10px 8px 10px 12px;
+        border-radius: 20px;
+        padding: 9px 8px 9px 11px;
         background: var(--control);
       }
 
@@ -3786,8 +3795,8 @@
       }
 
       .speech-delete {
-        width: 26px;
-        height: 26px;
+        width: 24px;
+        height: 24px;
         border: 0;
         border-radius: 50%;
         color: #ffffff;
@@ -3797,8 +3806,8 @@
       }
 
       .speech-new {
-        width: 36px;
-        height: 36px;
+        width: 34px;
+        height: 34px;
         border: 1px solid var(--line);
         border-radius: 50%;
         color: var(--ink);
@@ -3810,16 +3819,15 @@
 
       .speech-editor {
         flex: 0 0 auto;
-        min-height: 234px;
+        min-height: 0;
         display: grid;
         grid-template-rows: auto auto auto;
         gap: 10px;
         overflow: visible;
-        border: 1px solid var(--line);
-        border-radius: 30px;
-        padding: 16px;
-        background: var(--control);
-        animation: premiumPanelIn 0.72s 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+        background: transparent;
       }
 
       .speech-editor-top {
@@ -3870,15 +3878,15 @@
       }
 
       .speech-field input {
-        min-height: 46px;
-        font-size: 23px;
+        min-height: 42px;
+        font-size: 21px;
         line-height: 1.18;
         font-weight: 950;
       }
 
       .speech-field textarea {
         height: auto;
-        min-height: 142px;
+        min-height: 118px;
         overflow-y: auto;
         resize: none;
         border-bottom-width: 0;
@@ -3898,12 +3906,11 @@
         grid-template-columns: minmax(0, 1fr) 132px;
         align-items: center;
         gap: 10px;
-        min-height: 66px;
+        min-height: 62px;
         border: 1px solid var(--line);
         border-radius: 24px;
         padding: 11px 12px 11px 15px;
-        background: var(--control);
-        animation: premiumPanelIn 0.72s 0.17s cubic-bezier(0.16, 1, 0.3, 1) both;
+        background: var(--soft);
       }
 
       .voice-line span,
@@ -4064,7 +4071,6 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
-        animation: premiumPanelIn 0.72s 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .speech-actions .btn {
@@ -5322,6 +5328,84 @@
           min-height: 46px;
           font-size: 13px;
         }
+
+        .speech-workbench {
+          gap: 8px;
+          padding-bottom: calc(14px + env(safe-area-inset-bottom));
+        }
+
+        .speech-head {
+          min-height: 188px;
+          border-radius: 30px;
+          padding: 15px 15px 14px;
+        }
+
+        .speech-head h2 {
+          max-width: 300px;
+          font-size: clamp(27px, 8.6vw, 34px);
+        }
+
+        .speech-head p {
+          max-width: 292px;
+          font-size: 12px;
+          line-height: 1.24;
+        }
+
+        .speech-playback-meta {
+          min-height: 31px;
+          margin-top: 8px;
+          padding: 0 10px;
+        }
+
+        .speech-meter {
+          height: 30px;
+          margin-top: 8px;
+        }
+
+        .speech-play-main {
+          min-height: 46px;
+          margin-top: 8px;
+        }
+
+        .speech-studio {
+          border-radius: 28px;
+          padding: 12px;
+          gap: 10px;
+        }
+
+        .speech-list {
+          min-height: 50px;
+        }
+
+        .speech-pill {
+          min-width: 148px;
+          max-width: 172px;
+        }
+
+        .speech-field input {
+          min-height: 40px;
+          font-size: 20px;
+        }
+
+        .speech-field textarea {
+          min-height: 108px;
+        }
+
+        .voice-line {
+          min-height: 60px;
+          grid-template-columns: minmax(0, 1fr) 122px;
+          padding: 10px 10px 10px 13px;
+        }
+
+        .voice-picker,
+        .voice-carousel {
+          width: 122px;
+        }
+
+        .voice-card {
+          min-height: 42px;
+          border-radius: 15px;
+        }
       }
     </style>
   </head>
@@ -5541,44 +5625,46 @@
                 <button class="speech-play-main" id="playSelfTalk" type="button">Play</button>
               </div>
 
-              <div class="speech-script-panel">
-                <div class="speech-script-top">
-                  <span id="speechScriptsLabel">Scripts</span>
-                  <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
+              <div class="speech-studio">
+                <div class="speech-script-panel">
+                  <div class="speech-script-top">
+                    <span id="speechScriptsLabel">Scripts</span>
+                    <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
+                  </div>
+                  <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
                 </div>
-                <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
-              </div>
 
-              <div class="speech-editor">
-                <div class="speech-editor-top">
-                  <span id="speechCurrentLabel">Current script</span>
-                  <small id="speechEditorCount">0 words</small>
+                <div class="speech-editor">
+                  <div class="speech-editor-top">
+                    <span id="speechCurrentLabel">Current script</span>
+                    <small id="speechEditorCount">0 words</small>
+                  </div>
+                  <label class="speech-field">
+                    <span>Title</span>
+                    <input id="selfTalkTitle" type="text" maxlength="56" placeholder="Example: Morning identity" />
+                  </label>
+                  <label class="speech-field">
+                    <span>Script</span>
+                    <textarea id="selfTalkText" maxlength="1800" placeholder="Write your self speech here..."></textarea>
+                  </label>
                 </div>
-                <label class="speech-field">
-                  <span>Title</span>
-                  <input id="selfTalkTitle" type="text" maxlength="56" placeholder="Example: Morning identity" />
-                </label>
-                <label class="speech-field">
-                  <span>Script</span>
-                  <textarea id="selfTalkText" maxlength="1800" placeholder="Write your self speech here..."></textarea>
-                </label>
-              </div>
 
-              <div class="voice-line">
-                <div>
-                  <span>Voice</span>
-                  <strong id="voiceProfileName">Maya</strong>
-                  <em id="voiceQualityNote">Swipe to change voice</em>
+                <div class="voice-line">
+                  <div>
+                    <span>Voice</span>
+                    <strong id="voiceProfileName">Maya</strong>
+                    <em id="voiceQualityNote">Swipe to change voice</em>
+                  </div>
+                  <div class="voice-picker" aria-label="Swipe voice options">
+                    <div class="voice-carousel" id="voiceCarousel"></div>
+                    <div class="voice-dots" id="voiceDots" aria-hidden="true"></div>
+                  </div>
                 </div>
-                <div class="voice-picker" aria-label="Swipe voice options">
-                  <div class="voice-carousel" id="voiceCarousel"></div>
-                  <div class="voice-dots" id="voiceDots" aria-hidden="true"></div>
-                </div>
-              </div>
 
-              <div class="speech-actions">
-                <button class="btn" id="saveSelfTalk" type="button">Save</button>
-                <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
+                <div class="speech-actions">
+                  <button class="btn" id="saveSelfTalk" type="button">Save</button>
+                  <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
+                </div>
               </div>
             </article>
           </section>
