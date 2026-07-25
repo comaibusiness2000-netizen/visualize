@@ -1372,21 +1372,22 @@ export default function App() {
           <Text style={styles.heroBody}>
             {t("life.summary", { age: stats.age, expectancy: stats.expectancy })}
           </Text>
-          <View style={styles.heroStatsStrip}>
-            <View style={styles.heroStatCell}>
-              <Text style={styles.heroStatValue}>{stats.weeksLeft.toLocaleString("en-US")}</Text>
-              <Text style={styles.heroStatLabel}>{t("life.weeks")}</Text>
-            </View>
-            <View style={styles.heroStatDivider} />
-            <View style={styles.heroStatCell}>
-              <Text style={styles.heroStatValue}>{stats.monthsLeft.toLocaleString("en-US")}</Text>
-              <Text style={styles.heroStatLabel}>{t("life.months")}</Text>
-            </View>
-            <View style={styles.heroStatDivider} />
-            <View style={styles.heroStatCell}>
-              <Text style={styles.heroStatValue}>{stats.usedPercent}%</Text>
-              <Text style={styles.heroStatLabel}>{t("life.used")}</Text>
-            </View>
+        </View>
+
+        <View style={styles.heroStatsStrip}>
+          <View style={styles.heroStatCell}>
+            <Text style={styles.heroStatValue}>{stats.weeksLeft.toLocaleString("en-US")}</Text>
+            <Text style={styles.heroStatLabel}>{t("life.weeks")}</Text>
+          </View>
+          <View style={styles.heroStatDivider} />
+          <View style={styles.heroStatCell}>
+            <Text style={styles.heroStatValue}>{stats.monthsLeft.toLocaleString("en-US")}</Text>
+            <Text style={styles.heroStatLabel}>{t("life.months")}</Text>
+          </View>
+          <View style={styles.heroStatDivider} />
+          <View style={styles.heroStatCell}>
+            <Text style={styles.heroStatValue}>{stats.usedPercent}%</Text>
+            <Text style={styles.heroStatLabel}>{t("life.used")}</Text>
           </View>
         </View>
 
@@ -2299,7 +2300,7 @@ const styles = StyleSheet.create({
   mainMotion: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
   lifeContent: { padding: 16, paddingBottom: 126 },
-  heroCard: { minHeight: 314, overflow: "hidden", borderWidth: 1, borderRadius: 36, padding: 20, marginBottom: 11, shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
+  heroCard: { minHeight: 244, overflow: "hidden", borderWidth: 1, borderRadius: 36, padding: 20, marginBottom: 10, shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
   heroGlow: { position: "absolute", right: -48, top: -68, width: 180, height: 180, borderRadius: 90, backgroundColor: "rgba(232,196,104,0.15)" },
   heroWatermark: { position: "absolute", left: 16, right: 16, bottom: -22, color: "rgba(255,249,237,0.055)", fontSize: 116, lineHeight: 122, fontWeight: "900", textAlign: "center" },
   heroTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 },
@@ -2312,7 +2313,7 @@ const styles = StyleSheet.create({
   bigProgressTrack: { height: 10, overflow: "hidden", borderRadius: 999, marginBottom: 11 },
   bigProgressFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   heroBody: { color: "rgba(255,249,237,0.72)", fontSize: 14, lineHeight: 20, fontWeight: "700", textAlign: "center" },
-  heroStatsStrip: { minHeight: 66, marginTop: 14, borderRadius: 22, paddingHorizontal: 8, flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255,249,237,0.075)", borderWidth: 1, borderColor: "rgba(255,249,237,0.08)" },
+  heroStatsStrip: { minHeight: 72, marginBottom: 11, borderRadius: 26, paddingHorizontal: 8, flexDirection: "row", alignItems: "center", backgroundColor: "#11171A", borderWidth: 1, borderColor: "rgba(232,196,104,0.16)", shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 5 },
   heroStatCell: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 4 },
   heroStatValue: { color: "#FFF9ED", fontSize: 18, lineHeight: 22, fontWeight: "900", textAlign: "center" },
   heroStatLabel: { color: "rgba(255,249,237,0.58)", marginTop: 2, fontSize: 9.5, lineHeight: 12, fontWeight: "900", textAlign: "center", letterSpacing: 0.9, textTransform: "uppercase" },

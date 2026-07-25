@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=86" />
+    <link rel="manifest" href="./manifest.webmanifest?v=87" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v86";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v87";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -49,7 +49,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=86")
+            .register("./service-worker.js?v=87")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1188,10 +1188,8 @@
       }
 
       .life-head {
-        position: sticky;
-        top: 0;
-        z-index: 8;
-        min-height: clamp(214px, 31dvh, 268px);
+        position: relative;
+        min-height: clamp(208px, 28dvh, 248px);
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.18);
         border-radius: 34px;
@@ -1264,7 +1262,14 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
-        margin-top: 12px;
+        margin-top: -2px;
+        padding: 8px;
+        border: 1px solid rgba(232, 196, 104, 0.14);
+        border-radius: 26px;
+        background:
+          radial-gradient(circle at 88% 0%, rgba(232, 196, 104, 0.08), transparent 38%),
+          rgba(17, 23, 26, 0.92);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
       }
 
       .life-stat {
@@ -5378,11 +5383,11 @@
                 <div class="life-progress" aria-label="Estimated life used">
                   <span id="lifeProgressBar"></span>
                 </div>
-                <div class="life-stats">
-                  <div class="life-stat"><strong id="lifeWeeksLeft">0</strong><span>weeks left</span></div>
-                  <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
-                  <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
-                </div>
+              </div>
+              <div class="life-stats">
+                <div class="life-stat"><strong id="lifeWeeksLeft">0</strong><span>weeks left</span></div>
+                <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
+                <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
               </div>
               <button class="daily-quote-card" id="dailyQuoteCard" type="button" data-quote-index="01">
                 <span class="daily-quote-top">
