@@ -659,6 +659,7 @@ export default function App() {
   const playerPulse = useRef(new Animated.Value(0)).current;
   const quotePulse = useRef(new Animated.Value(0)).current;
   const speechPulse = useRef(new Animated.Value(0)).current;
+  const lifeScrollRef = useRef(null);
   const voiceScrollRef = useRef(null);
   const appStateRef = useRef("active");
 
@@ -797,11 +798,17 @@ export default function App() {
       const wasAway = appStateRef.current === "inactive" || appStateRef.current === "background";
       appStateRef.current = nextState;
       if (wasAway && nextState === "active") {
+        if (tab === "life") setTimeout(() => resetLifeScroll(false), 120);
         setTimeout(() => maybeRunDailyLifeUpdate(), 260);
       }
     });
     return () => subscription.remove();
-  }, [hydrated, profileComplete, appState.profile.lastAnimatedDate, appState.profile.lastSnapshot, appState.profile.lifeUpdateAnimationVersion]);
+  }, [hydrated, profileComplete, tab, appState.profile.lastAnimatedDate, appState.profile.lastSnapshot, appState.profile.lifeUpdateAnimationVersion]);
+
+  useEffect(() => {
+    if (tab !== "life" || !profileComplete) return;
+    setTimeout(() => resetLifeScroll(false), 80);
+  }, [tab, profileComplete]);
 
   useEffect(() => {
     if (!hydrated || !profileComplete || quoteRevealOpen) return undefined;
@@ -842,6 +849,13 @@ export default function App() {
     const nextIndex = tabs.findIndex((item) => item.id === nextTab);
     setTabDirection(nextIndex >= currentIndex ? 1 : -1);
     setTab(nextTab);
+    if (nextTab === "life") setTimeout(() => resetLifeScroll(true), 120);
+  }
+
+  function resetLifeScroll(animated = true) {
+    requestAnimationFrame(() => {
+      lifeScrollRef.current?.scrollTo({ y: 0, animated });
+    });
   }
 
   function saveProfile() {
@@ -895,6 +909,7 @@ export default function App() {
 
     lifeUpdatePulse.setValue(0);
     navigateTab("life");
+    setTimeout(() => resetLifeScroll(false), 80);
     setLifeUpdate({ previous, current: currentSnapshot });
     if (Platform.OS !== "web") Vibration.vibrate([0, 14, 70, 18]);
     updateState((current) => ({
@@ -1334,7 +1349,12 @@ export default function App() {
     const dots = Array.from({ length: stats.totalMonths }, (_, index) => index < stats.spentMonths);
     const quoteNumber = String(dailyQuoteIndex + 1).padStart(2, "0");
     return (
-      <ScrollView contentContainerStyle={styles.lifeContent}>
+      <ScrollView
+        ref={lifeScrollRef}
+        contentContainerStyle={styles.lifeContent}
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
+      >
         <View style={[styles.heroCard, { backgroundColor: theme.hero, borderColor: theme.heroLine }]}>
           <View style={styles.heroGlow} />
           <Text style={styles.heroWatermark}>{Math.round(stats.usedPercent)}%</Text>
