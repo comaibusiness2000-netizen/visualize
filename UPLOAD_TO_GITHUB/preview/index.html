@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=96" />
+    <link rel="manifest" href="./manifest.webmanifest?v=97" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v96";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v97";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -54,7 +54,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=96")
+            .register("./service-worker.js?v=97")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -89,9 +89,9 @@
         --control: #ffffff;
         --screen-x: 0px;
         --app-vh: 100vh;
-        --nav-h: 78px;
-        --nav-bottom: 12px;
-        --nav-clearance: calc(var(--nav-h) + var(--nav-bottom) + 10px);
+        --nav-h: 74px;
+        --nav-bottom: 6px;
+        --nav-clearance: calc(var(--nav-h) + var(--nav-bottom) + 6px);
       }
 
       body[data-theme="dark"] {
@@ -5438,9 +5438,9 @@
 
       @media (max-width: 520px) {
         :root {
-          --nav-h: 76px;
-          --nav-bottom: max(8px, env(safe-area-inset-bottom));
-          --nav-clearance: calc(var(--nav-h) + var(--nav-bottom) + 8px);
+          --nav-h: 70px;
+          --nav-bottom: max(2px, calc(env(safe-area-inset-bottom) - 30px));
+          --nav-clearance: calc(var(--nav-h) + var(--nav-bottom) + 6px);
         }
 
         .stage {
