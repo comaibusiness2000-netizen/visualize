@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=87" />
+    <link rel="manifest" href="./manifest.webmanifest?v=88" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v87";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v88";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -49,7 +49,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=87")
+            .register("./service-worker.js?v=88")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1172,7 +1172,8 @@
         overscroll-behavior: contain;
         border: 0;
         border-radius: 0;
-        padding: 0 0 10px;
+        padding: 0 0 128px;
+        scroll-padding-bottom: 128px;
         background: transparent;
         box-shadow: none;
         scrollbar-width: none;
@@ -5193,7 +5194,8 @@
         .life-dashboard {
           gap: 10px;
           padding: 0;
-          padding-bottom: 16px;
+          padding-bottom: calc(148px + env(safe-area-inset-bottom));
+          scroll-padding-bottom: calc(148px + env(safe-area-inset-bottom));
         }
 
         .life-head {

@@ -2299,7 +2299,7 @@ const styles = StyleSheet.create({
   main: { flex: 1 },
   mainMotion: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
-  lifeContent: { padding: 16, paddingBottom: 126 },
+  lifeContent: { padding: 16, paddingBottom: 188 },
   heroCard: { minHeight: 244, overflow: "hidden", borderWidth: 1, borderRadius: 36, padding: 20, marginBottom: 10, shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 28, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
   heroGlow: { position: "absolute", right: -48, top: -68, width: 180, height: 180, borderRadius: 90, backgroundColor: "rgba(232,196,104,0.15)" },
   heroWatermark: { position: "absolute", left: 16, right: 16, bottom: -22, color: "rgba(255,249,237,0.055)", fontSize: 116, lineHeight: 122, fontWeight: "900", textAlign: "center" },
