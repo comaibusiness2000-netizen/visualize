@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=103" />
+    <link rel="manifest" href="./manifest.webmanifest?v=104" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v103";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v104";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=103")
+            .register("./service-worker.js?v=104")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -4006,10 +4006,10 @@
         flex: 0 0 auto;
         display: grid;
         min-width: 0;
-        gap: 12px;
+        gap: 10px;
         border: 1px solid var(--line);
         border-radius: 32px;
-        padding: 14px;
+        padding: 12px;
         background:
           radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.09), transparent 34%),
           var(--control);
@@ -4019,7 +4019,7 @@
       .speech-overview,
       .speech-editor-stage {
         display: grid;
-        gap: 12px;
+        gap: 10px;
       }
 
       .speech-overview {
@@ -4059,9 +4059,12 @@
 
       .speech-script-panel {
         display: grid;
+        min-width: 0;
         gap: 8px;
-        padding-bottom: 3px;
-        border-bottom: 1px solid var(--line);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 11px;
+        background: rgba(255, 255, 255, 0.03);
       }
 
       .speech-script-top {
@@ -4081,9 +4084,9 @@
       }
 
       .speech-list {
-        min-height: 54px;
+        min-height: 42px;
         display: flex;
-        gap: 9px;
+        gap: 7px;
         overflow-x: auto;
         overscroll-behavior-inline: contain;
         scrollbar-width: none;
@@ -4094,15 +4097,15 @@
       }
 
       .speech-pill {
-        min-width: 156px;
-        max-width: 184px;
+        min-width: 124px;
+        max-width: 154px;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
-        gap: 6px;
+        gap: 5px;
         border: 1px solid var(--line);
-        border-radius: 20px;
-        padding: 9px 8px 9px 11px;
+        border-radius: 17px;
+        padding: 8px 7px 8px 10px;
         background: var(--control);
       }
 
@@ -4141,8 +4144,8 @@
       }
 
       .speech-delete {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
         border: 0;
         border-radius: 50%;
         color: #ffffff;
@@ -4165,19 +4168,37 @@
 
       .speech-current-card {
         position: relative;
-        min-height: 124px;
+        min-height: 138px;
         display: grid;
         align-content: center;
-        gap: 7px;
+        gap: 8px;
         overflow: hidden;
         border: 1px solid var(--line);
-        border-radius: 28px;
-        padding: 18px;
+        border-radius: 30px;
+        padding: 20px;
         color: var(--ink);
         background:
-          radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.14), transparent 34%),
+          radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.18), transparent 34%),
+          radial-gradient(circle at 0% 100%, rgba(218, 90, 58, 0.08), transparent 30%),
           var(--soft);
         text-align: left;
+      }
+
+      .speech-current-card::after {
+        content: "";
+        position: absolute;
+        width: 58px;
+        height: 58px;
+        right: 14px;
+        bottom: 14px;
+        border-radius: 50%;
+        background: rgba(232, 196, 104, 0.11);
+        pointer-events: none;
+      }
+
+      .speech-current-card > * {
+        position: relative;
+        z-index: 1;
       }
 
       .speech-current-card span,
@@ -4193,7 +4214,7 @@
         max-width: calc(100% - 72px);
         overflow: hidden;
         color: var(--ink);
-        font-size: clamp(21px, 6vw, 25px);
+        font-size: clamp(23px, 6.6vw, 29px);
         line-height: 1.08;
         font-weight: 950;
         text-overflow: ellipsis;
@@ -4228,7 +4249,7 @@
       }
 
       .speech-voice-summary {
-        min-height: 68px;
+        min-height: 66px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -4238,6 +4259,12 @@
         border-radius: 24px;
         padding: 13px 15px;
         background: var(--control);
+      }
+
+      .speech-overview-tools {
+        display: grid;
+        grid-template-columns: minmax(0, 1.16fr) minmax(0, 0.84fr);
+        gap: 10px;
       }
 
       .speech-voice-summary strong {
@@ -5973,7 +6000,7 @@
         }
 
         .speech-current-card {
-          min-height: 112px;
+          min-height: 166px;
           border-radius: 24px;
           padding: 16px;
         }
@@ -6319,6 +6346,14 @@
 
               <div class="speech-studio">
                 <div class="speech-overview" id="speechOverview">
+                  <button class="speech-current-card" id="openSpeechEditor" type="button">
+                    <span id="speechCurrentLabel">Current script</span>
+                    <strong id="speechOverviewTitle">Self speech 1</strong>
+                    <em id="speechOverviewPreview">Write your self speech here...</em>
+                    <b>Edit</b>
+                  </button>
+
+                  <div class="speech-overview-tools">
                   <div class="speech-script-panel">
                     <div class="speech-script-top">
                       <span id="speechScriptsLabel">Scripts</span>
@@ -6327,19 +6362,13 @@
                     <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
                   </div>
 
-                  <button class="speech-current-card" id="openSpeechEditor" type="button">
-                    <span id="speechCurrentLabel">Current script</span>
-                    <strong id="speechOverviewTitle">Self speech 1</strong>
-                    <em id="speechOverviewPreview">Write your self speech here...</em>
-                    <b>Edit</b>
-                  </button>
-
                   <div class="speech-voice-summary">
                     <div>
                       <span>Voice</span>
                       <strong id="speechOverviewVoice">Maya</strong>
                     </div>
                     <button class="mini-link" id="openSpeechVoice" type="button">change</button>
+                  </div>
                   </div>
                 </div>
 
