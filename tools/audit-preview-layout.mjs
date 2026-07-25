@@ -18,6 +18,20 @@ if (!chromePath) {
 const port = 9337 + Math.floor(Math.random() * 200);
 const userDataDir = resolve(".tmp", `layout-audit-${Date.now()}`);
 const appPath = `file:///${resolve("preview", "index.html").replace(/\\/g, "/")}?audit=1`;
+const viewportProfiles = [
+  { name: "iphone-15", width: 393, height: 852, scale: 3 },
+  { name: "iphone-x", width: 375, height: 812, scale: 3 },
+  { name: "iphone-se", width: 375, height: 667, scale: 2 }
+];
+const auditScenarios = [
+  { name: "en-dark", language: "en", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
+  { name: "fr-dark", language: "fr", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
+  { name: "pt-dark", language: "pt", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
+  { name: "zh-dark", language: "zh", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
+  { name: "en-light", language: "en", theme: "light", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
+  { name: "fr-onboarding", language: "fr", theme: "dark", profileComplete: false, views: ["today"] },
+  { name: "pt-onboarding", language: "pt", theme: "dark", profileComplete: false, views: ["today"] }
+];
 
 const chrome = spawn(chromePath, [
   "--headless=new",
@@ -136,50 +150,100 @@ const seedState = {
   subscription: { plan: "free", premium: false, entitlementSource: "apple-iap" }
 };
 
+function scenarioState(scenario) {
+  return {
+    ...seedState,
+    lifeProfile: {
+      ...seedState.lifeProfile,
+      complete: scenario.profileComplete
+    },
+    settings: {
+      ...seedState.settings,
+      language: scenario.language,
+      theme: scenario.theme
+    }
+  };
+}
+
 try {
   const cdp = createCdp(await getDebuggerUrl());
   await cdp.send("Page.enable");
   await cdp.send("Runtime.enable");
-  await cdp.send("Emulation.setDeviceMetricsOverride", {
-    width: 393,
-    height: 852,
-    deviceScaleFactor: 3,
-    mobile: true
-  });
   await cdp.send("Emulation.setUserAgentOverride", {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
   });
   await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
-    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v106");`
+    source: `
+      const auditSeeds = ${JSON.stringify(Object.fromEntries(auditScenarios.map((scenario) => [scenario.name, scenarioState(scenario)])))};
+      const auditParams = new URL(location.href).searchParams;
+      const auditScenario = auditParams.get("auditScenario") || "en-dark";
+      localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
+      localStorage.setItem("visualizeAppVersion", "2026-07-25-v107");
+    `
   });
-  await cdp.send("Page.navigate", { url: appPath });
-  await wait(1200);
-
-  const views = ["today", "goals", "vision", "anti", "speech"];
   const failures = [];
 
-  for (const view of views) {
-    await cdp.send("Runtime.evaluate", {
-      expression: `document.querySelector('.nav button[data-view="${view}"]')?.click()`,
-      awaitPromise: true
+  for (const viewport of viewportProfiles) {
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: viewport.width,
+      height: viewport.height,
+      deviceScaleFactor: viewport.scale,
+      mobile: true
     });
-    await wait(350);
-    const result = await cdp.send("Runtime.evaluate", {
-      returnByValue: true,
-      awaitPromise: true,
-      expression: `(() => {
+
+    for (const scenario of auditScenarios) {
+      const scenarioUrl = `${appPath}&auditScenario=${encodeURIComponent(scenario.name)}&auditViewport=${encodeURIComponent(viewport.name)}&t=${Date.now()}`;
+      await cdp.send("Page.navigate", { url: scenarioUrl });
+      await wait(900);
+
+      for (const view of scenario.views) {
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.querySelector('.nav button[data-view="${view}"]')?.click()`,
+          awaitPromise: true
+        });
+        await wait(260);
+        const result = await cdp.send("Runtime.evaluate", {
+          returnByValue: true,
+          awaitPromise: true,
+          expression: `(() => {
         const selectors = [
           '.stage', '.phone', '.topbar', '.nav', '.screen.active',
           '.life-head', '.life-pressure-card', '.life-stats', '.daily-quote-card', '.life-map-card',
           '.why-workbench', '.why-workbench-head', '.why-motive-stack', '.why-motive-card', '.why-prompts', '.why-prompts span', '#uploadWhyPhoto', '.why-people-grid',
           '.vision-empty', '.anti-empty', '.deck-stage', '.deck-actions',
-          '.speech-head', '.speech-studio', '.speech-current-card', '.speech-voice-summary'
+          '.speech-head', '.speech-studio', '.speech-current-card', '.speech-voice-summary',
+          '.life-onboarding', '.setup-showcase', '.field-stack'
         ];
         const textFitSelectors = [
+          '.nav-label',
+          '.btn',
+          '.life-head h1 strong',
+          '.life-head h1 em',
+          '.life-head .life-summary',
+          '.life-stat strong',
+          '.life-stat span',
+          '.life-pressure-copy strong',
+          '.life-pressure-copy p',
+          '.daily-quote-open',
+          '#dailyQuoteText',
           '.why-prompts span',
           '#uploadWhyPhoto',
           '.why-workbench-head h2',
-          '.why-workbench-head p'
+          '.why-workbench-head p',
+          '.vision-empty h2',
+          '.vision-empty p',
+          '.anti-empty h2',
+          '.anti-empty p',
+          '.deck-actions .btn',
+          '.speech-head h2',
+          '.speech-head p',
+          '.speech-play-main',
+          '.speech-current-card strong',
+          '.speech-current-card em',
+          '.speech-voice-summary strong',
+          '.life-onboarding h1',
+          '.life-onboarding p',
+          '#saveLifeProfile'
         ];
         const vw = window.innerWidth;
         const vh = window.innerHeight;
@@ -193,9 +257,23 @@ try {
         const bodyBg = getComputedStyle(document.body).backgroundColor;
         const fixedBg = getComputedStyle(document.body, '::before').backgroundColor;
         const themeColor = document.querySelector('meta[name="theme-color"]')?.content || '';
-        if (isLight(htmlBg) || isLight(bodyBg) || isLight(fixedBg) || themeColor.toLowerCase() !== '#07090b') {
+        const activeTheme = document.body.dataset.theme || document.documentElement.dataset.theme || 'dark';
+        if (activeTheme === 'dark' && (isLight(htmlBg) || isLight(bodyBg) || isLight(fixedBg) || themeColor.toLowerCase() !== '#07090b')) {
           items.push({
             selector: 'html/body dark background',
+            htmlBg,
+            bodyBg,
+            fixedBg,
+            themeColor,
+            clippedY: false,
+            outX: false,
+            navTooHigh: false,
+            viewportNotCovered: false
+          });
+        }
+        if (activeTheme === 'light' && (!isLight(htmlBg) || !isLight(bodyBg) || !isLight(fixedBg) || themeColor.toLowerCase() !== '#f3f3f1')) {
+          items.push({
+            selector: 'html/body light background',
             htmlBg,
             bodyBg,
             fixedBg,
@@ -236,8 +314,12 @@ try {
           for (const element of document.querySelectorAll(selector)) {
             if (!element.offsetParent && getComputedStyle(element).position !== 'fixed') continue;
             const rect = element.getBoundingClientRect();
-            const textOverflowX = element.scrollWidth > Math.ceil(element.clientWidth) + 2;
-            const textOverflowY = element.scrollHeight > Math.ceil(element.clientHeight) + 2;
+            const style = getComputedStyle(element);
+            const hiddenX = ['hidden', 'clip'].includes(style.overflowX) || ['hidden', 'clip'].includes(style.overflow);
+            const hiddenY = ['hidden', 'clip'].includes(style.overflowY) || ['hidden', 'clip'].includes(style.overflow);
+            const intentionalEllipsis = style.textOverflow === 'ellipsis';
+            const textOverflowX = element.scrollWidth > Math.ceil(element.clientWidth) + 2 && hiddenX && !intentionalEllipsis;
+            const textOverflowY = element.scrollHeight > Math.ceil(element.clientHeight) + 2 && hiddenY;
             if (textOverflowX || textOverflowY) {
               items.push({
                 selector: 'text does not fit',
@@ -282,10 +364,12 @@ try {
             }
           }
         }
-        return { view: '${view}', vw, vh, items };
+        return { viewport: '${viewport.name}', scenario: '${scenario.name}', view: '${view}', vw, vh, items };
       })()`
-    });
-    if (result.result.value.items.length) failures.push(result.result.value);
+        });
+        if (result.result.value.items.length) failures.push(result.result.value);
+      }
+    }
   }
 
   cdp.close();
@@ -293,7 +377,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log("Layout audit passed for iPhone viewport: today, goals, vision, anti, speech.");
+    console.log("Layout audit passed across iPhone viewport, theme, language, and onboarding scenarios.");
   }
 } finally {
   chrome.kill();
