@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=99" />
+    <link rel="manifest" href="./manifest.webmanifest?v=100" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v99";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v100";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -58,7 +58,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=99")
+            .register("./service-worker.js?v=100")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -98,6 +98,7 @@
         --nav-clearance: calc(var(--nav-h) + var(--nav-bottom) + 6px);
       }
 
+      html[data-theme="dark"],
       body[data-theme="dark"] {
         --paper: #0f1315;
         --ink: #f8f5ee;
@@ -126,6 +127,7 @@
       html {
         height: 100%;
         overflow: hidden;
+        background: var(--paper);
       }
 
       body {
@@ -133,8 +135,18 @@
         overflow: hidden;
         margin: 0;
         color: var(--ink);
-        background: #d9d9d6;
+        background: var(--paper);
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      html[data-theme="dark"],
+      body[data-theme="dark"] {
+        background: #07090b;
+      }
+
+      html[data-theme="light"],
+      body[data-theme="light"] {
+        background: #f3f3f1;
       }
 
       @keyframes phoneWake {
@@ -8356,10 +8368,11 @@
       }
 
       function applySettings() {
+        document.documentElement.dataset.theme = state.settings.theme;
         document.body.dataset.theme = state.settings.theme;
         document.querySelector('meta[name="theme-color"]').setAttribute(
           "content",
-          state.settings.theme === "dark" ? "#101418" : "#f4f4f2"
+          state.settings.theme === "dark" ? "#07090b" : "#f3f3f1"
         );
         applyStaticTranslations();
         document.getElementById("themeLight").classList.toggle("active", state.settings.theme === "light");

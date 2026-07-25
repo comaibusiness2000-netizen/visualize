@@ -150,7 +150,7 @@ try {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
   });
   await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
-    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v99");`
+    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v100");`
   });
   await cdp.send("Page.navigate", { url: appPath });
   await wait(1200);
@@ -178,6 +178,23 @@ try {
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         const items = [];
+        const rgb = (value) => (String(value).match(/\\d+/g) || []).slice(0, 3).map(Number);
+        const isLight = (value) => {
+          const [r = 0, g = 0, b = 0] = rgb(value);
+          return ((r * 299 + g * 587 + b * 114) / 1000) > 170;
+        };
+        const htmlBg = getComputedStyle(document.documentElement).backgroundColor;
+        const bodyBg = getComputedStyle(document.body).backgroundColor;
+        if (isLight(htmlBg) || isLight(bodyBg)) {
+          items.push({
+            selector: 'html/body dark background',
+            htmlBg,
+            bodyBg,
+            clippedY: false,
+            outX: false,
+            navTooHigh: false
+          });
+        }
         for (const selector of selectors) {
           for (const element of document.querySelectorAll(selector)) {
             if (!element.offsetParent && getComputedStyle(element).position !== 'fixed') continue;
