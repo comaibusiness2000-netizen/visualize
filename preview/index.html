@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=84" />
+    <link rel="manifest" href="./manifest.webmanifest?v=85" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,11 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-24-v84";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v85";
+
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
 
       function syncVisualViewport() {
         const viewport = window.visualViewport;
@@ -45,7 +49,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=84")
+            .register("./service-worker.js?v=85")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -7568,9 +7572,19 @@
         );
       }
 
+      function resetLifeDashboardScroll() {
+        const dashboard = document.getElementById("lifeDashboard");
+        if (!dashboard) return;
+        dashboard.scrollTop = 0;
+        requestAnimationFrame(() => {
+          dashboard.scrollTop = 0;
+        });
+      }
+
       function showLifeClockForPendingUpdate() {
         if (!hasPendingDailyLifeUpdate()) return;
         if (currentView !== "today") setView("today", { replace: true });
+        resetLifeDashboardScroll();
         setTimeout(animateLifeClockIfNeeded, 180);
       }
 
@@ -7714,6 +7728,7 @@
 
         const stats = getLifeStats();
         renderLifeStatsValues(stats);
+        if (currentView === "today") resetLifeDashboardScroll();
       }
 
       function renderGoalList() {
@@ -7971,6 +7986,7 @@
         if (name === currentView) {
           closeProfile();
           if (isMainView && !options.keepBack) clearContextualBack();
+          if (name === "today") resetLifeDashboardScroll();
           updateBackButton();
           return;
         }
@@ -7993,7 +8009,10 @@
         });
         closeProfile();
         updateBackButton();
-        if (name === "today") setTimeout(animateLifeClockIfNeeded, 180);
+        if (name === "today") {
+          resetLifeDashboardScroll();
+          setTimeout(animateLifeClockIfNeeded, 180);
+        }
       }
 
       function goBack() {
@@ -9145,15 +9164,18 @@
 
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
+          if (currentView === "today") resetLifeDashboardScroll();
           showLifeClockForPendingUpdate();
           scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
         }
       });
       window.addEventListener("pageshow", () => {
+        if (currentView === "today") resetLifeDashboardScroll();
         showLifeClockForPendingUpdate();
         scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
       });
       window.addEventListener("focus", () => {
+        if (currentView === "today") resetLifeDashboardScroll();
         showLifeClockForPendingUpdate();
         scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
       });
