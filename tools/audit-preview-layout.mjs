@@ -150,7 +150,7 @@ try {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
   });
   await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
-    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v100");`
+    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v102");`
   });
   await cdp.send("Page.navigate", { url: appPath });
   await wait(1200);
@@ -169,7 +169,7 @@ try {
       awaitPromise: true,
       expression: `(() => {
         const selectors = [
-          '.topbar', '.nav', '.screen.active',
+          '.stage', '.phone', '.topbar', '.nav', '.screen.active',
           '.life-head', '.life-pressure-card', '.life-stats', '.daily-quote-card', '.life-map-card',
           '.why-workbench', '.why-people-grid',
           '.vision-empty', '.anti-empty', '.deck-stage', '.deck-actions',
@@ -185,14 +185,19 @@ try {
         };
         const htmlBg = getComputedStyle(document.documentElement).backgroundColor;
         const bodyBg = getComputedStyle(document.body).backgroundColor;
-        if (isLight(htmlBg) || isLight(bodyBg)) {
+        const fixedBg = getComputedStyle(document.body, '::before').backgroundColor;
+        const themeColor = document.querySelector('meta[name="theme-color"]')?.content || '';
+        if (isLight(htmlBg) || isLight(bodyBg) || isLight(fixedBg) || themeColor.toLowerCase() !== '#07090b') {
           items.push({
             selector: 'html/body dark background',
             htmlBg,
             bodyBg,
+            fixedBg,
+            themeColor,
             clippedY: false,
             outX: false,
-            navTooHigh: false
+            navTooHigh: false,
+            viewportNotCovered: false
           });
         }
         for (const selector of selectors) {
@@ -204,7 +209,8 @@ try {
             const clippedY = hiddenY && element.scrollHeight > element.clientHeight + 3;
             const outX = rect.left < -1 || rect.right > vw + 1;
             const navTooHigh = selector === '.nav' && vh - rect.bottom > 18;
-            if (clippedY || outX || navTooHigh) {
+            const viewportNotCovered = ['.stage', '.phone'].includes(selector) && rect.bottom < vh - 1;
+            if (clippedY || outX || navTooHigh || viewportNotCovered) {
               items.push({
                 selector,
                 rect: { left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top), bottom: Math.round(rect.bottom), width: Math.round(rect.width), height: Math.round(rect.height) },
@@ -214,7 +220,8 @@ try {
                 overflowY: style.overflowY,
                 clippedY,
                 outX,
-                navTooHigh
+                navTooHigh,
+                viewportNotCovered
               });
             }
           }
