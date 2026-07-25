@@ -150,7 +150,7 @@ try {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
   });
   await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
-    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v105");`
+    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v106");`
   });
   await cdp.send("Page.navigate", { url: appPath });
   await wait(1200);
@@ -171,9 +171,15 @@ try {
         const selectors = [
           '.stage', '.phone', '.topbar', '.nav', '.screen.active',
           '.life-head', '.life-pressure-card', '.life-stats', '.daily-quote-card', '.life-map-card',
-          '.why-workbench', '.why-people-grid',
+          '.why-workbench', '.why-workbench-head', '.why-motive-stack', '.why-motive-card', '.why-prompts', '.why-prompts span', '#uploadWhyPhoto', '.why-people-grid',
           '.vision-empty', '.anti-empty', '.deck-stage', '.deck-actions',
           '.speech-head', '.speech-studio', '.speech-current-card', '.speech-voice-summary'
+        ];
+        const textFitSelectors = [
+          '.why-prompts span',
+          '#uploadWhyPhoto',
+          '.why-workbench-head h2',
+          '.why-workbench-head p'
         ];
         const vw = window.innerWidth;
         const vh = window.innerHeight;
@@ -222,6 +228,30 @@ try {
                 outX,
                 navTooHigh,
                 viewportNotCovered
+              });
+            }
+          }
+        }
+        for (const selector of textFitSelectors) {
+          for (const element of document.querySelectorAll(selector)) {
+            if (!element.offsetParent && getComputedStyle(element).position !== 'fixed') continue;
+            const rect = element.getBoundingClientRect();
+            const textOverflowX = element.scrollWidth > Math.ceil(element.clientWidth) + 2;
+            const textOverflowY = element.scrollHeight > Math.ceil(element.clientHeight) + 2;
+            if (textOverflowX || textOverflowY) {
+              items.push({
+                selector: 'text does not fit',
+                target: selector,
+                text: (element.textContent || element.value || '').trim().slice(0, 90),
+                rect: { left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top), bottom: Math.round(rect.bottom), width: Math.round(rect.width), height: Math.round(rect.height) },
+                clientWidth: element.clientWidth,
+                scrollWidth: element.scrollWidth,
+                clientHeight: element.clientHeight,
+                scrollHeight: element.scrollHeight,
+                clippedY: textOverflowY,
+                outX: textOverflowX,
+                navTooHigh: false,
+                viewportNotCovered: false
               });
             }
           }
