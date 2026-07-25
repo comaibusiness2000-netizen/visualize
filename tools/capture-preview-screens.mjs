@@ -158,7 +158,7 @@ try {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
   });
   await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
-    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v104");`
+    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v105");`
   });
   await cdp.send("Page.navigate", { url: appPath });
   await wait(1200);
