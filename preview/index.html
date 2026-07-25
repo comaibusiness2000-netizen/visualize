@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=102" />
+    <link rel="manifest" href="./manifest.webmanifest?v=103" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v102";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v103";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=102")
+            .register("./service-worker.js?v=103")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -5657,7 +5657,7 @@
         .app {
           height: 100%;
           row-gap: 12px;
-          padding: calc(14px + env(safe-area-inset-top)) 18px 0 18px;
+          padding: calc(14px + env(safe-area-inset-top)) 18px calc(var(--nav-clearance) + 8px) 18px;
         }
 
         .nav {
@@ -6182,6 +6182,10 @@
                 <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
                 <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
               </div>
+              <div class="life-actions">
+                <button class="btn" id="reviewVisionFromLife" type="button">Vision</button>
+                <button class="btn secondary" id="editLifeInfo" type="button">Edit info</button>
+              </div>
               <button class="daily-quote-card" id="dailyQuoteCard" type="button" data-quote-index="01">
                 <span class="daily-quote-top">
                   <span class="daily-quote-badge" id="dailyQuoteBadge">01</span>
@@ -6201,10 +6205,6 @@
                 </div>
                 <div class="life-map" id="lifeMap" aria-label="Estimated life map"></div>
                 <p class="life-legend" id="lifeLegend">Each dot is a month. Filled dots are time already spent.</p>
-              </div>
-              <div class="life-actions">
-                <button class="btn" id="reviewVisionFromLife" type="button">Vision</button>
-                <button class="btn secondary" id="editLifeInfo" type="button">Edit info</button>
               </div>
             </article>
           </section>

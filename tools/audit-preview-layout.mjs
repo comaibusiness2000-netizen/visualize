@@ -150,7 +150,7 @@ try {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
   });
   await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
-    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v102");`
+    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v103");`
   });
   await cdp.send("Page.navigate", { url: appPath });
   await wait(1200);
@@ -222,6 +222,32 @@ try {
                 outX,
                 navTooHigh,
                 viewportNotCovered
+              });
+            }
+          }
+        }
+        const nav = document.querySelector('.nav');
+        const navRect = nav?.getBoundingClientRect();
+        if (navRect) {
+          const interactiveSelectors = '.screen.active button, .screen.active input, .screen.active textarea, .screen.active select, .screen.active [role="button"]';
+          for (const element of document.querySelectorAll(interactiveSelectors)) {
+            if (!element.offsetParent || element.closest('.nav')) continue;
+            const rect = element.getBoundingClientRect();
+            const overlapsNav = rect.bottom > navRect.top + 4 && rect.top < navRect.bottom - 4;
+            const visibleHorizontally = rect.right > 0 && rect.left < vw;
+            if (overlapsNav && visibleHorizontally) {
+              items.push({
+                selector: 'interactive element under nav',
+                tag: element.tagName.toLowerCase(),
+                id: element.id || '',
+                text: (element.textContent || element.value || '').trim().slice(0, 60),
+                rect: { left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top), bottom: Math.round(rect.bottom), width: Math.round(rect.width), height: Math.round(rect.height) },
+                nav: { top: Math.round(navRect.top), bottom: Math.round(navRect.bottom) },
+                clippedY: false,
+                outX: false,
+                navTooHigh: false,
+                viewportNotCovered: false,
+                overlapsNav: true
               });
             }
           }
