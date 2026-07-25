@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v93";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v94";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -49,7 +49,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=93")
+            .register("./service-worker.js?v=94")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -3788,6 +3788,47 @@
         animation: premiumPanelIn 0.72s 0.07s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
+      .speech-overview,
+      .speech-editor-stage {
+        display: grid;
+        gap: 12px;
+      }
+
+      .speech-overview {
+        animation: speechLevelIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .speech-editor-stage {
+        animation: speechLevelIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .speech-stage-top {
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .speech-back {
+        min-height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0 14px;
+        color: var(--ink);
+        background: var(--soft);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .speech-stage-top small {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+      }
+
       .speech-script-panel {
         display: grid;
         gap: 8px;
@@ -3892,6 +3933,91 @@
         font-size: 22px;
         line-height: 1;
         font-weight: 850;
+      }
+
+      .speech-current-card {
+        position: relative;
+        min-height: 124px;
+        display: grid;
+        align-content: center;
+        gap: 7px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 18px;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.14), transparent 34%),
+          var(--soft);
+        text-align: left;
+      }
+
+      .speech-current-card span,
+      .speech-voice-summary span {
+        color: var(--muted);
+        font-size: 10.5px;
+        font-weight: 950;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+      }
+
+      .speech-current-card strong {
+        max-width: calc(100% - 72px);
+        overflow: hidden;
+        color: var(--ink);
+        font-size: 25px;
+        line-height: 1.04;
+        font-weight: 950;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .speech-current-card em {
+        max-width: calc(100% - 48px);
+        overflow: hidden;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+        font-style: normal;
+        font-weight: 780;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .speech-current-card b {
+        position: absolute;
+        right: 14px;
+        top: 14px;
+        min-height: 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        padding: 0 12px;
+        color: #101418;
+        background: var(--gold);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .speech-voice-summary {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 13px 15px;
+        background: var(--control);
+      }
+
+      .speech-voice-summary strong {
+        display: block;
+        margin-top: 3px;
+        color: var(--ink);
+        font-size: 18px;
+        line-height: 1.1;
+        font-weight: 950;
       }
 
       .speech-editor {
@@ -4166,6 +4292,17 @@
         48% {
           transform: scaleY(1.12);
           opacity: 1;
+        }
+      }
+
+      @keyframes speechLevelIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px) scale(0.986);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
         }
       }
 
@@ -5452,6 +5589,31 @@
           gap: 10px;
         }
 
+        .speech-overview,
+        .speech-editor-stage {
+          gap: 10px;
+        }
+
+        .speech-current-card {
+          min-height: 112px;
+          border-radius: 24px;
+          padding: 16px;
+        }
+
+        .speech-current-card strong {
+          font-size: 22px;
+        }
+
+        .speech-voice-summary {
+          min-height: 60px;
+          border-radius: 22px;
+          padding: 11px 13px;
+        }
+
+        .speech-stage-top {
+          min-height: 34px;
+        }
+
         .speech-list {
           min-height: 50px;
         }
@@ -5747,44 +5909,64 @@
               </div>
 
               <div class="speech-studio">
-                <div class="speech-script-panel">
-                  <div class="speech-script-top">
-                    <span id="speechScriptsLabel">Scripts</span>
-                    <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
+                <div class="speech-overview" id="speechOverview">
+                  <div class="speech-script-panel">
+                    <div class="speech-script-top">
+                      <span id="speechScriptsLabel">Scripts</span>
+                      <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
+                    </div>
+                    <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
                   </div>
-                  <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
+
+                  <button class="speech-current-card" id="openSpeechEditor" type="button">
+                    <span id="speechCurrentLabel">Current script</span>
+                    <strong id="speechOverviewTitle">Self speech 1</strong>
+                    <em id="speechOverviewPreview">Write your self speech here...</em>
+                    <b>Edit</b>
+                  </button>
+
+                  <div class="speech-voice-summary">
+                    <div>
+                      <span>Voice</span>
+                      <strong id="speechOverviewVoice">Maya</strong>
+                    </div>
+                    <button class="mini-link" id="openSpeechVoice" type="button">change</button>
+                  </div>
                 </div>
 
-                <div class="speech-editor">
-                  <div class="speech-editor-top">
-                    <span id="speechCurrentLabel">Current script</span>
+                <div class="speech-editor-stage hidden" id="speechEditorStage">
+                  <div class="speech-stage-top">
+                    <button class="speech-back" id="closeSpeechEditor" type="button">Back</button>
                     <small id="speechEditorCount">0 words</small>
                   </div>
-                  <label class="speech-field">
-                    <span>Title</span>
-                    <input id="selfTalkTitle" type="text" maxlength="56" placeholder="Example: Morning identity" />
-                  </label>
-                  <label class="speech-field">
-                    <span>Script</span>
-                    <textarea id="selfTalkText" maxlength="1800" placeholder="Write your self speech here..."></textarea>
-                  </label>
-                </div>
 
-                <div class="voice-line">
-                  <div>
-                    <span>Voice</span>
-                    <strong id="voiceProfileName">Maya</strong>
-                    <em id="voiceQualityNote">Swipe to change voice</em>
+                  <div class="speech-editor">
+                    <label class="speech-field">
+                      <span>Title</span>
+                      <input id="selfTalkTitle" type="text" maxlength="56" placeholder="Example: Morning identity" />
+                    </label>
+                    <label class="speech-field">
+                      <span>Script</span>
+                      <textarea id="selfTalkText" maxlength="1800" placeholder="Write your self speech here..."></textarea>
+                    </label>
                   </div>
-                  <div class="voice-picker" aria-label="Swipe voice options">
-                    <div class="voice-carousel" id="voiceCarousel"></div>
-                    <div class="voice-dots" id="voiceDots" aria-hidden="true"></div>
-                  </div>
-                </div>
 
-                <div class="speech-actions">
-                  <button class="btn" id="saveSelfTalk" type="button">Save</button>
-                  <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
+                  <div class="voice-line">
+                    <div>
+                      <span>Voice</span>
+                      <strong id="voiceProfileName">Maya</strong>
+                      <em id="voiceQualityNote">Swipe to change voice</em>
+                    </div>
+                    <div class="voice-picker" aria-label="Swipe voice options">
+                      <div class="voice-carousel" id="voiceCarousel"></div>
+                      <div class="voice-dots" id="voiceDots" aria-hidden="true"></div>
+                    </div>
+                  </div>
+
+                  <div class="speech-actions">
+                    <button class="btn" id="saveSelfTalk" type="button">Save</button>
+                    <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
+                  </div>
                 </div>
               </div>
             </article>
@@ -6796,6 +6978,8 @@
         setText("#speech .speech-field:nth-of-type(2) span", "script");
         setPlaceholder("#selfTalkTitle", "title");
         setPlaceholder("#selfTalkText", "script");
+        setText(".speech-voice-summary span", "voice");
+        setText("#openSpeechVoice", "edit");
         setText(".voice-line > div:first-child > span", "voice");
         setText("#voiceQualityNote", "swipeVoice");
         setText("#playSelfTalk", "play");
@@ -6872,6 +7056,7 @@
       let playerPaused = false;
       let selfTalkLoopActive = false;
       let selfTalkPlaying = false;
+      let speechEditorOpen = false;
       let voiceScrollTimer = null;
       let dailyQuoteTimer = null;
       let currentView = "today";
@@ -7622,12 +7807,16 @@
         const script = activeSelfTalkScript();
         const stats = selfTalkStats(script);
         const title = String(script.title || "").trim() || uiText("speechTitle");
+        const preview = String(script.text || "").trim() || uiText("script");
         const workbench = document.querySelector(".speech-workbench");
         const playButton = document.getElementById("playSelfTalk");
         const heroTitle = document.getElementById("speechHeroTitle");
         const heroText = document.getElementById("speechHeroText");
         const status = document.getElementById("speechPlaybackStatus");
         const voice = document.getElementById("speechHeroVoice");
+        const overviewVoice = document.getElementById("speechOverviewVoice");
+        const overviewTitle = document.getElementById("speechOverviewTitle");
+        const overviewPreview = document.getElementById("speechOverviewPreview");
         const duration = document.getElementById("speechHeroDuration");
         const editorCount = document.getElementById("speechEditorCount");
         if (workbench) workbench.classList.toggle("playing", selfTalkPlaying);
@@ -7638,8 +7827,32 @@
           : uiText("speechText");
         if (status) status.textContent = selfTalkPlaying ? uiText("playing") : uiText("ready");
         if (voice) voice.textContent = activeVoiceProfile().name;
+        if (overviewVoice) overviewVoice.textContent = activeVoiceProfile().name;
+        if (overviewTitle) overviewTitle.textContent = title;
+        if (overviewPreview) overviewPreview.textContent = preview;
         if (duration) duration.textContent = `${stats.minutes} ${uiText("min")}`;
         if (editorCount) editorCount.textContent = `${stats.words} ${uiText("words")}`;
+      }
+
+      function setSpeechEditorOpen(nextValue, { focus = false } = {}) {
+        speechEditorOpen = Boolean(nextValue);
+        const overview = document.getElementById("speechOverview");
+        const editor = document.getElementById("speechEditorStage");
+        if (overview) overview.classList.toggle("hidden", speechEditorOpen);
+        if (editor) editor.classList.toggle("hidden", !speechEditorOpen);
+        if (speechEditorOpen) {
+          requestAnimationFrame(() => {
+            const workbench = document.querySelector(".speech-workbench");
+            if (workbench) workbench.scrollTo({ top: 0, behavior: "smooth" });
+            if (focus) {
+              const input = document.getElementById("selfTalkTitle");
+              if (input) {
+                input.focus();
+                input.select();
+              }
+            }
+          });
+        }
       }
 
       function setSelfTalkPlaying(nextValue) {
@@ -7657,6 +7870,7 @@
         textInput.value = script.text || "";
         state.selfTalk = script.text || defaults.selfTalk;
         updateSelfTalkPlaybackUI();
+        setSpeechEditorOpen(speechEditorOpen);
       }
 
       function notificationsSupported() {
@@ -8346,6 +8560,7 @@
         else saveWithoutSyncBump();
         renderSelfTalkScripts();
         updateSelfTalkPlaybackUI();
+        if (!silent) setSpeechEditorOpen(false);
         if (!silent) notify("Self speech saved");
       }
 
@@ -8359,6 +8574,7 @@
         });
         state.activeSelfTalkIndex = scripts.length - 1;
         save();
+        speechEditorOpen = true;
         renderSelfSpeech();
         requestAnimationFrame(() => {
           const input = document.getElementById("selfTalkTitle");
@@ -9393,6 +9609,12 @@
       });
 
       document.getElementById("addSelfTalkScript").addEventListener("click", addSelfTalkScript);
+      document.getElementById("openSpeechEditor").addEventListener("click", () => setSpeechEditorOpen(true));
+      document.getElementById("openSpeechVoice").addEventListener("click", () => setSpeechEditorOpen(true));
+      document.getElementById("closeSpeechEditor").addEventListener("click", () => {
+        saveSelfTalkFromForm({ silent: true });
+        setSpeechEditorOpen(false);
+      });
       document.getElementById("playSelfTalk").addEventListener("click", playSelfTalk);
       document.getElementById("saveSelfTalk").addEventListener("click", () => saveSelfTalkFromForm());
       document.getElementById("stopSelfTalk").addEventListener("click", stopSelfTalk);
