@@ -283,6 +283,10 @@ const copy = {
     "life.used": "used",
     "life.monthMap": "Life by months",
     "life.monthMapBody": "Each dot is one month. Filled dots are already spent.",
+    "life.pressureKicker": "Today is shrinking",
+    "life.pressureTime": "{hours}h {minutes}m left today",
+    "life.pressureText": "One day closes tonight. Put one action inside it.",
+    "life.pressurePercent": "{percent}% gone",
     "quote.kicker": "Daily quote",
     "quote.title": "Read it. Move.",
     "quote.open": "open",
@@ -365,7 +369,7 @@ const copy = {
   es: {
     "tab.life": "Vida", "tab.goals": "Por quien", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voz",
     "setup.kicker": "Crear perfil", "setup.title": "Crea tu reloj de vida.", "setup.body": "Empieza vacio. Luego agregas tu por que, imagenes y self speech paso a paso.", "setup.name": "Nombre", "setup.age": "Edad", "setup.estimate": "Estimacion de vida, ejemplo 85", "setup.create": "Crear perfil",
-    "life.kicker": "Reloj de vida", "life.days": "dias estimados restantes", "life.summary": "Basado en edad {age} y una estimacion de vida de {expectancy}. No es una prediccion, es un recordatorio.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada punto es un mes. Los puntos llenos ya pasaron.",
+    "life.kicker": "Reloj de vida", "life.days": "dias estimados restantes", "life.summary": "Basado en edad {age} y una estimacion de vida de {expectancy}. No es una prediccion, es un recordatorio.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada punto es un mes. Los puntos llenos ya pasaron.", "life.pressureKicker": "El dia se acaba", "life.pressureTime": "Quedan {hours}h {minutes}m", "life.pressureText": "Un dia se cierra esta noche. Mete una accion dentro.", "life.pressurePercent": "{percent}% usado",
     "goals.daily": "Tareas diarias", "goals.long": "Metas a largo plazo", "goals.dailyTitle": "Que hace avanzar el dia?", "goals.longTitle": "Que estas construyendo este ano?", "goals.body": "Agrega hasta 5 items y mueve manualmente la barra de progreso.", "goals.addTask": "Agregar tarea", "goals.addGoal": "Agregar meta", "goals.emptyTitle": "Todavia no hay nada.", "goals.emptyBody": "Empieza con una pequena accion o una meta a largo plazo.", "goals.complete": "{progress}% completo",
     "why.title": "Por quien haces esto?", "why.body": "Sube fotos de las personas detras de tu esfuerzo: familia, un ex que quieres superar, tu yo de nino, un futuro hijo, un rival o alguien a quien quieres demostrar que se equivoco.", "why.examples": "familia|tu yo pequeno|futuro hijo|demostrarles", "why.add": "Agregar personas", "why.emptyTitle": "Aun no hay rostros.", "why.emptyBody": "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales.",
     "deck.visionTitle": "Crea tu Vision", "deck.antiTitle": "Crea tu Anti-vision", "deck.visionBody": "Empieza con fotos de identidad, ambiente, personas y el futuro que quieres volver familiar.", "deck.antiBody": "Empieza con fotos del desvio, los costes y el futuro que te niegas a normalizar.", "deck.add": "Agregar imagenes", "deck.play": "Reproducir", "deck.emptyTitle": "Sin imagenes aun.", "deck.emptyBody": "El deck empieza vacio. Agrega fotos desde este iPhone para guardarlas localmente.",
@@ -376,7 +380,7 @@ const copy = {
   fr: {
     "tab.life": "Vie", "tab.goals": "Pourquoi", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voix",
     "setup.kicker": "Creation profil", "setup.title": "Cree ton horloge de vie.", "setup.body": "L'app commence vide. Ajoute ensuite ton pourquoi, tes images et ton self speech.", "setup.name": "Prenom", "setup.age": "Age", "setup.estimate": "Estimation de vie, exemple 85", "setup.create": "Creer profil",
-    "life.kicker": "Horloge de vie", "life.days": "jours estimes restants", "life.summary": "Base sur l'age {age} et une estimation de vie de {expectancy}. Ce n'est pas une prediction, c'est un rappel.", "life.weeks": "semaines", "life.months": "mois", "life.used": "utilise", "life.monthMap": "Vie par mois", "life.monthMapBody": "Chaque point est un mois. Les points remplis sont deja passes.",
+    "life.kicker": "Horloge de vie", "life.days": "jours estimes restants", "life.summary": "Base sur l'age {age} et une estimation de vie de {expectancy}. Ce n'est pas une prediction, c'est un rappel.", "life.weeks": "semaines", "life.months": "mois", "life.used": "utilise", "life.monthMap": "Vie par mois", "life.monthMapBody": "Chaque point est un mois. Les points remplis sont deja passes.", "life.pressureKicker": "La journee file", "life.pressureTime": "{hours}h {minutes}m restantes", "life.pressureText": "Ce soir, ce jour se ferme. Mets-y une action.", "life.pressurePercent": "{percent}% utilise",
     "goals.daily": "Taches du jour", "goals.long": "Objectifs long terme", "goals.dailyTitle": "Qu'est-ce qui fait avancer aujourd'hui?", "goals.longTitle": "Que construis-tu cette annee?", "goals.body": "Ajoute jusqu'a 5 elements et ajuste manuellement la progression.", "goals.addTask": "Ajouter tache", "goals.addGoal": "Ajouter objectif", "goals.emptyTitle": "Rien pour l'instant.", "goals.emptyBody": "Commence avec une petite action ou un objectif long terme.", "goals.complete": "{progress}% termine",
     "why.title": "Pour qui fais-tu ca?", "why.body": "Ajoute les photos des personnes derriere ton effort: famille, un ex que tu veux depasser, l'enfant que tu etais, un futur enfant, un rival ou quelqu'un a qui tu veux prouver qu'il avait tort.", "why.examples": "famille|toi enfant|futur enfant|leur prouver", "why.add": "Ajouter personnes", "why.emptyTitle": "Aucun visage encore.", "why.emptyBody": "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels.",
     "deck.visionTitle": "Cree ta Vision", "deck.antiTitle": "Cree ton Anti-vision", "deck.visionBody": "Commence avec des photos d'identite, d'environnement, de personnes et du futur a rendre familier.", "deck.antiBody": "Commence avec des photos de la derive, du cout et du futur que tu refuses de normaliser.", "deck.add": "Ajouter images", "deck.play": "Lire", "deck.emptyTitle": "Aucune image.", "deck.emptyBody": "Le deck commence vide. Ajoute des photos depuis cet iPhone pour les garder localement.",
@@ -387,7 +391,7 @@ const copy = {
   pt: {
     "tab.life": "Vida", "tab.goals": "Por quem", "tab.vision": "Visao", "tab.anti": "Anti", "tab.speech": "Voz",
     "setup.kicker": "Criar perfil", "setup.title": "Crie seu relogio de vida.", "setup.body": "O app comeca vazio. Depois adicione seu por que, imagens e self speech.", "setup.name": "Nome", "setup.age": "Idade", "setup.estimate": "Estimativa de vida, exemplo 85", "setup.create": "Criar perfil",
-    "life.kicker": "Relogio de vida", "life.days": "dias estimados restantes", "life.summary": "Baseado na idade {age} e estimativa de vida de {expectancy}. Nao e previsao, e lembrete.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada ponto e um mes. Pontos preenchidos ja passaram.",
+    "life.kicker": "Relogio de vida", "life.days": "dias estimados restantes", "life.summary": "Baseado na idade {age} e estimativa de vida de {expectancy}. Nao e previsao, e lembrete.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada ponto e um mes. Pontos preenchidos ja passaram.", "life.pressureKicker": "O dia esta indo", "life.pressureTime": "Restam {hours}h {minutes}m", "life.pressureText": "Hoje fecha a noite. Coloque uma acao dentro dele.", "life.pressurePercent": "{percent}% usado",
     "goals.daily": "Tarefas diarias", "goals.long": "Metas de longo prazo", "goals.dailyTitle": "O que move hoje para frente?", "goals.longTitle": "O que voce esta construindo este ano?", "goals.body": "Adicione ate 5 itens e mova manualmente a barra de progresso.", "goals.addTask": "Adicionar tarefa", "goals.addGoal": "Adicionar meta", "goals.emptyTitle": "Nada aqui ainda.", "goals.emptyBody": "Comece com uma pequena acao ou uma meta de longo prazo.", "goals.complete": "{progress}% completo",
     "why.title": "Por quem voce faz isso?", "why.body": "Adicione fotos das pessoas por tras do seu esforco: familia, um ex que quer superar, voce quando crianca, um futuro filho, um rival ou alguem a quem quer provar que estava errado.", "why.examples": "familia|voce crianca|futuro filho|provar errado", "why.add": "Adicionar pessoas", "why.emptyTitle": "Ainda sem rostos.", "why.emptyBody": "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais.",
     "deck.visionTitle": "Crie sua Visao", "deck.antiTitle": "Crie sua Anti-visao", "deck.visionBody": "Comece com fotos de identidade, ambiente, pessoas e do futuro que voce quer tornar familiar.", "deck.antiBody": "Comece com fotos do desvio, dos custos e do futuro que voce recusa normalizar.", "deck.add": "Adicionar imagens", "deck.play": "Reproduzir", "deck.emptyTitle": "Sem imagens ainda.", "deck.emptyBody": "O deck comeca vazio. Adicione fotos deste iPhone para salva-las localmente.",
@@ -426,7 +430,11 @@ Object.assign(copy.zh, {
   "quote.kicker": "Daily quote",
   "quote.title": "Read it. Move.",
   "quote.open": "open",
-  "quote.close": "Carry it"
+  "quote.close": "Carry it",
+  "life.pressureKicker": "Today is shrinking",
+  "life.pressureTime": "{hours}h {minutes}m left today",
+  "life.pressureText": "One day closes tonight. Put one action inside it.",
+  "life.pressurePercent": "{percent}% gone"
 });
 
 Object.assign(copy.es, {
@@ -606,6 +614,18 @@ function lifeStats(profile) {
   return { age, expectancy, daysLeft, weeksLeft, monthsLeft, totalMonths, spentMonths, usedPercent };
 }
 
+function dayPressure(now = new Date()) {
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const totalMs = end - start;
+  const elapsedMs = Math.min(totalMs, Math.max(0, now - start));
+  const leftMs = Math.max(0, end - now);
+  const hoursLeft = Math.floor(leftMs / 3600000);
+  const minutesLeft = Math.floor((leftMs % 3600000) / 60000);
+  const usedPercent = Math.min(100, Math.max(0, Math.round((elapsedMs / totalMs) * 100)));
+  return { hoursLeft, minutesLeft, usedPercent };
+}
+
 function lifeSnapshot(stats) {
   return {
     daysLeft: stats.daysLeft,
@@ -664,6 +684,7 @@ export default function App() {
   const [speechPlaying, setSpeechPlaying] = useState(false);
   const [lifeUpdate, setLifeUpdate] = useState(null);
   const [quoteRevealOpen, setQuoteRevealOpen] = useState(false);
+  const [clockTick, setClockTick] = useState(Date.now());
   const setupPulse = useRef(new Animated.Value(0)).current;
   const screenPulse = useRef(new Animated.Value(1)).current;
   const lifeUpdatePulse = useRef(new Animated.Value(0)).current;
@@ -783,6 +804,12 @@ export default function App() {
       useNativeDriver: true
     }).start();
   }, [quoteRevealOpen, quotePulse]);
+
+  useEffect(() => {
+    if (!hydrated || !profileComplete) return undefined;
+    const timer = setInterval(() => setClockTick(Date.now()), 60000);
+    return () => clearInterval(timer);
+  }, [hydrated, profileComplete]);
 
   useEffect(() => {
     if (!player) return undefined;
@@ -1359,6 +1386,7 @@ export default function App() {
 
   function renderLife() {
     const stats = lifeStats(appState.profile);
+    const pressure = dayPressure(new Date(clockTick));
     const dots = Array.from({ length: stats.totalMonths }, (_, index) => index < stats.spentMonths);
     const quoteNumber = String(dailyQuoteIndex + 1).padStart(2, "0");
     return (
@@ -1386,6 +1414,23 @@ export default function App() {
           <Text style={styles.heroBody}>
             {t("life.summary", { age: stats.age, expectancy: stats.expectancy })}
           </Text>
+        </View>
+
+        <View style={styles.pressureCard}>
+          <View style={styles.pressureGlow} />
+          <View style={styles.pressureCopy}>
+            <Text style={styles.pressureKicker}>{t("life.pressureKicker")}</Text>
+            <Text style={styles.pressureTime} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.76}>
+              {t("life.pressureTime", { hours: pressure.hoursLeft, minutes: String(pressure.minutesLeft).padStart(2, "0") })}
+            </Text>
+            <Text style={styles.pressureText} numberOfLines={2}>{t("life.pressureText")}</Text>
+          </View>
+          <View style={styles.pressureMeter}>
+            <View style={[styles.pressureMeterFill, { height: `${pressure.usedPercent}%` }]} />
+            <Text style={styles.pressurePercent} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
+              {pressure.usedPercent}%
+            </Text>
+          </View>
         </View>
 
         <View style={styles.heroStatsStrip}>
@@ -2380,6 +2425,15 @@ const styles = StyleSheet.create({
   bigProgressTrack: { height: 8, overflow: "hidden", borderRadius: 999, marginBottom: 8 },
   bigProgressFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   heroBody: { color: "rgba(255,249,237,0.72)", fontSize: 12.2, lineHeight: 16, fontWeight: "700", textAlign: "center" },
+  pressureCard: { minHeight: 92, overflow: "hidden", marginBottom: 8, borderWidth: 1, borderColor: "rgba(218,90,58,0.28)", borderRadius: 26, padding: 13, flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: "#101518", shadowColor: "#000", shadowOpacity: 0.17, shadowRadius: 24, shadowOffset: { width: 0, height: 13 }, elevation: 5 },
+  pressureGlow: { position: "absolute", right: -42, top: -28, width: 130, height: 130, borderRadius: 65, backgroundColor: "rgba(218,90,58,0.16)" },
+  pressureCopy: { flex: 1, minWidth: 0 },
+  pressureKicker: { color: "#DA5A3A", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.7, textTransform: "uppercase" },
+  pressureTime: { marginTop: 4, color: "#FFF9ED", fontSize: 22, lineHeight: 27, fontWeight: "900", letterSpacing: 0 },
+  pressureText: { marginTop: 4, color: "rgba(255,249,237,0.67)", fontSize: 12.2, lineHeight: 16, fontWeight: "800" },
+  pressureMeter: { position: "relative", width: 64, height: 64, overflow: "hidden", borderRadius: 32, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,249,237,0.09)", borderWidth: 1, borderColor: "rgba(255,249,237,0.13)" },
+  pressureMeterFill: { position: "absolute", left: 0, right: 0, bottom: 0, backgroundColor: "rgba(218,90,58,0.62)" },
+  pressurePercent: { maxWidth: 52, color: "#FFF9ED", fontSize: 10.5, lineHeight: 13, fontWeight: "900", textAlign: "center" },
   heroStatsStrip: { minHeight: 54, marginBottom: 8, borderRadius: 22, paddingHorizontal: 6, flexDirection: "row", alignItems: "stretch", backgroundColor: "#11171A", borderWidth: 1, borderColor: "rgba(232,196,104,0.16)", shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 5 },
   heroStatCell: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 4 },
   heroStatValue: { color: "#FFF9ED", fontSize: 16, lineHeight: 19, fontWeight: "900", textAlign: "center" },
