@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=91" />
+    <link rel="manifest" href="./manifest.webmanifest?v=92" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v91";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v92";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -49,7 +49,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=91")
+            .register("./service-worker.js?v=92")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2398,8 +2398,8 @@
         inset: 0;
         display: grid;
         align-content: end;
-        gap: 12px;
-        padding: 104px 24px 128px;
+        gap: 13px;
+        padding: 112px 24px 126px;
         isolation: isolate;
         overflow: hidden;
         background: #050607;
@@ -2419,7 +2419,7 @@
       }
 
       .player-slide.is-animating .player-media {
-        animation: cinematicPhoto 3.65s ease both;
+        animation: cinematicPhoto 4.2s ease both;
       }
 
       .player-slide::before {
@@ -2437,14 +2437,12 @@
         position: relative;
         z-index: 2;
         display: grid;
-        gap: 9px;
+        gap: 8px;
         max-width: 360px;
-        padding: 18px 18px 20px;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        border-radius: 26px;
-        background: rgba(5, 6, 7, 0.32);
-        backdrop-filter: blur(18px);
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+        padding: 0 4px;
+        border: 0;
+        background: transparent;
+        text-wrap: balance;
       }
 
       .player-kicker {
@@ -2456,13 +2454,15 @@
       }
 
       .player-slide h2 {
-        font-size: 40px;
-        line-height: 1;
+        max-width: 350px;
+        font-size: clamp(34px, 10vw, 46px);
+        line-height: 0.98;
         font-weight: 950;
         text-shadow: 0 14px 34px rgba(0, 0, 0, 0.46);
       }
 
       .player-slide p {
+        max-width: 318px;
         color: rgba(255, 255, 255, 0.82);
         font-size: 16px;
         line-height: 1.35;
@@ -2502,7 +2502,7 @@
 
       .player-controls {
         align-self: end;
-        gap: 10px;
+        gap: 11px;
       }
 
       .player-close,
@@ -2519,6 +2519,7 @@
 
       .player-close {
         width: 44px;
+        font-size: 20px;
       }
 
       .player-count {
@@ -2549,21 +2550,46 @@
       }
 
       .player-controls button {
-        flex: 1;
-        padding: 0 14px;
+        height: 52px;
+        display: grid;
+        place-items: center;
+        padding: 0;
       }
 
-      .player-controls button:nth-child(2) {
+      .player-step {
+        flex: 0 0 68px;
+        font-size: 31px;
+        line-height: 1;
+      }
+
+      .player-play-toggle {
+        flex: 1;
+        grid-template-columns: auto auto;
+        gap: 8px;
+        min-width: 138px;
         color: #101418;
         background: #fff9ed;
         border-color: #fff9ed;
+      }
+
+      .player-play-toggle span {
+        display: block;
+        min-width: 18px;
+        font-size: 16px;
+        line-height: 1;
+        font-weight: 950;
+      }
+
+      .player-play-toggle small {
+        font-size: 13px;
+        font-weight: 950;
       }
 
       .player-progress {
         position: absolute;
         left: 24px;
         right: 24px;
-        top: 82px;
+        top: 84px;
         bottom: auto;
         z-index: 2;
         height: 4px;
@@ -2579,6 +2605,55 @@
         border-radius: inherit;
         background: #f4f4f1;
         transition: width 0.28s ease;
+      }
+
+      .player-progress-segments {
+        position: absolute;
+        left: 24px;
+        right: 24px;
+        top: 94px;
+        z-index: 3;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        gap: 5px;
+        pointer-events: none;
+      }
+
+      .player-progress-segments span {
+        height: 3px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.17);
+      }
+
+      .player-progress-segments span::before {
+        content: "";
+        display: block;
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: #fff9ed;
+        transition: width 0.26s ease;
+      }
+
+      .player-progress-segments span.seen::before {
+        width: 100%;
+      }
+
+      .player-progress-segments span.current::before {
+        width: 62%;
+        background: var(--gold);
+        animation: playerSegmentPulse 1.4s ease-in-out infinite;
+      }
+
+      .player-slide.is-anti ~ .player-progress-segments span.current::before {
+        background: var(--red);
+      }
+
+      @keyframes playerSegmentPulse {
+        0%, 100% { opacity: 0.72; }
+        50% { opacity: 1; }
       }
 
       .deck-editor {
@@ -5406,6 +5481,48 @@
           min-height: 42px;
           border-radius: 15px;
         }
+
+        .player-slide {
+          padding: calc(108px + env(safe-area-inset-top)) 22px calc(118px + env(safe-area-inset-bottom));
+        }
+
+        .player-copy {
+          max-width: 340px;
+          gap: 7px;
+        }
+
+        .player-slide h2 {
+          font-size: clamp(32px, 11vw, 42px);
+        }
+
+        .player-slide p {
+          font-size: 15px;
+          line-height: 1.32;
+        }
+
+        .player-top {
+          padding: calc(16px + env(safe-area-inset-top)) 20px 16px;
+        }
+
+        .player-progress {
+          left: 20px;
+          right: 20px;
+          top: calc(78px + env(safe-area-inset-top));
+        }
+
+        .player-progress-segments {
+          left: 20px;
+          right: 20px;
+          top: calc(90px + env(safe-area-inset-top));
+        }
+
+        .player-controls {
+          padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+        }
+
+        .player-step {
+          flex-basis: 62px;
+        }
       }
     </style>
   </head>
@@ -5921,11 +6038,15 @@
         </span>
       </div>
       <div class="player-controls">
-        <button id="prevPlayerSlide" type="button">Prev</button>
-        <button id="togglePlayer" type="button">Pause</button>
-        <button id="nextPlayerSlide" type="button">Next</button>
+        <button class="player-step" id="prevPlayerSlide" type="button" aria-label="Previous slide">‹</button>
+        <button class="player-play-toggle" id="togglePlayer" type="button" aria-label="Pause presentation">
+          <span id="togglePlayerIcon">Ⅱ</span>
+          <small id="togglePlayerLabel">Pause</small>
+        </button>
+        <button class="player-step" id="nextPlayerSlide" type="button" aria-label="Next slide">›</button>
       </div>
       <div class="player-progress" aria-hidden="true"><span id="playerProgress"></span></div>
+      <div class="player-progress-segments" id="playerProgressSegments" aria-hidden="true"></div>
     </div>
 
     <div class="deck-editor" id="deckEditor" aria-hidden="true">
@@ -9030,6 +9151,20 @@
         document.getElementById("playerCaption").textContent = slide.caption;
         document.getElementById("playerCount").textContent = `${playerIndex + 1} / ${deck.length}`;
         document.getElementById("playerProgress").style.width = `${((playerIndex + 1) / deck.length) * 100}%`;
+        document.getElementById("playerProgressSegments").innerHTML = deck.map((_, index) => {
+          const stateClass = index < playerIndex ? "seen" : index === playerIndex ? "current" : "";
+          return `<span class="${stateClass}"></span>`;
+        }).join("");
+      }
+
+      function updatePlayerPauseButton() {
+        const button = document.getElementById("togglePlayer");
+        const icon = document.getElementById("togglePlayerIcon");
+        const label = document.getElementById("togglePlayerLabel");
+        if (!button || !icon || !label) return;
+        button.setAttribute("aria-label", playerPaused ? "Resume presentation" : "Pause presentation");
+        icon.textContent = playerPaused ? "▶" : "Ⅱ";
+        label.textContent = playerPaused ? "Resume" : "Pause";
       }
 
       function retreatPlayer() {
@@ -9061,14 +9196,14 @@
         playerKind = kind;
         playerIndex = 0;
         playerPaused = false;
-        document.getElementById("togglePlayer").textContent = "Pause";
+        updatePlayerPauseButton();
         document.getElementById("deckPlayer").classList.add("open");
         document.getElementById("deckPlayer").setAttribute("aria-hidden", "false");
         renderPlayerSlide();
         clearInterval(playerTimer);
         playerTimer = setInterval(() => {
           if (!playerPaused) advancePlayer();
-        }, 3200);
+        }, 4200);
         const fullscreenRequest = document.getElementById("deckPlayer").requestFullscreen?.();
         if (fullscreenRequest && fullscreenRequest.catch) fullscreenRequest.catch(() => {});
       }
@@ -9126,7 +9261,7 @@
       document.getElementById("nextPlayerSlide").addEventListener("click", advancePlayer);
       document.getElementById("togglePlayer").addEventListener("click", () => {
         playerPaused = !playerPaused;
-        document.getElementById("togglePlayer").textContent = playerPaused ? "Resume" : "Pause";
+        updatePlayerPauseButton();
       });
       document.getElementById("closeDeckEditor").addEventListener("click", closeDeckEditor);
       document.getElementById("editorDone").addEventListener("click", closeDeckEditor);
