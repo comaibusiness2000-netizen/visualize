@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=92" />
+    <link rel="manifest" href="./manifest.webmanifest?v=95" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v94";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v95";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -49,7 +49,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=94")
+            .register("./service-worker.js?v=95")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -916,34 +916,39 @@
       .life-onboarding {
         text-align: center;
         justify-items: center;
-        overflow: hidden;
+        overflow-y: auto;
         position: relative;
+        scrollbar-width: none;
+      }
+
+      .life-onboarding::-webkit-scrollbar {
+        display: none;
       }
 
       .setup-mini-mark {
-        width: 54px;
-        height: 54px;
+        width: 44px;
+        height: 44px;
         display: grid;
         place-items: center;
-        border-radius: 18px;
+        border-radius: 16px;
         background: #101418;
-        margin-bottom: 2px;
+        margin-bottom: 0;
         animation: setupCardFloat 3.8s ease-in-out infinite;
       }
 
       .setup-mini-mark img {
-        width: 32px;
-        height: 32px;
+        width: 27px;
+        height: 27px;
       }
 
       .setup-showcase {
         width: 100%;
         overflow: hidden;
-        border-radius: 32px;
-        padding: 17px;
+        border-radius: 28px;
+        padding: 14px;
         color: #fff9ed;
         background: #101418;
-        margin-top: 4px;
+        margin-top: 2px;
       }
 
       .setup-showcase-head {
@@ -1094,8 +1099,8 @@
       }
 
       .life-onboarding h1 {
-        max-width: min(100%, 318px);
-        font-size: clamp(27px, 7vw, 32px);
+        max-width: min(100%, 330px);
+        font-size: clamp(25px, 6.6vw, 31px);
         line-height: 1.06;
         font-weight: 950;
         text-align: center;
@@ -1113,8 +1118,8 @@
       .life-summary,
       .life-legend {
         color: var(--muted);
-        font-size: 14.5px;
-        line-height: 1.42;
+        font-size: 14px;
+        line-height: 1.34;
         font-weight: 760;
       }
 
@@ -1145,13 +1150,14 @@
       }
 
       .field input {
-        min-height: 46px;
+        min-height: 44px;
         border-radius: 16px;
         background: var(--soft);
       }
 
       #saveLifeProfile {
         min-width: min(100%, 190px);
+        min-height: 50px;
         max-width: 100%;
         padding-inline: 22px;
         white-space: normal;
@@ -4135,6 +4141,19 @@
         font-weight: 950;
       }
 
+      .voice-focus {
+        min-height: 146px;
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: stretch;
+        gap: 16px;
+        padding: 18px;
+      }
+
+      .voice-focus .voice-picker,
+      .voice-focus .voice-carousel {
+        width: 100%;
+      }
+
       .voice-carousel {
         min-width: 0;
         width: 132px;
@@ -5423,6 +5442,82 @@
           scroll-padding-bottom: calc(124px + env(safe-area-inset-bottom));
         }
 
+        .life-onboarding {
+          height: 100%;
+          min-height: 0;
+          align-content: start;
+          gap: 9px;
+          border-radius: 32px;
+          padding: 14px 14px calc(112px + env(safe-area-inset-bottom));
+          scroll-padding-bottom: calc(112px + env(safe-area-inset-bottom));
+        }
+
+        .setup-mini-mark {
+          width: 34px;
+          height: 34px;
+          border-radius: 13px;
+          margin-bottom: -2px;
+        }
+
+        .setup-mini-mark img {
+          width: 22px;
+          height: 22px;
+        }
+
+        .life-onboarding h1 {
+          font-size: clamp(24px, 6.6vw, 30px);
+          line-height: 1.04;
+        }
+
+        .life-onboarding p {
+          font-size: 12.6px;
+          line-height: 1.28;
+        }
+
+        .setup-showcase {
+          border-radius: 24px;
+          padding: 12px;
+        }
+
+        .setup-showcase-head {
+          margin-bottom: 10px;
+        }
+
+        .setup-dot-map {
+          gap: 4.5px;
+        }
+
+        .setup-dot-map span {
+          width: 6.8px;
+          height: 6.8px;
+        }
+
+        .setup-progress {
+          height: 24px;
+          margin-top: 11px;
+        }
+
+        .setup-showcase-foot {
+          margin-top: 12px;
+          padding-top: 11px;
+        }
+
+        .setup-journey {
+          gap: 6px;
+        }
+
+        .field-stack {
+          gap: 8px;
+        }
+
+        .field span {
+          font-size: 10px;
+        }
+
+        .field input {
+          min-height: 42px;
+        }
+
         .life-head {
           min-height: 0;
           border-radius: 28px;
@@ -5638,9 +5733,21 @@
           padding: 10px 10px 10px 13px;
         }
 
+        .voice-focus {
+          min-height: 136px;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 14px;
+          padding: 16px;
+        }
+
         .voice-picker,
         .voice-carousel {
           width: 122px;
+        }
+
+        .voice-focus .voice-picker,
+        .voice-focus .voice-carousel {
+          width: 100%;
         }
 
         .voice-card {
@@ -5934,9 +6041,9 @@
                   </div>
                 </div>
 
-                <div class="speech-editor-stage hidden" id="speechEditorStage">
+                <div class="speech-editor-stage hidden" id="speechScriptStage">
                   <div class="speech-stage-top">
-                    <button class="speech-back" id="closeSpeechEditor" type="button">Back</button>
+                    <button class="speech-back" id="closeSpeechScript" type="button">Back</button>
                     <small id="speechEditorCount">0 words</small>
                   </div>
 
@@ -5951,7 +6058,19 @@
                     </label>
                   </div>
 
-                  <div class="voice-line">
+                  <div class="speech-actions">
+                    <button class="btn" id="saveSelfTalk" type="button">Save</button>
+                    <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
+                  </div>
+                </div>
+
+                <div class="speech-editor-stage hidden" id="speechVoiceStage">
+                  <div class="speech-stage-top">
+                    <button class="speech-back" id="closeSpeechVoice" type="button">Back</button>
+                    <small id="speechVoiceHint">Swipe to change voice</small>
+                  </div>
+
+                  <div class="voice-line voice-focus">
                     <div>
                       <span>Voice</span>
                       <strong id="voiceProfileName">Maya</strong>
@@ -5961,11 +6080,6 @@
                       <div class="voice-carousel" id="voiceCarousel"></div>
                       <div class="voice-dots" id="voiceDots" aria-hidden="true"></div>
                     </div>
-                  </div>
-
-                  <div class="speech-actions">
-                    <button class="btn" id="saveSelfTalk" type="button">Save</button>
-                    <button class="btn secondary" id="stopSelfTalk" type="button">Stop</button>
                   </div>
                 </div>
               </div>
@@ -6548,6 +6662,7 @@
           script: "Script",
           voice: "Voice",
           swipeVoice: "Swipe to change voice",
+          back: "Back",
           stop: "Stop",
           profile: "Profile",
           settings: "Settings",
@@ -6612,6 +6727,7 @@
         privacyOpen: "Open privacy policy draft",
         photos: "Photos",
         done: "Done",
+        back: "Back",
         navGoal: "For who",
         whyKicker: "Why",
         whyHint: "Keep the people behind your effort visible.",
@@ -6660,6 +6776,7 @@
         privacyOpen: "Abrir borrador de privacidad",
         photos: "Fotos",
         done: "Listo",
+        back: "Atras",
         navGoal: "Por quien",
         whyKicker: "Por quien",
         visionSetupText: "Empieza con fotos de identidad, ambiente, personas y el futuro que quieres volver familiar.",
@@ -6719,6 +6836,7 @@
         privacyOpen: "Ouvrir brouillon confidentialite",
         photos: "Photos",
         done: "Termine",
+        back: "Retour",
         navGoal: "Pour qui",
         whyKicker: "Pourquoi",
         visionSetupText: "Commence par des photos d'identite, de cadre, de personnes et du futur que tu veux rendre familier.",
@@ -6778,6 +6896,7 @@
         privacyOpen: "Abrir rascunho de privacidade",
         photos: "Fotos",
         done: "Concluido",
+        back: "Voltar",
         navGoal: "Por quem",
         whyKicker: "Por quem",
         visionSetupText: "Comece com fotos de identidade, ambiente, pessoas e do futuro que quer tornar familiar.",
@@ -6834,6 +6953,7 @@
         privacyOpen: "打开隐私政策草稿",
         photos: "照片",
         done: "完成",
+        back: "Back",
         navGoal: "For who",
         whyKicker: "Why",
         visionSetupText: "Start with photos of identity, environment, people, and the future you want to make familiar.",
@@ -6981,6 +7101,9 @@
         setText(".speech-voice-summary span", "voice");
         setText("#openSpeechVoice", "edit");
         setText(".voice-line > div:first-child > span", "voice");
+        setText("#closeSpeechScript", "back");
+        setText("#closeSpeechVoice", "back");
+        setText("#speechVoiceHint", "swipeVoice");
         setText("#voiceQualityNote", "swipeVoice");
         setText("#playSelfTalk", "play");
         setText("#saveSelfTalk", "save");
@@ -7056,7 +7179,7 @@
       let playerPaused = false;
       let selfTalkLoopActive = false;
       let selfTalkPlaying = false;
-      let speechEditorOpen = false;
+      let speechStage = "overview";
       let voiceScrollTimer = null;
       let dailyQuoteTimer = null;
       let currentView = "today";
@@ -7834,17 +7957,19 @@
         if (editorCount) editorCount.textContent = `${stats.words} ${uiText("words")}`;
       }
 
-      function setSpeechEditorOpen(nextValue, { focus = false } = {}) {
-        speechEditorOpen = Boolean(nextValue);
+      function setSpeechStage(nextStage = "overview", { focus = false } = {}) {
+        speechStage = ["overview", "script", "voice"].includes(nextStage) ? nextStage : "overview";
         const overview = document.getElementById("speechOverview");
-        const editor = document.getElementById("speechEditorStage");
-        if (overview) overview.classList.toggle("hidden", speechEditorOpen);
-        if (editor) editor.classList.toggle("hidden", !speechEditorOpen);
-        if (speechEditorOpen) {
+        const scriptStage = document.getElementById("speechScriptStage");
+        const voiceStage = document.getElementById("speechVoiceStage");
+        if (overview) overview.classList.toggle("hidden", speechStage !== "overview");
+        if (scriptStage) scriptStage.classList.toggle("hidden", speechStage !== "script");
+        if (voiceStage) voiceStage.classList.toggle("hidden", speechStage !== "voice");
+        if (speechStage !== "overview") {
           requestAnimationFrame(() => {
             const workbench = document.querySelector(".speech-workbench");
             if (workbench) workbench.scrollTo({ top: 0, behavior: "smooth" });
-            if (focus) {
+            if (focus && speechStage === "script") {
               const input = document.getElementById("selfTalkTitle");
               if (input) {
                 input.focus();
@@ -7870,7 +7995,7 @@
         textInput.value = script.text || "";
         state.selfTalk = script.text || defaults.selfTalk;
         updateSelfTalkPlaybackUI();
-        setSpeechEditorOpen(speechEditorOpen);
+        setSpeechStage(speechStage);
       }
 
       function notificationsSupported() {
@@ -8560,7 +8685,7 @@
         else saveWithoutSyncBump();
         renderSelfTalkScripts();
         updateSelfTalkPlaybackUI();
-        if (!silent) setSpeechEditorOpen(false);
+        if (!silent) setSpeechStage("overview");
         if (!silent) notify("Self speech saved");
       }
 
@@ -8574,7 +8699,7 @@
         });
         state.activeSelfTalkIndex = scripts.length - 1;
         save();
-        speechEditorOpen = true;
+        speechStage = "script";
         renderSelfSpeech();
         requestAnimationFrame(() => {
           const input = document.getElementById("selfTalkTitle");
@@ -9609,12 +9734,13 @@
       });
 
       document.getElementById("addSelfTalkScript").addEventListener("click", addSelfTalkScript);
-      document.getElementById("openSpeechEditor").addEventListener("click", () => setSpeechEditorOpen(true));
-      document.getElementById("openSpeechVoice").addEventListener("click", () => setSpeechEditorOpen(true));
-      document.getElementById("closeSpeechEditor").addEventListener("click", () => {
+      document.getElementById("openSpeechEditor").addEventListener("click", () => setSpeechStage("script"));
+      document.getElementById("openSpeechVoice").addEventListener("click", () => setSpeechStage("voice"));
+      document.getElementById("closeSpeechScript").addEventListener("click", () => {
         saveSelfTalkFromForm({ silent: true });
-        setSpeechEditorOpen(false);
+        setSpeechStage("overview");
       });
+      document.getElementById("closeSpeechVoice").addEventListener("click", () => setSpeechStage("overview"));
       document.getElementById("playSelfTalk").addEventListener("click", playSelfTalk);
       document.getElementById("saveSelfTalk").addEventListener("click", () => saveSelfTalkFromForm());
       document.getElementById("stopSelfTalk").addEventListener("click", stopSelfTalk);

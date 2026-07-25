@@ -454,6 +454,8 @@ Object.assign(copy.es, {
   "life.updateTitle": "Un dia paso. Usa el siguiente.",
   "life.updateSub": "Tu reloj avanzo. Haz que hoy valga.",
   "speech.heading": "Escribe tu voz interior.",
+  "speech.edit": "Editar",
+  "speech.back": "Atras",
   "speech.voice": "Voz",
   "speech.swipe": "Desliza para cambiar voz",
   "speech.ready": "Listo",
@@ -469,6 +471,8 @@ Object.assign(copy.fr, {
   "life.updateTitle": "Un jour est passe. Utilise le suivant.",
   "life.updateSub": "Ton horloge avance. Fais compter aujourd'hui.",
   "speech.heading": "Ecris ta voix interieure.",
+  "speech.edit": "Editer",
+  "speech.back": "Retour",
   "speech.voice": "Voix",
   "speech.swipe": "Glisse pour changer la voix",
   "speech.ready": "Pret",
@@ -484,6 +488,8 @@ Object.assign(copy.pt, {
   "life.updateTitle": "Um dia passou. Use o proximo.",
   "life.updateSub": "Seu relogio avancou. Faca hoje valer.",
   "speech.heading": "Escreva sua voz interior.",
+  "speech.edit": "Editar",
+  "speech.back": "Voltar",
   "speech.voice": "Voz",
   "speech.swipe": "Deslize para mudar voz",
   "speech.ready": "Pronto",
@@ -497,7 +503,9 @@ Object.assign(copy.pt, {
 
 Object.assign(copy.zh, {
   "life.updateTitle": "One day spent. Use the next one.",
-  "life.updateSub": "Your clock moved. Make today earn its place."
+  "life.updateSub": "Your clock moved. Make today earn its place.",
+  "speech.edit": "Edit",
+  "speech.back": "Back"
 });
 
 function clamp(value, min, max) {
@@ -1133,7 +1141,7 @@ export default function App() {
     }));
     setDraftSpeechTitle("");
     setDraftSpeechText("");
-    setSpeechMode("editor");
+    setSpeechMode("script");
   }
 
   function selectSpeech(index) {
@@ -1656,7 +1664,7 @@ export default function App() {
               </ScrollView>
             </View>
 
-            <TouchableOpacity style={[styles.speechCurrentCard, { backgroundColor: theme.soft, borderColor: theme.line }]} onPress={() => setSpeechMode("editor")} activeOpacity={0.88}>
+            <TouchableOpacity style={[styles.speechCurrentCard, { backgroundColor: theme.soft, borderColor: theme.line }]} onPress={() => setSpeechMode("script")} activeOpacity={0.88}>
               <Text style={[styles.speechLibraryLabel, { color: theme.muted }]}>{t("speech.current")}</Text>
               <Text style={[styles.speechCurrentTitle, { color: theme.ink }]} numberOfLines={1}>{currentSpeechTitle}</Text>
               <Text style={[styles.speechCurrentPreview, { color: theme.muted }]} numberOfLines={2}>{currentSpeechPreview}</Text>
@@ -1670,12 +1678,12 @@ export default function App() {
                 <Text style={[styles.voiceLabel, { color: theme.muted }]}>{t("speech.voice")}</Text>
                 <Text style={[styles.speechVoiceSummaryName, { color: theme.ink }]}>{activeVoiceProfile.name}</Text>
               </View>
-              <TouchableOpacity style={[styles.speechSmallButton, { borderColor: theme.line }]} onPress={() => setSpeechMode("editor")} activeOpacity={0.88}>
+              <TouchableOpacity style={[styles.speechSmallButton, { borderColor: theme.line }]} onPress={() => setSpeechMode("voice")} activeOpacity={0.88}>
                 <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.edit")}</Text>
               </TouchableOpacity>
             </View>
           </View>
-        ) : (
+        ) : speechMode === "script" ? (
           <View style={[styles.speechStudio, styles.speechEditorStage, { backgroundColor: theme.card, borderColor: theme.line }]}>
             <View style={styles.speechStageTop}>
               <TouchableOpacity style={[styles.speechBackButton, { backgroundColor: theme.soft, borderColor: theme.line }]} onPress={() => { if (draftSpeechText.trim()) saveSpeech(); else setSpeechMode("overview"); }} activeOpacity={0.88}>
@@ -1702,10 +1710,30 @@ export default function App() {
               />
             </View>
 
-            <View style={[styles.voicePanel, styles.voicePanelPremium, { backgroundColor: theme.soft, borderColor: theme.line }]}>
+            <View style={styles.speechActionDock}>
+              <TouchableOpacity style={[styles.speechDockButton, styles.speechDockPrimary]} onPress={saveSpeech}>
+                <Text style={styles.primaryText}>{t("speech.save")}</Text>
+              </TouchableOpacity>
+              {speechPlaying ? (
+                <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={stopSpeech}>
+                  <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
+                </TouchableOpacity>
+              ) : null}
+            </View>
+          </View>
+        ) : (
+          <View style={[styles.speechStudio, styles.speechEditorStage, { backgroundColor: theme.card, borderColor: theme.line }]}>
+            <View style={styles.speechStageTop}>
+              <TouchableOpacity style={[styles.speechBackButton, { backgroundColor: theme.soft, borderColor: theme.line }]} onPress={() => setSpeechMode("overview")} activeOpacity={0.88}>
+                <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.back")}</Text>
+              </TouchableOpacity>
+              <Text style={[styles.speechEditorCount, { color: theme.muted }]}>{t("speech.swipe")}</Text>
+            </View>
+
+            <View style={[styles.voicePanel, styles.voicePanelPremium, styles.voicePanelSolo, { backgroundColor: theme.soft, borderColor: theme.line }]}>
               <View style={styles.voiceHeader}>
                 <Text style={[styles.voiceLabel, { color: theme.muted }]}>{t("speech.voice")}</Text>
-                <Text style={[styles.voiceHint, { color: theme.muted }]}>{t("speech.swipe")}</Text>
+                <Text style={[styles.voiceHint, { color: theme.muted }]}>{activeVoiceProfile.name}</Text>
               </View>
               <ScrollView
                 ref={voiceScrollRef}
@@ -1724,6 +1752,7 @@ export default function App() {
                     activeOpacity={0.88}
                     style={[
                       styles.voiceCard,
+                      styles.voiceCardSolo,
                       {
                         backgroundColor: profile.id === activeVoiceProfile.id ? "#101418" : theme.card,
                         borderColor: profile.id === activeVoiceProfile.id ? "#E8C468" : theme.line
@@ -1741,17 +1770,6 @@ export default function App() {
                   <View key={profile.id} style={[styles.voiceDot, profile.id === activeVoiceProfile.id && styles.voiceDotActive]} />
                 ))}
               </View>
-            </View>
-
-            <View style={styles.speechActionDock}>
-              <TouchableOpacity style={[styles.speechDockButton, styles.speechDockPrimary]} onPress={saveSpeech}>
-                <Text style={styles.primaryText}>{t("speech.save")}</Text>
-              </TouchableOpacity>
-              {speechPlaying ? (
-                <TouchableOpacity style={[styles.speechDockButton, { borderColor: theme.line }]} onPress={stopSpeech}>
-                  <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
-                </TouchableOpacity>
-              ) : null}
             </View>
           </View>
         )}
@@ -2272,16 +2290,16 @@ const styles = StyleSheet.create({
   loader: { alignItems: "center", justifyContent: "center", backgroundColor: "#101418" },
   centerFill: { flex: 1, justifyContent: "center", padding: 24 },
   onboardingShell: { flex: 1 },
-  onboardingContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 18, paddingVertical: 18 },
+  onboardingContent: { flexGrow: 1, justifyContent: "flex-start", paddingHorizontal: 18, paddingTop: 14, paddingBottom: 112 },
   setupCard: {
     width: "100%",
     overflow: "hidden",
     alignSelf: "center",
     borderWidth: 1,
-    borderRadius: 40,
-    paddingHorizontal: 20,
-    paddingTop: 22,
-    paddingBottom: 22,
+    borderRadius: 36,
+    paddingHorizontal: 18,
+    paddingTop: 16,
+    paddingBottom: 18,
     shadowColor: "#000",
     shadowOpacity: 0.12,
     shadowRadius: 34,
@@ -2289,32 +2307,32 @@ const styles = StyleSheet.create({
     elevation: 8
   },
   setupMiniLogo: {
-    width: 54,
-    height: 54,
+    width: 42,
+    height: 42,
     alignSelf: "center",
-    borderRadius: 18,
+    borderRadius: 15,
     backgroundColor: "#101418",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 14
+    marginBottom: 9
   },
-  logoSlash: { position: "absolute", width: 7, height: 31, left: 17, top: 12, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
-  logoSlashSecond: { position: "absolute", width: 7, height: 31, left: 27, top: 12, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
-  logoDot: { position: "absolute", width: 11, height: 11, borderRadius: 6, right: 13, bottom: 14, backgroundColor: "#DA5A3A" },
-  setupPreview: { overflow: "hidden", borderRadius: 32, padding: 17, marginTop: 16, marginBottom: 14, backgroundColor: "#101418" },
-  setupPreviewHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 },
+  logoSlash: { position: "absolute", width: 6, height: 25, left: 13, top: 9, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoSlashSecond: { position: "absolute", width: 6, height: 25, left: 22, top: 9, transform: [{ skewX: "-20deg" }], backgroundColor: "#E8C468" },
+  logoDot: { position: "absolute", width: 9, height: 9, borderRadius: 5, right: 10, bottom: 10, backgroundColor: "#DA5A3A" },
+  setupPreview: { overflow: "hidden", borderRadius: 28, padding: 13, marginTop: 12, marginBottom: 12, backgroundColor: "#101418" },
+  setupPreviewHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
   setupPreviewKicker: { color: "rgba(255,249,237,0.58)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.6, textTransform: "uppercase" },
   setupPreviewAge: { color: "#E8C468", fontSize: 22, lineHeight: 26, fontWeight: "900" },
-  setupPreviewDots: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  setupPreviewDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "rgba(255,249,237,0.16)" },
+  setupPreviewDots: { flexDirection: "row", flexWrap: "wrap", gap: 4.5 },
+  setupPreviewDot: { width: 6.8, height: 6.8, borderRadius: 4, backgroundColor: "rgba(255,249,237,0.16)" },
   setupPreviewDotSpent: { backgroundColor: "rgba(255,249,237,0.46)" },
   setupPreviewDotNow: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.45, shadowRadius: 10, shadowOffset: { width: 0, height: 0 } },
-  setupPreviewRail: { height: 28, marginTop: 14, borderRadius: 14, overflow: "hidden", justifyContent: "center", backgroundColor: "rgba(255,249,237,0.1)" },
+  setupPreviewRail: { height: 24, marginTop: 11, borderRadius: 14, overflow: "hidden", justifyContent: "center", backgroundColor: "rgba(255,249,237,0.1)" },
   setupPreviewRailFill: { position: "absolute", left: 0, top: 0, bottom: 0, width: "46%", borderRadius: 14, backgroundColor: "rgba(232,196,104,0.28)" },
   setupPreviewRailText: { color: "rgba(255,249,237,0.78)", textAlign: "center", fontSize: 11, lineHeight: 14, fontWeight: "900" },
-  setupPreviewFooter: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 16, paddingTop: 14, borderTopWidth: 1, borderTopColor: "rgba(255,249,237,0.1)" },
+  setupPreviewFooter: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12, paddingTop: 11, borderTopWidth: 1, borderTopColor: "rgba(255,249,237,0.1)" },
   setupPreviewFootText: { color: "#FFF9ED", fontSize: 12, lineHeight: 15, fontWeight: "900" },
-  setupJourney: { width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 14, paddingHorizontal: 4 },
+  setupJourney: { width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 11, paddingHorizontal: 4 },
   setupJourneyItem: { minWidth: 58, alignItems: "center", gap: 5 },
   setupJourneyItemActive: {},
   setupJourneyNumber: { width: 25, height: 25, borderRadius: 13, overflow: "hidden", color: "#101418", backgroundColor: "#E8C468", textAlign: "center", fontSize: 12, lineHeight: 25, fontWeight: "900" },
@@ -2322,16 +2340,16 @@ const styles = StyleSheet.create({
   setupJourneyText: { maxWidth: 72, color: "#101418", textAlign: "center", fontSize: 10.5, lineHeight: 13, fontWeight: "900" },
   setupJourneyLine: { flex: 1, maxWidth: 48, height: 1, marginTop: -15, backgroundColor: "rgba(128,128,128,0.22)" },
   setupKicker: { alignSelf: "center", maxWidth: "100%", textAlign: "center", fontSize: 10, lineHeight: 14, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
-  setupTitle: { alignSelf: "center", maxWidth: 322, marginTop: 8, textAlign: "center", fontSize: 29, lineHeight: 32, fontWeight: "900" },
-  setupText: { alignSelf: "center", maxWidth: 322, marginTop: 9, textAlign: "center", fontSize: 14, lineHeight: 19, fontWeight: "700" },
-  setupFields: { marginTop: 4, gap: 10 },
+  setupTitle: { alignSelf: "center", maxWidth: 330, marginTop: 7, textAlign: "center", fontSize: 27, lineHeight: 30, fontWeight: "900" },
+  setupText: { alignSelf: "center", maxWidth: 322, marginTop: 7, textAlign: "center", fontSize: 13, lineHeight: 18, fontWeight: "700" },
+  setupFields: { marginTop: 3, gap: 8 },
   setupField: { minWidth: 0 },
   setupFieldRow: { flexDirection: "row", gap: 10 },
   setupFieldHalf: { flex: 1 },
-  setupFieldLabel: { marginBottom: 7, paddingLeft: 2, fontSize: 11, lineHeight: 14, fontWeight: "900", letterSpacing: 0.6, textTransform: "uppercase" },
-  input: { minHeight: 52, borderRadius: 18, borderWidth: 1, paddingHorizontal: 15, paddingVertical: 12, fontSize: 16, fontWeight: "750" },
+  setupFieldLabel: { marginBottom: 5, paddingLeft: 2, fontSize: 10.5, lineHeight: 13, fontWeight: "900", letterSpacing: 0.6, textTransform: "uppercase" },
+  input: { minHeight: 48, borderRadius: 18, borderWidth: 1, paddingHorizontal: 15, paddingVertical: 10, fontSize: 16, fontWeight: "750" },
   speechInput: { minHeight: 220, textAlignVertical: "top", lineHeight: 22 },
-  primaryButton: { minHeight: 56, minWidth: 190, maxWidth: "100%", alignSelf: "center", borderRadius: 999, paddingHorizontal: 28, paddingVertical: 14, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 18, shadowColor: "#DA5A3A", shadowOpacity: 0.22, shadowRadius: 16, shadowOffset: { width: 0, height: 10 }, elevation: 4 },
+  primaryButton: { minHeight: 52, minWidth: 190, maxWidth: "100%", alignSelf: "center", borderRadius: 999, paddingHorizontal: 28, paddingVertical: 13, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 14, shadowColor: "#DA5A3A", shadowOpacity: 0.22, shadowRadius: 16, shadowOffset: { width: 0, height: 10 }, elevation: 4 },
   primaryButtonFlex: { flex: 1, minHeight: 52, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.18, shadowRadius: 12, shadowOffset: { width: 0, height: 8 }, elevation: 3 },
   primaryText: { color: "#FFFFFF", fontSize: 15, lineHeight: 19, textAlign: "center", fontWeight: "900" },
   secondaryButton: { flex: 1, minHeight: 50, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", borderWidth: 1 },
@@ -2547,11 +2565,13 @@ const styles = StyleSheet.create({
   speechScriptInput: { minHeight: 124, marginTop: 10, borderWidth: 0, paddingHorizontal: 0, paddingVertical: 6, textAlignVertical: "top", fontSize: 15.5, lineHeight: 22, fontWeight: "750" },
   voicePanel: { borderRadius: 24, paddingVertical: 12, overflow: "hidden" },
   voicePanelPremium: { borderWidth: 1 },
+  voicePanelSolo: { paddingVertical: 16 },
   voiceHeader: { paddingHorizontal: 14, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 },
   voiceLabel: { fontSize: 11, lineHeight: 14, fontWeight: "900", letterSpacing: 1.4, textTransform: "uppercase" },
   voiceHint: { fontSize: 12, lineHeight: 15, fontWeight: "850" },
   voiceRail: { paddingHorizontal: 14, paddingTop: 9, paddingBottom: 3, gap: 12 },
   voiceCard: { width: 226, minHeight: 70, borderWidth: 1, borderRadius: 21, paddingHorizontal: 15, paddingVertical: 12, justifyContent: "center" },
+  voiceCardSolo: { minHeight: 92 },
   voiceName: { fontSize: 20, lineHeight: 23, fontWeight: "900" },
   voiceNote: { marginTop: 3, fontSize: 12.5, lineHeight: 15, fontWeight: "800" },
   voiceDots: { flexDirection: "row", justifyContent: "center", gap: 6, marginTop: 7 },
