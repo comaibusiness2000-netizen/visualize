@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=89" />
+    <link rel="manifest" href="./manifest.webmanifest?v=90" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v89";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v90";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -49,7 +49,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=89")
+            .register("./service-worker.js?v=90")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1167,13 +1167,13 @@
         min-height: 0;
         height: 100%;
         align-content: start;
-        gap: 12px;
+        gap: 9px;
         overflow-y: auto;
         overscroll-behavior: contain;
         border: 0;
         border-radius: 0;
-        padding: 0 0 128px;
-        scroll-padding-bottom: 128px;
+        padding: 0 0 118px;
+        scroll-padding-bottom: 118px;
         background: transparent;
         box-shadow: none;
         scrollbar-width: none;
@@ -1190,11 +1190,11 @@
 
       .life-head {
         position: relative;
-        min-height: clamp(208px, 28dvh, 248px);
+        min-height: clamp(188px, 25dvh, 226px);
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.18);
         border-radius: 34px;
-        padding: 21px 18px 17px;
+        padding: 18px 18px 15px;
         color: #fff9ed;
         background:
           radial-gradient(circle at 92% 0%, rgba(232, 196, 104, 0.16), transparent 34%),
@@ -1213,14 +1213,14 @@
       .life-head h1 {
         display: grid;
         gap: 5px;
-        margin-top: 12px;
+        margin-top: 8px;
         padding-bottom: 2px;
       }
 
       .life-head h1 strong {
         display: block;
         color: #ffffff;
-        font-size: clamp(48px, 13.8vw, 62px);
+        font-size: clamp(45px, 12.6vw, 58px);
         line-height: 1.02;
         font-weight: 950;
         letter-spacing: 0;
@@ -1238,7 +1238,7 @@
 
       .life-head .life-summary {
         max-width: 318px;
-        margin: 10px auto 0;
+        margin: 8px auto 0;
         color: rgba(255, 249, 237, 0.68);
       }
 
@@ -1246,7 +1246,7 @@
         height: 9px;
         overflow: hidden;
         border-radius: 999px;
-        margin-top: 15px;
+        margin-top: 12px;
         background: rgba(255, 249, 237, 0.12);
       }
 
@@ -1262,9 +1262,9 @@
       .life-stats {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        margin-top: -2px;
-        padding: 8px;
+        gap: 6px;
+        margin-top: 0;
+        padding: 7px;
         border: 1px solid rgba(232, 196, 104, 0.14);
         border-radius: 26px;
         background:
@@ -1274,7 +1274,7 @@
       }
 
       .life-stat {
-        min-height: 66px;
+        min-height: 56px;
         display: grid;
         align-content: center;
         gap: 3px;
@@ -1287,7 +1287,7 @@
 
       .life-stat strong {
         color: #fff9ed;
-        font-size: 20px;
+        font-size: 18px;
         line-height: 1;
         font-weight: 950;
       }
@@ -1306,13 +1306,13 @@
       .daily-quote-card {
         position: relative;
         width: 100%;
-        min-height: 142px;
+        min-height: 124px;
         display: grid;
-        gap: 12px;
+        gap: 9px;
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.24);
         border-radius: 28px;
-        padding: 15px;
+        padding: 14px;
         color: #fff9ed;
         background:
           radial-gradient(circle at 92% 8%, rgba(232, 196, 104, 0.2), transparent 34%),
@@ -1333,8 +1333,8 @@
       .daily-quote-card::before {
         content: "";
         position: absolute;
-        width: 142px;
-        height: 142px;
+        width: 128px;
+        height: 128px;
         right: -38px;
         top: -58px;
         border-radius: 50%;
@@ -1348,7 +1348,7 @@
         right: 2px;
         bottom: -14px;
         color: rgba(255, 249, 237, 0.065);
-        font-size: 92px;
+        font-size: 82px;
         line-height: 1;
         font-weight: 950;
         pointer-events: none;
@@ -1420,7 +1420,7 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         color: #fff9ed;
-        font-size: 21px;
+        font-size: 19px;
         line-height: 1.16;
         font-weight: 950;
       }
@@ -1448,10 +1448,10 @@
 
       .life-map-card {
         display: grid;
-        gap: 12px;
+        gap: 9px;
         border: 1px solid var(--line);
-        border-radius: 32px;
-        padding: 18px;
+        border-radius: 30px;
+        padding: 15px;
         background:
           radial-gradient(circle at 92% 0%, rgba(232, 196, 104, 0.08), transparent 30%),
           var(--control);
@@ -1489,8 +1489,8 @@
 
       .life-map {
         display: grid;
-        grid-template-columns: repeat(42, 1fr);
-        gap: 4px;
+        grid-template-columns: repeat(54, 1fr);
+        gap: 2.4px;
         padding: 2px 0 0;
       }
 
@@ -5196,111 +5196,122 @@
         }
 
         .life-dashboard {
-          gap: 10px;
+          gap: 7px;
           padding: 0;
-          padding-bottom: calc(148px + env(safe-area-inset-bottom));
-          scroll-padding-bottom: calc(148px + env(safe-area-inset-bottom));
+          padding-bottom: calc(132px + env(safe-area-inset-bottom));
+          scroll-padding-bottom: calc(132px + env(safe-area-inset-bottom));
         }
 
         .life-head {
-          min-height: 196px;
-          border-radius: 30px;
-          padding: 15px 14px 14px;
+          min-height: 166px;
+          border-radius: 28px;
+          padding: 13px 13px 12px;
         }
 
         .life-head h1 {
-          gap: 3px;
-          margin-top: 6px;
+          gap: 2px;
+          margin-top: 4px;
         }
 
         .life-head h1 strong {
-          font-size: clamp(38px, 11.4vw, 48px);
-          line-height: 1.06;
+          font-size: clamp(36px, 10.4vw, 44px);
+          line-height: 1.02;
         }
 
         .life-head h1 em {
-          font-size: 14px;
+          font-size: 13px;
           line-height: 1.15;
         }
 
         .life-head .life-summary {
-          margin-top: 7px;
+          margin-top: 5px;
           font-size: 12px;
-          line-height: 1.22;
+          line-height: 1.18;
         }
 
         .life-progress {
-          height: 8px;
-          margin-top: 10px;
+          height: 7px;
+          margin-top: 8px;
         }
 
         .life-stats {
-          gap: 6px;
-          margin-top: 9px;
+          gap: 5px;
+          margin-top: 0;
+          padding: 6px;
         }
 
         .life-stat {
-          min-height: 50px;
-          border-radius: 17px;
-          padding: 6px 5px;
+          min-height: 45px;
+          border-radius: 16px;
+          padding: 5px 4px;
         }
 
         .life-stat strong {
-          font-size: 17px;
+          font-size: 15.5px;
         }
 
         .life-stat span {
-          font-size: 9.5px;
+          font-size: 8.8px;
           line-height: 1.1;
         }
 
         .daily-quote-card {
-          min-height: 126px;
-          gap: 12px;
-          border-radius: 26px;
-          padding: 14px;
+          min-height: 104px;
+          gap: 7px;
+          border-radius: 24px;
+          padding: 11px 12px;
+        }
+
+        .daily-quote-top {
+          gap: 10px;
         }
 
         .daily-quote-badge {
-          width: 38px;
-          height: 38px;
+          width: 34px;
+          height: 34px;
           font-size: 12px;
         }
 
         .daily-quote-open {
-          min-height: 30px;
-          padding: 0 11px;
+          min-height: 28px;
+          padding: 0 10px;
           font-size: 11px;
         }
 
         #dailyQuoteText {
-          font-size: 18px;
-          line-height: 1.16;
+          font-size: 16.5px;
+          line-height: 1.14;
         }
 
         .daily-quote-author {
-          font-size: 10.5px;
+          font-size: 10px;
         }
 
         .life-map-card {
-          border-radius: 28px;
-          padding: 15px;
-          gap: 10px;
+          border-radius: 26px;
+          padding: 12px;
+          gap: 7px;
         }
 
         .life-map-top span {
-          font-size: 16px;
+          font-size: 15px;
+        }
+
+        .life-map-top strong {
+          min-height: 24px;
+          padding: 0 8px;
+          font-size: 10.5px;
         }
 
         .life-map {
-          grid-template-columns: repeat(36, 1fr);
-          gap: 3px;
+          grid-template-columns: repeat(48, 1fr);
+          gap: 2px;
           padding-top: 2px;
         }
 
         .life-legend {
-          font-size: 12.5px;
-          line-height: 1.28;
+          font-size: 11.2px;
+          line-height: 1.22;
         }
 
         .life-actions {
