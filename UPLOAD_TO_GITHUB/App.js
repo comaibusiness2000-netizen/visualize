@@ -1411,7 +1411,7 @@ export default function App() {
             </View>
             <Text style={styles.quoteOpenHint}>{t("quote.open")}</Text>
           </View>
-          <Text style={styles.quoteCardText}>"{dailyQuote.text}"</Text>
+          <Text style={styles.quoteCardText} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.88}>"{dailyQuote.text}"</Text>
           <View style={styles.quoteCardFooter}>
             <Text style={styles.quoteAuthor}>{dailyQuote.author}</Text>
             <View style={styles.quoteFooterLine} />
@@ -2320,11 +2320,11 @@ const styles = StyleSheet.create({
   heroStatDivider: { width: 1, height: 36, backgroundColor: "rgba(255,249,237,0.11)" },
   body: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
   syncFootnote: { marginTop: 10, fontSize: 11, lineHeight: 16, fontWeight: "900", letterSpacing: 0.5 },
-  quoteCard: { minHeight: 168, overflow: "hidden", borderWidth: 1, borderRadius: 32, padding: 18, marginBottom: 11, shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 16 }, elevation: 7 },
+  quoteCard: { minHeight: 142, overflow: "hidden", borderWidth: 1, borderRadius: 28, padding: 15, marginBottom: 11, shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 26, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
   quoteCardLight: { backgroundColor: "#0D1113", borderColor: "rgba(232,196,104,0.18)" },
   quoteCardDark: { backgroundColor: "#11171A", borderColor: "rgba(232,196,104,0.24)" },
-  quoteCardGlow: { position: "absolute", right: -46, top: -64, width: 166, height: 166, borderRadius: 83, backgroundColor: "rgba(232,196,104,0.18)" },
-  quoteCardWatermark: { position: "absolute", right: 0, bottom: -17, color: "rgba(255,249,237,0.06)", fontSize: 112, lineHeight: 118, fontWeight: "900" },
+  quoteCardGlow: { position: "absolute", right: -38, top: -58, width: 142, height: 142, borderRadius: 71, backgroundColor: "rgba(232,196,104,0.18)" },
+  quoteCardWatermark: { position: "absolute", right: 0, bottom: -13, color: "rgba(255,249,237,0.06)", fontSize: 92, lineHeight: 98, fontWeight: "900" },
   quoteCardTop: { flexDirection: "row", alignItems: "center", gap: 12 },
   quoteMark: { width: 42, height: 42, borderRadius: 21, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
   quoteMarkText: { color: "#101418", fontSize: 14, lineHeight: 17, fontWeight: "900" },
@@ -2332,8 +2332,8 @@ const styles = StyleSheet.create({
   quoteCardKicker: { color: "rgba(255,249,237,0.72)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
   quoteCardDay: { color: "#E8C468", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "900" },
   quoteOpenHint: { overflow: "hidden", minHeight: 32, paddingHorizontal: 13, paddingVertical: 8, borderRadius: 999, color: "#101418", backgroundColor: "#FFF9ED", fontSize: 12, lineHeight: 14, fontWeight: "900", textTransform: "lowercase" },
-  quoteCardText: { marginTop: 17, color: "#FFF9ED", fontSize: 22, lineHeight: 27, fontWeight: "900" },
-  quoteCardFooter: { marginTop: 15, flexDirection: "row", alignItems: "center", gap: 10 },
+  quoteCardText: { marginTop: 13, color: "#FFF9ED", fontSize: 20, lineHeight: 24, fontWeight: "900" },
+  quoteCardFooter: { marginTop: 10, flexDirection: "row", alignItems: "center", gap: 10 },
   quoteAuthor: { color: "rgba(255,249,237,0.72)", fontSize: 12, lineHeight: 16, fontWeight: "900" },
   quoteFooterLine: { flex: 1, height: 1, backgroundColor: "rgba(232,196,104,0.26)" },
   panel: { borderWidth: 1, borderRadius: 28, padding: 18, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 2 },

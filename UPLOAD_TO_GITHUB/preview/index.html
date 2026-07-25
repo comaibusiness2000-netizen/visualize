@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=88" />
+    <link rel="manifest" href="./manifest.webmanifest?v=89" />
     <meta name="theme-color" content="#f4f4f2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Visualize" />
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v88";
+      const VISUALIZE_APP_VERSION = "2026-07-25-v89";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -49,7 +49,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=88")
+            .register("./service-worker.js?v=89")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1306,13 +1306,13 @@
       .daily-quote-card {
         position: relative;
         width: 100%;
-        min-height: 176px;
+        min-height: 142px;
         display: grid;
-        gap: 16px;
+        gap: 12px;
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.24);
-        border-radius: 32px;
-        padding: 18px;
+        border-radius: 28px;
+        padding: 15px;
         color: #fff9ed;
         background:
           radial-gradient(circle at 92% 8%, rgba(232, 196, 104, 0.2), transparent 34%),
@@ -1333,10 +1333,10 @@
       .daily-quote-card::before {
         content: "";
         position: absolute;
-        width: 166px;
-        height: 166px;
-        right: -46px;
-        top: -64px;
+        width: 142px;
+        height: 142px;
+        right: -38px;
+        top: -58px;
         border-radius: 50%;
         background: rgba(232, 196, 104, 0.18);
         pointer-events: none;
@@ -1348,7 +1348,7 @@
         right: 2px;
         bottom: -14px;
         color: rgba(255, 249, 237, 0.065);
-        font-size: 112px;
+        font-size: 92px;
         line-height: 1;
         font-weight: 950;
         pointer-events: none;
@@ -1363,8 +1363,8 @@
       }
 
       .daily-quote-badge {
-        width: 42px;
-        height: 42px;
+        width: 38px;
+        height: 38px;
         display: grid;
         place-items: center;
         border-radius: 50%;
@@ -1400,7 +1400,7 @@
 
       .daily-quote-open {
         flex: 0 0 auto;
-        min-height: 32px;
+        min-height: 30px;
         display: grid;
         place-items: center;
         padding: 0 13px;
@@ -1412,11 +1412,15 @@
         text-transform: lowercase;
       }
 
-      .daily-quote-copy strong {
+      #dailyQuoteText {
         position: relative;
         z-index: 1;
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
         color: #fff9ed;
-        font-size: 23px;
+        font-size: 21px;
         line-height: 1.16;
         font-weight: 950;
       }
@@ -5251,10 +5255,10 @@
         }
 
         .daily-quote-card {
-          min-height: 148px;
+          min-height: 126px;
           gap: 12px;
-          border-radius: 28px;
-          padding: 15px;
+          border-radius: 26px;
+          padding: 14px;
         }
 
         .daily-quote-badge {
@@ -5269,8 +5273,8 @@
           font-size: 11px;
         }
 
-        .daily-quote-copy strong {
-          font-size: 20px;
+        #dailyQuoteText {
+          font-size: 18px;
           line-height: 1.16;
         }
 
