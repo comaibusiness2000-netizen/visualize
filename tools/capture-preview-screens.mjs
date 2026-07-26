@@ -19,11 +19,15 @@ const port = 9537 + Math.floor(Math.random() * 200);
 const userDataDir = resolve(".tmp", `screen-capture-${Date.now()}`);
 const outputDir = resolve(".tmp", "preview-screens");
 const appPath = `file:///${resolve("preview", "index.html").replace(/\\/g, "/")}?capture=1`;
+const viewportProfiles = [
+  { name: "iphone-15", width: 393, height: 852, scale: 3 },
+  { name: "iphone-se", width: 375, height: 667, scale: 2 }
+];
 
 mkdirSync(outputDir, { recursive: true });
 
 const seedState = {
-  appVersion: "en-v2",
+  appVersion: "2026-07-26-v108",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -148,47 +152,54 @@ try {
   const cdp = createCdp(await getDebuggerUrl());
   await cdp.send("Page.enable");
   await cdp.send("Runtime.enable");
-  await cdp.send("Emulation.setDeviceMetricsOverride", {
-    width: 393,
-    height: 852,
-    deviceScaleFactor: 3,
-    mobile: true
-  });
   await cdp.send("Emulation.setUserAgentOverride", {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
   });
   await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
     source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v107");`
   });
-  await cdp.send("Page.navigate", { url: appPath });
-  await wait(1200);
-
   const views = ["today", "goals", "vision", "anti", "speech"];
-  for (const view of views) {
-    await cdp.send("Runtime.evaluate", {
-      expression: `document.querySelector('.nav button[data-view="${view}"]')?.click()`,
-      awaitPromise: true
+  for (const viewport of viewportProfiles) {
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: viewport.width,
+      height: viewport.height,
+      deviceScaleFactor: viewport.scale,
+      mobile: true
     });
-    await wait(420);
-    await cdp.send("Runtime.evaluate", {
-      expression: `(() => {
-        document.getElementById("dailyQuoteReveal")?.classList.remove("open");
-        document.getElementById("dailyQuoteReveal")?.setAttribute("aria-hidden", "true");
-        document.getElementById("dailyInsight")?.classList.remove("open");
-        document.getElementById("dailyInsight")?.setAttribute("aria-hidden", "true");
-        document.getElementById("lifeUpdateOverlay")?.classList.remove("open");
-        document.getElementById("lifeUpdateOverlay")?.setAttribute("aria-hidden", "true");
-      })()`,
-      awaitPromise: true
-    });
-    await wait(120);
-    const image = await cdp.send("Page.captureScreenshot", {
-      format: "png",
-      fromSurface: true
-    });
-    const file = resolve(outputDir, `${view}.png`);
-    writeFileSync(file, Buffer.from(image.data, "base64"));
-    console.log(file);
+    await cdp.send("Page.navigate", { url: `${appPath}&viewport=${viewport.name}&t=${Date.now()}` });
+    await wait(1200);
+
+    for (const view of views) {
+      await cdp.send("Runtime.evaluate", {
+        expression: `document.querySelector('.nav button[data-view="${view}"]')?.click()`,
+        awaitPromise: true
+      });
+      await wait(420);
+      await cdp.send("Runtime.evaluate", {
+        expression: `(() => {
+          document.getElementById("dailyQuoteReveal")?.classList.remove("open");
+          document.getElementById("dailyQuoteReveal")?.setAttribute("aria-hidden", "true");
+          document.getElementById("dailyInsight")?.classList.remove("open");
+          document.getElementById("dailyInsight")?.setAttribute("aria-hidden", "true");
+          document.getElementById("lifeUpdateOverlay")?.classList.remove("open");
+          document.getElementById("lifeUpdateOverlay")?.setAttribute("aria-hidden", "true");
+        })()`,
+        awaitPromise: true
+      });
+      await wait(120);
+      const image = await cdp.send("Page.captureScreenshot", {
+        format: "png",
+        fromSurface: true
+      });
+      const prefixedFile = resolve(outputDir, `${viewport.name}-${view}.png`);
+      writeFileSync(prefixedFile, Buffer.from(image.data, "base64"));
+      console.log(prefixedFile);
+      if (viewport.name === "iphone-15") {
+        const file = resolve(outputDir, `${view}.png`);
+        writeFileSync(file, Buffer.from(image.data, "base64"));
+        console.log(file);
+      }
+    }
   }
   cdp.close();
 } finally {

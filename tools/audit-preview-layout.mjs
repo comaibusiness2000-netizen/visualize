@@ -178,7 +178,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-25-v107");
+      localStorage.setItem("visualizeAppVersion", "2026-07-26-v108");
     `
   });
   const failures = [];
@@ -335,6 +335,43 @@ try {
                 navTooHigh: false,
                 viewportNotCovered: false
               });
+            }
+          }
+        }
+        const containmentChecks = [
+          { panel: '.why-workbench', children: '.why-prompts span, #uploadWhyPhoto, .why-motive-stack' },
+          { panel: '.speech-head', children: '.deck-kicker, h2, p, .speech-playback-meta, .speech-meter, .speech-play-main' },
+          { panel: '.speech-studio', children: '.speech-current-card, .speech-script-panel, .speech-voice-summary, .speech-actions .btn' },
+          { panel: '.life-head', children: '.deck-kicker, h1, .life-summary, .life-progress' },
+          { panel: '.vision-empty', children: 'h2, p, #createVision' },
+          { panel: '.anti-empty', children: 'h2, p, #createAnti' }
+        ];
+        for (const check of containmentChecks) {
+          for (const panel of document.querySelectorAll(check.panel)) {
+            if (!panel.offsetParent && getComputedStyle(panel).position !== 'fixed') continue;
+            const panelRect = panel.getBoundingClientRect();
+            for (const child of panel.querySelectorAll(check.children)) {
+              if (!child.offsetParent && getComputedStyle(child).position !== 'fixed') continue;
+              const childRect = child.getBoundingClientRect();
+              const outsidePanel =
+                childRect.left < panelRect.left - 1 ||
+                childRect.right > panelRect.right + 1 ||
+                childRect.top < panelRect.top - 1 ||
+                childRect.bottom > panelRect.bottom + 1;
+              if (outsidePanel) {
+                items.push({
+                  selector: 'child outside panel',
+                  panel: check.panel,
+                  child: child.id ? '#' + child.id : child.className || child.tagName.toLowerCase(),
+                  text: (child.textContent || child.value || '').trim().slice(0, 90),
+                  panelRect: { left: Math.round(panelRect.left), right: Math.round(panelRect.right), top: Math.round(panelRect.top), bottom: Math.round(panelRect.bottom), width: Math.round(panelRect.width), height: Math.round(panelRect.height) },
+                  childRect: { left: Math.round(childRect.left), right: Math.round(childRect.right), top: Math.round(childRect.top), bottom: Math.round(childRect.bottom), width: Math.round(childRect.width), height: Math.round(childRect.height) },
+                  clippedY: childRect.bottom > panelRect.bottom + 1 || childRect.top < panelRect.top - 1,
+                  outX: childRect.left < panelRect.left - 1 || childRect.right > panelRect.right + 1,
+                  navTooHigh: false,
+                  viewportNotCovered: false
+                });
+              }
             }
           }
         }

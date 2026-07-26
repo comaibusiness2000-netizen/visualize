@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=107" />
+    <link rel="manifest" href="./manifest.webmanifest?v=108" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-25-v107";
+      const VISUALIZE_APP_VERSION = "2026-07-26-v108";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=107")
+            .register("./service-worker.js?v=108")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -97,8 +97,8 @@
         --viewport-bg: #f3f3f1;
         --app-vh: 100dvh;
         --nav-h: 74px;
-        --nav-bottom: 6px;
-        --nav-clearance: calc(var(--nav-h) + var(--nav-bottom) + 6px);
+        --nav-bottom: 10px;
+        --nav-clearance: 10px;
       }
 
       html[data-theme="dark"],
@@ -444,10 +444,10 @@
       .app {
         height: 100%;
         display: grid;
-        grid-template-rows: 48px minmax(0, 1fr);
-        row-gap: 18px;
+        grid-template-rows: 48px minmax(0, 1fr) var(--nav-h);
+        row-gap: 14px;
         overflow: hidden;
-        padding: 20px 22px 0;
+        padding: 20px 22px var(--nav-bottom);
       }
 
       .app::-webkit-scrollbar,
@@ -458,7 +458,7 @@
       .screen {
         display: none;
         min-height: 0;
-        height: 100%;
+        height: auto;
         overflow: hidden;
       }
 
@@ -1244,7 +1244,8 @@
 
       .life-dashboard {
         min-height: 0;
-        height: 100%;
+        height: auto;
+        max-height: 100%;
         align-content: start;
         gap: 9px;
         overflow-y: auto;
@@ -1505,13 +1506,14 @@
       .daily-quote-card {
         position: relative;
         width: 100%;
-        min-height: 124px;
+        min-height: 146px;
         display: grid;
-        gap: 9px;
+        align-content: center;
+        gap: 10px;
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.24);
         border-radius: 28px;
-        padding: 14px;
+        padding: 15px 14px;
         color: #fff9ed;
         background:
           radial-gradient(circle at 92% 8%, rgba(232, 196, 104, 0.2), transparent 34%),
@@ -1617,13 +1619,11 @@
       #dailyQuoteText {
         position: relative;
         z-index: 1;
-        display: -webkit-box;
-        overflow: hidden;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
+        display: block;
+        overflow: visible;
         color: #fff9ed;
-        font-size: 19px;
-        line-height: 1.16;
+        font-size: 18.5px;
+        line-height: 1.18;
         font-weight: 950;
         overflow-wrap: break-word;
       }
@@ -1794,7 +1794,7 @@
         display: grid;
         gap: 16px;
         align-self: start;
-        min-height: max-content;
+        min-height: auto;
         overflow: hidden;
         padding: 22px;
         border: 1px solid rgba(17, 17, 17, 0.06);
@@ -3867,13 +3867,16 @@
       .speech-head {
         position: relative;
         flex: 0 0 auto;
-        min-height: 318px;
+        box-sizing: border-box;
+        min-height: 330px;
         display: grid;
+        grid-template-rows: auto auto auto auto auto;
+        row-gap: 8px;
         justify-items: center;
         align-content: center;
         overflow: hidden;
         border-radius: 34px;
-        padding: 30px 18px 24px;
+        padding: 34px 20px 26px;
         color: #fff9ed;
         background:
           radial-gradient(circle at 88% 0%, rgba(232, 196, 104, 0.2), transparent 36%),
@@ -3903,14 +3906,15 @@
         position: relative;
         z-index: 1;
         color: var(--gold);
-        margin-top: 2px;
+        margin: 0;
+        line-height: 1.12;
       }
 
       .speech-head h2 {
         position: relative;
         z-index: 1;
         max-width: 320px;
-        margin-top: 3px;
+        margin: 0;
         color: #fff9ed;
         font-size: clamp(27px, 8vw, 34px);
         line-height: 1.05;
@@ -3922,7 +3926,7 @@
         position: relative;
         z-index: 1;
         max-width: 300px;
-        margin: 7px auto 0;
+        margin: 0 auto;
         color: rgba(255, 249, 237, 0.68);
         font-size: 12.5px;
         line-height: 1.32;
@@ -3939,7 +3943,7 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        margin-top: 9px;
+        margin-top: 2px;
         border: 1px solid rgba(255, 249, 237, 0.1);
         border-radius: 999px;
         padding: 0 12px;
@@ -3975,7 +3979,7 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
-        margin-top: 12px;
+        margin-top: 2px;
       }
 
       .speech-meter span {
@@ -4003,8 +4007,11 @@
         position: relative;
         z-index: 1;
         min-width: 178px;
+        max-width: calc(100% - 40px);
         min-height: 52px;
-        margin-top: 14px;
+        display: grid;
+        place-items: center;
+        margin-top: 4px;
         border: 0;
         border-radius: 999px;
         color: #101418;
@@ -4232,13 +4239,11 @@
 
       .speech-current-card strong {
         max-width: calc(100% - 72px);
-        overflow: hidden;
         color: var(--ink);
         font-size: clamp(23px, 6.6vw, 29px);
         line-height: 1.08;
         font-weight: 950;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow-wrap: anywhere;
       }
 
       .speech-current-card em {
@@ -4691,10 +4696,13 @@
       }
 
       .nav {
-        position: absolute;
-        left: 16px;
-        right: 16px;
-        bottom: var(--nav-bottom);
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        align-self: end;
+        z-index: 40;
         height: var(--nav-h);
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -5682,8 +5690,8 @@
       @media (max-width: 520px) {
         :root {
           --nav-h: 70px;
-          --nav-bottom: max(2px, calc(env(safe-area-inset-bottom) - 30px));
-          --nav-clearance: calc(var(--nav-h) + var(--nav-bottom) + 6px);
+          --nav-bottom: max(8px, env(safe-area-inset-bottom));
+          --nav-clearance: 10px;
         }
 
         .stage {
@@ -5703,12 +5711,11 @@
 
         .app {
           height: 100%;
-          row-gap: 12px;
-          padding: calc(14px + env(safe-area-inset-top)) 18px calc(var(--nav-clearance) + 8px) 18px;
+          row-gap: 10px;
+          padding: calc(14px + env(safe-area-inset-top)) 18px var(--nav-bottom) 18px;
         }
 
         .nav {
-          bottom: var(--nav-bottom);
           z-index: 40;
         }
 
@@ -5893,10 +5900,10 @@
         }
 
         .daily-quote-card {
-          min-height: 122px;
-          gap: 7px;
+          min-height: 148px;
+          gap: 8px;
           border-radius: 24px;
-          padding: 11px 12px;
+          padding: 12px;
         }
 
         .daily-quote-card::before,
@@ -5921,8 +5928,8 @@
         }
 
         #dailyQuoteText {
-          font-size: 16px;
-          line-height: 1.14;
+          font-size: clamp(14.5px, 4.15vw, 16px);
+          line-height: 1.2;
         }
 
         .daily-quote-author {
@@ -5940,7 +5947,7 @@
 
         .why-workbench {
           gap: 11px;
-          min-height: max-content;
+          min-height: auto;
           padding: 18px 18px 22px;
           border-radius: 32px;
         }
@@ -6041,9 +6048,10 @@
         }
 
         .speech-head {
-          min-height: 316px;
+          min-height: 324px;
           border-radius: 30px;
-          padding: 26px 16px 22px;
+          row-gap: 7px;
+          padding: 30px 17px 24px;
         }
 
         .speech-head::after {
@@ -6065,18 +6073,18 @@
 
         .speech-playback-meta {
           min-height: 31px;
-          margin-top: 8px;
+          margin-top: 1px;
           padding: 0 10px;
         }
 
         .speech-meter {
           height: 30px;
-          margin-top: 10px;
+          margin-top: 1px;
         }
 
         .speech-play-main {
           min-height: 50px;
-          margin-top: 12px;
+          margin-top: 3px;
         }
 
         .speech-studio {
@@ -6213,6 +6221,131 @@
           padding-top: calc(10px + env(safe-area-inset-top));
         }
 
+        .life-dashboard {
+          gap: 6px;
+        }
+
+        .life-head {
+          min-height: 148px;
+          padding: 11px 12px 10px;
+          border-radius: 25px;
+        }
+
+        .life-head h1 {
+          margin-top: 3px;
+        }
+
+        .life-head h1 strong {
+          font-size: clamp(32px, 9.4vw, 39px);
+        }
+
+        .life-head h1 em {
+          font-size: 11.6px;
+        }
+
+        .life-head .life-summary {
+          margin-top: 4px;
+          font-size: 10.8px;
+          line-height: 1.2;
+        }
+
+        .life-progress {
+          height: 6px;
+          margin-top: 7px;
+        }
+
+        .life-pressure-card {
+          grid-template-columns: minmax(0, 1fr) 50px;
+          min-height: 78px;
+          gap: 8px;
+          padding: 9px 10px;
+          border-radius: 21px;
+        }
+
+        .life-pressure-card::before {
+          right: 12px;
+          top: 10px;
+        }
+
+        .life-pressure-copy span {
+          font-size: 7.6px;
+          letter-spacing: 1.2px;
+        }
+
+        .life-pressure-copy strong {
+          margin-top: 3px;
+          font-size: clamp(17px, 5.4vw, 20px);
+        }
+
+        .life-pressure-copy p {
+          margin-top: 2px;
+          font-size: 10px;
+          line-height: 1.18;
+        }
+
+        .life-pressure-meter {
+          width: 50px;
+          height: 50px;
+        }
+
+        .life-pressure-meter span {
+          font-size: 10px;
+        }
+
+        .life-stats {
+          gap: 4px;
+          padding: 5px;
+        }
+
+        .life-stat {
+          min-height: 38px;
+          border-radius: 14px;
+          padding: 4px 3px;
+        }
+
+        .life-stat strong {
+          font-size: 14px;
+        }
+
+        .life-stat span {
+          font-size: 8px;
+        }
+
+        .life-actions {
+          gap: 6px;
+        }
+
+        .life-actions .btn {
+          min-height: 40px;
+          font-size: 12.4px;
+        }
+
+        .daily-quote-card {
+          min-height: 112px;
+          gap: 6px;
+          padding: 10px;
+        }
+
+        .daily-quote-badge {
+          width: 30px;
+          height: 30px;
+          font-size: 11px;
+        }
+
+        .daily-quote-open {
+          min-height: 26px;
+          font-size: 10px;
+        }
+
+        #dailyQuoteText {
+          font-size: clamp(12.8px, 3.65vw, 13.6px);
+          line-height: 1.16;
+        }
+
+        .daily-quote-author {
+          display: none;
+        }
+
         .life-onboarding {
           height: auto;
           min-height: 100%;
@@ -6317,8 +6450,9 @@
         }
 
         .speech-head {
-          min-height: 214px;
-          padding: 18px 16px 16px;
+          min-height: 256px;
+          row-gap: 5px;
+          padding: 22px 16px 18px;
         }
 
         .speech-head h2 {
@@ -6327,20 +6461,19 @@
         }
 
         .speech-head p {
-          margin-top: 5px;
           font-size: 11.4px;
           line-height: 1.24;
         }
 
         .speech-playback-meta {
           min-height: 28px;
-          margin-top: 7px;
+          margin-top: 0;
         }
 
         .speech-meter {
           height: 20px;
           gap: 5px;
-          margin-top: 5px;
+          margin-top: 0;
         }
 
         .speech-meter span {
@@ -6349,7 +6482,7 @@
 
         .speech-play-main {
           min-height: 44px;
-          margin-top: 7px;
+          margin-top: 2px;
         }
 
         .speech-studio {
@@ -6718,6 +6851,29 @@
               </div>
             </div>
           </section>
+
+          <nav class="nav" aria-label="Navigazione principale">
+            <button class="active" data-view="today">
+              <span class="nav-glyph nav-life" aria-hidden="true"><span class="nav-life-ring"></span></span>
+              <span class="nav-label">Life</span>
+            </button>
+            <button data-view="goals">
+              <span class="nav-glyph nav-people" aria-hidden="true"><span></span></span>
+              <span class="nav-label">Goal</span>
+            </button>
+            <button data-view="vision">
+              <span class="nav-glyph nav-vision" aria-hidden="true"><span></span></span>
+              <span class="nav-label">Vision</span>
+            </button>
+            <button data-view="anti">
+              <span class="nav-glyph nav-anti" aria-hidden="true"></span>
+              <span class="nav-label">Anti</span>
+            </button>
+            <button data-view="speech">
+              <span class="nav-glyph nav-voice" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="nav-label">Speech</span>
+            </button>
+          </nav>
         </main>
 
         <div class="drawer-scrim" id="profileScrim"></div>
@@ -6825,28 +6981,6 @@
           </div>
         </aside>
 
-        <nav class="nav" aria-label="Navigazione principale">
-          <button class="active" data-view="today">
-            <span class="nav-glyph nav-life" aria-hidden="true"><span class="nav-life-ring"></span></span>
-            <span class="nav-label">Life</span>
-          </button>
-          <button data-view="goals">
-            <span class="nav-glyph nav-people" aria-hidden="true"><span></span></span>
-            <span class="nav-label">Goal</span>
-          </button>
-          <button data-view="vision">
-            <span class="nav-glyph nav-vision" aria-hidden="true"><span></span></span>
-            <span class="nav-label">Vision</span>
-          </button>
-          <button data-view="anti">
-            <span class="nav-glyph nav-anti" aria-hidden="true"></span>
-            <span class="nav-label">Anti</span>
-          </button>
-          <button data-view="speech">
-            <span class="nav-glyph nav-voice" aria-hidden="true"><span></span><span></span><span></span></span>
-            <span class="nav-label">Speech</span>
-          </button>
-        </nav>
       </div>
     </div>
 
