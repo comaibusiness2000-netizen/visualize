@@ -27,7 +27,7 @@ const viewportProfiles = [
 mkdirSync(outputDir, { recursive: true });
 
 const seedState = {
-  appVersion: "2026-07-26-v109",
+  appVersion: "2026-07-26-v110",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -189,9 +189,15 @@ try {
     source: `
       const defaultCaptureState = ${JSON.stringify(JSON.stringify(seedState))};
       const playerCaptureState = ${JSON.stringify(JSON.stringify(playerState))};
-      const usePlayerState = new URL(location.href).searchParams.has("player");
-      localStorage.setItem("visualize-simple-v1", usePlayerState ? playerCaptureState : defaultCaptureState);
-      localStorage.setItem("visualizeAppVersion", "2026-07-26-v109");
+      const captureParams = new URL(location.href).searchParams;
+      const usePlayerState = captureParams.has("player");
+      const selectedState = JSON.parse(usePlayerState ? playerCaptureState : defaultCaptureState);
+      if (captureParams.get("theme") === "light") {
+        selectedState.settings.theme = "light";
+        selectedState.settings.language = "en";
+      }
+      localStorage.setItem("visualize-simple-v1", JSON.stringify(selectedState));
+      localStorage.setItem("visualizeAppVersion", "2026-07-26-v110");
     `
   });
   const views = ["today", "goals", "vision", "anti", "speech"];
@@ -232,6 +238,40 @@ try {
       console.log(prefixedFile);
       if (viewport.name === "iphone-15") {
         const file = resolve(outputDir, `${view}.png`);
+        writeFileSync(file, Buffer.from(image.data, "base64"));
+        console.log(file);
+      }
+    }
+
+    await cdp.send("Page.navigate", { url: `${appPath}&viewport=${viewport.name}&theme=light&t=${Date.now()}` });
+    await wait(1200);
+    for (const view of views) {
+      await cdp.send("Runtime.evaluate", {
+        expression: `document.querySelector('.nav button[data-view="${view}"]')?.click()`,
+        awaitPromise: true
+      });
+      await wait(420);
+      await cdp.send("Runtime.evaluate", {
+        expression: `(() => {
+          document.getElementById("dailyQuoteReveal")?.classList.remove("open");
+          document.getElementById("dailyQuoteReveal")?.setAttribute("aria-hidden", "true");
+          document.getElementById("dailyInsight")?.classList.remove("open");
+          document.getElementById("dailyInsight")?.setAttribute("aria-hidden", "true");
+          document.getElementById("lifeUpdateOverlay")?.classList.remove("open");
+          document.getElementById("lifeUpdateOverlay")?.setAttribute("aria-hidden", "true");
+        })()`,
+        awaitPromise: true
+      });
+      await wait(120);
+      const image = await cdp.send("Page.captureScreenshot", {
+        format: "png",
+        fromSurface: true
+      });
+      const prefixedFile = resolve(outputDir, `${viewport.name}-light-${view}.png`);
+      writeFileSync(prefixedFile, Buffer.from(image.data, "base64"));
+      console.log(prefixedFile);
+      if (viewport.name === "iphone-15") {
+        const file = resolve(outputDir, `light-${view}.png`);
         writeFileSync(file, Buffer.from(image.data, "base64"));
         console.log(file);
       }

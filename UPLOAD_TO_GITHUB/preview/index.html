@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=109" />
+    <link rel="manifest" href="./manifest.webmanifest?v=110" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-26-v109";
+      const VISUALIZE_APP_VERSION = "2026-07-26-v110";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=109")
+            .register("./service-worker.js?v=110")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -91,12 +91,14 @@
         --soft: #eeeeec;
         --gold: #e8c468;
         --rust: #da5a3a;
+        --red: #da5a3a;
         --warm: #ffffff;
         --control: #ffffff;
         --screen-x: 0px;
         --viewport-bg: #f3f3f1;
         --app-vh: 100dvh;
         --nav-h: 74px;
+        --safe-bottom-raw: 0px;
         --nav-bottom: 10px;
         --nav-clearance: 10px;
       }
@@ -2387,15 +2389,15 @@
       .deck-frame:nth-child(1) {
         left: 0;
         top: 18px;
-        width: 47%;
+        width: 43%;
         height: 112px;
         transform: rotate(-4deg);
       }
 
       .deck-frame:nth-child(2) {
-        left: 27%;
+        left: 29%;
         top: 0;
-        width: 47%;
+        width: 44%;
         height: 132px;
         transform: rotate(2deg);
       }
@@ -2403,14 +2405,19 @@
       .deck-frame:nth-child(3) {
         right: 0;
         top: 26px;
-        width: 42%;
+        width: 39%;
         height: 106px;
         transform: rotate(5deg);
       }
 
       .deck-frame span {
+        max-width: 100%;
+        display: block;
+        overflow: hidden;
         font-size: 12px;
         font-weight: 950;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .anti-empty .deck-frame {
@@ -3470,12 +3477,16 @@
 
       .btn {
         min-height: 46px;
+        display: inline-grid;
+        place-items: center;
         border: 1px solid var(--ink);
         border-radius: 999px;
         color: var(--paper);
         background: var(--ink);
         font-size: 14px;
+        line-height: 1.1;
         font-weight: 900;
+        text-align: center;
         box-shadow: 0 10px 22px rgba(17, 17, 17, 0.08);
       }
 
@@ -5748,20 +5759,33 @@
       @media (max-width: 520px) {
         :root {
           --nav-h: 70px;
-          --nav-bottom: max(8px, env(safe-area-inset-bottom));
-          --nav-clearance: 10px;
+          --safe-bottom-raw: env(safe-area-inset-bottom);
+          --nav-bottom: clamp(6px, var(--safe-bottom-raw), 14px);
+          --nav-clearance: 8px;
+        }
+
+        html,
+        body {
+          height: var(--app-vh);
+          min-height: var(--app-vh);
+          max-height: var(--app-vh);
+          overflow: hidden;
         }
 
         .stage {
-          min-height: max(var(--app-vh), 100dvh);
+          height: var(--app-vh);
+          min-height: var(--app-vh);
+          max-height: var(--app-vh);
+          overflow: hidden;
           padding: 0;
           background: var(--viewport-bg, var(--paper));
         }
 
         .phone {
           width: 100%;
-          height: max(var(--app-vh), 100dvh);
-          min-height: 0;
+          height: var(--app-vh);
+          min-height: var(--app-vh);
+          max-height: var(--app-vh);
           border: 0;
           border-radius: 0;
           box-shadow: none;
@@ -6778,8 +6802,8 @@
 
             <article class="vision-empty" id="visionEmpty">
               <div class="deck-frame-stack" aria-hidden="true">
-                <div class="deck-frame"><span id="visionFrameIdentity">Identity</span></div>
-                <div class="deck-frame"><span id="visionFrameEnvironment">Environment</span></div>
+                <div class="deck-frame"><span id="visionFrameIdentity">Self</span></div>
+                <div class="deck-frame"><span id="visionFrameEnvironment">Place</span></div>
                 <div class="deck-frame"><span id="visionFramePeople">People</span></div>
               </div>
               <span class="deck-kicker">Vision setup</span>
@@ -7486,8 +7510,8 @@
           visionSetup: "Vision setup",
           createVisionTitle: "Create the future scene first.",
           visionSetupText: "Start with photos of identity, environment, people, and the future you want to make familiar.",
-          visionFrameIdentity: "Identity",
-          visionFrameEnvironment: "Environment",
+          visionFrameIdentity: "Self",
+          visionFrameEnvironment: "Place",
           visionFramePeople: "People",
           createVision: "Create vision",
           visionDeck: "Vision deck",
@@ -7640,8 +7664,8 @@
         navGoal: "Por quien",
         whyKicker: "Por quien",
         visionSetupText: "Empieza con fotos de identidad, ambiente, personas y el futuro que quieres volver familiar.",
-        visionFrameIdentity: "Identidad",
-        visionFrameEnvironment: "Ambiente",
+        visionFrameIdentity: "Yo",
+        visionFrameEnvironment: "Lugar",
         visionFramePeople: "Personas",
         antiSetupText: "Empieza con fotos del desvio, los costes y el futuro que te niegas a normalizar.",
         antiFrameDrift: "Deriva",
@@ -7704,7 +7728,7 @@
         navGoal: "Pour qui",
         whyKicker: "Pourquoi",
         visionSetupText: "Commence par des photos d'identite, de cadre, de personnes et du futur que tu veux rendre familier.",
-        visionFrameIdentity: "Identite",
+        visionFrameIdentity: "Moi",
         visionFrameEnvironment: "Cadre",
         visionFramePeople: "Personnes",
         antiSetupText: "Commence par des photos de la derive, du cout et du futur que tu refuses de normaliser.",
@@ -7768,8 +7792,8 @@
         navGoal: "Por quem",
         whyKicker: "Por quem",
         visionSetupText: "Comece com fotos de identidade, ambiente, pessoas e do futuro que quer tornar familiar.",
-        visionFrameIdentity: "Identidade",
-        visionFrameEnvironment: "Ambiente",
+        visionFrameIdentity: "Eu",
+        visionFrameEnvironment: "Lugar",
         visionFramePeople: "Pessoas",
         antiSetupText: "Comece com fotos do desvio, dos custos e do futuro que voce se recusa a normalizar.",
         antiFrameDrift: "Desvio",
@@ -7825,8 +7849,8 @@
         navGoal: "For who",
         whyKicker: "Why",
         visionSetupText: "Start with photos of identity, environment, people, and the future you want to make familiar.",
-        visionFrameIdentity: "Identity",
-        visionFrameEnvironment: "Environment",
+        visionFrameIdentity: "Self",
+        visionFrameEnvironment: "Place",
         visionFramePeople: "People",
         antiSetupText: "Start with photos of the drift, costs, and future you refuse to normalize.",
         antiFrameDrift: "Drift",
@@ -8310,7 +8334,7 @@
         const starters = kind === "vision"
           ? [
               ["Identity", "You move like someone who has already decided."],
-              ["Environment", "Your day reflects your standards."],
+              ["Place", "Your day reflects your standards."],
               ["Result", "Your goals become visible proof."]
             ]
           : [

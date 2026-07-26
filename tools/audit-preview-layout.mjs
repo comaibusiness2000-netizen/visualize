@@ -29,6 +29,7 @@ const auditScenarios = [
   { name: "pt-dark", language: "pt", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
   { name: "zh-dark", language: "zh", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
   { name: "en-light", language: "en", theme: "light", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
+  { name: "safe-bottom-light", language: "en", theme: "light", profileComplete: true, safeBottomStress: true, views: ["today", "goals", "vision", "anti", "speech"] },
   { name: "fr-onboarding", language: "fr", theme: "dark", profileComplete: false, views: ["today"] },
   { name: "pt-onboarding", language: "pt", theme: "dark", profileComplete: false, views: ["today"] }
 ];
@@ -108,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-26-v109",
+  appVersion: "2026-07-26-v110",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -178,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-26-v109");
+      localStorage.setItem("visualizeAppVersion", "2026-07-26-v110");
     `
   });
   const failures = [];
@@ -195,6 +196,12 @@ try {
       const scenarioUrl = `${appPath}&auditScenario=${encodeURIComponent(scenario.name)}&auditViewport=${encodeURIComponent(viewport.name)}&t=${Date.now()}`;
       await cdp.send("Page.navigate", { url: scenarioUrl });
       await wait(900);
+      if (scenario.safeBottomStress) {
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.documentElement.style.setProperty('--safe-bottom-raw', '96px')`,
+          awaitPromise: true
+        });
+      }
 
       for (const view of scenario.views) {
         await cdp.send("Runtime.evaluate", {
@@ -207,7 +214,7 @@ try {
           awaitPromise: true,
           expression: `(() => {
         const selectors = [
-          '.stage', '.phone', '.topbar', '.nav', '.screen.active',
+          '.stage', '.phone', '.app', '.topbar', '.nav', '.screen.active',
           '.life-head', '.life-pressure-card', '.life-stats', '.daily-quote-card', '.life-map-card',
           '.why-workbench', '.why-workbench-head', '.why-motive-stack', '.why-motive-card', '.why-prompts', '.why-prompts span', '#uploadWhyPhoto', '.why-people-grid',
           '.vision-empty', '.anti-empty', '.deck-stage', '.deck-actions',
@@ -293,7 +300,7 @@ try {
             const clippedY = hiddenY && element.scrollHeight > element.clientHeight + 3;
             const outX = rect.left < -1 || rect.right > vw + 1;
             const navTooHigh = selector === '.nav' && vh - rect.bottom > 18;
-            const viewportNotCovered = ['.stage', '.phone'].includes(selector) && rect.bottom < vh - 1;
+            const viewportNotCovered = ['.stage', '.phone', '.app'].includes(selector) && rect.bottom < vh - 1;
             if (clippedY || outX || navTooHigh || viewportNotCovered) {
               items.push({
                 selector,
