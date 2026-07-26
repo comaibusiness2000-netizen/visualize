@@ -27,7 +27,7 @@ const viewportProfiles = [
 mkdirSync(outputDir, { recursive: true });
 
 const seedState = {
-  appVersion: "2026-07-26-v108",
+  appVersion: "2026-07-26-v109",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -72,6 +72,36 @@ const seedState = {
   sync: { mode: "local", status: "pending-backend", lastSyncedAt: "", pendingChanges: 0 },
   dailyInsight: { lastShownDate: "2099-01-01", index: 59 },
   subscription: { plan: "free", premium: false, entitlementSource: "apple-iap" }
+};
+
+const playerState = {
+  ...seedState,
+  visionCreated: true,
+  antiCreated: true,
+  visionSlides: [
+    {
+      title: "Own the room",
+      caption: "Stand inside the future long enough that action feels familiar."
+    },
+    {
+      title: "Build the body",
+      caption: "Make the next rep, meal, and hour vote for this version."
+    },
+    {
+      title: "Choose your people",
+      caption: "Keep the faces you are doing this for close."
+    }
+  ],
+  antiSlides: [
+    {
+      title: "The cost of delay",
+      caption: "See the drift clearly enough that today becomes non-negotiable."
+    },
+    {
+      title: "The room you refuse",
+      caption: "Let the warning scene sharpen the next decision."
+    }
+  ]
 };
 
 const chrome = spawn(chromePath, [
@@ -156,7 +186,13 @@ try {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
   });
   await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
-    source: `localStorage.setItem("visualize-simple-v1", ${JSON.stringify(JSON.stringify(seedState))}); localStorage.setItem("visualizeAppVersion", "2026-07-25-v107");`
+    source: `
+      const defaultCaptureState = ${JSON.stringify(JSON.stringify(seedState))};
+      const playerCaptureState = ${JSON.stringify(JSON.stringify(playerState))};
+      const usePlayerState = new URL(location.href).searchParams.has("player");
+      localStorage.setItem("visualize-simple-v1", usePlayerState ? playerCaptureState : defaultCaptureState);
+      localStorage.setItem("visualizeAppVersion", "2026-07-26-v109");
+    `
   });
   const views = ["today", "goals", "vision", "anti", "speech"];
   for (const viewport of viewportProfiles) {
@@ -199,6 +235,31 @@ try {
         writeFileSync(file, Buffer.from(image.data, "base64"));
         console.log(file);
       }
+    }
+
+    await cdp.send("Page.navigate", { url: `${appPath}&viewport=${viewport.name}&player=vision&t=${Date.now()}` });
+    await wait(1000);
+    await cdp.send("Runtime.evaluate", {
+      expression: `document.querySelector('.nav button[data-view="vision"]')?.click()`,
+      awaitPromise: true
+    });
+    await wait(420);
+    await cdp.send("Runtime.evaluate", {
+      expression: `document.getElementById("playVisionDeck")?.click()`,
+      awaitPromise: true
+    });
+    await wait(780);
+    const playerImage = await cdp.send("Page.captureScreenshot", {
+      format: "png",
+      fromSurface: true
+    });
+    const playerFile = resolve(outputDir, `${viewport.name}-player-vision.png`);
+    writeFileSync(playerFile, Buffer.from(playerImage.data, "base64"));
+    console.log(playerFile);
+    if (viewport.name === "iphone-15") {
+      const file = resolve(outputDir, "player-vision.png");
+      writeFileSync(file, Buffer.from(playerImage.data, "base64"));
+      console.log(file);
     }
   }
   cdp.close();

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=108" />
+    <link rel="manifest" href="./manifest.webmanifest?v=109" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-26-v108";
+      const VISUALIZE_APP_VERSION = "2026-07-26-v109";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=108")
+            .register("./service-worker.js?v=109")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2628,14 +2628,16 @@
       .player {
         position: fixed;
         inset: 0;
-        z-index: 40;
+        z-index: 94;
         display: none;
-        color: #fff;
+        overflow: hidden;
+        color: #fff9ed;
         background: #050607;
       }
 
       .player.open {
-        display: grid;
+        display: block;
+        animation: playerOpen 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .player-slide {
@@ -2644,7 +2646,7 @@
         display: grid;
         align-content: end;
         gap: 13px;
-        padding: 112px 24px 126px;
+        padding: 118px 24px 154px;
         isolation: isolate;
         overflow: hidden;
         background: #050607;
@@ -2653,37 +2655,49 @@
       .player-media {
         content: "";
         position: absolute;
-        inset: 0;
+        inset: -18px;
         z-index: 0;
         background:
-          linear-gradient(180deg, rgba(5, 6, 7, 0.04), rgba(5, 6, 7, 0.82)),
+          linear-gradient(180deg, rgba(5, 6, 7, 0.02), rgba(5, 6, 7, 0.36) 48%, rgba(5, 6, 7, 0.9)),
           var(--slide-bg, linear-gradient(145deg, #111, #565853 58%, #d9d9d6));
         background-size: cover;
         background-position: center;
-        transform: scale(1.04);
+        filter: saturate(1.03) contrast(1.03);
+        transform: scale(1.035);
       }
 
       .player-slide.is-animating .player-media {
-        animation: cinematicPhoto 4.2s ease both;
+        animation: cinematicPhoto 4.6s ease both;
       }
 
-      .player-slide::before {
+      .player-slide::before,
+      .player-slide::after {
         content: "";
         position: absolute;
         inset: 0;
         z-index: 1;
-        background:
-          radial-gradient(circle at 50% 28%, transparent 0 28%, rgba(0, 0, 0, 0.18) 62%),
-          linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.76));
         pointer-events: none;
+      }
+
+      .player-slide::before {
+        background:
+          radial-gradient(circle at 50% 38%, transparent 0 25%, rgba(0, 0, 0, 0.18) 64%),
+          linear-gradient(180deg, rgba(0, 0, 0, 0.58), transparent 24%, transparent 56%, rgba(0, 0, 0, 0.92));
+      }
+
+      .player-slide::after {
+        inset: 12px;
+        border: 1px solid rgba(255, 249, 237, 0.12);
+        border-radius: 32px;
+        box-shadow: inset 0 0 80px rgba(255, 249, 237, 0.04);
       }
 
       .player-copy {
         position: relative;
         z-index: 2;
         display: grid;
-        gap: 8px;
-        max-width: 360px;
+        gap: 9px;
+        width: min(100%, 374px);
         padding: 0 4px;
         border: 0;
         background: transparent;
@@ -2691,34 +2705,47 @@
       }
 
       .player-kicker {
+        width: max-content;
+        max-width: 100%;
+        min-height: 29px;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(255, 249, 237, 0.18);
+        border-radius: 999px;
+        padding: 0 12px;
         color: var(--gold);
-        font-size: 11px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(16px);
+        font-size: 10.5px;
         letter-spacing: 1.6px;
         text-transform: uppercase;
         font-weight: 950;
       }
 
       .player-slide h2 {
-        max-width: 350px;
-        font-size: clamp(34px, 10vw, 46px);
-        line-height: 0.98;
+        max-width: 360px;
+        margin: 0;
+        font-size: clamp(38px, 10.8vw, 54px);
+        line-height: 0.96;
+        letter-spacing: 0;
         font-weight: 950;
-        text-shadow: 0 14px 34px rgba(0, 0, 0, 0.46);
+        text-shadow: 0 16px 38px rgba(0, 0, 0, 0.58);
       }
 
       .player-slide p {
-        max-width: 318px;
-        color: rgba(255, 255, 255, 0.82);
-        font-size: 16px;
-        line-height: 1.35;
-        font-weight: 800;
-        text-shadow: 0 10px 28px rgba(0, 0, 0, 0.44);
+        max-width: 330px;
+        margin: 0;
+        color: rgba(255, 249, 237, 0.84);
+        font-size: 16.5px;
+        line-height: 1.34;
+        font-weight: 820;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
 
       @keyframes cinematicPhoto {
         0% {
-          opacity: 0.35;
-          transform: scale(1.04) translate3d(-1.2%, 1%, 0);
+          opacity: 0.42;
+          transform: scale(1.035) translate3d(-1%, 0.8%, 0);
           filter: saturate(0.9);
         }
         18% {
@@ -2726,44 +2753,69 @@
         }
         100% {
           opacity: 1;
-          transform: scale(1.12) translate3d(1.4%, -1.2%, 0);
-          filter: saturate(1.06);
+          transform: scale(1.115) translate3d(1.1%, -1%, 0);
+          filter: saturate(1.08) contrast(1.04);
+        }
+      }
+
+      @keyframes playerOpen {
+        from {
+          opacity: 0;
+          transform: scale(1.025);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
         }
       }
 
       .player-top,
       .player-controls {
-        position: relative;
+        position: absolute;
         z-index: 3;
-        display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 22px 24px;
       }
 
       .player-top {
-        align-self: start;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        padding: calc(22px + env(safe-area-inset-top)) 24px 18px;
       }
 
       .player-controls {
-        align-self: end;
-        gap: 11px;
+        left: 20px;
+        right: 20px;
+        bottom: calc(18px + env(safe-area-inset-bottom));
+        display: grid;
+        grid-template-columns: 56px minmax(0, 1fr) 56px;
+        gap: 8px;
+        min-height: 70px;
+        border: 1px solid rgba(255, 249, 237, 0.18);
+        border-radius: 36px;
+        padding: 8px;
+        background: rgba(12, 14, 15, 0.58);
+        box-shadow: 0 26px 60px rgba(0, 0, 0, 0.38);
+        backdrop-filter: blur(22px);
       }
 
       .player-close,
       .player-controls button {
-        min-height: 44px;
-        border: 1px solid rgba(255, 255, 255, 0.22);
+        min-height: 52px;
+        border: 1px solid rgba(255, 249, 237, 0.2);
         border-radius: 999px;
-        color: #fff;
-        background: rgba(255, 255, 255, 0.11);
+        color: #fff9ed;
+        background: rgba(255, 255, 255, 0.1);
         font-size: 13px;
         font-weight: 900;
-        backdrop-filter: blur(14px);
+        backdrop-filter: blur(18px);
       }
 
       .player-close {
-        width: 44px;
+        width: 48px;
+        min-height: 48px;
         font-size: 20px;
       }
 
@@ -2774,15 +2826,15 @@
       }
 
       .player-session {
-        min-height: 44px;
-        min-width: 128px;
+        min-height: 48px;
+        min-width: 132px;
         display: grid;
         place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 249, 237, 0.16);
         border-radius: 999px;
         padding: 6px 14px;
-        background: rgba(255, 255, 255, 0.11);
-        backdrop-filter: blur(14px);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(18px);
       }
 
       .player-session small {
@@ -2801,28 +2853,35 @@
         padding: 0;
       }
 
-      .player-step {
-        flex: 0 0 68px;
-        font-size: 31px;
+      .player-controls .player-step {
+        font-size: 0;
         line-height: 1;
       }
 
+      .player-controls .player-step::before {
+        font-size: 22px;
+        line-height: 1;
+        font-weight: 950;
+      }
+
+      #prevPlayerSlide::before {
+        content: "<";
+      }
+
+      #nextPlayerSlide::before {
+        content: ">";
+      }
+
       .player-play-toggle {
-        flex: 1;
-        grid-template-columns: auto auto;
-        gap: 8px;
-        min-width: 138px;
+        grid-template-columns: auto;
+        gap: 0;
         color: #101418;
         background: #fff9ed;
         border-color: #fff9ed;
       }
 
       .player-play-toggle span {
-        display: block;
-        min-width: 18px;
-        font-size: 16px;
-        line-height: 1;
-        font-weight: 950;
+        display: none;
       }
 
       .player-play-toggle small {
@@ -2832,15 +2891,14 @@
 
       .player-progress {
         position: absolute;
-        left: 24px;
-        right: 24px;
-        top: 84px;
-        bottom: auto;
-        z-index: 2;
-        height: 4px;
+        left: 28px;
+        right: 28px;
+        bottom: calc(100px + env(safe-area-inset-bottom));
+        z-index: 4;
+        height: 5px;
         overflow: hidden;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.18);
+        background: rgba(255, 249, 237, 0.15);
       }
 
       .player-progress span {
@@ -2854,10 +2912,10 @@
 
       .player-progress-segments {
         position: absolute;
-        left: 24px;
-        right: 24px;
-        top: 94px;
-        z-index: 3;
+        left: 28px;
+        right: 28px;
+        bottom: calc(114px + env(safe-area-inset-bottom));
+        z-index: 4;
         display: grid;
         grid-auto-flow: column;
         grid-auto-columns: 1fr;
@@ -6173,16 +6231,16 @@
         }
 
         .player-slide {
-          padding: calc(108px + env(safe-area-inset-top)) 22px calc(118px + env(safe-area-inset-bottom));
+          padding: calc(104px + env(safe-area-inset-top)) 22px calc(142px + env(safe-area-inset-bottom));
         }
 
         .player-copy {
           max-width: 340px;
-          gap: 7px;
+          gap: 8px;
         }
 
         .player-slide h2 {
-          font-size: clamp(32px, 11vw, 42px);
+          font-size: clamp(34px, 11.2vw, 44px);
         }
 
         .player-slide p {
@@ -6197,21 +6255,31 @@
         .player-progress {
           left: 20px;
           right: 20px;
-          top: calc(78px + env(safe-area-inset-top));
+          bottom: calc(96px + env(safe-area-inset-bottom));
         }
 
         .player-progress-segments {
           left: 20px;
           right: 20px;
-          top: calc(90px + env(safe-area-inset-top));
+          bottom: calc(109px + env(safe-area-inset-bottom));
         }
 
         .player-controls {
-          padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+          left: 18px;
+          right: 18px;
+          bottom: calc(12px + env(safe-area-inset-bottom));
+          grid-template-columns: 52px minmax(0, 1fr) 52px;
+          min-height: 68px;
+          padding: 7px;
         }
 
-        .player-step {
-          flex-basis: 62px;
+        .player-controls button {
+          min-height: 52px;
+        }
+
+        .player-index {
+          top: 30%;
+          font-size: clamp(108px, 32vw, 138px);
         }
       }
 
@@ -6500,6 +6568,65 @@
 
         .speech-script-panel {
           padding: 9px;
+        }
+
+        .player-slide {
+          padding: calc(88px + env(safe-area-inset-top)) 20px calc(128px + env(safe-area-inset-bottom));
+        }
+
+        .player-slide h2 {
+          font-size: clamp(31px, 10.2vw, 38px);
+          line-height: 0.98;
+        }
+
+        .player-slide p {
+          font-size: 13.8px;
+          line-height: 1.28;
+        }
+
+        .player-kicker {
+          min-height: 26px;
+          padding: 0 10px;
+          font-size: 9.6px;
+        }
+
+        .player-top {
+          padding: calc(12px + env(safe-area-inset-top)) 18px 12px;
+        }
+
+        .player-close,
+        .player-session {
+          min-height: 42px;
+        }
+
+        .player-close {
+          width: 42px;
+        }
+
+        .player-session {
+          min-width: 118px;
+          padding: 5px 11px;
+        }
+
+        .player-controls {
+          left: 18px;
+          right: 18px;
+          bottom: calc(10px + env(safe-area-inset-bottom));
+          grid-template-columns: 48px minmax(0, 1fr) 48px;
+          min-height: 62px;
+          padding: 6px;
+        }
+
+        .player-controls button {
+          min-height: 48px;
+        }
+
+        .player-progress {
+          bottom: calc(86px + env(safe-area-inset-bottom));
+        }
+
+        .player-progress-segments {
+          bottom: calc(98px + env(safe-area-inset-bottom));
         }
       }
     </style>
@@ -7057,12 +7184,12 @@
         </span>
       </div>
       <div class="player-controls">
-        <button class="player-step" id="prevPlayerSlide" type="button" aria-label="Previous slide">‹</button>
+        <button class="player-step" id="prevPlayerSlide" type="button" aria-label="Previous slide">&lt;</button>
         <button class="player-play-toggle" id="togglePlayer" type="button" aria-label="Pause presentation">
-          <span id="togglePlayerIcon">Ⅱ</span>
+          <span id="togglePlayerIcon">II</span>
           <small id="togglePlayerLabel">Pause</small>
         </button>
-        <button class="player-step" id="nextPlayerSlide" type="button" aria-label="Next slide">›</button>
+        <button class="player-step" id="nextPlayerSlide" type="button" aria-label="Next slide">&gt;</button>
       </div>
       <div class="player-progress" aria-hidden="true"><span id="playerProgress"></span></div>
       <div class="player-progress-segments" id="playerProgressSegments" aria-hidden="true"></div>
@@ -10279,7 +10406,7 @@
         const label = document.getElementById("togglePlayerLabel");
         if (!button || !icon || !label) return;
         button.setAttribute("aria-label", playerPaused ? "Resume presentation" : "Pause presentation");
-        icon.textContent = playerPaused ? "▶" : "Ⅱ";
+        icon.textContent = playerPaused ? ">" : "II";
         label.textContent = playerPaused ? "Resume" : "Pause";
       }
 
