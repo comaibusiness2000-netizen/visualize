@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=110" />
+    <link rel="manifest" href="./manifest.webmanifest?v=112" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-26-v110";
+      const VISUALIZE_APP_VERSION = "2026-07-26-v112";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -27,7 +27,7 @@
           document.documentElement.clientHeight || 0
         );
         const height = Math.max(420, Math.round(rawHeight));
-        document.documentElement.style.setProperty("--app-vh", `${height}px`);
+        document.documentElement.style.setProperty("--app-vh", `max(100vh, 100dvh, ${height}px)`);
       }
 
       syncVisualViewport();
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=110")
+            .register("./service-worker.js?v=112")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1961,6 +1961,16 @@
       .why-workbench .btn {
         width: min(100%, 220px);
         justify-self: center;
+      }
+
+      #goals.screen.active.why-empty {
+        height: 100%;
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+
+      #goals.screen.active.why-empty .why-workbench {
+        align-self: stretch;
+        align-content: center;
       }
 
       .why-people-grid {
@@ -5760,8 +5770,8 @@
         :root {
           --nav-h: 70px;
           --safe-bottom-raw: env(safe-area-inset-bottom);
-          --nav-bottom: clamp(6px, var(--safe-bottom-raw), 14px);
-          --nav-clearance: 8px;
+          --nav-bottom: clamp(4px, var(--safe-bottom-raw), 10px);
+          --nav-clearance: 0px;
         }
 
         html,
@@ -5793,18 +5803,50 @@
 
         .app {
           height: 100%;
+          grid-template-rows: 48px minmax(0, 1fr);
           row-gap: 10px;
-          padding: calc(14px + env(safe-area-inset-top)) 18px var(--nav-bottom) 18px;
+          padding: calc(14px + env(safe-area-inset-top)) 18px calc(var(--nav-h) + var(--nav-bottom) + 8px) 18px;
+        }
+
+        .screen.active {
+          height: 100%;
+          max-height: 100%;
+        }
+
+        #vision.screen.active,
+        #anti.screen.active {
+          align-content: stretch;
         }
 
         .nav {
+          position: fixed;
+          left: 18px;
+          right: 18px;
+          bottom: var(--nav-bottom);
+          width: auto;
+          max-width: 394px;
+          margin-inline: auto;
           z-index: 40;
         }
 
+        .drawer-scrim {
+          position: fixed;
+          z-index: 88;
+        }
+
+        .profile-drawer {
+          position: fixed;
+          z-index: 89;
+          height: var(--app-vh);
+          max-height: var(--app-vh);
+          padding-bottom: calc(24px + var(--nav-bottom));
+        }
+
         .life-dashboard {
-          gap: 8px;
+          height: 100%;
+          max-height: 100%;
+          gap: 6px;
           padding: 0;
-          padding-bottom: var(--nav-clearance);
           scroll-padding-bottom: var(--nav-clearance);
         }
 
@@ -5886,9 +5928,9 @@
         }
 
         .life-head {
-          min-height: 174px;
+          min-height: 156px;
           border-radius: 28px;
-          padding: 14px 14px 13px;
+          padding: 12px 14px 11px;
         }
 
         .life-head h1 {
@@ -5908,22 +5950,22 @@
 
         .life-head .life-summary {
           max-width: 300px;
-          margin-top: 6px;
-          font-size: 12.2px;
-          line-height: 1.22;
+          margin-top: 5px;
+          font-size: 11.4px;
+          line-height: 1.2;
         }
 
         .life-progress {
           height: 7px;
-          margin-top: 9px;
+          margin-top: 7px;
         }
 
         .life-pressure-card {
           grid-template-columns: minmax(0, 1fr) 58px;
           gap: 10px;
-          min-height: 96px;
+          min-height: 90px;
           border-radius: 24px;
-          padding: 11px 12px;
+          padding: 10px 12px;
         }
 
         .life-pressure-card::before {
@@ -5943,8 +5985,8 @@
         }
 
         .life-pressure-copy p {
-          font-size: 11.2px;
-          line-height: 1.22;
+          font-size: 10.6px;
+          line-height: 1.18;
         }
 
         .life-pressure-meter {
@@ -5967,7 +6009,7 @@
         }
 
         .life-stat {
-          min-height: 44px;
+          min-height: 42px;
           border-radius: 16px;
           padding: 5px 4px;
         }
@@ -5982,10 +6024,12 @@
         }
 
         .daily-quote-card {
-          min-height: 148px;
-          gap: 8px;
+          min-height: 104px;
+          max-height: none;
+          align-content: center;
+          gap: 6px;
           border-radius: 24px;
-          padding: 12px;
+          padding: 10px 12px;
         }
 
         .daily-quote-card::before,
@@ -6010,11 +6054,17 @@
         }
 
         #dailyQuoteText {
+          display: -webkit-box;
+          overflow: hidden;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          max-height: calc(2 * 1.16em);
           font-size: clamp(14.5px, 4.15vw, 16px);
-          line-height: 1.2;
+          line-height: 1.16;
         }
 
         .daily-quote-author {
+          display: none;
           font-size: 10px;
         }
 
@@ -6032,6 +6082,17 @@
           min-height: auto;
           padding: 18px 18px 22px;
           border-radius: 32px;
+        }
+
+        .vision-empty,
+        .anti-empty {
+          height: 100%;
+          min-height: 0;
+          align-content: center;
+        }
+
+        #goals.screen.active.why-empty .why-workbench {
+          min-height: clamp(440px, calc(var(--app-vh) - var(--nav-h) - 160px), 640px);
         }
 
         .why-workbench-head h2 {
@@ -6090,8 +6151,8 @@
 
         .life-map-card {
           border-radius: 26px;
-          padding: 12px;
-          gap: 7px;
+          padding: 11px 12px 12px;
+          gap: 6px;
         }
 
         .life-map-top span {
@@ -6105,14 +6166,14 @@
         }
 
         .life-map {
-          grid-template-columns: repeat(54, 1fr);
-          gap: 1.7px;
+          grid-template-columns: repeat(60, 1fr);
+          gap: 1.45px;
           padding-top: 2px;
         }
 
         .life-legend {
-          font-size: 11.2px;
-          line-height: 1.22;
+          font-size: 10.6px;
+          line-height: 1.18;
         }
 
         .life-actions {
@@ -6120,7 +6181,7 @@
         }
 
         .life-actions .btn {
-          min-height: 46px;
+          min-height: 42px;
           font-size: 13px;
         }
 
@@ -6311,14 +6372,15 @@
         .app {
           row-gap: 8px;
           padding-top: calc(10px + env(safe-area-inset-top));
+          padding-bottom: calc(var(--nav-h) + var(--nav-bottom) + 6px);
         }
 
         .life-dashboard {
-          gap: 6px;
+          gap: 5px;
         }
 
         .life-head {
-          min-height: 148px;
+          min-height: 144px;
           padding: 11px 12px 10px;
           border-radius: 25px;
         }
@@ -6348,7 +6410,7 @@
 
         .life-pressure-card {
           grid-template-columns: minmax(0, 1fr) 50px;
-          min-height: 78px;
+          min-height: 76px;
           gap: 8px;
           padding: 9px 10px;
           border-radius: 21px;
@@ -6413,8 +6475,9 @@
         }
 
         .daily-quote-card {
-          min-height: 112px;
-          gap: 6px;
+          min-height: 64px;
+          max-height: none;
+          gap: 4px;
           padding: 10px;
         }
 
@@ -6430,11 +6493,33 @@
         }
 
         #dailyQuoteText {
-          font-size: clamp(12.8px, 3.65vw, 13.6px);
-          line-height: 1.16;
+          display: none;
         }
 
         .daily-quote-author {
+          display: none;
+        }
+
+        .life-map-card {
+          padding: 9px 10px;
+          gap: 5px;
+        }
+
+        .life-map {
+          grid-template-columns: repeat(85, 1fr);
+          gap: 1px;
+        }
+
+        .life-map-top span {
+          font-size: 13px;
+        }
+
+        .life-map-top strong {
+          min-height: 22px;
+          font-size: 9.6px;
+        }
+
+        .life-legend {
           display: none;
         }
 
@@ -6774,7 +6859,7 @@
             </article>
           </section>
 
-          <section class="screen" id="goals">
+          <section class="screen why-empty" id="goals">
             <div class="helper-copy">
               <span id="whyHint">Keep the people behind your effort visible.</span>
             </div>
@@ -7039,26 +7124,28 @@
 
           <div class="profile-card">
             <h2 id="profileNameTitle">Your profile</h2>
-            <p id="accountSummary">Prototype account. App Store builds will use Sign in with Apple and secure cloud sync.</p>
+            <p id="accountSummary">Your profile is saved on this device. You can keep building it without creating an account.</p>
             <div class="account-row">
               <div class="account-avatar" id="accountAvatar">V</div>
               <div>
-                <strong id="accountStatus">Local prototype</strong>
-                <p id="syncSummary">Saved on this device. Cloud sync is waiting for the production backend.</p>
+                <strong id="accountStatus">Saved on this device</strong>
+                <p id="syncSummary">Your life clock, images, people, and self speeches stay available here.</p>
               </div>
-            </div>
-            <div class="action-row">
-              <button class="btn secondary" id="signInApple" type="button">Sign in</button>
-              <button class="btn" id="syncNow" type="button">Sync</button>
-            </div>
-            <div class="theme-choice" aria-label="App theme">
-              <button id="themeLight" type="button">Light</button>
-              <button id="themeDark" type="button">Dark</button>
             </div>
           </div>
 
           <div class="profile-card">
             <h2>Settings</h2>
+            <div class="setting-row">
+              <div>
+                <strong>Appearance</strong>
+                <span>Choose the tone you want to use every day.</span>
+              </div>
+            </div>
+            <div class="theme-choice" aria-label="App theme">
+              <button id="themeLight" type="button">Light</button>
+              <button id="themeDark" type="button">Dark</button>
+            </div>
             <div class="setting-row">
               <div>
                 <strong>Daily reminder</strong>
@@ -7079,34 +7166,33 @@
             </div>
             <div class="setting-row">
               <div>
-                <strong>Local saving</strong>
-                <span>Prototype fallback. Production saves encrypted data and image references to the cloud.</span>
+                <strong>Device storage</strong>
+                <span>Your profile, photos, decks, and scripts are kept on this device.</span>
               </div>
               <button class="switch on" type="button" aria-label="Local saving enabled" disabled></button>
             </div>
             <div class="setting-row">
               <div>
                 <strong>Cloud sync</strong>
-                <span>Account, goals, decks, and image files sync across iPhone and iPad.</span>
+                <span>Ready to connect later, without replacing the profile you build now.</span>
               </div>
-              <button class="switch" id="cloudSyncSwitch" type="button" aria-label="Cloud sync pending"></button>
+              <button class="switch" id="cloudSyncSwitch" type="button" aria-label="Cloud sync pending" disabled></button>
             </div>
           </div>
 
           <div class="profile-card">
-            <h2>Cloud readiness</h2>
-            <p>Designed for 10,000+ users with account auth, database rows, object storage, and Apple subscription entitlements.</p>
+            <h2>Backup & sync</h2>
+            <p>This version keeps everything private to your device. When account sync is added, this local profile can become the starting point instead of being thrown away.</p>
             <div class="status-list">
-              <div class="status-pill"><span>Auth</span><strong>Sign in with Apple</strong></div>
-              <div class="status-pill"><span>Images</span><strong>Cloud storage</strong></div>
-              <div class="status-pill"><span>Payments</span><strong>Apple IAP</strong></div>
-              <div class="status-pill warning"><span>Prototype</span><strong>Local only</strong></div>
+              <div class="status-pill"><span>Profile</span><strong>Device saved</strong></div>
+              <div class="status-pill"><span>Images</span><strong>Stored locally</strong></div>
+              <div class="status-pill"><span>Account</span><strong>Ready later</strong></div>
             </div>
           </div>
 
           <div class="profile-card">
             <h2>Language</h2>
-            <p>Interface language for the full app. English is active for this prototype.</p>
+            <p>Uses your iPhone language by default. You can change the interface language anytime.</p>
             <div class="language-grid" aria-label="App language">
               <button data-lang="en" type="button">English</button>
               <button data-lang="es" type="button">Spanish</button>
@@ -7118,7 +7204,7 @@
 
           <div class="profile-card">
             <h2>Data</h2>
-            <p>Production will separate account data, private images, goals, and subscription status. The prototype can still be reset here.</p>
+            <p>Reset this device copy when you want a clean start. Uploaded images, people, decks, and scripts will be removed from this device.</p>
             <div class="action-row">
               <button class="btn secondary" id="resetData" type="button">Reset</button>
               <button class="btn" id="saveProfile" type="button">Save</button>
@@ -7127,8 +7213,8 @@
 
           <div class="profile-card">
             <h2>Privacy</h2>
-            <p>Images, goals, anti-visions, and audio scripts are sensitive. Production requires explicit consent, deletion, and a clear privacy policy.</p>
-            <button class="text-link" id="openPrivacy" type="button">Open privacy policy draft</button>
+            <p>Your goals, images, and self speeches are personal. Keep only what helps you act, and remove anything you no longer want here.</p>
+            <button class="text-link" id="openPrivacy" type="button">Privacy policy</button>
           </div>
         </aside>
 
@@ -7581,30 +7667,32 @@
         lifeUpdateTitle: "One day spent. Use the next one.",
         lifeUpdateSub: "Your clock moved. Make today earn its place.",
         profileDefault: "Your profile",
-        accountSummaryLocal: "Prototype account. App Store builds will use Sign in with Apple and secure cloud sync.",
-        accountStatusLocal: "Local prototype",
+        accountSummaryLocal: "Your profile is saved on this device. You can keep building it without creating an account.",
+        accountStatusLocal: "Saved on this device",
         accountStatusCloud: "Cloud account",
-        syncSummaryLocal: "Saved on this device. Cloud sync is waiting for the production backend.",
+        syncSummaryLocal: "Your life clock, images, people, and self speeches stay available here.",
+        appearance: "Appearance",
+        appearanceText: "Choose the tone you want to use every day.",
         dailyReminder: "Daily reminder",
         dailyReminderText: "A gentle nudge to open your vision.",
         notifications: "Notifications",
         notificationsText: "Ask this device for notification permission.",
-        localSaving: "Local saving",
-        localSavingText: "Saved on this device. Later, existing data can move into cloud sync.",
+        localSaving: "Device storage",
+        localSavingText: "Your profile, photos, decks, and scripts are kept on this device.",
         cloudSync: "Cloud sync",
-        cloudSyncText: "Account, goals, decks, and image files will sync across iPhone and iPad.",
-        cloudReadiness: "Cloud readiness",
-        cloudReadinessText: "Designed for 10,000+ users with account auth, database rows, object storage, and Apple subscription entitlements.",
+        cloudSyncText: "Ready to connect later, without replacing the profile you build now.",
+        cloudReadiness: "Backup & sync",
+        cloudReadinessText: "This version keeps everything private to your device. When account sync is added, this local profile can become the starting point instead of being thrown away.",
         data: "Data",
-        dataText: "The prototype can be reset here. Production will add export, deletion, and account recovery.",
+        dataText: "Reset this device copy when you want a clean start. Uploaded images, people, decks, and scripts will be removed from this device.",
         privacy: "Privacy",
-        privacyText: "Images, goals, anti-visions, and audio scripts are sensitive. Production requires explicit consent, deletion, and a clear privacy policy.",
+        privacyText: "Your goals, images, and self speeches are personal. Keep only what helps you act, and remove anything you no longer want here.",
         signIn: "Sign in",
         sync: "Sync",
         reset: "Reset",
         testNotification: "Test notification",
         howItWorks: "How it works",
-        privacyOpen: "Open privacy policy draft",
+        privacyOpen: "Privacy policy",
         photos: "Photos",
         done: "Done",
         back: "Back",
@@ -7634,30 +7722,32 @@
         lifeUpdateTitle: "Un dia paso. Usa el siguiente.",
         lifeUpdateSub: "Tu reloj avanzo. Haz que hoy valga.",
         profileDefault: "Tu perfil",
-        accountSummaryLocal: "Cuenta prototipo. La version App Store usara Sign in with Apple y sincronizacion cloud segura.",
-        accountStatusLocal: "Prototipo local",
+        accountSummaryLocal: "Tu perfil queda guardado en este dispositivo. Puedes seguir construyendolo sin crear una cuenta.",
+        accountStatusLocal: "Guardado en este dispositivo",
         accountStatusCloud: "Cuenta cloud",
-        syncSummaryLocal: "Guardado en este dispositivo. Cloud sync espera el backend de produccion.",
+        syncSummaryLocal: "Tu reloj de vida, imagenes, personas y self speeches quedan disponibles aqui.",
+        appearance: "Apariencia",
+        appearanceText: "Elige el tono que quieres usar cada dia.",
         dailyReminder: "Recordatorio diario",
         dailyReminderText: "Un recordatorio suave para abrir tu vision.",
         notifications: "Notificaciones",
         notificationsText: "Pide permiso de notificaciones a este dispositivo.",
-        localSaving: "Guardado local",
-        localSavingText: "Guardado en este dispositivo. Mas adelante los datos existentes podran pasar al cloud.",
+        localSaving: "Guardado en dispositivo",
+        localSavingText: "Tu perfil, fotos, decks y scripts se guardan en este dispositivo.",
         cloudSync: "Cloud sync",
-        cloudSyncText: "Cuenta, metas, decks e imagenes se sincronizaran entre iPhone y iPad.",
-        cloudReadiness: "Preparado para cloud",
-        cloudReadinessText: "Disenado para 10.000+ usuarios con auth, base de datos, storage y suscripciones Apple.",
+        cloudSyncText: "Listo para conectarse mas adelante, sin reemplazar el perfil que construyes ahora.",
+        cloudReadiness: "Backup y sync",
+        cloudReadinessText: "Esta version mantiene todo privado en tu dispositivo. Cuando se agregue sync de cuenta, este perfil local podra ser el punto de partida.",
         data: "Datos",
-        dataText: "Puedes resetear el prototipo aqui. Produccion agregara exportacion, eliminacion y recuperacion de cuenta.",
+        dataText: "Resetea esta copia cuando quieras empezar limpio. Imagenes, personas, decks y scripts se eliminaran de este dispositivo.",
         privacy: "Privacidad",
-        privacyText: "Imagenes, metas, anti-visions y scripts de audio son sensibles. Produccion requiere consentimiento, borrado y privacidad clara.",
+        privacyText: "Tus metas, imagenes y self speeches son personales. Conserva solo lo que te ayuda a actuar.",
         signIn: "Entrar",
         sync: "Sync",
         reset: "Resetear",
         testNotification: "Probar notificacion",
         howItWorks: "Como funciona",
-        privacyOpen: "Abrir borrador de privacidad",
+        privacyOpen: "Politica de privacidad",
         photos: "Fotos",
         done: "Listo",
         back: "Atras",
@@ -7698,30 +7788,32 @@
         lifeUpdateTitle: "Un jour est passe. Utilise le suivant.",
         lifeUpdateSub: "Ton horloge avance. Fais compter aujourd'hui.",
         profileDefault: "Ton profil",
-        accountSummaryLocal: "Compte prototype. La version App Store utilisera Sign in with Apple et une sync cloud securisee.",
-        accountStatusLocal: "Prototype local",
+        accountSummaryLocal: "Ton profil est sauvegarde sur cet appareil. Tu peux continuer sans creer de compte.",
+        accountStatusLocal: "Sauvegarde sur cet appareil",
         accountStatusCloud: "Compte cloud",
-        syncSummaryLocal: "Sauve sur cet appareil. La sync cloud attend le backend de production.",
+        syncSummaryLocal: "Ton horloge de vie, tes images, tes personnes et tes self speeches restent disponibles ici.",
+        appearance: "Apparence",
+        appearanceText: "Choisis le ton que tu veux utiliser chaque jour.",
         dailyReminder: "Rappel quotidien",
         dailyReminderText: "Un rappel doux pour ouvrir ta vision.",
         notifications: "Notifications",
         notificationsText: "Demande l'autorisation de notifications sur cet appareil.",
-        localSaving: "Sauvegarde locale",
-        localSavingText: "Sauve sur cet appareil. Plus tard, les donnees existantes pourront passer au cloud.",
+        localSaving: "Stockage appareil",
+        localSavingText: "Ton profil, tes photos, tes decks et tes scripts restent sur cet appareil.",
         cloudSync: "Cloud sync",
-        cloudSyncText: "Compte, objectifs, decks et images se synchroniseront entre iPhone et iPad.",
-        cloudReadiness: "Pret pour le cloud",
-        cloudReadinessText: "Pense pour 10 000+ utilisateurs avec auth, base de donnees, stockage et abonnements Apple.",
+        cloudSyncText: "Pret a etre connecte plus tard, sans remplacer le profil que tu construis maintenant.",
+        cloudReadiness: "Backup & sync",
+        cloudReadinessText: "Cette version garde tout prive sur ton appareil. Quand la sync compte sera ajoutee, ce profil local pourra devenir le point de depart.",
         data: "Donnees",
-        dataText: "Le prototype peut etre reinitialise ici. La production ajoutera export, suppression et recuperation de compte.",
+        dataText: "Reinitialise cette copie quand tu veux repartir de zero. Images, personnes, decks et scripts seront supprimes de cet appareil.",
         privacy: "Confidentialite",
-        privacyText: "Images, objectifs, anti-visions et scripts audio sont sensibles. La production exige consentement, suppression et politique claire.",
+        privacyText: "Tes objectifs, images et self speeches sont personnels. Garde seulement ce qui t'aide a agir.",
         signIn: "Connexion",
         sync: "Sync",
         reset: "Reset",
         testNotification: "Tester notification",
         howItWorks: "Comment ca marche",
-        privacyOpen: "Ouvrir brouillon confidentialite",
+        privacyOpen: "Politique de confidentialite",
         photos: "Photos",
         done: "Termine",
         back: "Retour",
@@ -7762,30 +7854,32 @@
         lifeUpdateTitle: "Um dia passou. Use o proximo.",
         lifeUpdateSub: "Seu relogio avancou. Faca hoje valer.",
         profileDefault: "Seu perfil",
-        accountSummaryLocal: "Conta prototipo. A versao App Store usara Sign in with Apple e cloud sync seguro.",
-        accountStatusLocal: "Prototipo local",
+        accountSummaryLocal: "Seu perfil fica salvo neste dispositivo. Voce pode continuar construindo sem criar uma conta.",
+        accountStatusLocal: "Salvo neste dispositivo",
         accountStatusCloud: "Conta cloud",
-        syncSummaryLocal: "Salvo neste dispositivo. Cloud sync aguarda o backend de producao.",
+        syncSummaryLocal: "Seu relogio de vida, imagens, pessoas e self speeches ficam disponiveis aqui.",
+        appearance: "Aparencia",
+        appearanceText: "Escolha o tom que quer usar todos os dias.",
         dailyReminder: "Lembrete diario",
         dailyReminderText: "Um lembrete leve para abrir sua visao.",
         notifications: "Notificacoes",
         notificationsText: "Pedir permissao de notificacoes a este dispositivo.",
-        localSaving: "Salvamento local",
-        localSavingText: "Salvo neste dispositivo. Depois, os dados existentes poderao ir para cloud sync.",
+        localSaving: "Armazenamento",
+        localSavingText: "Seu perfil, fotos, decks e scripts ficam neste dispositivo.",
         cloudSync: "Cloud sync",
-        cloudSyncText: "Conta, metas, decks e imagens serao sincronizados entre iPhone e iPad.",
-        cloudReadiness: "Pronto para cloud",
-        cloudReadinessText: "Pensado para 10.000+ usuarios com auth, banco de dados, storage e assinaturas Apple.",
+        cloudSyncText: "Pronto para conectar depois, sem substituir o perfil que voce cria agora.",
+        cloudReadiness: "Backup e sync",
+        cloudReadinessText: "Esta versao mantem tudo privado neste dispositivo. Quando a sync de conta for adicionada, este perfil local podera ser o ponto de partida.",
         data: "Dados",
-        dataText: "O prototipo pode ser resetado aqui. Producao tera exportacao, exclusao e recuperacao de conta.",
+        dataText: "Resete esta copia quando quiser comecar limpo. Imagens, pessoas, decks e scripts serao removidos deste dispositivo.",
         privacy: "Privacidade",
-        privacyText: "Imagens, metas, anti-visoes e scripts de audio sao sensiveis. Producao exige consentimento, exclusao e politica clara.",
+        privacyText: "Suas metas, imagens e self speeches sao pessoais. Guarde apenas o que ajuda voce a agir.",
         signIn: "Entrar",
         sync: "Sync",
         reset: "Resetar",
         testNotification: "Testar notificacao",
         howItWorks: "Como funciona",
-        privacyOpen: "Abrir rascunho de privacidade",
+        privacyOpen: "Politica de privacidade",
         photos: "Fotos",
         done: "Concluido",
         back: "Voltar",
@@ -7819,30 +7913,32 @@
         lifeUpdateSub: "Your clock moved. Make today earn its place.",
         "quote.close": "Start today",
         profileDefault: "你的资料",
-        accountSummaryLocal: "原型账号。App Store 版本将使用 Apple 登录和安全云同步。",
-        accountStatusLocal: "本地原型",
+        accountSummaryLocal: "你的资料保存在此设备上。无需创建账号也可以继续完善。",
+        accountStatusLocal: "已保存在此设备",
         accountStatusCloud: "云账号",
-        syncSummaryLocal: "已保存在此设备。云同步等待生产后端。",
+        syncSummaryLocal: "你的生命时钟、图片、人物和自我对话都会保存在这里。",
+        appearance: "外观",
+        appearanceText: "选择你每天想使用的界面风格。",
         dailyReminder: "每日提醒",
         dailyReminderText: "温和提醒你打开愿景。",
         notifications: "通知",
         notificationsText: "向此设备请求通知权限。",
-        localSaving: "本地保存",
-        localSavingText: "保存在此设备。未来现有数据可迁移到云同步。",
+        localSaving: "设备存储",
+        localSavingText: "你的资料、照片、卡组和脚本都保存在此设备。",
         cloudSync: "云同步",
-        cloudSyncText: "账号、目标、卡组和图片将在 iPhone 和 iPad 间同步。",
-        cloudReadiness: "云端准备",
-        cloudReadinessText: "为 10,000+ 用户设计，包含账号、数据库、对象存储和 Apple 订阅。",
+        cloudSyncText: "以后可以连接账号同步，不会替换你现在创建的资料。",
+        cloudReadiness: "备份与同步",
+        cloudReadinessText: "此版本会把内容保存在你的设备上。以后加入账号同步时，本地资料可以作为起点。",
         data: "数据",
-        dataText: "可在这里重置原型。生产版会加入导出、删除和账号恢复。",
+        dataText: "想重新开始时，可以重置此设备副本。图片、人物、卡组和脚本会从此设备删除。",
         privacy: "隐私",
-        privacyText: "图片、目标、反愿景和音频文本都很敏感。生产版需要明确同意、删除功能和清晰隐私政策。",
+        privacyText: "你的目标、图片和自我对话都很私人。只保留真正帮助你行动的内容。",
         signIn: "登录",
         sync: "同步",
         reset: "重置",
         testNotification: "测试通知",
         howItWorks: "工作方式",
-        privacyOpen: "打开隐私政策草稿",
+        privacyOpen: "隐私政策",
         photos: "照片",
         done: "完成",
         back: "Back",
@@ -8007,31 +8103,35 @@
         setText("#accountSummary", "accountSummaryLocal");
         setText("#accountStatus", "accountStatusLocal");
         setText("#syncSummary", "syncSummaryLocal");
-        setText("#signInApple", "signIn");
-        setText("#syncNow", "sync");
         setText(".profile-card:nth-of-type(3) h2", "settings");
         const settingRows = document.querySelectorAll(".profile-card:nth-of-type(3) .setting-row");
         if (settingRows[0]) {
           const title = settingRows[0].querySelector("strong");
           const body = settingRows[0].querySelector("span");
-          if (title) title.textContent = uiText("dailyReminder");
-          if (body) body.textContent = uiText("dailyReminderText");
+          if (title) title.textContent = uiText("appearance");
+          if (body) body.textContent = uiText("appearanceText");
         }
         if (settingRows[1]) {
           const title = settingRows[1].querySelector("strong");
           const body = settingRows[1].querySelector("span");
-          if (title) title.textContent = uiText("notifications");
-          if (body) body.textContent = uiText("notificationsText");
+          if (title) title.textContent = uiText("dailyReminder");
+          if (body) body.textContent = uiText("dailyReminderText");
         }
         if (settingRows[2]) {
           const title = settingRows[2].querySelector("strong");
           const body = settingRows[2].querySelector("span");
-          if (title) title.textContent = uiText("localSaving");
-          if (body) body.textContent = uiText("localSavingText");
+          if (title) title.textContent = uiText("notifications");
+          if (body) body.textContent = uiText("notificationsText");
         }
         if (settingRows[3]) {
           const title = settingRows[3].querySelector("strong");
           const body = settingRows[3].querySelector("span");
+          if (title) title.textContent = uiText("localSaving");
+          if (body) body.textContent = uiText("localSavingText");
+        }
+        if (settingRows[4]) {
+          const title = settingRows[4].querySelector("strong");
+          const body = settingRows[4].querySelector("span");
           if (title) title.textContent = uiText("cloudSync");
           if (body) body.textContent = uiText("cloudSyncText");
         }
@@ -8221,7 +8321,7 @@
       }
 
       function cloudUnavailable(feature) {
-        notify(`${feature} needs the production backend`);
+        notify(`${feature} will be available when account sync is connected`);
       }
 
       function openImageDb() {
@@ -8979,7 +9079,7 @@
         document.getElementById("accountAvatar").textContent = (profileName || "V").slice(0, 1).toUpperCase();
         document.getElementById("accountStatus").textContent = state.account.signedIn ? uiText("accountStatusCloud") : uiText("accountStatusLocal");
         document.getElementById("accountSummary").textContent = state.account.signedIn
-          ? `${profileName || "Your profile"} is signed in. Production builds sync through the backend.`
+          ? `${profileName || "Your profile"} is signed in and ready for account sync.`
           : uiText("accountSummaryLocal");
         document.getElementById("syncSummary").textContent = state.sync.mode === "cloud"
           ? `Cloud sync ready. Pending changes: ${state.sync.pendingChanges || 0}.`
@@ -9331,6 +9431,7 @@
         const grid = document.getElementById("whyPeopleGrid");
         const motiveStack = document.getElementById("whyMotiveStack");
         if (!prompts || !grid || !motiveStack) return;
+        document.getElementById("goals")?.classList.toggle("why-empty", !state.whyPeople.length);
         const chips = uiText("whyChips").split("|");
         prompts.innerHTML = chips.map((item) => `<span>${escapeHtml(item)}</span>`).join("");
         const motiveItems = state.whyPeople.length
@@ -9346,17 +9447,12 @@
         `;
 
         if (!state.whyPeople.length) {
-          grid.innerHTML = `
-            <div class="why-person-card empty">
-              <div>
-                <strong>${escapeHtml(uiText("whyEmptyTitle"))}</strong>
-                <span>${escapeHtml(uiText("whyEmptyText"))}</span>
-              </div>
-            </div>
-          `;
+          grid.classList.add("hidden");
+          grid.innerHTML = "";
           return;
         }
 
+        grid.classList.remove("hidden");
         grid.innerHTML = state.whyPeople.map((person, index) => `
           <div class="why-person-card" data-why-index="${index}">
             <img src="${escapeHtml(whyPersonImageUrl(person))}" alt="" />
@@ -9761,7 +9857,7 @@
       }
 
       function explainNotifications() {
-        notify("Web prototype: test notifications only. Native app: scheduled daily reminders.");
+        notify("Daily reminders use this device's notification permission.");
       }
 
       function saveLifeProfile() {
@@ -10569,9 +10665,9 @@
         }
       });
       document.getElementById("startTrial").addEventListener("click", startAppleTrial);
-      document.getElementById("signInApple").addEventListener("click", signInWithApple);
-      document.getElementById("syncNow").addEventListener("click", syncNow);
-      document.getElementById("cloudSyncSwitch").addEventListener("click", syncNow);
+      document.getElementById("signInApple")?.addEventListener("click", signInWithApple);
+      document.getElementById("syncNow")?.addEventListener("click", syncNow);
+      document.getElementById("cloudSyncSwitch")?.addEventListener("click", syncNow);
       document.getElementById("openPrivacy").addEventListener("click", openPrivacyDraft);
       document.getElementById("closePro").addEventListener("click", () => {
         if (contextualBackTarget || contextualBackAction) {
@@ -10681,7 +10777,7 @@
       });
 
       document.getElementById("resetData").addEventListener("click", async () => {
-        if (!confirm("Do you want to reset the prototype to its initial state?")) return;
+        if (!confirm("Do you want to reset this device and start again?")) return;
         localStorage.removeItem("visualize-simple-v1");
         await deleteImageDb();
         window.location.reload();

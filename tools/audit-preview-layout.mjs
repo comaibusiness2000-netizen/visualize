@@ -24,12 +24,12 @@ const viewportProfiles = [
   { name: "iphone-se", width: 375, height: 667, scale: 2 }
 ];
 const auditScenarios = [
-  { name: "en-dark", language: "en", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
-  { name: "fr-dark", language: "fr", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
-  { name: "pt-dark", language: "pt", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
+  { name: "en-dark", language: "en", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech", "profile"] },
+  { name: "fr-dark", language: "fr", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech", "profile"] },
+  { name: "pt-dark", language: "pt", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech", "profile"] },
   { name: "zh-dark", language: "zh", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
-  { name: "en-light", language: "en", theme: "light", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
-  { name: "safe-bottom-light", language: "en", theme: "light", profileComplete: true, safeBottomStress: true, views: ["today", "goals", "vision", "anti", "speech"] },
+  { name: "en-light", language: "en", theme: "light", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech", "profile"] },
+  { name: "safe-bottom-light", language: "en", theme: "light", profileComplete: true, safeBottomStress: true, views: ["today", "goals", "vision", "anti", "speech", "profile"] },
   { name: "fr-onboarding", language: "fr", theme: "dark", profileComplete: false, views: ["today"] },
   { name: "pt-onboarding", language: "pt", theme: "dark", profileComplete: false, views: ["today"] }
 ];
@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-26-v110",
+  appVersion: "2026-07-26-v112",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-26-v110");
+      localStorage.setItem("visualizeAppVersion", "2026-07-26-v112");
     `
   });
   const failures = [];
@@ -205,7 +205,9 @@ try {
 
       for (const view of scenario.views) {
         await cdp.send("Runtime.evaluate", {
-          expression: `document.querySelector('.nav button[data-view="${view}"]')?.click()`,
+          expression: view === "profile"
+            ? `document.getElementById("profileTop")?.click()`
+            : `document.getElementById("profileDrawer")?.classList.remove("open"); document.getElementById("profileScrim")?.classList.remove("open"); document.querySelector('.nav button[data-view="${view}"]')?.click()`,
           awaitPromise: true
         });
         await wait(260);
@@ -213,7 +215,7 @@ try {
           returnByValue: true,
           awaitPromise: true,
           expression: `(() => {
-        const selectors = [
+        const baseSelectors = [
           '.stage', '.phone', '.app', '.topbar', '.nav', '.screen.active',
           '.life-head', '.life-pressure-card', '.life-stats', '.daily-quote-card', '.life-map-card',
           '.why-workbench', '.why-workbench-head', '.why-motive-stack', '.why-motive-card', '.why-prompts', '.why-prompts span', '#uploadWhyPhoto', '.why-people-grid',
@@ -221,6 +223,11 @@ try {
           '.speech-head', '.speech-studio', '.speech-current-card', '.speech-voice-summary',
           '.life-onboarding', '.setup-showcase', '.field-stack'
         ];
+        const profileSelectors = [
+          '.profile-drawer.open', '.profile-card', '.setting-row', '.status-list', '.status-pill', '.language-grid'
+        ];
+        const profileOpen = document.getElementById('profileDrawer')?.classList.contains('open');
+        const selectors = profileOpen ? baseSelectors.concat(profileSelectors) : baseSelectors;
         const textFitSelectors = [
           '.nav-label',
           '.btn',
@@ -248,6 +255,16 @@ try {
           '.speech-current-card strong',
           '.speech-current-card em',
           '.speech-voice-summary strong',
+          '.profile-card h2',
+          '.profile-card p',
+          '.setting-row strong',
+          '.setting-row span',
+          '.status-pill strong',
+          '.status-pill span',
+          '.language-grid button',
+          '#openPrivacy',
+          '#saveProfile',
+          '#resetData',
           '.life-onboarding h1',
           '.life-onboarding p',
           '#saveLifeProfile'
@@ -325,8 +342,9 @@ try {
             const hiddenX = ['hidden', 'clip'].includes(style.overflowX) || ['hidden', 'clip'].includes(style.overflow);
             const hiddenY = ['hidden', 'clip'].includes(style.overflowY) || ['hidden', 'clip'].includes(style.overflow);
             const intentionalEllipsis = style.textOverflow === 'ellipsis';
+            const lineClamp = style.webkitLineClamp && style.webkitLineClamp !== 'none';
             const textOverflowX = element.scrollWidth > Math.ceil(element.clientWidth) + 2 && hiddenX && !intentionalEllipsis;
-            const textOverflowY = element.scrollHeight > Math.ceil(element.clientHeight) + 2 && hiddenY;
+            const textOverflowY = element.scrollHeight > Math.ceil(element.clientHeight) + 2 && hiddenY && !lineClamp;
             if (textOverflowX || textOverflowY) {
               items.push({
                 selector: 'text does not fit',
@@ -385,6 +403,39 @@ try {
         const nav = document.querySelector('.nav');
         const navRect = nav?.getBoundingClientRect();
         if (navRect) {
+          const protectedSelectors = [
+            '.life-head',
+            '.life-pressure-card',
+            '.life-stats',
+            '.daily-quote-card',
+            '.life-map-card',
+            '.why-workbench',
+            '.vision-empty',
+            '.anti-empty',
+            '.speech-head',
+            '.speech-studio'
+          ];
+          for (const selector of protectedSelectors) {
+            for (const element of document.querySelectorAll(selector)) {
+              if (!element.offsetParent) continue;
+              const rect = element.getBoundingClientRect();
+              const overlapsNav = rect.bottom > navRect.top + 6 && rect.top < navRect.bottom - 6;
+              const visibleHorizontally = rect.right > 0 && rect.left < vw;
+              if (overlapsNav && visibleHorizontally) {
+                items.push({
+                  selector: 'main panel under nav',
+                  target: selector,
+                  rect: { left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top), bottom: Math.round(rect.bottom), width: Math.round(rect.width), height: Math.round(rect.height) },
+                  nav: { top: Math.round(navRect.top), bottom: Math.round(navRect.bottom) },
+                  clippedY: true,
+                  outX: false,
+                  navTooHigh: false,
+                  viewportNotCovered: false,
+                  overlapsNav: true
+                });
+              }
+            }
+          }
           const interactiveSelectors = '.screen.active button, .screen.active input, .screen.active textarea, .screen.active select, .screen.active [role="button"]';
           for (const element of document.querySelectorAll(interactiveSelectors)) {
             if (!element.offsetParent || element.closest('.nav')) continue;

@@ -27,7 +27,7 @@ const viewportProfiles = [
 mkdirSync(outputDir, { recursive: true });
 
 const seedState = {
-  appVersion: "2026-07-26-v110",
+  appVersion: "2026-07-26-v112",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -197,10 +197,10 @@ try {
         selectedState.settings.language = "en";
       }
       localStorage.setItem("visualize-simple-v1", JSON.stringify(selectedState));
-      localStorage.setItem("visualizeAppVersion", "2026-07-26-v110");
+      localStorage.setItem("visualizeAppVersion", "2026-07-26-v112");
     `
   });
-  const views = ["today", "goals", "vision", "anti", "speech"];
+  const views = ["today", "goals", "vision", "anti", "speech", "profile"];
   for (const viewport of viewportProfiles) {
     await cdp.send("Emulation.setDeviceMetricsOverride", {
       width: viewport.width,
@@ -213,7 +213,20 @@ try {
 
     for (const view of views) {
       await cdp.send("Runtime.evaluate", {
-        expression: `document.querySelector('.nav button[data-view="${view}"]')?.click()`,
+        expression: `(() => {
+          document.getElementById("dailyQuoteReveal")?.classList.remove("open");
+          document.getElementById("dailyQuoteReveal")?.setAttribute("aria-hidden", "true");
+          document.getElementById("dailyInsight")?.classList.remove("open");
+          document.getElementById("dailyInsight")?.setAttribute("aria-hidden", "true");
+          document.getElementById("lifeUpdateOverlay")?.classList.remove("open");
+          document.getElementById("lifeUpdateOverlay")?.setAttribute("aria-hidden", "true");
+        })()`,
+        awaitPromise: true
+      });
+      await cdp.send("Runtime.evaluate", {
+        expression: view === "profile"
+          ? `document.getElementById("profileTop")?.click()`
+          : `document.getElementById("profileDrawer")?.classList.remove("open"); document.getElementById("profileScrim")?.classList.remove("open"); document.querySelector('.nav button[data-view="${view}"]')?.click()`,
         awaitPromise: true
       });
       await wait(420);
@@ -247,7 +260,20 @@ try {
     await wait(1200);
     for (const view of views) {
       await cdp.send("Runtime.evaluate", {
-        expression: `document.querySelector('.nav button[data-view="${view}"]')?.click()`,
+        expression: `(() => {
+          document.getElementById("dailyQuoteReveal")?.classList.remove("open");
+          document.getElementById("dailyQuoteReveal")?.setAttribute("aria-hidden", "true");
+          document.getElementById("dailyInsight")?.classList.remove("open");
+          document.getElementById("dailyInsight")?.setAttribute("aria-hidden", "true");
+          document.getElementById("lifeUpdateOverlay")?.classList.remove("open");
+          document.getElementById("lifeUpdateOverlay")?.setAttribute("aria-hidden", "true");
+        })()`,
+        awaitPromise: true
+      });
+      await cdp.send("Runtime.evaluate", {
+        expression: view === "profile"
+          ? `document.getElementById("profileTop")?.click()`
+          : `document.getElementById("profileDrawer")?.classList.remove("open"); document.getElementById("profileScrim")?.classList.remove("open"); document.querySelector('.nav button[data-view="${view}"]')?.click()`,
         awaitPromise: true
       });
       await wait(420);
