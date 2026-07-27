@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-27-v130",
+  appVersion: "2026-07-27-v131",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v130");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v131");
     `
   });
   const failures = [];
@@ -256,6 +256,10 @@ try {
           '.deck-actions .btn',
           '.speech-head h2',
           '.speech-head p',
+          '#speechPlaybackStatus',
+          '#speechHeroVoice',
+          '#speechHeroWords',
+          '#speechHeroDuration',
           '.speech-play-main',
           '.speech-current-card strong',
           '.speech-current-card em',

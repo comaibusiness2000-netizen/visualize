@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=130" />
+    <link rel="manifest" href="./manifest.webmanifest?v=131" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v130";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v131";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=130")
+            .register("./service-worker.js?v=131")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -4795,37 +4795,43 @@
         position: relative;
         z-index: 1;
         max-width: 100%;
-        min-height: 34px;
-        display: inline-flex;
+        min-height: 0;
+        display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        margin-top: 2px;
-        border: 1px solid rgba(255, 249, 237, 0.1);
-        border-radius: 999px;
-        padding: 0 12px;
+        gap: 6px;
+        margin-top: 3px;
+        padding: 0;
         color: rgba(255, 249, 237, 0.78);
-        background: rgba(255, 255, 255, 0.07);
         font-size: 11px;
         font-weight: 950;
       }
 
       .speech-playback-meta span {
-        max-width: min(92px, 28vw);
+        min-height: 28px;
+        max-width: min(116px, 42vw);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 249, 237, 0.1);
+        border-radius: 999px;
+        padding: 0 9px;
+        background: rgba(255, 255, 255, 0.07);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
 
-      .speech-playback-meta i {
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
+      .speech-playback-meta span:first-child {
+        color: #101418;
         background: var(--gold);
+        border-color: rgba(232, 196, 104, 0.82);
       }
 
       .speech-workbench.playing .speech-playback-meta span:first-child {
-        color: var(--gold);
+        color: #101418;
+        box-shadow: 0 0 0 6px rgba(232, 196, 104, 0.1);
       }
 
       .speech-meter {
@@ -8850,9 +8856,8 @@
                 <p id="speechHeroText">Write the text you want to hear before you act, train, work, or visualize.</p>
                 <div class="speech-playback-meta">
                   <span id="speechPlaybackStatus">Ready</span>
-                  <i aria-hidden="true"></i>
                   <span id="speechHeroVoice">Maya</span>
-                  <i aria-hidden="true"></i>
+                  <span id="speechHeroWords">0 words</span>
                   <span id="speechHeroDuration">1 min</span>
                 </div>
                 <div class="speech-meter" aria-hidden="true">
@@ -9573,6 +9578,7 @@
           selfSpeech: "Self speech",
           speechTitle: "Script your inner voice.",
           speechText: "Write the text you want to hear before you act, train, work, or visualize.",
+          speechCue: "Hear it before action, training, work, or visualization.",
           scripts: "Scripts",
           currentScript: "Current script",
           title: "Title",
@@ -9597,16 +9603,16 @@
           languageSelected: "{language} selected"
         },
         es: {
-          profileSetup: "Crear perfil", setupTitle: "Crea tu reloj de vida.", setupText: "Empieza vacio. Luego agregas tu por que, imagenes y self speech paso a paso.", firstName: "Tu nombre", age: "Tu edad", estimate: "Estimacion de vida", createProfile: "Crear perfil", lifeClock: "Reloj de vida", daysLeft: "dias restantes", lifeSummary: "Estimado desde edad {age} hasta {expectancy}. Son unos {months} meses, o {weeks} semanas, restantes.", weeksLeft: "semanas restantes", monthsLeft: "meses restantes", lifeUsed: "vida usada", lifeLegend: "Cada punto es un bloque pequeno de vida. Los puntos oscuros son tiempo ya vivido.", editInfo: "Editar datos", dailyTasks: "Tareas diarias", longGoals: "Metas a largo plazo", dailyTitle: "Haz avanzar hoy.", longTitle: "Sigue la gran meta.", dailyText: "Mantén una lista corta de lo que hace que hoy cuente y mueve el progreso manualmente.", longText: "Usa esto para metas que quieres cerrar este ano o que necesitan accion repetida.", addTask: "Agregar tarea", addGoal: "Agregar meta", emptyTask: "Agrega una tarea que haga que hoy cuente.", emptyGoal: "Agrega una meta a largo plazo que puedas mover este ano.", dailyHint: "Las tareas diarias son para ejecutar hoy. Vision queda para metas a largo plazo.", longHint: "Las metas a largo plazo conectan accion diaria y Vision.", visionSetup: "Configurar vision", createVisionTitle: "Crea primero la escena futura.", visionSetupText: "Sube imagenes de como quieres verte, que quieres tener o vivir, donde quieres estar y quienes quieres cerca.", createVision: "Crear vision", visionDeck: "Deck de vision", antiSetup: "Configurar anti-vision", createAntiTitle: "Crea primero la escena de advertencia.", antiSetupText: "Sube imagenes de la vida en la que no quieres caer: lo que no quieres ser, perder o tolerar.", createAnti: "Crear anti-vision", antiDeck: "Deck anti-vision", play: "Reproducir", upload: "Subir", edit: "Editar", export: "Exportar", noSlides: "Sin slides aun.", noSlidesText: "Sube fotos en el orden en que quieres verlas durante el ejercicio.", selfSpeech: "Self speech", speechTitle: "Escribe tu voz interior.", speechText: "Escribe el texto que quieres escuchar antes de actuar, entrenar, trabajar o visualizar.", title: "Titulo", script: "Script", voice: "Voz", swipeVoice: "Desliza para cambiar voz", stop: "Stop", profile: "Perfil", settings: "Ajustes", language: "Idioma", languageText: "Elige el idioma usado por la interfaz.", save: "Guardar", light: "Claro", dark: "Oscuro", navLife: "Vida", navGoal: "Metas", navVision: "Vision", navAnti: "Anti", navSpeech: "Voz", profileSaved: "Perfil guardado", languageSelected: "{language} seleccionado"
+          profileSetup: "Crear perfil", setupTitle: "Crea tu reloj de vida.", setupText: "Empieza vacio. Luego agregas tu por que, imagenes y self speech paso a paso.", firstName: "Tu nombre", age: "Tu edad", estimate: "Estimacion de vida", createProfile: "Crear perfil", lifeClock: "Reloj de vida", daysLeft: "dias restantes", lifeSummary: "Estimado desde edad {age} hasta {expectancy}. Son unos {months} meses, o {weeks} semanas, restantes.", weeksLeft: "semanas restantes", monthsLeft: "meses restantes", lifeUsed: "vida usada", lifeLegend: "Cada punto es un bloque pequeno de vida. Los puntos oscuros son tiempo ya vivido.", editInfo: "Editar datos", dailyTasks: "Tareas diarias", longGoals: "Metas a largo plazo", dailyTitle: "Haz avanzar hoy.", longTitle: "Sigue la gran meta.", dailyText: "Mantén una lista corta de lo que hace que hoy cuente y mueve el progreso manualmente.", longText: "Usa esto para metas que quieres cerrar este ano o que necesitan accion repetida.", addTask: "Agregar tarea", addGoal: "Agregar meta", emptyTask: "Agrega una tarea que haga que hoy cuente.", emptyGoal: "Agrega una meta a largo plazo que puedas mover este ano.", dailyHint: "Las tareas diarias son para ejecutar hoy. Vision queda para metas a largo plazo.", longHint: "Las metas a largo plazo conectan accion diaria y Vision.", visionSetup: "Configurar vision", createVisionTitle: "Crea primero la escena futura.", visionSetupText: "Sube imagenes de como quieres verte, que quieres tener o vivir, donde quieres estar y quienes quieres cerca.", createVision: "Crear vision", visionDeck: "Deck de vision", antiSetup: "Configurar anti-vision", createAntiTitle: "Crea primero la escena de advertencia.", antiSetupText: "Sube imagenes de la vida en la que no quieres caer: lo que no quieres ser, perder o tolerar.", createAnti: "Crear anti-vision", antiDeck: "Deck anti-vision", play: "Reproducir", upload: "Subir", edit: "Editar", export: "Exportar", noSlides: "Sin slides aun.", noSlidesText: "Sube fotos en el orden en que quieres verlas durante el ejercicio.", selfSpeech: "Self speech", speechTitle: "Escribe tu voz interior.", speechText: "Escribe el texto que quieres escuchar antes de actuar, entrenar, trabajar o visualizar.", speechCue: "Escuchalo antes de actuar, entrenar, trabajar o visualizar.", title: "Titulo", script: "Script", voice: "Voz", swipeVoice: "Desliza para cambiar voz", stop: "Stop", profile: "Perfil", settings: "Ajustes", language: "Idioma", languageText: "Elige el idioma usado por la interfaz.", save: "Guardar", light: "Claro", dark: "Oscuro", navLife: "Vida", navGoal: "Metas", navVision: "Vision", navAnti: "Anti", navSpeech: "Voz", profileSaved: "Perfil guardado", languageSelected: "{language} seleccionado"
         },
         fr: {
-          profileSetup: "Creation profil", setupTitle: "Cree ton horloge de vie.", setupText: "L'app commence vide. Ajoute ensuite ton pourquoi, tes images et ton self speech.", firstName: "Ton prenom", age: "Ton age", estimate: "Estimation de vie", createProfile: "Creer profil", lifeClock: "Horloge de vie", daysLeft: "jours restants", lifeSummary: "Estime de l'age {age} a {expectancy}. Environ {months} mois, ou {weeks} semaines, restants.", weeksLeft: "semaines restantes", monthsLeft: "mois restants", lifeUsed: "vie utilisee", lifeLegend: "Chaque point est un petit bloc de vie. Les points sombres sont le temps deja passe.", editInfo: "Modifier", dailyTasks: "Taches du jour", longGoals: "Objectifs long terme", dailyTitle: "Fais avancer aujourd'hui.", longTitle: "Suis la grande victoire.", dailyText: "Garde une courte liste de ce qui compte aujourd'hui et ajuste la progression.", longText: "Utilise ceci pour les objectifs a finir cette annee ou qui demandent une action repetee.", addTask: "Ajouter tache", addGoal: "Ajouter objectif", emptyTask: "Ajoute une tache qui ferait compter aujourd'hui.", emptyGoal: "Ajoute un objectif long terme a avancer cette annee.", dailyHint: "Les taches du jour servent a agir maintenant. Vision reste pour le long terme.", longHint: "Les objectifs long terme relient l'action quotidienne a ta Vision.", visionSetup: "Setup Vision", createVisionTitle: "Cree d'abord la scene future.", visionSetupText: "Ajoute des images de qui tu veux devenir, ce que tu veux avoir, les lieux ou vivre et les personnes autour de toi.", createVision: "Creer vision", visionDeck: "Deck Vision", antiSetup: "Setup Anti-vision", createAntiTitle: "Cree d'abord la scene d'avertissement.", antiSetupText: "Ajoute des images de la vie que tu refuses: ce que tu ne veux pas devenir, perdre ou tolerer.", createAnti: "Creer anti-vision", antiDeck: "Deck Anti-vision", play: "Lire", upload: "Ajouter", edit: "Editer", export: "Exporter", noSlides: "Aucune slide.", noSlidesText: "Ajoute les photos dans l'ordre de l'exercice.", selfSpeech: "Self speech", speechTitle: "Ecris ta voix interieure.", speechText: "Ecris le texte a ecouter avant d'agir, t'entrainer, travailler ou visualiser.", title: "Titre", script: "Script", voice: "Voix", swipeVoice: "Glisse pour changer la voix", stop: "Stop", profile: "Profil", settings: "Reglages", language: "Langue", languageText: "Choisis la langue de l'interface.", save: "Sauver", light: "Clair", dark: "Sombre", navLife: "Vie", navGoal: "Objectifs", navVision: "Vision", navAnti: "Anti", navSpeech: "Voix", profileSaved: "Profil sauvegarde", languageSelected: "{language} choisi"
+          profileSetup: "Creation profil", setupTitle: "Cree ton horloge de vie.", setupText: "L'app commence vide. Ajoute ensuite ton pourquoi, tes images et ton self speech.", firstName: "Ton prenom", age: "Ton age", estimate: "Estimation de vie", createProfile: "Creer profil", lifeClock: "Horloge de vie", daysLeft: "jours restants", lifeSummary: "Estime de l'age {age} a {expectancy}. Environ {months} mois, ou {weeks} semaines, restants.", weeksLeft: "semaines restantes", monthsLeft: "mois restants", lifeUsed: "vie utilisee", lifeLegend: "Chaque point est un petit bloc de vie. Les points sombres sont le temps deja passe.", editInfo: "Modifier", dailyTasks: "Taches du jour", longGoals: "Objectifs long terme", dailyTitle: "Fais avancer aujourd'hui.", longTitle: "Suis la grande victoire.", dailyText: "Garde une courte liste de ce qui compte aujourd'hui et ajuste la progression.", longText: "Utilise ceci pour les objectifs a finir cette annee ou qui demandent une action repetee.", addTask: "Ajouter tache", addGoal: "Ajouter objectif", emptyTask: "Ajoute une tache qui ferait compter aujourd'hui.", emptyGoal: "Ajoute un objectif long terme a avancer cette annee.", dailyHint: "Les taches du jour servent a agir maintenant. Vision reste pour le long terme.", longHint: "Les objectifs long terme relient l'action quotidienne a ta Vision.", visionSetup: "Setup Vision", createVisionTitle: "Cree d'abord la scene future.", visionSetupText: "Ajoute des images de qui tu veux devenir, ce que tu veux avoir, les lieux ou vivre et les personnes autour de toi.", createVision: "Creer vision", visionDeck: "Deck Vision", antiSetup: "Setup Anti-vision", createAntiTitle: "Cree d'abord la scene d'avertissement.", antiSetupText: "Ajoute des images de la vie que tu refuses: ce que tu ne veux pas devenir, perdre ou tolerer.", createAnti: "Creer anti-vision", antiDeck: "Deck Anti-vision", play: "Lire", upload: "Ajouter", edit: "Editer", export: "Exporter", noSlides: "Aucune slide.", noSlidesText: "Ajoute les photos dans l'ordre de l'exercice.", selfSpeech: "Self speech", speechTitle: "Ecris ta voix interieure.", speechText: "Ecris le texte a ecouter avant d'agir, t'entrainer, travailler ou visualiser.", speechCue: "Ecoute-la avant d'agir, t'entrainer, travailler ou visualiser.", title: "Titre", script: "Script", voice: "Voix", swipeVoice: "Glisse pour changer la voix", stop: "Stop", profile: "Profil", settings: "Reglages", language: "Langue", languageText: "Choisis la langue de l'interface.", save: "Sauver", light: "Clair", dark: "Sombre", navLife: "Vie", navGoal: "Objectifs", navVision: "Vision", navAnti: "Anti", navSpeech: "Voix", profileSaved: "Profil sauvegarde", languageSelected: "{language} choisi"
         },
         pt: {
-          profileSetup: "Criar perfil", setupTitle: "Crie seu relogio de vida.", setupText: "O app comeca vazio. Depois adicione seu por que, imagens e self speech.", firstName: "Seu nome", age: "Sua idade", estimate: "Estimativa de vida", createProfile: "Criar perfil", lifeClock: "Relogio de vida", daysLeft: "dias restantes", lifeSummary: "Estimado da idade {age} ate {expectancy}. Cerca de {months} meses, ou {weeks} semanas, restantes.", weeksLeft: "semanas restantes", monthsLeft: "meses restantes", lifeUsed: "vida usada", lifeLegend: "Cada ponto e um pequeno bloco de vida. Pontos escuros ja foram vividos.", editInfo: "Editar", dailyTasks: "Tarefas diarias", longGoals: "Metas de longo prazo", dailyTitle: "Mova hoje para frente.", longTitle: "Acompanhe a grande meta.", dailyText: "Mantenha uma lista curta do que faz hoje contar e mova o progresso manualmente.", longText: "Use para metas deste ano ou que precisam de acao repetida.", addTask: "Adicionar tarefa", addGoal: "Adicionar meta", emptyTask: "Adicione uma tarefa que faca hoje contar.", emptyGoal: "Adicione uma meta de longo prazo para este ano.", dailyHint: "Tarefas diarias sao para executar hoje. Vision fica para metas de longo prazo.", longHint: "Metas de longo prazo ligam acao diaria e Vision.", visionSetup: "Configurar visao", createVisionTitle: "Crie primeiro a cena futura.", visionSetupText: "Adicione imagens de quem quer ser, o que quer ter, onde quer viver e quem quer por perto.", createVision: "Criar visao", visionDeck: "Deck de visao", antiSetup: "Configurar anti-visao", createAntiTitle: "Crie primeiro a cena de alerta.", antiSetupText: "Adicione imagens da vida que voce recusa: o que nao quer se tornar, perder ou tolerar.", createAnti: "Criar anti-visao", antiDeck: "Deck anti-visao", play: "Reproduzir", upload: "Adicionar", edit: "Editar", export: "Exportar", noSlides: "Sem slides ainda.", noSlidesText: "Adicione fotos na ordem do exercicio.", selfSpeech: "Self speech", speechTitle: "Escreva sua voz interior.", speechText: "Escreva o texto que quer ouvir antes de agir, treinar, trabalhar ou visualizar.", title: "Titulo", script: "Script", voice: "Voz", swipeVoice: "Deslize para mudar voz", stop: "Parar", profile: "Perfil", settings: "Ajustes", language: "Idioma", languageText: "Escolha o idioma da interface.", save: "Salvar", light: "Claro", dark: "Escuro", navLife: "Vida", navGoal: "Metas", navVision: "Visao", navAnti: "Anti", navSpeech: "Voz", profileSaved: "Perfil salvo", languageSelected: "{language} selecionado"
+          profileSetup: "Criar perfil", setupTitle: "Crie seu relogio de vida.", setupText: "O app comeca vazio. Depois adicione seu por que, imagens e self speech.", firstName: "Seu nome", age: "Sua idade", estimate: "Estimativa de vida", createProfile: "Criar perfil", lifeClock: "Relogio de vida", daysLeft: "dias restantes", lifeSummary: "Estimado da idade {age} ate {expectancy}. Cerca de {months} meses, ou {weeks} semanas, restantes.", weeksLeft: "semanas restantes", monthsLeft: "meses restantes", lifeUsed: "vida usada", lifeLegend: "Cada ponto e um pequeno bloco de vida. Pontos escuros ja foram vividos.", editInfo: "Editar", dailyTasks: "Tarefas diarias", longGoals: "Metas de longo prazo", dailyTitle: "Mova hoje para frente.", longTitle: "Acompanhe a grande meta.", dailyText: "Mantenha uma lista curta do que faz hoje contar e mova o progresso manualmente.", longText: "Use para metas deste ano ou que precisam de acao repetida.", addTask: "Adicionar tarefa", addGoal: "Adicionar meta", emptyTask: "Adicione uma tarefa que faca hoje contar.", emptyGoal: "Adicione uma meta de longo prazo para este ano.", dailyHint: "Tarefas diarias sao para executar hoje. Vision fica para metas de longo prazo.", longHint: "Metas de longo prazo ligam acao diaria e Vision.", visionSetup: "Configurar visao", createVisionTitle: "Crie primeiro a cena futura.", visionSetupText: "Adicione imagens de quem quer ser, o que quer ter, onde quer viver e quem quer por perto.", createVision: "Criar visao", visionDeck: "Deck de visao", antiSetup: "Configurar anti-visao", createAntiTitle: "Crie primeiro a cena de alerta.", antiSetupText: "Adicione imagens da vida que voce recusa: o que nao quer se tornar, perder ou tolerar.", createAnti: "Criar anti-visao", antiDeck: "Deck anti-visao", play: "Reproduzir", upload: "Adicionar", edit: "Editar", export: "Exportar", noSlides: "Sem slides ainda.", noSlidesText: "Adicione fotos na ordem do exercicio.", selfSpeech: "Self speech", speechTitle: "Escreva sua voz interior.", speechText: "Escreva o texto que quer ouvir antes de agir, treinar, trabalhar ou visualizar.", speechCue: "Ouça antes de agir, treinar, trabalhar ou visualizar.", title: "Titulo", script: "Script", voice: "Voz", swipeVoice: "Deslize para mudar voz", stop: "Parar", profile: "Perfil", settings: "Ajustes", language: "Idioma", languageText: "Escolha o idioma da interface.", save: "Salvar", light: "Claro", dark: "Escuro", navLife: "Vida", navGoal: "Metas", navVision: "Visao", navAnti: "Anti", navSpeech: "Voz", profileSaved: "Perfil salvo", languageSelected: "{language} selecionado"
         },
         zh: {
-          profileSetup: "创建资料", setupTitle: "从空白生命时钟开始。", setupText: "先创建资料。应用会从空白开始，然后一步步添加目标、图片和自我对话。", firstName: "名字", age: "年龄", estimate: "寿命估计", createProfile: "创建资料", lifeClock: "生命时钟", daysLeft: "剩余天数", lifeSummary: "从 {age} 岁到 {expectancy} 岁估算。大约剩余 {months} 个月，或 {weeks} 周。", weeksLeft: "剩余周数", monthsLeft: "剩余月数", lifeUsed: "已用生命", lifeLegend: "每个点代表一小段生命。深色点代表已过去的时间。", editInfo: "编辑信息", dailyTasks: "每日任务", longGoals: "长期目标", dailyTitle: "推动今天前进。", longTitle: "追踪更大的目标。", dailyText: "保留一小列今天重要的事，并手动移动进度条。", longText: "用于今年要完成或需要反复行动的目标。", addTask: "添加任务", addGoal: "添加目标", emptyTask: "添加一个能让今天有意义的任务。", emptyGoal: "添加一个今年可以推进的长期目标。", dailyHint: "每日任务用于今天执行。Vision 用于长期目标。", longHint: "长期目标连接每日行动和 Vision。", visionSetup: "愿景设置", createVisionTitle: "先创建未来场景。", visionSetupText: "上传你想成为什么样、想拥有什么、想住在哪里、想和谁在一起的图片。", createVision: "创建愿景", visionDeck: "愿景卡组", antiSetup: "反愿景设置", createAntiTitle: "先创建警示场景。", antiSetupText: "上传你拒绝滑向的生活：不想成为什么、不想失去什么、不想忍受什么。", createAnti: "创建反愿景", antiDeck: "反愿景卡组", play: "播放", upload: "上传", edit: "编辑", export: "导出", noSlides: "还没有幻灯片。", noSlidesText: "按练习时想看的顺序上传照片。", selfSpeech: "自我对话", speechTitle: "写下你的内在声音。", speechText: "写下行动、训练、工作或视觉化前想听到的文字。", title: "标题", script: "文本", voice: "声音", swipeVoice: "滑动切换声音", stop: "停止", profile: "资料", settings: "设置", language: "语言", languageText: "选择应用界面语言。", save: "保存", light: "浅色", dark: "深色", navLife: "生命", navGoal: "目标", navVision: "愿景", navAnti: "反愿景", navSpeech: "自我对话", profileSaved: "资料已保存", languageSelected: "已选择 {language}"
+          profileSetup: "创建资料", setupTitle: "从空白生命时钟开始。", setupText: "先创建资料。应用会从空白开始，然后一步步添加目标、图片和自我对话。", firstName: "名字", age: "年龄", estimate: "寿命估计", createProfile: "创建资料", lifeClock: "生命时钟", daysLeft: "剩余天数", lifeSummary: "从 {age} 岁到 {expectancy} 岁估算。大约剩余 {months} 个月，或 {weeks} 周。", weeksLeft: "剩余周数", monthsLeft: "剩余月数", lifeUsed: "已用生命", lifeLegend: "每个点代表一小段生命。深色点代表已过去的时间。", editInfo: "编辑信息", dailyTasks: "每日任务", longGoals: "长期目标", dailyTitle: "推动今天前进。", longTitle: "追踪更大的目标。", dailyText: "保留一小列今天重要的事，并手动移动进度条。", longText: "用于今年要完成或需要反复行动的目标。", addTask: "添加任务", addGoal: "添加目标", emptyTask: "添加一个能让今天有意义的任务。", emptyGoal: "添加一个今年可以推进的长期目标。", dailyHint: "每日任务用于今天执行。Vision 用于长期目标。", longHint: "长期目标连接每日行动和 Vision。", visionSetup: "愿景设置", createVisionTitle: "先创建未来场景。", visionSetupText: "上传你想成为什么样、想拥有什么、想住在哪里、想和谁在一起的图片。", createVision: "创建愿景", visionDeck: "愿景卡组", antiSetup: "反愿景设置", createAntiTitle: "先创建警示场景。", antiSetupText: "上传你拒绝滑向的生活：不想成为什么、不想失去什么、不想忍受什么。", createAnti: "创建反愿景", antiDeck: "反愿景卡组", play: "播放", upload: "上传", edit: "编辑", export: "导出", noSlides: "还没有幻灯片。", noSlidesText: "按练习时想看的顺序上传照片。", selfSpeech: "自我对话", speechTitle: "写下你的内在声音。", speechText: "写下行动、训练、工作或视觉化前想听到的文字。", speechCue: "行动、训练或视觉化前先听一次。", title: "标题", script: "文本", voice: "声音", swipeVoice: "滑动切换声音", stop: "停止", profile: "资料", settings: "设置", language: "语言", languageText: "选择应用界面语言。", save: "保存", light: "浅色", dark: "深色", navLife: "生命", navGoal: "目标", navVision: "愿景", navAnti: "反愿景", navSpeech: "自我对话", profileSaved: "资料已保存", languageSelected: "已选择 {language}"
         }
       };
 
@@ -10132,7 +10138,7 @@
 
         setText("#speech .speech-head .deck-kicker", "selfSpeech");
         setText("#speech .speech-head h2", "speechTitle");
-        setText("#speech .speech-head p", "speechText");
+        setText("#speech .speech-head p", "speechCue");
         setText("#speechScriptsLabel", "scripts");
         setText("#speechCurrentLabel", "currentScript");
         setText("#speech .speech-field:nth-of-type(1) span", "title");
@@ -11085,6 +11091,7 @@
         const heroText = document.getElementById("speechHeroText");
         const status = document.getElementById("speechPlaybackStatus");
         const voice = document.getElementById("speechHeroVoice");
+        const words = document.getElementById("speechHeroWords");
         const overviewVoice = document.getElementById("speechOverviewVoice");
         const overviewTitle = document.getElementById("speechOverviewTitle");
         const overviewPreview = document.getElementById("speechOverviewPreview");
@@ -11093,11 +11100,10 @@
         if (workbench) workbench.classList.toggle("playing", selfTalkPlaying);
         if (playButton) playButton.textContent = selfTalkPlaying ? uiText("playing") : uiText("play");
         if (heroTitle) heroTitle.textContent = title;
-        if (heroText) heroText.textContent = stats.words
-          ? `${stats.words} ${uiText("words")} - ${uiText("speechText")}`
-          : uiText("speechText");
+        if (heroText) heroText.textContent = uiText("speechCue");
         if (status) status.textContent = selfTalkPlaying ? uiText("playing") : uiText("ready");
         if (voice) voice.textContent = activeVoiceProfile().name;
+        if (words) words.textContent = `${stats.words} ${uiText("words")}`;
         if (overviewVoice) overviewVoice.textContent = activeVoiceProfile().name;
         if (overviewTitle) overviewTitle.textContent = title;
         if (overviewPreview) overviewPreview.textContent = preview;
