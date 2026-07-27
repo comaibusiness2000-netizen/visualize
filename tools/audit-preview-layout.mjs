@@ -29,6 +29,7 @@ const auditScenarios = [
   { name: "pt-dark", language: "pt", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech", "profile"] },
   { name: "zh-dark", language: "zh", theme: "dark", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech"] },
   { name: "en-light", language: "en", theme: "light", profileComplete: true, views: ["today", "goals", "vision", "anti", "speech", "profile"] },
+  { name: "no-mantra-light", language: "en", theme: "light", profileComplete: true, noMantra: true, views: ["today"] },
   { name: "safe-bottom-light", language: "en", theme: "light", profileComplete: true, safeBottomStress: true, views: ["today", "goals", "vision", "anti", "speech", "profile"] },
   { name: "fr-onboarding", language: "fr", theme: "dark", profileComplete: false, views: ["today"] },
   { name: "pt-onboarding", language: "pt", theme: "dark", profileComplete: false, views: ["today"] }
@@ -109,12 +110,13 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-27-v133",
+  appVersion: "2026-07-27-v134",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
   shortTermGoals: [],
   whyPeople: [],
+  mantra: "I keep the promises I make to myself.",
   selfTalkScripts: [{ title: "Morning decision", text: "I act before I negotiate with doubt. I keep the promises I make to myself." }],
   activeSelfTalkIndex: 0,
   lifeProfile: {
@@ -158,6 +160,7 @@ function scenarioState(scenario) {
       ...seedState.lifeProfile,
       complete: scenario.profileComplete
     },
+    mantra: scenario.noMantra ? "" : seedState.mantra,
     settings: {
       ...seedState.settings,
       language: scenario.language,
@@ -179,7 +182,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v133");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v134");
     `
   });
   const failures = [];
@@ -217,7 +220,7 @@ try {
           expression: `(() => {
         const baseSelectors = [
           '.stage', '.phone', '.app', '.topbar', '.nav', '.screen.active',
-          '.life-head', '.life-months-card', '.life-months-open', '.life-stats', '.daily-quote-card', '.life-map-card', '.life-map-open-hint',
+          '.life-head', '.life-months-card', '.life-months-open', '.life-stats', '.life-mantra-card', '.life-map-card', '.life-map-open-hint',
           '.why-workbench', '.why-workbench-head', '.why-motive-stack', '.why-motive-card', '.why-prompts', '.why-prompts span', '#uploadWhyPhoto', '.why-people-grid',
           '.vision-empty', '.anti-empty', '.deck-stage', '.deck-actions',
           '.speech-head', '.speech-studio', '.speech-current-card', '.speech-voice-summary',
@@ -241,8 +244,8 @@ try {
           '.life-months-copy strong em',
           '.life-months-copy p',
           '.life-map-open-hint',
-          '.daily-quote-open',
-          '#dailyQuoteText',
+          '.life-mantra-listen',
+          '#lifeMantraText',
           '.why-prompts span',
           '#uploadWhyPhoto',
           '.why-workbench-head h2',
@@ -417,7 +420,7 @@ try {
             '.life-head',
             '.life-months-card',
             '.life-stats',
-            '.daily-quote-card',
+            '.life-mantra-card',
             '.life-map-card',
             '.why-workbench',
             '.vision-empty',

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=133" />
+    <link rel="manifest" href="./manifest.webmanifest?v=134" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v133";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v134";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=133")
+            .register("./service-worker.js?v=134")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -481,7 +481,7 @@
 
       .life-head,
       .life-stats,
-      .daily-quote-card,
+      .life-mantra-card,
       .life-map-card,
       .why-workbench,
       .vision-empty,
@@ -1218,6 +1218,10 @@
         grid-column: 1 / -1;
       }
 
+      .field-stack .mantra-field {
+        grid-column: 1 / -1;
+      }
+
       .field {
         display: grid;
         gap: 6px;
@@ -1680,21 +1684,21 @@
         overflow-wrap: anywhere;
       }
 
-      .daily-quote-card {
+      .life-mantra-card {
         position: relative;
         width: 100%;
-        min-height: 146px;
+        min-height: 126px;
         display: grid;
         align-content: center;
-        gap: 10px;
+        gap: 12px;
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.24);
         border-radius: 28px;
-        padding: 15px 14px;
+        padding: 16px 15px;
         color: #fff9ed;
         background:
-          radial-gradient(circle at 92% 8%, rgba(232, 196, 104, 0.2), transparent 34%),
-          radial-gradient(circle at 8% 100%, rgba(218, 90, 58, 0.1), transparent 28%),
+          radial-gradient(circle at 92% 10%, rgba(232, 196, 104, 0.18), transparent 34%),
+          radial-gradient(circle at 8% 100%, rgba(218, 90, 58, 0.09), transparent 28%),
           linear-gradient(145deg, #12181b, #070a0c);
         text-align: left;
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
@@ -1703,12 +1707,12 @@
         animation: premiumPanelIn 0.78s 0.08s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
-      .daily-quote-card:active {
+      .life-mantra-card:active {
         transform: scale(0.985);
         box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
       }
 
-      .daily-quote-card::before {
+      .life-mantra-card::before {
         content: "";
         position: absolute;
         width: 128px;
@@ -1720,19 +1724,19 @@
         pointer-events: none;
       }
 
-      .daily-quote-card::after {
-        content: attr(data-quote-index);
+      .life-mantra-card::after {
+        content: "mantra";
         position: absolute;
-        right: 2px;
-        bottom: 0;
+        right: -4px;
+        bottom: 2px;
         color: rgba(255, 249, 237, 0.065);
-        font-size: 72px;
+        font-size: 58px;
         line-height: 0.9;
         font-weight: 950;
         pointer-events: none;
       }
 
-      .daily-quote-top {
+      .life-mantra-top {
         position: relative;
         z-index: 1;
         display: flex;
@@ -1741,7 +1745,7 @@
         gap: 12px;
       }
 
-      .daily-quote-badge {
+      .life-mantra-badge {
         width: 38px;
         height: 38px;
         display: grid;
@@ -1749,18 +1753,19 @@
         border-radius: 50%;
         color: #101418;
         background: var(--gold);
-        font-size: 14px;
+        font-size: 24px;
+        line-height: 1;
         font-weight: 950;
       }
 
-      .daily-quote-copy {
+      .life-mantra-copy {
         flex: 1;
         min-width: 0;
         display: grid;
         gap: 3px;
       }
 
-      .daily-quote-copy small {
+      .life-mantra-copy small {
         color: rgba(255, 249, 237, 0.72);
         font-size: 10px;
         line-height: 1.1;
@@ -1769,7 +1774,7 @@
         font-weight: 950;
       }
 
-      .daily-quote-copy em {
+      .life-mantra-copy em {
         color: var(--gold);
         font-size: 12px;
         line-height: 1.25;
@@ -1777,7 +1782,7 @@
         font-weight: 950;
       }
 
-      .daily-quote-open {
+      .life-mantra-listen {
         flex: 0 0 auto;
         max-width: 84px;
         min-height: 30px;
@@ -1793,37 +1798,16 @@
         white-space: nowrap;
       }
 
-      #dailyQuoteText {
+      #lifeMantraText {
         position: relative;
         z-index: 1;
         display: block;
         overflow: visible;
         color: #fff9ed;
-        font-size: 18.5px;
-        line-height: 1.18;
+        font-size: 18px;
+        line-height: 1.2;
         font-weight: 950;
         overflow-wrap: break-word;
-      }
-
-      .daily-quote-author {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: rgba(255, 249, 237, 0.72);
-        font-size: 11px;
-        line-height: 1.25;
-        font-style: normal;
-        font-weight: 900;
-      }
-
-      .daily-quote-author::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        border-radius: 999px;
-        background: rgba(232, 196, 104, 0.26);
       }
 
       .life-map-card {
@@ -7484,7 +7468,7 @@
           line-height: 1.1;
         }
 
-        .daily-quote-card {
+        .life-mantra-card {
           min-height: 104px;
           max-height: none;
           align-content: center;
@@ -7493,28 +7477,28 @@
           padding: 10px 12px;
         }
 
-        .daily-quote-card::before,
-        .daily-quote-card::after {
+        .life-mantra-card::before,
+        .life-mantra-card::after {
           display: none;
         }
 
-        .daily-quote-top {
+        .life-mantra-top {
           gap: 10px;
         }
 
-        .daily-quote-badge {
+        .life-mantra-badge {
           width: 34px;
           height: 34px;
-          font-size: 12px;
+          font-size: 20px;
         }
 
-        .daily-quote-open {
+        .life-mantra-listen {
           min-height: 28px;
           padding: 0 10px;
           font-size: 11px;
         }
 
-        #dailyQuoteText {
+        #lifeMantraText {
           display: -webkit-box;
           overflow: hidden;
           -webkit-box-orient: vertical;
@@ -7522,11 +7506,6 @@
           max-height: calc(2 * 1.16em);
           font-size: clamp(14.5px, 4.15vw, 16px);
           line-height: 1.16;
-        }
-
-        .daily-quote-author {
-          display: none;
-          font-size: 10px;
         }
 
         .why-workbench::before,
@@ -7894,6 +7873,62 @@
       }
 
       @media (max-width: 520px) and (max-height: 740px) {
+        .life-onboarding {
+          gap: 7px;
+          padding: 10px 12px 0;
+        }
+
+        .life-onboarding .setup-mini-mark {
+          display: none;
+        }
+
+        .life-onboarding h1 {
+          font-size: clamp(21px, 6vw, 25px);
+          line-height: 1.02;
+        }
+
+        .life-onboarding p {
+          font-size: 11.2px;
+          line-height: 1.2;
+        }
+
+        .setup-showcase {
+          min-height: 132px;
+          padding: 9px;
+        }
+
+        .setup-dot-map span {
+          width: 5.6px;
+          height: 5.6px;
+        }
+
+        .setup-progress {
+          height: 18px;
+          margin-top: 8px;
+        }
+
+        .setup-showcase-foot,
+        .setup-journey {
+          display: none;
+        }
+
+        .field-stack {
+          gap: 6px;
+        }
+
+        .field {
+          gap: 4px;
+        }
+
+        .field input {
+          min-height: 37px;
+          border-radius: 14px;
+        }
+
+        #saveLifeProfile {
+          min-height: 43px;
+        }
+
         .runway-reveal-card {
           gap: 7px;
           padding: max(34px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom));
@@ -8256,29 +8291,25 @@
           font-size: 8px;
         }
 
-        .daily-quote-card {
+        .life-mantra-card {
           min-height: 64px;
           max-height: none;
           gap: 4px;
           padding: 10px;
         }
 
-        .daily-quote-badge {
+        .life-mantra-badge {
           width: 30px;
           height: 30px;
-          font-size: 11px;
+          font-size: 18px;
         }
 
-        .daily-quote-open {
+        .life-mantra-listen {
           min-height: 26px;
           font-size: 10px;
         }
 
-        #dailyQuoteText {
-          display: none;
-        }
-
-        .daily-quote-author {
+        #lifeMantraText {
           display: none;
         }
 
@@ -8652,16 +8683,20 @@
               </div>
               <div class="field-stack">
                 <label class="field">
-                  <span>Your first name</span>
+                  <span id="profileNameLabel">Your first name</span>
                   <input id="profileName" type="text" maxlength="32" autocomplete="given-name" placeholder="Example: Alex" />
                 </label>
                 <label class="field">
-                  <span>Your age</span>
+                  <span id="profileAgeLabel">Your age</span>
                   <input id="lifeAge" type="number" min="1" max="120" inputmode="numeric" placeholder="Example: 28" />
                 </label>
                 <label class="field">
-                  <span>Life estimate</span>
+                  <span id="profileEstimateLabel">Life estimate</span>
                   <input id="lifeExpectancy" type="number" min="50" max="120" inputmode="numeric" value="85" />
+                </label>
+                <label class="field mantra-field">
+                  <span id="profileMantraLabel">Personal mantra</span>
+                  <input id="profileMantra" type="text" maxlength="140" autocomplete="off" placeholder="Example: I keep the promises I make to myself." />
                 </label>
               </div>
               <button class="btn" id="saveLifeProfile" type="button">Create profile</button>
@@ -8698,17 +8733,16 @@
                 <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
                 <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
               </div>
-              <button class="daily-quote-card" id="dailyQuoteCard" type="button" data-quote-index="01">
-                <span class="daily-quote-top">
-                  <span class="daily-quote-badge" id="dailyQuoteBadge">01</span>
-                  <span class="daily-quote-copy">
-                    <small id="dailyQuoteKicker">Daily quote</small>
-                    <em id="dailyQuoteDay">1 / 100</em>
+              <button class="life-mantra-card hidden" id="lifeMantraCard" type="button" aria-label="Play personal mantra">
+                <span class="life-mantra-top">
+                  <span class="life-mantra-badge" aria-hidden="true">"</span>
+                  <span class="life-mantra-copy">
+                    <small id="lifeMantraKicker">Personal mantra</small>
+                    <em id="lifeMantraHint">Tap to hear it</em>
                   </span>
-                  <span class="daily-quote-open" id="dailyQuoteOpen">open</span>
+                  <span class="life-mantra-listen" id="lifeMantraListen">play</span>
                 </span>
-                <strong id="dailyQuoteText">Energy and persistence conquer all things.</strong>
-                <em class="daily-quote-author" id="dailyQuoteAuthor">Benjamin Franklin</em>
+                <strong id="lifeMantraText">I keep the promises I make to myself.</strong>
               </button>
               <div class="life-map-card" id="lifeMapCard" role="button" tabindex="0" aria-label="Open lifetime runway">
                 <div class="life-map-top">
@@ -9486,6 +9520,11 @@
           firstName: "Your first name",
           age: "Your age",
           estimate: "Life estimate",
+          personalMantra: "Personal mantra",
+          personalMantraPlaceholder: "Example: I keep the promises I make to myself.",
+          personalMantraHint: "Tap to hear it",
+          personalMantraPlay: "play",
+          personalMantraPlaying: "Mantra playing",
           createProfile: "Create profile",
           lifeClock: "Life clock",
           daysLeft: "days left",
@@ -9597,6 +9636,11 @@
         "quote.title": "Read it. Move.",
         "quote.open": "open",
         "quote.close": "Start today",
+        personalMantra: "Personal mantra",
+        personalMantraPlaceholder: "Example: I keep the promises I make to myself.",
+        personalMantraHint: "Tap to hear it",
+        personalMantraPlay: "play",
+        personalMantraPlaying: "Mantra playing",
         monthRunwayKicker: "Lifetime runway",
         monthRunwayText: "Only {rows} rows of 12 months remain. One row disappears every year.",
         runwayOpen: "Open lifetime runway",
@@ -9662,6 +9706,11 @@
         "quote.title": "Leela. Avanza.",
         "quote.open": "abrir",
         "quote.close": "Empezar hoy",
+        personalMantra: "Mantra personal",
+        personalMantraPlaceholder: "Ejemplo: Cumplo las promesas que me hago.",
+        personalMantraHint: "Toca para escucharlo",
+        personalMantraPlay: "play",
+        personalMantraPlaying: "Mantra reproduciendo",
         monthRunwayKicker: "Pista de vida",
         monthRunwayText: "Quedan solo {rows} filas de 12 meses. Cada ano desaparece una fila.",
         runwayOpen: "Abrir pista de vida",
@@ -9745,6 +9794,11 @@
         "quote.title": "Lis-la. Avance.",
         "quote.open": "ouvrir",
         "quote.close": "Commencer",
+        personalMantra: "Mantra personnel",
+        personalMantraPlaceholder: "Exemple: je tiens les promesses que je me fais.",
+        personalMantraHint: "Appuie pour l'ecouter",
+        personalMantraPlay: "play",
+        personalMantraPlaying: "Mantra en lecture",
         monthRunwayKicker: "Piste de vie",
         monthRunwayText: "Il reste seulement {rows} rangees de 12 mois. Une rangee disparait chaque annee.",
         runwayOpen: "Ouvrir la piste de vie",
@@ -9828,6 +9882,11 @@
         "quote.title": "Leia. Avance.",
         "quote.open": "abrir",
         "quote.close": "Comecar hoje",
+        personalMantra: "Mantra pessoal",
+        personalMantraPlaceholder: "Exemplo: cumpro as promessas que faco a mim mesmo.",
+        personalMantraHint: "Toque para ouvir",
+        personalMantraPlay: "play",
+        personalMantraPlaying: "Mantra tocando",
         monthRunwayKicker: "Pista de vida",
         monthRunwayText: "Restam apenas {rows} fileiras de 12 meses. Uma fileira desaparece a cada ano.",
         runwayOpen: "Abrir pista de vida",
@@ -9910,6 +9969,11 @@
         lifeUpdateTitle: "One day spent. Use the next one.",
         lifeUpdateSub: "Your clock moved. Make today earn its place.",
         "quote.close": "Start today",
+        personalMantra: "Personal mantra",
+        personalMantraPlaceholder: "Example: I keep the promises I make to myself.",
+        personalMantraHint: "Tap to hear it",
+        personalMantraPlay: "play",
+        personalMantraPlaying: "Mantra playing",
         monthRunwayKicker: "Lifetime runway",
         monthRunwayText: "Only {rows} rows of 12 months remain. One row disappears every year.",
         runwayTapHint: "Open runway",
@@ -10036,11 +10100,13 @@
         setText("#setupJourneyLife", "navLife");
         setText("#setupJourneyGoal", "navGoal");
         setText("#setupJourneyVision", "navVision");
-        setText("#lifeOnboarding .field:nth-child(1) span", "firstName");
-        setText("#lifeOnboarding .field:nth-child(2) span", "age");
-        setText("#lifeOnboarding .field:nth-child(3) span", "estimate");
+        setText("#profileNameLabel", "firstName");
+        setText("#profileAgeLabel", "age");
+        setText("#profileEstimateLabel", "estimate");
+        setText("#profileMantraLabel", "personalMantra");
         setPlaceholder("#profileName", "firstName");
         setPlaceholder("#lifeAge", "age");
+        setPlaceholder("#profileMantra", "personalMantraPlaceholder");
         setText("#saveLifeProfile", "createProfile");
 
         setText("#lifeDashboard .deck-kicker", "lifeClock");
@@ -10064,8 +10130,9 @@
         setText(".life-stat:nth-child(3) span", "lifeUsed");
         setText("#lifeMapTitle", "lifeMapTitle");
         setText("#lifeMapOpenHint", "runwayMapHint");
-        setText("#dailyQuoteKicker", "quote.kicker");
-        setText("#dailyQuoteOpen", "quote.open");
+        setText("#lifeMantraKicker", "personalMantra");
+        setText("#lifeMantraHint", "personalMantraHint");
+        setText("#lifeMantraListen", "personalMantraPlay");
         setText("#dailyQuoteRevealKicker", "quote.kicker");
         setText("#dailyQuoteRevealTitle", "quote.title");
         setText("#closeDailyQuote", "quote.close");
@@ -10207,7 +10274,6 @@
       let selfTalkPlaying = false;
       let speechStage = "overview";
       let voiceScrollTimer = null;
-      let dailyQuoteTimer = null;
       let currentView = "today";
       let editorKind = "vision";
       let editingProgressIndex = null;
@@ -10570,7 +10636,6 @@
         paint();
         updateBackButton();
         setTimeout(showLifeClockForPendingUpdate, 360);
-        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 1100);
       }
 
       function notify(text) {
@@ -10660,6 +10725,31 @@
         }
       }
 
+      function activeMantra() {
+        return String(state.mantra || "").trim();
+      }
+
+      function renderLifeMantra() {
+        const card = document.getElementById("lifeMantraCard");
+        const text = document.getElementById("lifeMantraText");
+        const dashboard = document.getElementById("lifeDashboard");
+        if (!card || !text) return;
+        const mantra = activeMantra();
+        const hasMantra = Boolean(mantra);
+        card.classList.toggle("hidden", !hasMantra);
+        card.setAttribute("aria-hidden", hasMantra ? "false" : "true");
+        dashboard?.classList.toggle("has-mantra", hasMantra);
+        dashboard?.classList.toggle("no-mantra", !hasMantra);
+        if (hasMantra) text.textContent = `"${mantra}"`;
+      }
+
+      function playLifeMantra() {
+        const mantra = activeMantra();
+        if (!mantra) return;
+        speak(mantra);
+        notify(uiText("personalMantraPlaying"));
+      }
+
       function openDailyQuote({ force = false } = {}) {
         if (!DAILY_QUOTES.length) return;
         if (!force && !state.lifeProfile.complete) return;
@@ -10710,18 +10800,6 @@
         const modal = document.getElementById("lifeRunwayReveal");
         modal.classList.remove("open");
         modal.setAttribute("aria-hidden", "true");
-      }
-
-      function scheduleDailyQuote(delay = 900) {
-        clearTimeout(dailyQuoteTimer);
-        if (!state.lifeProfile.complete) return;
-        if (
-          state.lifeProfile.lastQuoteDate === todayKey() &&
-          state.lifeProfile.lastQuoteRitualVersion === QUOTE_RITUAL_VERSION
-        ) {
-          return;
-        }
-        dailyQuoteTimer = setTimeout(() => openDailyQuote(), delay);
       }
 
       function currentDailyInsight() {
@@ -11246,7 +11324,7 @@
           return `<span class="life-dot ${isSpent ? "spent" : ""} ${justSpent ? "just-spent" : ""}" aria-hidden="true"></span>`;
         }).join("");
         document.getElementById("lifeLegend").textContent = uiText("lifeLegend");
-        renderDailyQuote();
+        renderLifeMantra();
       }
 
       function animateNumberValue(element, fromValue, toValue, formatter = formatNumber) {
@@ -11403,7 +11481,6 @@
         saveWithoutSyncBump();
         renderLifeStatsValues({ ...currentStats, ...previous }, { animateMonth: false });
         await showLifeUpdateOverlay(previous, currentStats);
-        scheduleDailyQuote(520);
         requestAnimationFrame(() => {
           document.getElementById("lifeProgressBar").style.width = `${currentStats.usedPercent}%`;
           document.getElementById("lifeMapCounter").textContent = `${formatNumber(currentStats.spentMonths)}/${formatNumber(currentStats.totalMonths)}`;
@@ -11436,6 +11513,7 @@
         document.getElementById("profileName").value = state.account.name || "";
         document.getElementById("lifeAge").value = state.lifeProfile.age || "";
         document.getElementById("lifeExpectancy").value = state.lifeProfile.expectancy || 85;
+        document.getElementById("profileMantra").value = activeMantra();
 
         if (!isComplete) return;
 
@@ -11721,7 +11799,6 @@
         if (name === "today") {
           resetLifeDashboardScroll();
           setTimeout(animateLifeClockIfNeeded, 180);
-          scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
         }
       }
 
@@ -11976,6 +12053,7 @@
         const name = document.getElementById("profileName").value.trim();
         const age = clampNumber(document.getElementById("lifeAge").value, 0, 120);
         const expectancy = clampNumber(document.getElementById("lifeExpectancy").value || 85, 50, 120);
+        const mantra = document.getElementById("profileMantra").value.trim();
 
         if (!name) {
           notify("Add your name first");
@@ -11988,13 +12066,16 @@
         }
 
         state.account.name = name;
+        state.mantra = mantra;
+        const previousProfile = state.lifeProfile || {};
         state.lifeProfile = {
           complete: true,
           age,
           expectancy: Math.max(expectancy, age + 1),
-          startedAt: new Date().toISOString(),
+          startedAt: previousProfile.startedAt || new Date().toISOString(),
           lastAnimatedDate: "",
           lastQuoteDate: "",
+          lastQuoteRitualVersion: "",
           lastSnapshot: null,
           lifeUpdateAnimationVersion: ""
         };
@@ -12721,7 +12802,7 @@
         event.preventDefault();
         openLifeRunway();
       });
-      document.getElementById("dailyQuoteCard").addEventListener("click", () => openDailyQuote({ force: true }));
+      document.getElementById("lifeMantraCard").addEventListener("click", playLifeMantra);
       document.getElementById("closeDailyQuote").addEventListener("click", closeDailyQuote);
       document.getElementById("dailyQuoteReveal").addEventListener("click", (event) => {
         if (event.target.id === "dailyQuoteReveal") closeDailyQuote();
@@ -12921,18 +13002,15 @@
         if (document.visibilityState === "visible") {
           if (currentView === "today") resetLifeDashboardScroll();
           showLifeClockForPendingUpdate();
-          scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
         }
       });
       window.addEventListener("pageshow", () => {
         if (currentView === "today") resetLifeDashboardScroll();
         showLifeClockForPendingUpdate();
-        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
       });
       window.addEventListener("focus", () => {
         if (currentView === "today") resetLifeDashboardScroll();
         showLifeClockForPendingUpdate();
-        scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
       });
       if ("speechSynthesis" in window) {
         speechSynthesis.onvoiceschanged = populateVoiceOptions;
