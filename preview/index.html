@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=129" />
+    <link rel="manifest" href="./manifest.webmanifest?v=130" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v129";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v130";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=129")
+            .register("./service-worker.js?v=130")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -6849,12 +6849,64 @@
       .runway-years-card {
         min-height: 0;
         display: grid;
-        grid-template-rows: auto minmax(0, 1fr);
-        gap: 12px;
+        grid-template-rows: auto auto minmax(0, 1fr);
+        gap: 10px;
         padding: 16px 14px 14px;
         background:
           radial-gradient(circle at 16% 100%, rgba(218, 90, 58, 0.1), transparent 34%),
           rgba(255, 249, 237, 0.065);
+      }
+
+      .runway-years-legend {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .runway-years-legend span {
+        min-width: 0;
+        min-height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border: 1px solid rgba(255, 249, 237, 0.08);
+        border-radius: 999px;
+        padding: 0 8px;
+        background: rgba(255, 249, 237, 0.055);
+      }
+
+      .runway-years-legend i {
+        width: 9px;
+        height: 9px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.03);
+      }
+
+      .runway-years-legend i.spent {
+        background: rgba(218, 90, 58, 0.72);
+        box-shadow: 0 0 0 4px rgba(218, 90, 58, 0.12);
+      }
+
+      .runway-years-legend i.now {
+        background: var(--gold);
+        box-shadow: 0 0 0 4px rgba(232, 196, 104, 0.14);
+      }
+
+      .runway-years-legend i.left {
+        background: rgba(255, 249, 237, 0.9);
+      }
+
+      .runway-years-legend b {
+        min-width: 0;
+        color: rgba(255, 249, 237, 0.76);
+        font-size: 9.8px;
+        line-height: 1.05;
+        font-weight: 950;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .runway-years-map {
@@ -6879,6 +6931,24 @@
         border-radius: 999px;
         background: rgba(255, 249, 237, 0.86);
         opacity: 0.95;
+      }
+
+      .runway-years-map span.spent {
+        border-color: rgba(218, 90, 58, 0.16);
+        background: rgba(218, 90, 58, 0.24);
+        opacity: 0.42;
+      }
+
+      .runway-years-map span.now {
+        border-color: rgba(232, 196, 104, 0.86);
+        background: var(--gold);
+        opacity: 1;
+        box-shadow: 0 0 0 3px rgba(232, 196, 104, 0.13), 0 0 18px rgba(232, 196, 104, 0.24);
+      }
+
+      .runway-years-map span.available {
+        border-color: rgba(255, 249, 237, 0.1);
+        background: rgba(255, 249, 237, 0.88);
       }
 
       .runway-years-map span.filler {
@@ -7163,6 +7233,20 @@
           gap: 9px;
           padding: 13px 12px 12px;
           border-radius: 24px;
+        }
+
+        .runway-years-legend {
+          gap: 5px;
+        }
+
+        .runway-years-legend span {
+          min-height: 27px;
+          gap: 5px;
+          padding-inline: 6px;
+        }
+
+        .runway-years-legend b {
+          font-size: 8.9px;
         }
 
         .runway-years-map {
@@ -7875,6 +7959,25 @@
         .runway-years-card {
           gap: 7px;
           padding: 10px;
+        }
+
+        .runway-years-legend {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 4px;
+        }
+
+        .runway-years-legend span {
+          min-height: 23px;
+          padding-inline: 4px;
+        }
+
+        .runway-years-legend i {
+          width: 7px;
+          height: 7px;
+        }
+
+        .runway-years-legend b {
+          font-size: 7.5px;
         }
 
         .runway-years-map {
@@ -9075,6 +9178,11 @@
                 <span id="runwayYearsLabel">Rows left</span>
                 <strong id="runwayRowsCount">0 rows</strong>
               </div>
+              <div class="runway-years-legend" aria-hidden="true">
+                <span><i class="spent"></i><b id="runwaySpentLegend">0 spent</b></span>
+                <span><i class="now"></i><b id="runwayNowLegend">now</b></span>
+                <span><i class="left"></i><b id="runwayLeftLegend">0 left</b></span>
+              </div>
               <div class="runway-years-map" id="runwayYearsMap" aria-hidden="true"></div>
             </div>
             <button class="runway-commit" id="closeLifeRunwayBottom" type="button">Back to clock</button>
@@ -9415,8 +9523,11 @@
           runwayUrgencyText: "Make this month count before it disappears.",
           runwayThisYear: "This year",
           runwayNow: "now",
-          runwayRowsLabel: "Rows left",
+          runwayRowsLabel: "Whole timeline",
           runwayRowsCount: "{rows} rows",
+          runwaySpentCount: "{months} spent",
+          runwayNowMarker: "now",
+          runwayLeftCount: "{months} left",
           runwayClose: "Back to clock",
           editInfo: "Edit info",
           dailyTasks: "Daily tasks",
@@ -9512,8 +9623,11 @@
         runwayUrgencyText: "Make this month count before it disappears.",
         runwayThisYear: "This year",
         runwayNow: "now",
-        runwayRowsLabel: "Rows left",
+        runwayRowsLabel: "Whole timeline",
         runwayRowsCount: "{rows} rows",
+        runwaySpentCount: "{months} spent",
+        runwayNowMarker: "now",
+        runwayLeftCount: "{months} left",
         runwayClose: "Back to clock",
         lifeUpdateTitle: "One day spent. Use the next one.",
         lifeUpdateSub: "Your clock moved. Make today earn its place.",
@@ -9575,8 +9689,11 @@
         runwayUrgencyText: "Haz que este mes cuente antes de que desaparezca.",
         runwayThisYear: "Este ano",
         runwayNow: "ahora",
-        runwayRowsLabel: "Filas restantes",
+        runwayRowsLabel: "Linea completa",
         runwayRowsCount: "{rows} filas",
+        runwaySpentCount: "{months} gastados",
+        runwayNowMarker: "ahora",
+        runwayLeftCount: "{months} restantes",
         runwayClose: "Volver al reloj",
         lifeUpdateTitle: "Un dia paso. Usa el siguiente.",
         lifeUpdateSub: "Tu reloj avanzo. Haz que hoy valga.",
@@ -9655,8 +9772,11 @@
         runwayUrgencyText: "Fais compter ce mois avant qu'il disparaisse.",
         runwayThisYear: "Cette annee",
         runwayNow: "maintenant",
-        runwayRowsLabel: "Rangees restantes",
+        runwayRowsLabel: "Chronologie complete",
         runwayRowsCount: "{rows} rangees",
+        runwaySpentCount: "{months} passes",
+        runwayNowMarker: "maintenant",
+        runwayLeftCount: "{months} restants",
         runwayClose: "Retour a l'horloge",
         lifeUpdateTitle: "Un jour est passe. Utilise le suivant.",
         lifeUpdateSub: "Ton horloge avance. Fais compter aujourd'hui.",
@@ -9735,8 +9855,11 @@
         runwayUrgencyText: "Faca este mes contar antes que ele desapareca.",
         runwayThisYear: "Este ano",
         runwayNow: "agora",
-        runwayRowsLabel: "Fileiras restantes",
+        runwayRowsLabel: "Linha completa",
         runwayRowsCount: "{rows} fileiras",
+        runwaySpentCount: "{months} gastos",
+        runwayNowMarker: "agora",
+        runwayLeftCount: "{months} restantes",
         runwayClose: "Voltar ao relogio",
         lifeUpdateTitle: "Um dia passou. Use o proximo.",
         lifeUpdateSub: "Seu relogio avancou. Faca hoje valer.",
@@ -9810,6 +9933,11 @@
         runwayTapHint: "Open runway",
         runwayMapHint: "Full screen",
         runwayUrgencyText: "Make this month count before it disappears.",
+        runwayRowsLabel: "Whole timeline",
+        runwayRowsCount: "{rows} rows",
+        runwaySpentCount: "{months} spent",
+        runwayNowMarker: "now",
+        runwayLeftCount: "{months} left",
         profileDefault: "你的资料",
         accountSummaryLocal: "你的资料保存在此设备上。无需创建账号也可以继续完善。",
         accountStatusLocal: "已保存在此设备",
@@ -9943,6 +10071,10 @@
         setText("#runwayThisYear", "runwayThisYear");
         setText("#runwayCurrentMonth", "runwayNow");
         setText("#runwayYearsLabel", "runwayRowsLabel");
+        setText("#runwayRowsCount", "runwayRowsCount", { rows: 0 });
+        setText("#runwaySpentLegend", "runwaySpentCount", { months: 0 });
+        setText("#runwayNowLegend", "runwayNowMarker");
+        setText("#runwayLeftLegend", "runwayLeftCount", { months: 0 });
         setText("#closeLifeRunway", "back");
         setText("#closeLifeRunwayBottom", "runwayClose");
         setText(".life-stat:nth-child(1) span", "weeksLeft");
@@ -10722,7 +10854,9 @@
 
       function renderLifeRunwayReveal(stats = getLifeStats()) {
         const months = Math.max(0, Math.round(stats.monthsLeft || 0));
-        const rows = Math.max(0, Math.ceil(months / 12));
+        const totalMonths = Math.max(12, Math.round(stats.totalMonths || months || 12));
+        const spentMonths = Math.min(totalMonths, Math.max(0, Math.round(stats.spentMonths || 0)));
+        const rows = Math.max(1, Math.ceil(totalMonths / 12));
         const now = new Date();
         const currentMonth = now.getMonth();
         const monthName = new Intl.DateTimeFormat(state.settings.language || "en", { month: "short" }).format(now);
@@ -10733,6 +10867,9 @@
         const currentNode = document.getElementById("runwayCurrentMonth");
         const yearsLabel = document.getElementById("runwayYearsLabel");
         const rowsCount = document.getElementById("runwayRowsCount");
+        const spentLegend = document.getElementById("runwaySpentLegend");
+        const nowLegend = document.getElementById("runwayNowLegend");
+        const leftLegend = document.getElementById("runwayLeftLegend");
         const orbit = document.getElementById("runwayRevealOrbit");
         const yearsMap = document.getElementById("runwayYearsMap");
         if (monthsNode) monthsNode.textContent = formatNumber(months);
@@ -10742,6 +10879,9 @@
         if (currentNode) currentNode.textContent = `${uiText("runwayNow")} - ${monthName}`;
         if (yearsLabel) yearsLabel.textContent = uiText("runwayRowsLabel");
         if (rowsCount) rowsCount.textContent = uiText("runwayRowsCount", { rows: formatNumber(rows) });
+        if (spentLegend) spentLegend.textContent = uiText("runwaySpentCount", { months: formatNumber(spentMonths) });
+        if (nowLegend) nowLegend.textContent = uiText("runwayNowMarker");
+        if (leftLegend) leftLegend.textContent = uiText("runwayLeftCount", { months: formatNumber(months) });
         if (orbit) {
           orbit.innerHTML = Array.from({ length: 12 }, (_, index) => {
             const stateClass = index < currentMonth ? "spent" : index === currentMonth ? "now" : "";
@@ -10749,11 +10889,17 @@
           }).join("");
         }
         if (yearsMap) {
-          const cellCount = Math.max(12, rows * 12);
-          yearsMap.innerHTML = Array.from({ length: cellCount }, (_, index) => {
-            const className = index < months ? "available" : "filler";
+          yearsMap.innerHTML = Array.from({ length: totalMonths }, (_, index) => {
+            const className = index < spentMonths ? "spent" : index === spentMonths && months > 0 ? "now" : "available";
             return `<span class="${className}" aria-hidden="true"></span>`;
           }).join("");
+          requestAnimationFrame(() => {
+            const maxScroll = Math.max(0, yearsMap.scrollHeight - yearsMap.clientHeight);
+            if (!maxScroll) return;
+            const spentRatio = Math.min(1, Math.max(0, spentMonths / totalMonths));
+            const target = (yearsMap.scrollHeight * spentRatio) - (yearsMap.clientHeight * 0.42);
+            yearsMap.scrollTop = Math.max(0, Math.min(maxScroll, target));
+          });
         }
       }
 
