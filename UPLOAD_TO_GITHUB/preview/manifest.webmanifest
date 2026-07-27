@@ -1,7 +1,7 @@
 {
   "name": "Visualize",
   "short_name": "Visualize",
-  "start_url": "./index.html?v=126",
+  "start_url": "./index.html?v=127",
   "display": "standalone",
   "background_color": "#07090b",
   "theme_color": "#07090b",
