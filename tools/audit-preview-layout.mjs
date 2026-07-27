@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-27-v120",
+  appVersion: "2026-07-27-v121",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v120");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v121");
     `
   });
   const failures = [];
@@ -217,7 +217,7 @@ try {
           expression: `(() => {
         const baseSelectors = [
           '.stage', '.phone', '.app', '.topbar', '.nav', '.screen.active',
-          '.life-head', '.life-months-card', '.life-months-open', '.life-stats', '.daily-quote-card', '.life-map-card',
+          '.life-head', '.life-months-card', '.life-months-open', '.life-stats', '.daily-quote-card', '.life-map-card', '.life-map-open-hint',
           '.why-workbench', '.why-workbench-head', '.why-motive-stack', '.why-motive-card', '.why-prompts', '.why-prompts span', '#uploadWhyPhoto', '.why-people-grid',
           '.vision-empty', '.anti-empty', '.deck-stage', '.deck-actions',
           '.speech-head', '.speech-studio', '.speech-current-card', '.speech-voice-summary',
@@ -239,6 +239,7 @@ try {
           '.life-months-copy strong b',
           '.life-months-copy strong em',
           '.life-months-copy p',
+          '.life-map-open-hint',
           '.daily-quote-open',
           '#dailyQuoteText',
           '.why-prompts span',
