@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=119" />
+    <link rel="manifest" href="./manifest.webmanifest?v=120" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v119";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v120";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=119")
+            .register("./service-worker.js?v=120")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -7134,7 +7134,8 @@
         }
 
         .speech-overview-tools {
-          grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+          grid-template-columns: minmax(0, 1fr);
+          gap: 8px;
         }
 
         .speech-script-panel {
@@ -7590,19 +7591,19 @@
         }
 
         .speech-head {
-          min-height: 256px;
-          row-gap: 5px;
-          padding: 22px 16px 18px;
+          min-height: 216px;
+          row-gap: 4px;
+          padding: 18px 16px 15px;
         }
 
         .speech-head h2 {
-          font-size: clamp(24px, 7vw, 29px);
-          line-height: 1.1;
+          font-size: clamp(22px, 6.4vw, 27px);
+          line-height: 1.08;
         }
 
         .speech-head p {
-          font-size: 11.4px;
-          line-height: 1.24;
+          font-size: 10.8px;
+          line-height: 1.2;
         }
 
         .speech-playback-meta {
@@ -7611,7 +7612,7 @@
         }
 
         .speech-meter {
-          height: 20px;
+          height: 18px;
           gap: 5px;
           margin-top: 0;
         }
@@ -7621,7 +7622,7 @@
         }
 
         .speech-play-main {
-          min-height: 44px;
+          min-height: 42px;
           margin-top: 2px;
         }
 
@@ -7630,12 +7631,12 @@
         }
 
         .speech-current-card {
-          min-height: 106px;
-          padding: 14px;
+          min-height: 100px;
+          padding: 13px;
         }
 
         .speech-overview-tools {
-          grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+          grid-template-columns: minmax(0, 1fr);
           align-items: stretch;
           gap: 8px;
         }
@@ -7646,9 +7647,9 @@
 
         .speech-voice-summary {
           order: 2;
-          min-height: auto;
-          display: grid;
-          align-content: center;
+          min-height: 56px;
+          display: flex;
+          align-items: center;
           gap: 7px;
         }
 
@@ -7660,7 +7661,7 @@
         }
 
         .speech-script-panel {
-          padding: 9px;
+          padding: 10px;
         }
 
         .speech-script-top {
@@ -7668,13 +7669,22 @@
         }
 
         .speech-list {
-          min-height: 36px;
+          min-height: 42px;
         }
 
         .speech-pill {
-          min-width: 112px;
-          max-width: 132px;
-          padding: 7px;
+          min-width: min(100%, 212px);
+          max-width: 240px;
+          padding: 8px 8px 8px 10px;
+        }
+
+        .speech-select strong {
+          display: -webkit-box;
+          overflow: hidden;
+          white-space: normal;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          line-height: 1.08;
         }
 
         .player-slide {
