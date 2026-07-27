@@ -16,7 +16,7 @@ Use this when the Apple Developer Program membership is active.
 
 1. App Store Connect app name must be unique. Use `Kairum`. The installed app name is also `Kairum`.
 2. Log in to Expo/EAS on this PC.
-3. Link or initialize the EAS project. EAS will add the real project ID to `app.json`.
+3. Link or initialize the EAS project. EAS project ID: `f7ee511a-7ffa-4b1f-ab03-0b474edf6164`.
 
 ## What you must do
 
@@ -94,7 +94,7 @@ These commands are for Codex to run/guided-run tomorrow:
 npx.cmd expo-doctor
 npx.cmd expo export --platform ios --output-dir .tmp\expo-export-check --clear
 npx.cmd eas-cli login
-npx.cmd eas-cli init
+npx.cmd eas-cli init --id f7ee511a-7ffa-4b1f-ab03-0b474edf6164
 npx.cmd eas-cli build --platform ios --profile production
 npx.cmd eas-cli submit --platform ios --profile production
 ```

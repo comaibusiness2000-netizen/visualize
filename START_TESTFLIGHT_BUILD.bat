@@ -24,7 +24,7 @@ if errorlevel 1 goto fail
 
 echo.
 echo 3/5 - Collegamento progetto EAS...
-call npx.cmd eas-cli init
+call npx.cmd eas-cli init --id f7ee511a-7ffa-4b1f-ab03-0b474edf6164
 if errorlevel 1 goto fail
 
 echo.
