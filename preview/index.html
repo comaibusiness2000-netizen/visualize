@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=113" />
+    <link rel="manifest" href="./manifest.webmanifest?v=114" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-26-v113";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v114";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=113")
+            .register("./service-worker.js?v=114")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -930,11 +930,14 @@
       }
 
       .mini-link {
-        border: 0;
-        color: var(--muted);
-        background: transparent;
+        min-height: 32px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0 12px;
+        color: var(--ink);
+        background: var(--soft);
         font-size: 12px;
-        font-weight: 900;
+        font-weight: 950;
       }
 
       .helper-copy {
@@ -4165,13 +4168,11 @@
         flex: 0 0 auto;
         display: grid;
         min-width: 0;
-        gap: 10px;
-        border: 1px solid var(--line);
-        border-radius: 32px;
-        padding: 12px;
-        background:
-          radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.09), transparent 34%),
-          var(--control);
+        gap: 9px;
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+        background: transparent;
         animation: premiumPanelIn 0.72s 0.07s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
@@ -4221,9 +4222,11 @@
         min-width: 0;
         gap: 8px;
         border: 1px solid var(--line);
-        border-radius: 24px;
-        padding: 11px;
-        background: rgba(255, 255, 255, 0.03);
+        border-radius: 26px;
+        padding: 13px;
+        background:
+          radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.07), transparent 32%),
+          var(--control);
       }
 
       .speech-script-top {
@@ -4243,7 +4246,7 @@
       }
 
       .speech-list {
-        min-height: 42px;
+        min-height: 44px;
         display: flex;
         gap: 7px;
         overflow-x: auto;
@@ -4327,14 +4330,14 @@
 
       .speech-current-card {
         position: relative;
-        min-height: 138px;
+        min-height: 124px;
         display: grid;
         align-content: center;
         gap: 8px;
         overflow: hidden;
         border: 1px solid var(--line);
         border-radius: 30px;
-        padding: 20px;
+        padding: 18px;
         color: var(--ink);
         background:
           radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.18), transparent 34%),
@@ -4372,7 +4375,7 @@
       .speech-current-card strong {
         max-width: calc(100% - 72px);
         color: var(--ink);
-        font-size: clamp(23px, 6.6vw, 29px);
+        font-size: clamp(22px, 6.1vw, 28px);
         line-height: 1.08;
         font-weight: 950;
         overflow-wrap: anywhere;
@@ -4406,22 +4409,24 @@
       }
 
       .speech-voice-summary {
-        min-height: 66px;
+        min-height: 76px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         min-width: 0;
         gap: 14px;
         border: 1px solid var(--line);
-        border-radius: 24px;
-        padding: 13px 15px;
-        background: var(--control);
+        border-radius: 26px;
+        padding: 14px 15px;
+        background:
+          radial-gradient(circle at 88% 8%, rgba(232, 196, 104, 0.14), transparent 34%),
+          var(--control);
       }
 
       .speech-overview-tools {
         display: grid;
-        grid-template-columns: minmax(0, 1.16fr) minmax(0, 0.84fr);
-        gap: 10px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 9px;
       }
 
       .speech-voice-summary strong {
@@ -6300,9 +6305,9 @@
         }
 
         .speech-studio {
-          border-radius: 28px;
-          padding: 12px;
-          gap: 10px;
+          border-radius: 0;
+          padding: 0;
+          gap: 8px;
         }
 
         .speech-overview,
@@ -6311,7 +6316,7 @@
         }
 
         .speech-current-card {
-          min-height: 166px;
+          min-height: 126px;
           border-radius: 24px;
           padding: 16px;
         }
@@ -6321,7 +6326,7 @@
         }
 
         .speech-voice-summary {
-          min-height: 60px;
+          min-height: 70px;
           border-radius: 22px;
           padding: 11px 13px;
         }
@@ -6451,6 +6456,26 @@
         .life-legend {
           font-size: 10px;
           line-height: 1.15;
+        }
+
+        .speech-head {
+          min-height: 286px;
+        }
+
+        .speech-current-card {
+          min-height: 118px;
+        }
+
+        .speech-overview-tools {
+          grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+        }
+
+        .speech-script-panel {
+          order: 1;
+        }
+
+        .speech-voice-summary {
+          order: 2;
         }
       }
 
@@ -6765,20 +6790,55 @@
         }
 
         .speech-studio {
-          padding: 10px;
+          padding: 0;
         }
 
         .speech-current-card {
-          min-height: 112px;
+          min-height: 106px;
           padding: 14px;
         }
 
         .speech-overview-tools {
+          grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+          align-items: stretch;
           gap: 8px;
         }
 
         .speech-script-panel {
+          order: 1;
+        }
+
+        .speech-voice-summary {
+          order: 2;
+          min-height: auto;
+          display: grid;
+          align-content: center;
+          gap: 7px;
+        }
+
+        .speech-voice-summary .mini-link {
+          justify-self: start;
+          min-height: 28px;
+          padding: 0 10px;
+          font-size: 11px;
+        }
+
+        .speech-script-panel {
           padding: 9px;
+        }
+
+        .speech-script-top {
+          min-height: 28px;
+        }
+
+        .speech-list {
+          min-height: 36px;
+        }
+
+        .speech-pill {
+          min-width: 112px;
+          max-width: 132px;
+          padding: 7px;
         }
 
         .player-slide {
@@ -7076,21 +7136,21 @@
                   </button>
 
                   <div class="speech-overview-tools">
-                  <div class="speech-script-panel">
-                    <div class="speech-script-top">
-                      <span id="speechScriptsLabel">Scripts</span>
-                      <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
+                    <div class="speech-voice-summary">
+                      <div>
+                        <span>Voice</span>
+                        <strong id="speechOverviewVoice">Maya</strong>
+                      </div>
+                      <button class="mini-link" id="openSpeechVoice" type="button">change</button>
                     </div>
-                    <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
-                  </div>
 
-                  <div class="speech-voice-summary">
-                    <div>
-                      <span>Voice</span>
-                      <strong id="speechOverviewVoice">Maya</strong>
+                    <div class="speech-script-panel">
+                      <div class="speech-script-top">
+                        <span id="speechScriptsLabel">Scripts</span>
+                        <button class="speech-new" id="addSelfTalkScript" type="button" aria-label="New self speech">+</button>
+                      </div>
+                      <div class="speech-list" id="selfTalkList" aria-label="Self speech scripts"></div>
                     </div>
-                    <button class="mini-link" id="openSpeechVoice" type="button">change</button>
-                  </div>
                   </div>
                 </div>
 
