@@ -122,7 +122,7 @@ Prepare screenshots for:
 5. Confirm beta support email or provide a dedicated support email.
 6. App name availability check in App Store Connect.
 7. Expo account login on this PC.
-8. EAS project init, which will replace the temporary `extra.eas.projectId` placeholder in `app.json`.
+8. EAS project init, which will add the real EAS project ID to `app.json`.
 9. iOS build upload to TestFlight.
 
 ## Future production work

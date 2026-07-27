@@ -15,8 +15,8 @@ Use this when the Apple Developer Program membership is active.
 ## Current blockers before upload
 
 1. App Store Connect app name must be unique. Use `Memento Visualize`; `Visualize` was rejected as already used. The installed app name is `Memento`.
-2. Link or initialize the EAS project so `app.json` no longer has `replace-after-eas-init`.
-3. Log in to Expo/EAS on this PC.
+2. Log in to Expo/EAS on this PC.
+3. Link or initialize the EAS project. EAS will add the real project ID to `app.json`.
 
 ## What you must do
 

@@ -18,11 +18,6 @@
         "NSPhotoLibraryUsageDescription": "Memento uses photos you select to create private Why, Vision, and Anti-vision photo decks saved on this device."
       }
     },
-    "extra": {
-      "eas": {
-        "projectId": "replace-after-eas-init"
-      }
-    },
     "plugins": [
       "expo-asset"
     ]
