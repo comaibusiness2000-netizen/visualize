@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v124";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v125";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -186,7 +186,7 @@
         }
         64% {
           opacity: 1;
-          transform: translate3d(calc(var(--screen-x, 0px) * -0.08), -2px, 0) scale(1.004);
+          transform: translate3d(calc(var(--screen-x, 0px) * -0.05), -2px, 0) scale(1);
         }
         100% {
           opacity: 1;
@@ -6525,6 +6525,42 @@
         text-wrap: balance;
       }
 
+      .runway-urgency-note {
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        margin-top: 3px;
+        padding: 0 13px;
+        border: 1px solid rgba(232, 196, 104, 0.26);
+        border-radius: 999px;
+        color: rgba(255, 249, 237, 0.9);
+        background:
+          linear-gradient(90deg, rgba(218, 90, 58, 0.14), rgba(232, 196, 104, 0.1)),
+          rgba(255, 249, 237, 0.06);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      }
+
+      .runway-urgency-note span {
+        width: 8px;
+        height: 8px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: var(--red);
+        box-shadow: 0 0 0 7px rgba(218, 90, 58, 0.12);
+        animation: runwayUrgencyPulse 1.6s ease-in-out infinite;
+      }
+
+      .runway-urgency-note strong {
+        font-size: 11px;
+        line-height: 1.05;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        font-weight: 950;
+        text-wrap: balance;
+      }
+
       .runway-focus-strip,
       .runway-years-card {
         position: relative;
@@ -6605,12 +6641,19 @@
         box-shadow: 0 0 0 6px rgba(232, 196, 104, 0.12), 0 14px 30px rgba(232, 196, 104, 0.24);
       }
 
+      .runway-scrim.open .runway-detail-orbit span.now {
+        animation: runwayNowPulse 2.2s ease-in-out infinite;
+      }
+
       .runway-years-card {
         min-height: 0;
         display: grid;
         grid-template-rows: auto minmax(0, 1fr);
         gap: 12px;
         padding: 16px 14px 14px;
+        background:
+          radial-gradient(circle at 16% 100%, rgba(218, 90, 58, 0.1), transparent 34%),
+          rgba(255, 249, 237, 0.065);
       }
 
       .runway-years-map {
@@ -6631,6 +6674,7 @@
 
       .runway-years-map span {
         height: 7px;
+        border: 1px solid rgba(255, 249, 237, 0.06);
         border-radius: 999px;
         background: rgba(255, 249, 237, 0.86);
         opacity: 0.95;
@@ -6657,7 +6701,7 @@
       .runway-scrim.open .runway-focus-strip,
       .runway-scrim.open .runway-years-card,
       .runway-scrim.open .runway-commit {
-        animation: quoteTextLift 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation: runwayTextLift 0.58s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
       .runway-scrim.open .runway-focus-strip {
@@ -6678,6 +6722,30 @@
         }
         to {
           opacity: 1;
+        }
+      }
+
+      @keyframes runwayUrgencyPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 7px rgba(218, 90, 58, 0.12);
+        }
+        50% {
+          transform: scale(1.18);
+          box-shadow: 0 0 0 11px rgba(218, 90, 58, 0.04);
+        }
+      }
+
+      @keyframes runwayNowPulse {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+          box-shadow: 0 0 0 6px rgba(232, 196, 104, 0.12), 0 14px 30px rgba(232, 196, 104, 0.24);
+        }
+        50% {
+          transform: translateY(-2px) scale(1.04);
+          box-shadow: 0 0 0 11px rgba(232, 196, 104, 0.06), 0 18px 36px rgba(232, 196, 104, 0.3);
         }
       }
 
@@ -6718,6 +6786,17 @@
         from {
           opacity: 0;
           transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes runwayTextLift {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
         }
         to {
           opacity: 1;
@@ -6835,7 +6914,7 @@
         }
 
         .runway-reveal-card {
-          gap: 11px;
+          gap: 10px;
           padding: max(46px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
         }
 
@@ -6858,6 +6937,16 @@
           line-height: 1.2;
         }
 
+        .runway-urgency-note {
+          min-height: 30px;
+          padding-inline: 11px;
+        }
+
+        .runway-urgency-note strong {
+          font-size: 10px;
+          letter-spacing: 0.55px;
+        }
+
         .runway-focus-strip {
           gap: 8px;
           padding: 12px;
@@ -6876,7 +6965,7 @@
         }
 
         .runway-years-map {
-          max-height: min(230px, 33vh);
+          max-height: min(218px, 31vh);
           gap: 2.4px;
         }
 
@@ -7173,8 +7262,8 @@
         .anti-empty {
           height: 100%;
           min-height: 0;
-          grid-template-rows: clamp(132px, 21vh, 178px) auto auto auto auto minmax(44px, 1fr);
-          align-content: stretch;
+          grid-template-rows: clamp(132px, 21vh, 178px) auto auto auto auto auto;
+          align-content: center;
           gap: clamp(10px, 1.7vh, 15px);
           padding: clamp(22px, 3.2vh, 30px) 22px;
         }
@@ -7186,7 +7275,7 @@
         }
 
         .deck-flow {
-          align-self: end;
+          align-self: center;
           min-height: 56px;
           padding: 7px;
         }
@@ -7522,8 +7611,8 @@
 
       @media (max-width: 520px) and (max-height: 740px) {
         .runway-reveal-card {
-          gap: 8px;
-          padding: max(38px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom));
+          gap: 7px;
+          padding: max(34px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom));
         }
 
         .runway-reveal-card::before {
@@ -7537,7 +7626,8 @@
         }
 
         .runway-hero {
-          padding-top: 14px;
+          gap: 5px;
+          padding-top: 10px;
         }
 
         .runway-reveal-kicker {
@@ -7554,6 +7644,10 @@
         }
 
         .runway-reveal-card p {
+          display: none;
+        }
+
+        .runway-urgency-note {
           display: none;
         }
 
@@ -7577,7 +7671,7 @@
         }
 
         .runway-years-map {
-          max-height: min(170px, 28vh);
+          max-height: min(148px, 23vh);
           gap: 2px;
         }
 
@@ -7586,7 +7680,7 @@
         }
 
         .runway-commit {
-          min-height: 44px;
+          min-height: 42px;
           font-size: 13px;
         }
 
@@ -8714,6 +8808,10 @@
               <span class="runway-reveal-kicker" id="runwayRevealKicker">Lifetime runway</span>
               <h2 id="runwayRevealTitle"><strong id="runwayRevealMonths">0</strong><em id="runwayRevealUnit">months left</em></h2>
               <p id="runwayRevealText">Every capsule is one month. Every row is a year you can still spend intentionally.</p>
+              <div class="runway-urgency-note">
+                <span aria-hidden="true"></span>
+                <strong id="runwayUrgencyText">Make this month count before it disappears.</strong>
+              </div>
             </div>
             <div class="runway-focus-strip">
               <div class="runway-focus-top">
@@ -9057,6 +9155,7 @@
           runwayOpen: "Open lifetime runway",
           runwayTapHint: "Tap to expand",
           runwayDetailText: "Every capsule is one month. Every row is a year you can still spend intentionally.",
+          runwayUrgencyText: "Make this month count before it disappears.",
           runwayThisYear: "This year",
           runwayNow: "now",
           runwayRowsLabel: "Rows left",
@@ -9153,6 +9252,7 @@
         runwayOpen: "Open lifetime runway",
         runwayTapHint: "Tap to expand",
         runwayDetailText: "Every capsule is one month. Every row is a year you can still spend intentionally.",
+        runwayUrgencyText: "Make this month count before it disappears.",
         runwayThisYear: "This year",
         runwayNow: "now",
         runwayRowsLabel: "Rows left",
@@ -9214,6 +9314,7 @@
         runwayOpen: "Abrir pista de vida",
         runwayTapHint: "Toca para ampliar",
         runwayDetailText: "Cada capsula es un mes. Cada fila es un ano que todavia puedes usar con intencion.",
+        runwayUrgencyText: "Haz que este mes cuente antes de que desaparezca.",
         runwayThisYear: "Este ano",
         runwayNow: "ahora",
         runwayRowsLabel: "Filas restantes",
@@ -9292,6 +9393,7 @@
         runwayOpen: "Ouvrir la piste de vie",
         runwayTapHint: "Toucher pour agrandir",
         runwayDetailText: "Chaque capsule est un mois. Chaque rangee est une annee que tu peux encore utiliser avec intention.",
+        runwayUrgencyText: "Fais compter ce mois avant qu'il disparaisse.",
         runwayThisYear: "Cette annee",
         runwayNow: "maintenant",
         runwayRowsLabel: "Rangees restantes",
@@ -9370,6 +9472,7 @@
         runwayOpen: "Abrir pista de vida",
         runwayTapHint: "Toque para ampliar",
         runwayDetailText: "Cada capsula e um mes. Cada fileira e um ano que voce ainda pode usar com intencao.",
+        runwayUrgencyText: "Faca este mes contar antes que ele desapareca.",
         runwayThisYear: "Este ano",
         runwayNow: "agora",
         runwayRowsLabel: "Fileiras restantes",
@@ -9445,6 +9548,7 @@
         monthRunwayKicker: "Lifetime runway",
         monthRunwayText: "Only {rows} rows of 12 months remain. One row disappears every year.",
         runwayTapHint: "Tap to expand",
+        runwayUrgencyText: "Make this month count before it disappears.",
         profileDefault: "你的资料",
         accountSummaryLocal: "你的资料保存在此设备上。无需创建账号也可以继续完善。",
         accountStatusLocal: "已保存在此设备",
@@ -9574,6 +9678,7 @@
         setText("#runwayRevealKicker", "monthRunwayKicker");
         setText("#runwayRevealUnit", "monthsLeft");
         setText("#runwayRevealText", "runwayDetailText");
+        setText("#runwayUrgencyText", "runwayUrgencyText");
         setText("#runwayThisYear", "runwayThisYear");
         setText("#runwayCurrentMonth", "runwayNow");
         setText("#runwayYearsLabel", "runwayRowsLabel");
