@@ -1,4 +1,4 @@
-# Visualize App Store Prep
+# Memento Visualize App Store Prep
 
 Last updated: July 24, 2026.
 
@@ -12,7 +12,8 @@ Last updated: July 24, 2026.
 
 ## App identity
 
-- App name: `Memento Visualize` recommended, because `Visualize` was rejected as already used.
+- App Store name: `Memento Visualize`, because `Visualize` was rejected as already used.
+- Installed app name: `Memento`.
 - Bundle ID: `com.samuelecomai.visualize`
 - SKU suggestion: `com.samuelecomai.visualize`
 - Primary language: English
@@ -39,7 +40,7 @@ Build a private life clock, Why board, Vision deck, Anti-vision deck, and Self S
 
 ### Description draft
 
-Visualize helps you keep your future in front of you.
+Memento helps you keep your future in front of you.
 
 Create a simple profile, see a life clock based on your age and life estimate, add the people and reasons you are doing it for, build private Vision and Anti-vision photo decks, and write Self Speech scripts that can be read aloud by your device.
 
@@ -54,7 +55,7 @@ Core features:
 - Light and dark mode
 - Interface language selection
 
-Visualize is not a medical device, therapy product, or mental health diagnosis tool. It is a private personal productivity and visualization tool.
+Memento is not a medical device, therapy product, or mental health diagnosis tool. It is a private personal productivity and visualization tool.
 
 ### Keywords draft
 
@@ -92,7 +93,7 @@ Please test the first-run flow and core local-only features:
 
 ### Review notes for Apple
 
-Visualize is a local-only personal productivity and visualization app. It does not require account login in this TestFlight version.
+Memento is a local-only personal productivity and visualization app. It does not require account login in this TestFlight version.
 
 The app asks for photo library permission only when the user chooses to add photos to the Why tab, a Vision deck, or an Anti-vision deck. Selected images are copied into the app's local storage on the device.
 

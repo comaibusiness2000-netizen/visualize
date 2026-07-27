@@ -4,6 +4,7 @@ node_modules/
 .npm-cache/
 .dotslash-cache/
 .tmp/
+dist/
 dist-ios-test/
 output/
 outputs/

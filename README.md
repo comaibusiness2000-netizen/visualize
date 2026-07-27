@@ -1,6 +1,6 @@
-# Visualize
+# Memento Visualize
 
-Visualize is a mobile-first product prototype for a personal vision app.
+Memento Visualize is a mobile-first product prototype for a personal vision app.
 
 The app helps a user define goals, generate or upload visual scenes, compare a desired future with an anti-vision, and listen to a personalized mindset script.
 
@@ -69,6 +69,8 @@ This repository is prepared for that path.
 
 Current TestFlight prep:
 
+- App Store name: `Memento Visualize`
+- Installed app name: `Memento`
 - Bundle ID: `com.samuelecomai.visualize`
 - App version: `0.2.0`
 - iOS build number: `1`

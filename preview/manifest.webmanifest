@@ -1,6 +1,6 @@
 {
-  "name": "Visualize",
-  "short_name": "Visualize",
+  "name": "Memento Visualize",
+  "short_name": "Memento",
   "start_url": "./index.html?v=134",
   "display": "standalone",
   "background_color": "#07090b",

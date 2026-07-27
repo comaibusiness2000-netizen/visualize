@@ -1,4 +1,4 @@
-# Visualize TestFlight Tomorrow
+# Memento Visualize TestFlight Tomorrow
 
 Use this when the Apple Developer Program membership is active.
 
@@ -14,7 +14,7 @@ Use this when the Apple Developer Program membership is active.
 
 ## Current blockers before upload
 
-1. App Store Connect app name must be unique. `Visualize` was rejected as already used, so choose a unique public name before creating the app record. Recommended first option: `Memento Visualize`.
+1. App Store Connect app name must be unique. Use `Memento Visualize`; `Visualize` was rejected as already used. The installed app name is `Memento`.
 2. Link or initialize the EAS project so `app.json` no longer has `replace-after-eas-init`.
 3. Log in to Expo/EAS on this PC.
 
@@ -25,7 +25,7 @@ Use this when the Apple Developer Program membership is active.
 3. Tell Codex the Apple Team ID.
 4. Confirm the Bundle ID: `com.samuelecomai.visualize`.
 5. Confirm whether to keep `comaisamuele@gmail.com` as beta support or replace it with a dedicated support email.
-6. Confirm whether the app name `Visualize` is available in App Store Connect.
+6. Use the App Store name `Memento Visualize`.
 7. Log in to Expo/EAS on this PC when prompted.
 
 Do not send Apple ID password, 2FA codes, recovery keys, or payment details in chat.
@@ -50,7 +50,8 @@ Use this as the first TestFlight invite after the build is available.
 ## App Store Connect values
 
 - Platform: iOS
-- Name: `Memento Visualize` recommended, because `Visualize` was rejected as already used.
+- Name: `Memento Visualize`
+- Installed app name: `Memento`
 - Primary language: English
 - Bundle ID: `com.samuelecomai.visualize`
 - SKU: `com.samuelecomai.visualize`
@@ -77,11 +78,11 @@ Test the first-run experience:
 
 ## Apple review note
 
-Visualize is currently a local-only personal productivity and visualization app. It does not require account login in this TestFlight version.
+Memento is currently a local-only personal productivity and visualization app. It does not require account login in this TestFlight version.
 
 The app asks for photo library permission only when the user chooses to add photos to the Why tab, a Vision deck, or an Anti-vision deck. Selected images are copied into local app storage on the device.
 
-Self Speech uses device text-to-speech. The current build does not upload scripts, photos, goals, or profile data to a Visualize server.
+Self Speech uses device text-to-speech. The current build does not upload scripts, photos, goals, or profile data to a Memento server.
 
 No subscriptions, paid features, AI generation, cloud sync, or third-party analytics are active in this build.
 
