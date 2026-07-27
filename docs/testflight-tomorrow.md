@@ -2,6 +2,22 @@
 
 Use this when the Apple Developer Program membership is active.
 
+## Current status
+
+- Native Expo export: passed on July 27, 2026.
+- Expo doctor: 19/19 checks passed on July 27, 2026.
+- Bundle ID in code: `com.samuelecomai.visualize`.
+- First-run profile now starts empty and saves locally on the device.
+- Profile includes optional personal mantra; Life shows it only when present.
+- Old daily quote popup has been disabled in the native app.
+
+## Current blockers before upload
+
+1. App Store Connect app name must be unique. `Visualize` was rejected as already used, so choose a unique public name before creating the app record.
+2. Replace the support email placeholder in `preview/support.html`.
+3. Link or initialize the EAS project so `app.json` no longer has `replace-after-eas-init`.
+4. Log in to Expo/EAS on this PC.
+
 ## What you must do
 
 1. Confirm the Apple Developer Program is active.
@@ -44,7 +60,7 @@ Use this as the first TestFlight invite after the build is available.
 
 - Privacy Policy URL: `https://comaibusiness2000-netizen.github.io/visualize/privacy.html`
 - Support URL: `https://comaibusiness2000-netizen.github.io/visualize/support.html`
-- Web preview: `https://comaibusiness2000-netizen.github.io/visualize/?v=60`
+- Web preview: `https://comaibusiness2000-netizen.github.io/visualize/?v=134`
 
 ## TestFlight "What to Test"
 

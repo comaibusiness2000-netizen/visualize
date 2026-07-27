@@ -32,7 +32,6 @@ const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
 const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v8";
-const QUOTE_RITUAL_VERSION = "quote-ritual-v6";
 const SUPPORTED_LANGUAGE_IDS = ["en", "es", "fr", "pt", "zh"];
 
 function normalizeLanguageId(locale) {
@@ -102,11 +101,10 @@ const blankState = {
     name: "",
     age: "",
     expectancy: 85,
+    mantra: "",
     createdAt: "",
     updatedAt: "",
     lastAnimatedDate: "",
-    lastQuoteDate: "",
-    lastQuoteRitualVersion: "",
     lastSnapshot: null,
     lifeUpdateAnimationVersion: ""
   },
@@ -274,6 +272,8 @@ const copy = {
     "setup.name": "First name",
     "setup.age": "Age",
     "setup.estimate": "Life estimate, example 85",
+    "setup.mantra": "Personal mantra",
+    "setup.mantraPlaceholder": "I keep the promises I make to myself.",
     "setup.create": "Create profile",
     "life.kicker": "Life clock",
     "life.days": "estimated days left",
@@ -283,14 +283,9 @@ const copy = {
     "life.used": "used",
     "life.monthMap": "Life by months",
     "life.monthMapBody": "Each dot is one month. Filled dots are already spent.",
-    "life.pressureKicker": "Today is shrinking",
-    "life.pressureTime": "{hours}h {minutes}m left today",
-    "life.pressureText": "One day closes tonight. Put one action inside it.",
-    "life.pressurePercent": "{percent}% gone",
-    "quote.kicker": "Daily quote",
-    "quote.title": "Read it. Move.",
-    "quote.open": "open",
-    "quote.close": "Carry it",
+    "life.mantraKicker": "Personal mantra",
+    "life.mantraOpen": "play",
+    "life.mantraEmpty": "Add a short line you want to see every day.",
     "goals.daily": "Daily tasks",
     "goals.long": "Long-term goals",
     "goals.dailyTitle": "What moves today forward?",
@@ -344,6 +339,9 @@ const copy = {
     "profile.darkMode": "Dark mode",
     "profile.notifications": "Notifications later",
     "profile.language": "Language",
+    "profile.mantraTitle": "Personal mantra",
+    "profile.mantraBody": "A short line that appears on the Life tab and can be played aloud.",
+    "profile.mantraPlaceholder": "Write your daily line",
     "profile.reset": "Reset this device",
     "profile.close": "Close",
     "player.close": "Close",
@@ -368,35 +366,35 @@ const copy = {
   },
   es: {
     "tab.life": "Vida", "tab.goals": "Por quien", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voz",
-    "setup.kicker": "Crear perfil", "setup.title": "Crea tu reloj de vida.", "setup.body": "Empieza vacio. Luego agregas tu por que, imagenes y self speech paso a paso.", "setup.name": "Nombre", "setup.age": "Edad", "setup.estimate": "Estimacion de vida, ejemplo 85", "setup.create": "Crear perfil",
-    "life.kicker": "Reloj de vida", "life.days": "dias estimados restantes", "life.summary": "Basado en edad {age} y una estimacion de vida de {expectancy}. No es una prediccion, es un recordatorio.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada punto es un mes. Los puntos llenos ya pasaron.", "life.pressureKicker": "El dia se acaba", "life.pressureTime": "Quedan {hours}h {minutes}m", "life.pressureText": "Un dia se cierra esta noche. Mete una accion dentro.", "life.pressurePercent": "{percent}% usado",
+    "setup.kicker": "Crear perfil", "setup.title": "Crea tu reloj de vida.", "setup.body": "Empieza vacio. Luego agregas tu por que, imagenes y self speech paso a paso.", "setup.name": "Nombre", "setup.age": "Edad", "setup.estimate": "Estimacion de vida, ejemplo 85", "setup.mantra": "Mantra personal", "setup.mantraPlaceholder": "Cumplo las promesas que me hago.", "setup.create": "Crear perfil",
+    "life.kicker": "Reloj de vida", "life.days": "dias estimados restantes", "life.summary": "Basado en edad {age} y una estimacion de vida de {expectancy}. No es una prediccion, es un recordatorio.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada punto es un mes. Los puntos llenos ya pasaron.", "life.mantraKicker": "Mantra personal", "life.mantraOpen": "play", "life.mantraEmpty": "Agrega una linea corta para ver cada dia.",
     "goals.daily": "Tareas diarias", "goals.long": "Metas a largo plazo", "goals.dailyTitle": "Que hace avanzar el dia?", "goals.longTitle": "Que estas construyendo este ano?", "goals.body": "Agrega hasta 5 items y mueve manualmente la barra de progreso.", "goals.addTask": "Agregar tarea", "goals.addGoal": "Agregar meta", "goals.emptyTitle": "Todavia no hay nada.", "goals.emptyBody": "Empieza con una pequena accion o una meta a largo plazo.", "goals.complete": "{progress}% completo",
     "why.title": "Por quien haces esto?", "why.body": "Sube fotos de las personas detras de tu esfuerzo: familia, un ex que quieres superar, tu yo de nino, un futuro hijo, un rival o alguien a quien quieres demostrar que se equivoco.", "why.examples": "familia|tu yo pequeno|futuro hijo|demostrarles", "why.add": "Agregar personas", "why.emptyTitle": "Aun no hay rostros.", "why.emptyBody": "Agrega personas, recuerdos o personas futuras que vuelvan tus metas personales.",
     "deck.visionTitle": "Crea tu Vision", "deck.antiTitle": "Crea tu Anti-vision", "deck.visionBody": "Empieza con fotos de identidad, ambiente, personas y el futuro que quieres volver familiar.", "deck.antiBody": "Empieza con fotos del desvio, los costes y el futuro que te niegas a normalizar.", "deck.add": "Agregar imagenes", "deck.play": "Reproducir", "deck.emptyTitle": "Sin imagenes aun.", "deck.emptyBody": "El deck empieza vacio. Agrega fotos desde este iPhone para guardarlas localmente.",
     "speech.title": "Self speech", "speech.body": "Escribe el dialogo interno que quieres escuchar repetidamente. Hazlo personal, directo y creible.", "speech.titlePlaceholder": "Titulo", "speech.textPlaceholder": "Escribe tu self speech aqui", "speech.save": "Guardar", "speech.new": "Nuevo", "speech.listen": "Escuchar", "speech.stop": "Stop", "speech.emptyDraft": "Borrador vacio",
-    "profile.kicker": "Perfil local", "profile.storageTitle": "Guardado en el dispositivo", "profile.storageBody": "Guardado solo en este iPhone. Al cerrar la app o reiniciar el telefono, los datos se mantienen. Si eliminas la app, se eliminan los datos locales.", "profile.cloudTitle": "Datos listos para cloud", "profile.cloudBody": "Tu perfil, metas, imagenes y speeches locales tienen IDs estables. Cuando agreguemos cloud sync, este dispositivo podra subir sus datos existentes antes de activar la sincronizacion.", "profile.deviceKey": "Clave dispositivo", "profile.appearance": "Apariencia", "profile.darkMode": "Modo oscuro", "profile.notifications": "Notificaciones luego", "profile.language": "Idioma", "profile.reset": "Resetear este dispositivo", "profile.close": "Cerrar", "player.close": "Cerrar",
+    "profile.kicker": "Perfil local", "profile.storageTitle": "Guardado en el dispositivo", "profile.storageBody": "Guardado solo en este iPhone. Al cerrar la app o reiniciar el telefono, los datos se mantienen. Si eliminas la app, se eliminan los datos locales.", "profile.cloudTitle": "Datos listos para cloud", "profile.cloudBody": "Tu perfil, metas, imagenes y speeches locales tienen IDs estables. Cuando agreguemos cloud sync, este dispositivo podra subir sus datos existentes antes de activar la sincronizacion.", "profile.deviceKey": "Clave dispositivo", "profile.appearance": "Apariencia", "profile.darkMode": "Modo oscuro", "profile.notifications": "Notificaciones luego", "profile.language": "Idioma", "profile.mantraTitle": "Mantra personal", "profile.mantraBody": "Una linea corta que aparece en Life y se puede escuchar.", "profile.mantraPlaceholder": "Escribe tu linea diaria", "profile.reset": "Resetear este dispositivo", "profile.close": "Cerrar", "player.close": "Cerrar",
     "alert.profile": "Perfil", "alert.addName": "Agrega tu nombre primero.", "alert.addAge": "Agrega tu edad primero.", "alert.goals": "Metas", "alert.maxGoals": "Mantén la lista enfocada: maximo 5 items.", "alert.photos": "Fotos", "alert.allowPhotos": "Permite acceso a fotos para agregarlas a tu deck.", "alert.deckFull": "Deck lleno", "alert.maxImages": "Maximo {max} imagenes por ahora.", "alert.deck": "Deck", "alert.addImagesFirst": "Agrega imagenes primero.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Escribe primero el texto que quieres escuchar.", "alert.writeSpeechPlay": "Escribe un speech primero.", "alert.resetTitle": "Resetear datos locales", "alert.resetBody": "Esto elimina perfil, metas, imagenes y self speeches de este dispositivo.", "alert.cancel": "Cancelar", "alert.reset": "Resetear"
   },
   fr: {
     "tab.life": "Vie", "tab.goals": "Pourquoi", "tab.vision": "Vision", "tab.anti": "Anti", "tab.speech": "Voix",
-    "setup.kicker": "Creation profil", "setup.title": "Cree ton horloge de vie.", "setup.body": "L'app commence vide. Ajoute ensuite ton pourquoi, tes images et ton self speech.", "setup.name": "Prenom", "setup.age": "Age", "setup.estimate": "Estimation de vie, exemple 85", "setup.create": "Creer profil",
-    "life.kicker": "Horloge de vie", "life.days": "jours estimes restants", "life.summary": "Base sur l'age {age} et une estimation de vie de {expectancy}. Ce n'est pas une prediction, c'est un rappel.", "life.weeks": "semaines", "life.months": "mois", "life.used": "utilise", "life.monthMap": "Vie par mois", "life.monthMapBody": "Chaque point est un mois. Les points remplis sont deja passes.", "life.pressureKicker": "La journee file", "life.pressureTime": "{hours}h {minutes}m restantes", "life.pressureText": "Ce soir, ce jour se ferme. Mets-y une action.", "life.pressurePercent": "{percent}% utilise",
+    "setup.kicker": "Creation profil", "setup.title": "Cree ton horloge de vie.", "setup.body": "L'app commence vide. Ajoute ensuite ton pourquoi, tes images et ton self speech.", "setup.name": "Prenom", "setup.age": "Age", "setup.estimate": "Estimation de vie, exemple 85", "setup.mantra": "Mantra personnel", "setup.mantraPlaceholder": "Je tiens les promesses que je me fais.", "setup.create": "Creer profil",
+    "life.kicker": "Horloge de vie", "life.days": "jours estimes restants", "life.summary": "Base sur l'age {age} et une estimation de vie de {expectancy}. Ce n'est pas une prediction, c'est un rappel.", "life.weeks": "semaines", "life.months": "mois", "life.used": "utilise", "life.monthMap": "Vie par mois", "life.monthMapBody": "Chaque point est un mois. Les points remplis sont deja passes.", "life.mantraKicker": "Mantra personnel", "life.mantraOpen": "play", "life.mantraEmpty": "Ajoute une phrase courte a voir chaque jour.",
     "goals.daily": "Taches du jour", "goals.long": "Objectifs long terme", "goals.dailyTitle": "Qu'est-ce qui fait avancer aujourd'hui?", "goals.longTitle": "Que construis-tu cette annee?", "goals.body": "Ajoute jusqu'a 5 elements et ajuste manuellement la progression.", "goals.addTask": "Ajouter tache", "goals.addGoal": "Ajouter objectif", "goals.emptyTitle": "Rien pour l'instant.", "goals.emptyBody": "Commence avec une petite action ou un objectif long terme.", "goals.complete": "{progress}% termine",
     "why.title": "Pour qui fais-tu ca?", "why.body": "Ajoute les photos des personnes derriere ton effort: famille, un ex que tu veux depasser, l'enfant que tu etais, un futur enfant, un rival ou quelqu'un a qui tu veux prouver qu'il avait tort.", "why.examples": "famille|toi enfant|futur enfant|leur prouver", "why.add": "Ajouter personnes", "why.emptyTitle": "Aucun visage encore.", "why.emptyBody": "Ajoute les personnes, souvenirs ou futurs visages qui rendent tes objectifs personnels.",
     "deck.visionTitle": "Cree ta Vision", "deck.antiTitle": "Cree ton Anti-vision", "deck.visionBody": "Commence avec des photos d'identite, d'environnement, de personnes et du futur a rendre familier.", "deck.antiBody": "Commence avec des photos de la derive, du cout et du futur que tu refuses de normaliser.", "deck.add": "Ajouter images", "deck.play": "Lire", "deck.emptyTitle": "Aucune image.", "deck.emptyBody": "Le deck commence vide. Ajoute des photos depuis cet iPhone pour les garder localement.",
     "speech.title": "Self speech", "speech.body": "Ecris le discours interieur que tu veux ecouter souvent. Personnel, direct, credible.", "speech.titlePlaceholder": "Titre", "speech.textPlaceholder": "Ecris ton self speech ici", "speech.save": "Sauver", "speech.new": "Nouveau", "speech.listen": "Ecouter", "speech.stop": "Stop", "speech.emptyDraft": "Brouillon vide",
-    "profile.kicker": "Profil local", "profile.storageTitle": "Stockage appareil", "profile.storageBody": "Sauve seulement sur cet iPhone. Fermer l'app ou redemarrer le telephone garde les donnees. Supprimer l'app supprime les donnees locales.", "profile.cloudTitle": "Donnees pretes pour le cloud", "profile.cloudBody": "Profil, objectifs, images et speeches locaux ont des IDs stables. Quand le cloud sync arrivera, cet appareil pourra envoyer ses donnees existantes avant d'activer la sync.", "profile.deviceKey": "Cle appareil", "profile.appearance": "Apparence", "profile.darkMode": "Mode sombre", "profile.notifications": "Notifications plus tard", "profile.language": "Langue", "profile.reset": "Reinitialiser", "profile.close": "Fermer", "player.close": "Fermer",
+    "profile.kicker": "Profil local", "profile.storageTitle": "Stockage appareil", "profile.storageBody": "Sauve seulement sur cet iPhone. Fermer l'app ou redemarrer le telephone garde les donnees. Supprimer l'app supprime les donnees locales.", "profile.cloudTitle": "Donnees pretes pour le cloud", "profile.cloudBody": "Profil, objectifs, images et speeches locaux ont des IDs stables. Quand le cloud sync arrivera, cet appareil pourra envoyer ses donnees existantes avant d'activer la sync.", "profile.deviceKey": "Cle appareil", "profile.appearance": "Apparence", "profile.darkMode": "Mode sombre", "profile.notifications": "Notifications plus tard", "profile.language": "Langue", "profile.mantraTitle": "Mantra personnel", "profile.mantraBody": "Une phrase courte visible dans Life et lisible a voix haute.", "profile.mantraPlaceholder": "Ecris ta phrase du jour", "profile.reset": "Reinitialiser", "profile.close": "Fermer", "player.close": "Fermer",
     "alert.profile": "Profil", "alert.addName": "Ajoute ton prenom d'abord.", "alert.addAge": "Ajoute ton age d'abord.", "alert.goals": "Objectifs", "alert.maxGoals": "Garde la liste concentree: maximum 5 elements.", "alert.photos": "Photos", "alert.allowPhotos": "Autorise l'acces aux photos pour les ajouter au deck.", "alert.deckFull": "Deck plein", "alert.maxImages": "Maximum {max} images pour l'instant.", "alert.deck": "Deck", "alert.addImagesFirst": "Ajoute d'abord des images.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Ecris d'abord le texte a ecouter.", "alert.writeSpeechPlay": "Ecris d'abord un speech.", "alert.resetTitle": "Reinitialiser les donnees locales", "alert.resetBody": "Cela supprime le profil, les objectifs, les images et les self speeches de cet appareil.", "alert.cancel": "Annuler", "alert.reset": "Reinitialiser"
   },
   pt: {
     "tab.life": "Vida", "tab.goals": "Por quem", "tab.vision": "Visao", "tab.anti": "Anti", "tab.speech": "Voz",
-    "setup.kicker": "Criar perfil", "setup.title": "Crie seu relogio de vida.", "setup.body": "O app comeca vazio. Depois adicione seu por que, imagens e self speech.", "setup.name": "Nome", "setup.age": "Idade", "setup.estimate": "Estimativa de vida, exemplo 85", "setup.create": "Criar perfil",
-    "life.kicker": "Relogio de vida", "life.days": "dias estimados restantes", "life.summary": "Baseado na idade {age} e estimativa de vida de {expectancy}. Nao e previsao, e lembrete.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada ponto e um mes. Pontos preenchidos ja passaram.", "life.pressureKicker": "O dia esta indo", "life.pressureTime": "Restam {hours}h {minutes}m", "life.pressureText": "Hoje fecha a noite. Coloque uma acao dentro dele.", "life.pressurePercent": "{percent}% usado",
+    "setup.kicker": "Criar perfil", "setup.title": "Crie seu relogio de vida.", "setup.body": "O app comeca vazio. Depois adicione seu por que, imagens e self speech.", "setup.name": "Nome", "setup.age": "Idade", "setup.estimate": "Estimativa de vida, exemplo 85", "setup.mantra": "Mantra pessoal", "setup.mantraPlaceholder": "Eu cumpro as promessas que faco a mim.", "setup.create": "Criar perfil",
+    "life.kicker": "Relogio de vida", "life.days": "dias estimados restantes", "life.summary": "Baseado na idade {age} e estimativa de vida de {expectancy}. Nao e previsao, e lembrete.", "life.weeks": "semanas", "life.months": "meses", "life.used": "usado", "life.monthMap": "Vida por meses", "life.monthMapBody": "Cada ponto e um mes. Pontos preenchidos ja passaram.", "life.mantraKicker": "Mantra pessoal", "life.mantraOpen": "play", "life.mantraEmpty": "Adicione uma frase curta para ver todo dia.",
     "goals.daily": "Tarefas diarias", "goals.long": "Metas de longo prazo", "goals.dailyTitle": "O que move hoje para frente?", "goals.longTitle": "O que voce esta construindo este ano?", "goals.body": "Adicione ate 5 itens e mova manualmente a barra de progresso.", "goals.addTask": "Adicionar tarefa", "goals.addGoal": "Adicionar meta", "goals.emptyTitle": "Nada aqui ainda.", "goals.emptyBody": "Comece com uma pequena acao ou uma meta de longo prazo.", "goals.complete": "{progress}% completo",
     "why.title": "Por quem voce faz isso?", "why.body": "Adicione fotos das pessoas por tras do seu esforco: familia, um ex que quer superar, voce quando crianca, um futuro filho, um rival ou alguem a quem quer provar que estava errado.", "why.examples": "familia|voce crianca|futuro filho|provar errado", "why.add": "Adicionar pessoas", "why.emptyTitle": "Ainda sem rostos.", "why.emptyBody": "Adicione pessoas, memorias ou pessoas futuras que tornam suas metas pessoais.",
     "deck.visionTitle": "Crie sua Visao", "deck.antiTitle": "Crie sua Anti-visao", "deck.visionBody": "Comece com fotos de identidade, ambiente, pessoas e do futuro que voce quer tornar familiar.", "deck.antiBody": "Comece com fotos do desvio, dos custos e do futuro que voce recusa normalizar.", "deck.add": "Adicionar imagens", "deck.play": "Reproduzir", "deck.emptyTitle": "Sem imagens ainda.", "deck.emptyBody": "O deck comeca vazio. Adicione fotos deste iPhone para salva-las localmente.",
     "speech.title": "Self speech", "speech.body": "Escreva o dialogo interno que quer ouvir repetidamente. Pessoal, direto e crivel.", "speech.titlePlaceholder": "Titulo", "speech.textPlaceholder": "Escreva seu self speech aqui", "speech.save": "Salvar", "speech.new": "Novo", "speech.listen": "Ouvir", "speech.stop": "Parar", "speech.emptyDraft": "Rascunho vazio",
-    "profile.kicker": "Perfil local", "profile.storageTitle": "Armazenamento no dispositivo", "profile.storageBody": "Salvo apenas neste iPhone. Fechar o app ou reiniciar o telefone mantem os dados. Apagar o app remove os dados locais.", "profile.cloudTitle": "Dados prontos para cloud", "profile.cloudBody": "Perfil, metas, imagens e speeches locais tem IDs estaveis. Quando adicionarmos cloud sync, este dispositivo podera enviar os dados existentes antes de ativar a sincronizacao.", "profile.deviceKey": "Chave do dispositivo", "profile.appearance": "Aparencia", "profile.darkMode": "Modo escuro", "profile.notifications": "Notificacoes depois", "profile.language": "Idioma", "profile.reset": "Resetar dispositivo", "profile.close": "Fechar", "player.close": "Fechar",
+    "profile.kicker": "Perfil local", "profile.storageTitle": "Armazenamento no dispositivo", "profile.storageBody": "Salvo apenas neste iPhone. Fechar o app ou reiniciar o telefone mantem os dados. Apagar o app remove os dados locais.", "profile.cloudTitle": "Dados prontos para cloud", "profile.cloudBody": "Perfil, metas, imagens e speeches locais tem IDs estaveis. Quando adicionarmos cloud sync, este dispositivo podera enviar os dados existentes antes de ativar a sincronizacao.", "profile.deviceKey": "Chave do dispositivo", "profile.appearance": "Aparencia", "profile.darkMode": "Modo escuro", "profile.notifications": "Notificacoes depois", "profile.language": "Idioma", "profile.mantraTitle": "Mantra pessoal", "profile.mantraBody": "Uma frase curta que aparece em Life e pode ser ouvida.", "profile.mantraPlaceholder": "Escreva sua frase diaria", "profile.reset": "Resetar dispositivo", "profile.close": "Fechar", "player.close": "Fechar",
     "alert.profile": "Perfil", "alert.addName": "Adicione seu nome primeiro.", "alert.addAge": "Adicione sua idade primeiro.", "alert.goals": "Metas", "alert.maxGoals": "Mantenha a lista focada: maximo 5 itens.", "alert.photos": "Fotos", "alert.allowPhotos": "Permita acesso as fotos para adiciona-las ao deck.", "alert.deckFull": "Deck cheio", "alert.maxImages": "Maximo {max} imagens por agora.", "alert.deck": "Deck", "alert.addImagesFirst": "Adicione imagens primeiro.", "alert.selfSpeech": "Self speech", "alert.writeSpeech": "Escreva primeiro o texto que quer ouvir.", "alert.writeSpeechPlay": "Escreva um speech primeiro.", "alert.resetTitle": "Resetar dados locais", "alert.resetBody": "Isso remove perfil, metas, imagens e self speeches deste dispositivo.", "alert.cancel": "Cancelar", "alert.reset": "Resetar"
   },
   zh: {
@@ -683,13 +681,11 @@ export default function App() {
   const [player, setPlayer] = useState(null);
   const [speechPlaying, setSpeechPlaying] = useState(false);
   const [lifeUpdate, setLifeUpdate] = useState(null);
-  const [quoteRevealOpen, setQuoteRevealOpen] = useState(false);
   const [clockTick, setClockTick] = useState(Date.now());
   const setupPulse = useRef(new Animated.Value(0)).current;
   const screenPulse = useRef(new Animated.Value(1)).current;
   const lifeUpdatePulse = useRef(new Animated.Value(0)).current;
   const playerPulse = useRef(new Animated.Value(0)).current;
-  const quotePulse = useRef(new Animated.Value(0)).current;
   const speechPulse = useRef(new Animated.Value(0)).current;
   const lifeScrollRef = useRef(null);
   const voiceScrollRef = useRef(null);
@@ -709,10 +705,7 @@ export default function App() {
   const profileComplete = appState.profile.complete;
   const activeGoals = goalMode === "daily" ? appState.dailyTasks : appState.longGoals;
   const activeSpeech = appState.selfSpeeches[appState.activeSpeechIndex] || null;
-  const dailyQuoteIndex = quoteIndexForDate();
-  const dailyQuote = dailyQuotes[dailyQuoteIndex] || quoteForDate();
-  const dailyQuoteOrdinal = `${dailyQuoteIndex + 1} / ${dailyQuotes.length}`;
-  const dailyQuoteProgress = `${Math.round(((dailyQuoteIndex + 1) / Math.max(dailyQuotes.length, 1)) * 100)}%`;
+  const profileMantra = String(appState.profile.mantra || "").trim();
   const screenOpacity = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [0.72, 1] });
   const screenTranslate = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [12, 0] });
   const screenTranslateX = screenPulse.interpolate({ inputRange: [0, 1], outputRange: [tabDirection * 26, 0] });
@@ -795,17 +788,6 @@ export default function App() {
   }, [player?.kind, player?.index, playerPulse]);
 
   useEffect(() => {
-    if (!quoteRevealOpen) return;
-    quotePulse.setValue(0);
-    Animated.spring(quotePulse, {
-      toValue: 1,
-      friction: 8,
-      tension: 72,
-      useNativeDriver: true
-    }).start();
-  }, [quoteRevealOpen, quotePulse]);
-
-  useEffect(() => {
     if (!hydrated || !profileComplete) return undefined;
     const timer = setInterval(() => setClockTick(Date.now()), 60000);
     return () => clearInterval(timer);
@@ -848,22 +830,6 @@ export default function App() {
     setTimeout(() => resetLifeScroll(false), 80);
   }, [tab, profileComplete]);
 
-  useEffect(() => {
-    if (!hydrated || !profileComplete || quoteRevealOpen) return undefined;
-    const dateKey = todayKey();
-    if (
-      appState.profile.lastQuoteDate === dateKey &&
-      appState.profile.lastQuoteRitualVersion === QUOTE_RITUAL_VERSION
-    ) {
-      return undefined;
-    }
-    const lifeRevealPending =
-      appState.profile.lastAnimatedDate !== dateKey ||
-      appState.profile.lifeUpdateAnimationVersion !== LIFE_UPDATE_ANIMATION_VERSION;
-    const timer = setTimeout(() => maybeShowDailyQuote(), lifeRevealPending ? 6900 : 900);
-    return () => clearTimeout(timer);
-  }, [hydrated, profileComplete, appState.profile.lastQuoteDate, appState.profile.lastQuoteRitualVersion, appState.profile.lastAnimatedDate, appState.profile.lifeUpdateAnimationVersion, quoteRevealOpen]);
-
   function updateState(mutator) {
     setAppState((current) => {
       const next = typeof mutator === "function" ? mutator(current) : mutator;
@@ -900,6 +866,7 @@ export default function App() {
     const name = String(profileDraft.name || "").trim();
     const age = clamp(profileDraft.age, 0, 120);
     const expectancy = clamp(profileDraft.expectancy || 85, 50, 120);
+    const mantra = String(profileDraft.mantra || "").trim();
     if (!name) {
       Alert.alert(t("alert.profile"), t("alert.addName"));
       return;
@@ -915,6 +882,7 @@ export default function App() {
         name,
         age,
         expectancy: Math.max(expectancy, age + 1),
+        mantra,
         createdAt: current.profile.createdAt || timestamp,
         updatedAt: timestamp,
         lastAnimatedDate: "",
@@ -1220,32 +1188,15 @@ export default function App() {
     selectVoiceProfile(index, { scroll: false });
   }
 
-  function maybeShowDailyQuote(options = {}) {
-    const force = Boolean(options.force);
-    const dateKey = todayKey();
-    if (!appState.profile.complete) return;
-    if (
-      !force &&
-      appState.profile.lastQuoteDate === dateKey &&
-      appState.profile.lastQuoteRitualVersion === QUOTE_RITUAL_VERSION
-    ) {
-      return;
-    }
+  function playProfileMantra() {
+    if (!profileMantra) return;
     softImpact();
-    setQuoteRevealOpen(true);
-    if (
-      appState.profile.lastQuoteDate !== dateKey ||
-      appState.profile.lastQuoteRitualVersion !== QUOTE_RITUAL_VERSION
-    ) {
-      updateState((current) => ({
-        ...current,
-        profile: {
-          ...current.profile,
-          lastQuoteDate: dateKey,
-          lastQuoteRitualVersion: QUOTE_RITUAL_VERSION
-        }
-      }));
-    }
+    Speech.stop();
+    Speech.speak(profileMantra, {
+      language: languageMeta.speech,
+      rate: activeVoiceProfile.rate,
+      pitch: activeVoiceProfile.pitch
+    });
   }
 
   function resetLocalData() {
@@ -1374,6 +1325,19 @@ export default function App() {
                   />
                 </View>
               </View>
+              <View style={styles.setupField}>
+                <Text style={[styles.setupFieldLabel, { color: theme.muted }]}>{t("setup.mantra")}</Text>
+                <TextInput
+                  value={String(profileDraft.mantra || "")}
+                  onChangeText={(mantra) => setProfileDraft((current) => ({ ...current, mantra }))}
+                  placeholder={t("setup.mantraPlaceholder")}
+                  placeholderTextColor={theme.placeholder}
+                  multiline
+                  numberOfLines={2}
+                  maxLength={140}
+                  style={[styles.input, styles.mantraInput, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+                />
+              </View>
             </View>
             <TouchableOpacity style={styles.primaryButton} onPress={() => { softImpact(); saveProfile(); }}>
               <Text style={styles.primaryText}>{t("setup.create")}</Text>
@@ -1386,9 +1350,7 @@ export default function App() {
 
   function renderLife() {
     const stats = lifeStats(appState.profile);
-    const pressure = dayPressure(new Date(clockTick));
     const dots = Array.from({ length: stats.totalMonths }, (_, index) => index < stats.spentMonths);
-    const quoteNumber = String(dailyQuoteIndex + 1).padStart(2, "0");
     return (
       <ScrollView
         ref={lifeScrollRef}
@@ -1416,23 +1378,6 @@ export default function App() {
           </Text>
         </View>
 
-        <View style={styles.pressureCard}>
-          <View style={styles.pressureGlow} />
-          <View style={styles.pressureCopy}>
-            <Text style={styles.pressureKicker}>{t("life.pressureKicker")}</Text>
-            <Text style={styles.pressureTime} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.76}>
-              {t("life.pressureTime", { hours: pressure.hoursLeft, minutes: String(pressure.minutesLeft).padStart(2, "0") })}
-            </Text>
-            <Text style={styles.pressureText} numberOfLines={2}>{t("life.pressureText")}</Text>
-          </View>
-          <View style={styles.pressureMeter}>
-            <View style={[styles.pressureMeterFill, { height: `${pressure.usedPercent}%` }]} />
-            <Text style={styles.pressurePercent} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
-              {pressure.usedPercent}%
-            </Text>
-          </View>
-        </View>
-
         <View style={styles.heroStatsStrip}>
           <View style={styles.heroStatCell}>
             <Text style={styles.heroStatValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.72}>{stats.weeksLeft.toLocaleString("en-US")}</Text>
@@ -1450,32 +1395,26 @@ export default function App() {
           </View>
         </View>
 
-        <TouchableOpacity
-          activeOpacity={0.88}
-          style={[styles.quoteCard, appState.settings.darkMode ? styles.quoteCardDark : styles.quoteCardLight]}
-          onPress={() => {
-            softImpact();
-            maybeShowDailyQuote({ force: true });
-          }}
-        >
-          <View style={styles.quoteCardGlow} />
-          <Text style={styles.quoteCardWatermark}>{quoteNumber}</Text>
-          <View style={styles.quoteCardTop}>
-            <View style={styles.quoteMark}>
-              <Text style={styles.quoteMarkText}>{quoteNumber}</Text>
+        {profileMantra ? (
+          <TouchableOpacity
+            activeOpacity={0.88}
+            style={[styles.mantraCard, appState.settings.darkMode ? styles.mantraCardDark : styles.mantraCardLight]}
+            onPress={playProfileMantra}
+          >
+            <View style={styles.mantraGlow} />
+            <View style={styles.mantraTop}>
+              <View style={styles.mantraMark}>
+                <Text style={styles.mantraMarkText}>//</Text>
+              </View>
+              <View style={styles.quoteMetaBlock}>
+                <Text style={styles.mantraKicker}>{t("life.mantraKicker")}</Text>
+                <Text style={styles.mantraHint}>{activeVoiceProfile.name}</Text>
+              </View>
+              <Text style={styles.mantraPlayHint} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.72}>{t("life.mantraOpen")}</Text>
             </View>
-            <View style={styles.quoteMetaBlock}>
-              <Text style={styles.quoteCardKicker}>{t("quote.kicker")}</Text>
-              <Text style={styles.quoteCardDay}>{dailyQuoteOrdinal}</Text>
-            </View>
-            <Text style={styles.quoteOpenHint} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.72}>{t("quote.open")}</Text>
-          </View>
-          <Text style={styles.quoteCardText} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.88}>"{dailyQuote.text}"</Text>
-          <View style={styles.quoteCardFooter}>
-            <Text style={styles.quoteAuthor}>{dailyQuote.author}</Text>
-            <View style={styles.quoteFooterLine} />
-          </View>
-        </TouchableOpacity>
+            <Text style={styles.mantraText} numberOfLines={3} adjustsFontSizeToFit minimumFontScale={0.82}>"{profileMantra}"</Text>
+          </TouchableOpacity>
+        ) : null}
 
         <View style={[styles.panel, styles.monthPanel, { backgroundColor: theme.card, borderColor: theme.line }]}>
           <View style={styles.panelHeaderRow}>
@@ -1853,6 +1792,26 @@ export default function App() {
               </Text>
             </View>
             <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+              <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("profile.mantraTitle")}</Text>
+              <Text style={[styles.body, { color: theme.muted }]}>{t("profile.mantraBody")}</Text>
+              <TextInput
+                value={String(appState.profile.mantra || "")}
+                onChangeText={(mantra) => {
+                  setProfileDraft((current) => ({ ...current, mantra }));
+                  updateState((current) => ({
+                    ...current,
+                    profile: { ...current.profile, mantra, updatedAt: nowIso() }
+                  }));
+                }}
+                placeholder={t("profile.mantraPlaceholder")}
+                placeholderTextColor={theme.placeholder}
+                multiline
+                numberOfLines={2}
+                maxLength={140}
+                style={[styles.input, styles.mantraInput, styles.profileMantraInput, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
+              />
+            </View>
+            <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
               <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("profile.appearance")}</Text>
               <View style={styles.switchRow}>
                 <Text style={[styles.body, { color: theme.ink }]}>{t("profile.darkMode")}</Text>
@@ -2123,62 +2082,7 @@ export default function App() {
   }
 
   function renderQuoteReveal() {
-    if (!quoteRevealOpen) return null;
-    const scale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.94, 1] });
-    const translateY = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [76, 0] });
-    const opacity = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
-    const sweepY = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [-120, 0] });
-    const indexScale = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [0.7, 1] });
-    const quoteTranslate = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [22, 0] });
-    const bottomTranslate = quotePulse.interpolate({ inputRange: [0, 1], outputRange: [34, 0] });
-    return (
-      <Modal visible transparent animationType="fade" onRequestClose={() => setQuoteRevealOpen(false)}>
-        <View style={styles.quoteOverlay}>
-          <Animated.View style={[styles.quoteRevealStage, { opacity, transform: [{ translateY }, { scale }] }]}>
-            <View style={styles.quoteRevealAuraTop} />
-            <View style={styles.quoteRevealAuraBottom} />
-            <Animated.View style={[styles.quoteRevealSweep, { transform: [{ translateY: sweepY }] }]} />
-            <View style={styles.quoteRevealTop}>
-              <View style={styles.quoteRevealLogo}>
-                <View style={styles.logoSmallSlash} />
-                <View style={styles.logoSmallSlashSecond} />
-                <View style={styles.logoSmallDot} />
-              </View>
-              <Text style={styles.quoteRevealDay}>{dailyQuoteOrdinal}</Text>
-            </View>
-            <Animated.Text style={[styles.quoteRevealIndex, { opacity, transform: [{ scale: indexScale }] }]}>
-              {String(dailyQuoteIndex + 1).padStart(2, "0")}
-            </Animated.Text>
-            <View style={styles.quoteRevealMeter}>
-              <View style={[styles.quoteRevealMeterFill, { width: dailyQuoteProgress }]} />
-            </View>
-            <View style={styles.quoteRevealCenter}>
-              <Text style={styles.quoteRevealKicker}>{t("quote.kicker")}</Text>
-              <Text style={styles.quoteRevealTitle}>{t("quote.title")}</Text>
-              <Animated.View style={[styles.quoteRevealPlate, { transform: [{ translateY: quoteTranslate }] }]}>
-                <Text
-                  style={styles.quoteRevealText}
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.68}
-                  numberOfLines={6}
-                >
-                  "{dailyQuote.text}"
-                </Text>
-              </Animated.View>
-            </View>
-            <Animated.View style={[styles.quoteRevealBottom, { transform: [{ translateY: bottomTranslate }] }]}>
-              <View style={styles.quoteRevealAuthorBox}>
-                <Text style={styles.quoteRevealAuthor}>{dailyQuote.author}</Text>
-                <Text style={styles.quoteRevealSource}>{dailyQuote.source}</Text>
-              </View>
-              <TouchableOpacity style={styles.quoteCloseButton} onPress={() => { softImpact(); setQuoteRevealOpen(false); }}>
-                <Text style={styles.quoteCloseText}>{t("quote.close")}</Text>
-              </TouchableOpacity>
-            </Animated.View>
-          </Animated.View>
-        </View>
-      </Modal>
-    );
+    return null;
   }
 
   if (!hydrated) {
@@ -2394,6 +2298,8 @@ const styles = StyleSheet.create({
   setupFieldHalf: { flex: 1 },
   setupFieldLabel: { marginBottom: 5, paddingLeft: 2, fontSize: 10.5, lineHeight: 13, fontWeight: "900", letterSpacing: 0.6, textTransform: "uppercase" },
   input: { minHeight: 48, borderRadius: 18, borderWidth: 1, paddingHorizontal: 15, paddingVertical: 10, fontSize: 16, fontWeight: "750" },
+  mantraInput: { minHeight: 70, textAlignVertical: "top", lineHeight: 20 },
+  profileMantraInput: { marginTop: 12 },
   speechInput: { minHeight: 220, textAlignVertical: "top", lineHeight: 22 },
   primaryButton: { minHeight: 52, minWidth: 190, maxWidth: "100%", alignSelf: "center", borderRadius: 999, paddingHorizontal: 28, paddingVertical: 13, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 14, shadowColor: "#DA5A3A", shadowOpacity: 0.22, shadowRadius: 16, shadowOffset: { width: 0, height: 10 }, elevation: 4 },
   primaryButtonFlex: { flex: 1, minHeight: 52, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.18, shadowRadius: 12, shadowOffset: { width: 0, height: 8 }, elevation: 3 },
@@ -2441,6 +2347,17 @@ const styles = StyleSheet.create({
   heroStatDivider: { width: 1, height: 28, backgroundColor: "rgba(255,249,237,0.11)" },
   body: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
   syncFootnote: { marginTop: 10, fontSize: 11, lineHeight: 16, fontWeight: "900", letterSpacing: 0.5 },
+  mantraCard: { minHeight: 112, overflow: "hidden", borderWidth: 1, borderRadius: 25, padding: 13, marginBottom: 8, shadowColor: "#000", shadowOpacity: 0.15, shadowRadius: 24, shadowOffset: { width: 0, height: 12 }, elevation: 5 },
+  mantraCardLight: { backgroundColor: "#101418", borderColor: "rgba(232,196,104,0.2)" },
+  mantraCardDark: { backgroundColor: "#11171A", borderColor: "rgba(232,196,104,0.24)" },
+  mantraGlow: { position: "absolute", right: -34, top: -50, width: 126, height: 126, borderRadius: 63, backgroundColor: "rgba(232,196,104,0.16)" },
+  mantraTop: { flexDirection: "row", alignItems: "center", gap: 10 },
+  mantraMark: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
+  mantraMarkText: { color: "#101418", fontSize: 14, lineHeight: 17, fontWeight: "900" },
+  mantraKicker: { color: "rgba(255,249,237,0.74)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
+  mantraHint: { color: "#E8C468", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "900" },
+  mantraPlayHint: { overflow: "hidden", maxWidth: 76, minHeight: 28, paddingHorizontal: 11, paddingVertical: 7, borderRadius: 999, color: "#101418", backgroundColor: "#FFF9ED", fontSize: 11, lineHeight: 13, fontWeight: "900", textAlign: "center", textTransform: "lowercase" },
+  mantraText: { marginTop: 10, color: "#FFF9ED", fontSize: 18, lineHeight: 22, fontWeight: "900" },
   quoteCard: { minHeight: 110, overflow: "hidden", borderWidth: 1, borderRadius: 25, padding: 12, marginBottom: 8, shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 26, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
   quoteCardLight: { backgroundColor: "#0D1113", borderColor: "rgba(232,196,104,0.18)" },
   quoteCardDark: { backgroundColor: "#11171A", borderColor: "rgba(232,196,104,0.24)" },
