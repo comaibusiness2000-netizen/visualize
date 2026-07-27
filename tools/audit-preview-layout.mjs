@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-26-v112",
+  appVersion: "2026-07-26-v113",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-26-v112");
+      localStorage.setItem("visualizeAppVersion", "2026-07-26-v113");
     `
   });
   const failures = [];
@@ -217,7 +217,7 @@ try {
           expression: `(() => {
         const baseSelectors = [
           '.stage', '.phone', '.app', '.topbar', '.nav', '.screen.active',
-          '.life-head', '.life-pressure-card', '.life-stats', '.daily-quote-card', '.life-map-card',
+          '.life-head', '.life-months-card', '.life-stats', '.daily-quote-card', '.life-map-card',
           '.why-workbench', '.why-workbench-head', '.why-motive-stack', '.why-motive-card', '.why-prompts', '.why-prompts span', '#uploadWhyPhoto', '.why-people-grid',
           '.vision-empty', '.anti-empty', '.deck-stage', '.deck-actions',
           '.speech-head', '.speech-studio', '.speech-current-card', '.speech-voice-summary',
@@ -236,8 +236,9 @@ try {
           '.life-head .life-summary',
           '.life-stat strong',
           '.life-stat span',
-          '.life-pressure-copy strong',
-          '.life-pressure-copy p',
+          '.life-months-copy strong b',
+          '.life-months-copy strong em',
+          '.life-months-copy p',
           '.daily-quote-open',
           '#dailyQuoteText',
           '.why-prompts span',
@@ -368,6 +369,7 @@ try {
           { panel: '.speech-head', children: '.deck-kicker, h2, p, .speech-playback-meta, .speech-meter, .speech-play-main' },
           { panel: '.speech-studio', children: '.speech-current-card, .speech-script-panel, .speech-voice-summary, .speech-actions .btn' },
           { panel: '.life-head', children: '.deck-kicker, h1, .life-summary, .life-progress' },
+          { panel: '.life-months-card', children: '.life-months-copy, .life-months-orbit' },
           { panel: '.vision-empty', children: 'h2, p, #createVision' },
           { panel: '.anti-empty', children: 'h2, p, #createAnti' }
         ];
@@ -405,7 +407,7 @@ try {
         if (navRect) {
           const protectedSelectors = [
             '.life-head',
-            '.life-pressure-card',
+            '.life-months-card',
             '.life-stats',
             '.daily-quote-card',
             '.life-map-card',

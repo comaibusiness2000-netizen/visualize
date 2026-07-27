@@ -27,7 +27,7 @@ const viewportProfiles = [
 mkdirSync(outputDir, { recursive: true });
 
 const seedState = {
-  appVersion: "2026-07-26-v112",
+  appVersion: "2026-07-26-v113",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -197,7 +197,7 @@ try {
         selectedState.settings.language = "en";
       }
       localStorage.setItem("visualize-simple-v1", JSON.stringify(selectedState));
-      localStorage.setItem("visualizeAppVersion", "2026-07-26-v112");
+      localStorage.setItem("visualizeAppVersion", "2026-07-26-v113");
     `
   });
   const views = ["today", "goals", "vision", "anti", "speech", "profile"];
