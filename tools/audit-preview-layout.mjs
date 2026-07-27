@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-27-v121",
+  appVersion: "2026-07-27-v122",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v121");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v122");
     `
   });
   const failures = [];
@@ -250,6 +250,8 @@ try {
           '.vision-empty p',
           '.anti-empty h2',
           '.anti-empty p',
+          '.deck-flow b',
+          '.deck-flow em',
           '.deck-actions .btn',
           '.speech-head h2',
           '.speech-head p',

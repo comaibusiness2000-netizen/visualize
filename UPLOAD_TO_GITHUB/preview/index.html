@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=121" />
+    <link rel="manifest" href="./manifest.webmanifest?v=122" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v121";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v122";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=121")
+            .register("./service-worker.js?v=122")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2629,12 +2629,12 @@
       }
 
       .anti-empty {
-        color: #f8efe6;
-        border-color: rgba(75, 53, 43, 0.18);
+        color: #fff7ed;
+        border-color: rgba(75, 53, 43, 0.12);
         background:
-          radial-gradient(circle at 88% 4%, rgba(232, 196, 104, 0.12), transparent 32%),
-          radial-gradient(circle at 8% 100%, rgba(218, 90, 58, 0.11), transparent 34%),
-          linear-gradient(145deg, #231f1c, #121211 68%, #0c0d0d);
+          radial-gradient(circle at 88% 4%, rgba(232, 196, 104, 0.1), transparent 34%),
+          radial-gradient(circle at 8% 100%, rgba(218, 90, 58, 0.08), transparent 34%),
+          linear-gradient(145deg, #2b2824, #171716 68%, #111313);
       }
 
       body[data-theme="dark"] .vision-empty,
@@ -2811,15 +2811,15 @@
       }
 
       .deck-flow {
-        width: min(100%, 290px);
-        min-height: 50px;
+        width: min(100%, 318px);
+        min-height: 64px;
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        align-items: center;
+        align-items: stretch;
         gap: 8px;
         border: 1px solid rgba(17, 17, 17, 0.06);
-        border-radius: 25px;
-        padding: 10px;
+        border-radius: 28px;
+        padding: 8px;
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.22)),
           rgba(17, 17, 17, 0.03);
@@ -2828,28 +2828,73 @@
 
       .deck-flow span {
         position: relative;
-        height: 7px;
-        border-radius: 999px;
+        min-width: 0;
+        min-height: 48px;
+        display: grid;
+        align-content: center;
+        gap: 4px;
+        border-radius: 21px;
+        padding: 8px 6px;
         overflow: hidden;
-        background: rgba(17, 17, 17, 0.1);
+        color: rgba(17, 17, 17, 0.72);
+        background: rgba(17, 17, 17, 0.055);
       }
 
       .deck-flow span::before {
         content: "";
         position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: linear-gradient(90deg, rgba(232, 196, 104, 0.92), rgba(232, 196, 104, 0.18));
-        transform: translateX(-102%);
-        animation: deckFlowTrace 2.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+        left: 9px;
+        right: 9px;
+        bottom: 6px;
+        height: 3px;
+        border-radius: 999px;
+        background: rgba(17, 17, 17, 0.1);
       }
 
-      .deck-flow span:nth-child(2)::before {
+      .deck-flow span::after {
+        content: "";
+        position: absolute;
+        left: 9px;
+        bottom: 6px;
+        width: 22%;
+        height: 3px;
+        border-radius: 999px;
+        background: var(--gold);
+        animation: deckStepPulse 2.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      }
+
+      .deck-flow span:nth-child(2)::after {
         animation-delay: 0.16s;
       }
 
-      .deck-flow span:nth-child(3)::before {
+      .deck-flow span:nth-child(3)::after {
         animation-delay: 0.32s;
+      }
+
+      .deck-flow b,
+      .deck-flow em {
+        position: relative;
+        z-index: 1;
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-style: normal;
+      }
+
+      .deck-flow b {
+        color: var(--gold);
+        font-size: 9px;
+        line-height: 1;
+        font-weight: 950;
+        letter-spacing: 1.1px;
+      }
+
+      .deck-flow em {
+        font-size: 10.5px;
+        line-height: 1.08;
+        font-weight: 950;
       }
 
       .anti-empty .deck-flow {
@@ -2860,11 +2905,16 @@
       }
 
       .anti-empty .deck-flow span {
-        background: rgba(248, 239, 230, 0.12);
+        color: rgba(255, 247, 237, 0.78);
+        background: rgba(248, 239, 230, 0.075);
       }
 
       .anti-empty .deck-flow span::before {
-        background: linear-gradient(90deg, rgba(218, 90, 58, 0.78), rgba(232, 196, 104, 0.18));
+        background: rgba(248, 239, 230, 0.12);
+      }
+
+      .anti-empty .deck-flow span::after {
+        background: linear-gradient(90deg, rgba(218, 90, 58, 0.82), rgba(232, 196, 104, 0.54));
       }
 
       body[data-theme="dark"] .vision-empty .deck-flow,
@@ -2877,6 +2927,7 @@
 
       body[data-theme="dark"] .vision-empty .deck-flow span,
       body[data-theme="dark"] .anti-empty .deck-flow span {
+        color: rgba(255, 249, 237, 0.78);
         background: rgba(255, 249, 237, 0.12);
       }
 
@@ -2891,21 +2942,18 @@
         }
       }
 
-      @keyframes deckFlowTrace {
+      @keyframes deckStepPulse {
         0% {
-          transform: translateX(-102%);
-          opacity: 0;
+          width: 20%;
+          opacity: 0.42;
         }
-        18% {
-          opacity: 1;
-        }
-        64% {
-          transform: translateX(0%);
+        45% {
+          width: calc(100% - 18px);
           opacity: 1;
         }
         100% {
-          transform: translateX(102%);
-          opacity: 0;
+          width: 20%;
+          opacity: 0.42;
         }
       }
 
@@ -6947,8 +6995,23 @@
 
         .deck-flow {
           align-self: end;
-          min-height: 44px;
-          padding: 8px;
+          min-height: 56px;
+          padding: 7px;
+        }
+
+        .deck-flow span {
+          min-height: 42px;
+          border-radius: 18px;
+          padding: 7px 5px;
+        }
+
+        .deck-flow b {
+          font-size: 8px;
+          letter-spacing: 0.9px;
+        }
+
+        .deck-flow em {
+          font-size: 9.3px;
         }
 
         #goals.screen.active.why-empty .why-workbench {
@@ -7378,13 +7441,37 @@
         }
 
         .deck-flow {
-          min-height: 34px;
+          min-height: 46px;
           border-radius: 18px;
-          padding: 7px;
+          gap: 5px;
+          padding: 5px;
         }
 
         .deck-flow span {
-          height: 5px;
+          min-height: 36px;
+          border-radius: 15px;
+          padding: 6px 4px;
+        }
+
+        .deck-flow span::before,
+        .deck-flow span::after {
+          left: 7px;
+          right: 7px;
+          bottom: 5px;
+          height: 2px;
+        }
+
+        .deck-flow span::after {
+          width: 18%;
+        }
+
+        .deck-flow b {
+          font-size: 7px;
+          letter-spacing: 0.7px;
+        }
+
+        .deck-flow em {
+          font-size: 8.1px;
         }
 
         .speech-workbench.script-stage .speech-head,
@@ -8039,7 +8126,11 @@
               <h2>Create the future scene first.</h2>
               <p>Upload images of how you want to look, what you want to own or experience, the places you want to live in, and the kind of people you want around you.</p>
               <button class="btn" id="createVision" type="button">Create vision</button>
-              <div class="deck-flow" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div class="deck-flow" aria-label="Vision creation steps">
+                <span><b>01</b><em id="visionStepOne">Choose photos</em></span>
+                <span><b>02</b><em id="visionStepTwo">Arrange deck</em></span>
+                <span><b>03</b><em id="visionStepThree">Play</em></span>
+              </div>
             </article>
 
             <article class="deck-stage positive hidden" id="visionStage">
@@ -8074,7 +8165,11 @@
               <h2>Create the scene you refuse to live.</h2>
               <p>Upload images that show the opposite future: the body, environment, relationships, habits, stress, loneliness, or regret you do not want to end up with.</p>
               <button class="btn" id="createAnti" type="button">Create anti-vision</button>
-              <div class="deck-flow" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div class="deck-flow" aria-label="Anti-vision creation steps">
+                <span><b>01</b><em id="antiStepOne">Choose warnings</em></span>
+                <span><b>02</b><em id="antiStepTwo">Arrange deck</em></span>
+                <span><b>03</b><em id="antiStepThree">Play</em></span>
+              </div>
             </article>
 
             <article class="deck-stage negative hidden" id="antiStage">
@@ -8780,6 +8875,9 @@
           visionFrameIdentity: "Self",
           visionFrameEnvironment: "Place",
           visionFramePeople: "People",
+          visionStepOne: "Choose photos",
+          visionStepTwo: "Arrange deck",
+          visionStepThree: "Play",
           createVision: "Create vision",
           visionDeck: "Vision deck",
           antiSetup: "Anti-vision setup",
@@ -8788,6 +8886,9 @@
           antiFrameDrift: "Drift",
           antiFrameCost: "Cost",
           antiFrameRegret: "Regret",
+          antiStepOne: "Choose warnings",
+          antiStepTwo: "Arrange deck",
+          antiStepThree: "Play",
           createAnti: "Create anti-vision",
           antiDeck: "Anti-vision deck",
           play: "Play",
@@ -8950,10 +9051,16 @@
         visionFrameIdentity: "Yo",
         visionFrameEnvironment: "Lugar",
         visionFramePeople: "Personas",
+        visionStepOne: "Elegir fotos",
+        visionStepTwo: "Ordenar deck",
+        visionStepThree: "Reproducir",
         antiSetupText: "Empieza con fotos del desvio, los costes y el futuro que te niegas a normalizar.",
         antiFrameDrift: "Deriva",
         antiFrameCost: "Coste",
         antiFrameRegret: "Arrepentimiento",
+        antiStepOne: "Elegir avisos",
+        antiStepTwo: "Ordenar deck",
+        antiStepThree: "Reproducir",
         whyHint: "Mantén visibles las personas detras de tu esfuerzo.",
         whyTitle: "Por quien haces esto?",
         whyText: "Sube fotos de las personas detras de tu esfuerzo: familia, un ex que quieres superar, tu yo de nino, un futuro hijo, un rival o alguien a quien quieres demostrar que se equivoco.",
@@ -9022,10 +9129,16 @@
         visionFrameIdentity: "Moi",
         visionFrameEnvironment: "Cadre",
         visionFramePeople: "Personnes",
+        visionStepOne: "Choisir photos",
+        visionStepTwo: "Ordonner deck",
+        visionStepThree: "Lire",
         antiSetupText: "Commence par des photos de la derive, du cout et du futur que tu refuses de normaliser.",
         antiFrameDrift: "Derive",
         antiFrameCost: "Cout",
         antiFrameRegret: "Regret",
+        antiStepOne: "Choisir alertes",
+        antiStepTwo: "Ordonner deck",
+        antiStepThree: "Lire",
         whyHint: "Garde visibles les personnes derriere ton effort.",
         whyTitle: "Pour qui fais-tu ca?",
         whyText: "Ajoute les photos des personnes derriere ton effort: famille, un ex que tu veux depasser, l'enfant que tu etais, un futur enfant, un rival ou quelqu'un a qui tu veux prouver qu'il avait tort.",
@@ -9094,10 +9207,16 @@
         visionFrameIdentity: "Eu",
         visionFrameEnvironment: "Lugar",
         visionFramePeople: "Pessoas",
+        visionStepOne: "Escolher fotos",
+        visionStepTwo: "Ordenar deck",
+        visionStepThree: "Reproduzir",
         antiSetupText: "Comece com fotos do desvio, dos custos e do futuro que voce se recusa a normalizar.",
         antiFrameDrift: "Desvio",
         antiFrameCost: "Custo",
         antiFrameRegret: "Arrependimento",
+        antiStepOne: "Escolher alertas",
+        antiStepTwo: "Ordenar deck",
+        antiStepThree: "Reproduzir",
         whyHint: "Mantenha visiveis as pessoas por tras do seu esforco.",
         whyTitle: "Por quem voce faz isso?",
         whyText: "Adicione fotos das pessoas por tras do seu esforco: familia, um ex que quer superar, voce quando crianca, um futuro filho, um rival ou alguem a quem quer provar que estava errado.",
@@ -9156,10 +9275,16 @@
         visionFrameIdentity: "Self",
         visionFrameEnvironment: "Place",
         visionFramePeople: "People",
+        visionStepOne: "Choose photos",
+        visionStepTwo: "Arrange deck",
+        visionStepThree: "Play",
         antiSetupText: "Start with photos of the drift, costs, and future you refuse to normalize.",
         antiFrameDrift: "Drift",
         antiFrameCost: "Cost",
         antiFrameRegret: "Regret",
+        antiStepOne: "Choose warnings",
+        antiStepTwo: "Arrange deck",
+        antiStepThree: "Play",
         whyHint: "Keep the people behind your effort visible.",
         whyTitle: "Who are you doing this for?",
         whyText: "Upload photos of family, the child you were, a future child, a rival, or someone you want to prove wrong.",
@@ -9275,6 +9400,9 @@
         setText("#visionFrameIdentity", "visionFrameIdentity");
         setText("#visionFrameEnvironment", "visionFrameEnvironment");
         setText("#visionFramePeople", "visionFramePeople");
+        setText("#visionStepOne", "visionStepOne");
+        setText("#visionStepTwo", "visionStepTwo");
+        setText("#visionStepThree", "visionStepThree");
         setText("#createVision", "createVision");
         setText("#visionStage .deck-kicker", "visionDeck");
         setText("#playVisionDeck", "play");
@@ -9288,6 +9416,9 @@
         setText("#antiFrameDrift", "antiFrameDrift");
         setText("#antiFrameCost", "antiFrameCost");
         setText("#antiFrameRegret", "antiFrameRegret");
+        setText("#antiStepOne", "antiStepOne");
+        setText("#antiStepTwo", "antiStepTwo");
+        setText("#antiStepThree", "antiStepThree");
         setText("#createAnti", "createAnti");
         setText("#antiStage .deck-kicker", "antiDeck");
         setText("#playAntiDeck", "play");
