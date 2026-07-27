@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-27-v122",
+  appVersion: "2026-07-27-v123",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v122");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v123");
     `
   });
   const failures = [];
@@ -236,6 +236,7 @@ try {
           '.life-head .life-summary',
           '.life-stat strong',
           '.life-stat span',
+          '#lifeMonthsTapHint',
           '.life-months-copy strong b',
           '.life-months-copy strong em',
           '.life-months-copy p',
@@ -493,6 +494,7 @@ try {
           '#runwayRevealTitle',
           '#runwayRevealMonths',
           '#runwayRevealUnit',
+          '#lifeMonthsTapHint',
           '#runwayRevealText',
           '#runwayThisYear',
           '#runwayCurrentMonth',

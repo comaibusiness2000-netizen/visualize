@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v122";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v123";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -1352,12 +1352,12 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr);
         align-items: stretch;
-        gap: 12px;
+        gap: 10px;
         min-height: 136px;
         overflow: hidden;
         border: 1px solid rgba(232, 196, 104, 0.24);
         border-radius: 30px;
-        padding: 16px;
+        padding: 14px;
         color: #fff9ed;
         background:
           radial-gradient(circle at 88% 16%, rgba(232, 196, 104, 0.2), transparent 32%),
@@ -1439,7 +1439,15 @@
         padding-right: 34px;
       }
 
-      .life-months-copy > span {
+      .life-months-copy-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .life-months-copy-head > span {
+        min-width: 0;
         display: block;
         color: var(--gold);
         font-size: 9.5px;
@@ -1447,6 +1455,26 @@
         font-weight: 950;
         letter-spacing: 1.7px;
         text-transform: uppercase;
+        overflow-wrap: anywhere;
+      }
+
+      .life-months-tap-hint {
+        flex: 0 0 auto;
+        min-height: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(232, 196, 104, 0.3);
+        border-radius: 999px;
+        padding: 0 9px;
+        color: rgba(255, 249, 237, 0.78);
+        background: rgba(232, 196, 104, 0.1);
+        font-size: 8.8px;
+        line-height: 1;
+        letter-spacing: 0.95px;
+        text-transform: uppercase;
+        font-style: normal;
+        font-weight: 950;
       }
 
       .life-months-copy strong {
@@ -1480,10 +1508,10 @@
 
       .life-months-copy p {
         max-width: 330px;
-        margin-top: 7px;
+        margin-top: 6px;
         color: rgba(255, 249, 237, 0.68);
-        font-size: 12px;
-        line-height: 1.22;
+        font-size: 11.6px;
+        line-height: 1.18;
         font-weight: 850;
       }
 
@@ -1492,8 +1520,8 @@
         z-index: 1;
         display: grid;
         grid-template-columns: repeat(12, minmax(0, 1fr));
-        gap: 5px;
-        padding: 10px 10px 16px;
+        gap: 4px;
+        padding: 8px 9px 13px;
         border: 1px solid rgba(255, 249, 237, 0.1);
         border-radius: 24px;
         background: rgba(255, 249, 237, 0.06);
@@ -1528,7 +1556,7 @@
 
       .life-months-orbit span {
         min-width: 0;
-        height: 24px;
+        height: 20px;
         border-radius: 999px;
         border: 1px solid rgba(255, 249, 237, 0.08);
         background: rgba(255, 249, 237, 0.16);
@@ -6823,10 +6851,10 @@
 
         .life-months-card {
           grid-template-columns: minmax(0, 1fr);
-          gap: 9px;
+          gap: 7px;
           min-height: 150px;
           border-radius: 24px;
-          padding: 11px 12px;
+          padding: 10px 12px;
         }
 
         .life-months-card::before {
@@ -6859,9 +6887,20 @@
           padding-right: 30px;
         }
 
-        .life-months-copy > span {
+        .life-months-copy-head {
+          gap: 7px;
+        }
+
+        .life-months-copy-head > span {
           font-size: 8.4px;
           letter-spacing: 1.45px;
+        }
+
+        .life-months-tap-hint {
+          min-height: 22px;
+          padding-inline: 7px;
+          font-size: 7.8px;
+          letter-spacing: 0.7px;
         }
 
         .life-months-copy strong {
@@ -6879,20 +6918,20 @@
         }
 
         .life-months-copy p {
-          margin-top: 5px;
-          font-size: 10.4px;
-          line-height: 1.17;
+          margin-top: 4px;
+          font-size: 10px;
+          line-height: 1.12;
         }
 
         .life-months-orbit {
           grid-template-columns: repeat(12, minmax(0, 1fr));
-          gap: 3px;
-          padding: 8px 8px 13px;
+          gap: 2.6px;
+          padding: 6px 7px 10px;
           border-radius: 20px;
         }
 
         .life-months-orbit span {
-          height: 16px;
+          height: 13px;
         }
 
         .life-stats {
@@ -7580,9 +7619,20 @@
           top: 10px;
         }
 
-        .life-months-copy > span {
+        .life-months-copy-head {
+          gap: 6px;
+        }
+
+        .life-months-copy-head > span {
           font-size: 7.4px;
           letter-spacing: 1.15px;
+        }
+
+        .life-months-tap-hint {
+          min-height: 20px;
+          padding-inline: 6px;
+          font-size: 7px;
+          letter-spacing: 0.5px;
         }
 
         .life-months-copy strong {
@@ -8051,7 +8101,10 @@
                   </svg>
                 </span>
                 <div class="life-months-copy">
-                  <span id="lifeMonthsKicker">Lifetime runway</span>
+                  <div class="life-months-copy-head">
+                    <span id="lifeMonthsKicker">Lifetime runway</span>
+                    <em class="life-months-tap-hint" id="lifeMonthsTapHint">Tap to expand</em>
+                  </div>
                   <strong><b id="lifeMonthsSpotlight">0</b><em id="lifeMonthsUnit">months left</em></strong>
                   <p id="lifeMonthsText">Only 0 rows of 12 months remain. One row disappears every year.</p>
                 </div>
@@ -10127,6 +10180,7 @@
         const unit = document.getElementById("lifeMonthsUnit");
         const kicker = document.getElementById("lifeMonthsKicker");
         const text = document.getElementById("lifeMonthsText");
+        const tapHint = document.getElementById("lifeMonthsTapHint");
         const orbit = document.getElementById("lifeMonthsOrbit");
         const card = document.getElementById("lifeMonthsCard");
         const mapCard = document.getElementById("lifeMapCard");
@@ -10134,6 +10188,7 @@
         if (spotlight) spotlight.textContent = formatNumber(months);
         if (unit) unit.textContent = uiText("monthsLeft");
         if (kicker) kicker.textContent = uiText("monthRunwayKicker");
+        if (tapHint) tapHint.textContent = uiText("runwayTapHint");
         if (text) text.textContent = uiText("monthRunwayText", { rows: formatNumber(rows) });
         if (card) card.setAttribute("aria-label", uiText("runwayOpen"));
         if (mapCard) mapCard.setAttribute("aria-label", uiText("runwayOpen"));
