@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-27-v128",
+  appVersion: "2026-07-27-v129",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v128");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v129");
     `
   });
   const failures = [];
@@ -472,7 +472,7 @@ try {
 
         if (view === "today" && scenario.profileComplete) {
           await cdp.send("Runtime.evaluate", {
-            expression: `document.getElementById("lifeMonthsCard")?.click()`,
+            expression: `document.getElementById("lifeMapCard")?.click()`,
             awaitPromise: true
           });
           await wait(320);
@@ -495,6 +495,7 @@ try {
           '#runwayRevealMonths',
           '#runwayRevealUnit',
           '#lifeMonthsTapHint',
+          '#lifeMapOpenHint',
           '#runwayRevealText',
           '#runwayThisYear',
           '#runwayCurrentMonth',

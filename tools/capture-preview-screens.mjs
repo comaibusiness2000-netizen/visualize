@@ -27,7 +27,7 @@ const viewportProfiles = [
 mkdirSync(outputDir, { recursive: true });
 
 const seedState = {
-  appVersion: "2026-07-27-v128",
+  appVersion: "2026-07-27-v129",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -197,7 +197,7 @@ try {
         selectedState.settings.language = "en";
       }
       localStorage.setItem("visualize-simple-v1", JSON.stringify(selectedState));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v128");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v129");
     `
   });
   const views = ["today", "goals", "vision", "anti", "speech", "profile"];
@@ -260,7 +260,7 @@ try {
       }
       if (view === "today") {
         await cdp.send("Runtime.evaluate", {
-          expression: `document.getElementById("lifeMonthsCard")?.click()`,
+          expression: `document.getElementById("lifeMapCard")?.click()`,
           awaitPromise: true
         });
         await wait(520);
@@ -359,7 +359,7 @@ try {
       }
       if (view === "today") {
         await cdp.send("Runtime.evaluate", {
-          expression: `document.getElementById("lifeMonthsCard")?.click()`,
+          expression: `document.getElementById("lifeMapCard")?.click()`,
           awaitPromise: true
         });
         await wait(520);
