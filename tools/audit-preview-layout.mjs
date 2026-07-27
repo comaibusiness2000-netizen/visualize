@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-27-v117",
+  appVersion: "2026-07-27-v118",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v117");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v118");
     `
   });
   const failures = [];
@@ -370,8 +370,8 @@ try {
           { panel: '.speech-studio', children: '.speech-current-card, .speech-script-panel, .speech-voice-summary, .speech-actions .btn' },
           { panel: '.life-head', children: '.deck-kicker, h1, .life-summary, .life-progress' },
           { panel: '.life-months-card', children: '.life-months-copy, .life-months-orbit' },
-          { panel: '.vision-empty', children: 'h2, p, #createVision' },
-          { panel: '.anti-empty', children: 'h2, p, #createAnti' }
+          { panel: '.vision-empty', children: '.deck-frame-stack, h2, p, #createVision, .deck-flow' },
+          { panel: '.anti-empty', children: '.deck-frame-stack, h2, p, #createAnti, .deck-flow' }
         ];
         for (const check of containmentChecks) {
           for (const panel of document.querySelectorAll(check.panel)) {

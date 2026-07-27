@@ -27,7 +27,7 @@ const viewportProfiles = [
 mkdirSync(outputDir, { recursive: true });
 
 const seedState = {
-  appVersion: "2026-07-27-v117",
+  appVersion: "2026-07-27-v118",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],

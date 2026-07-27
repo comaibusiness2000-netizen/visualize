@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=117" />
+    <link rel="manifest" href="./manifest.webmanifest?v=118" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v117";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v118";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=117")
+            .register("./service-worker.js?v=118")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2443,6 +2443,7 @@
         position: relative;
         min-height: 482px;
         display: grid;
+        grid-template-rows: auto auto auto auto auto auto;
         align-content: center;
         justify-items: center;
         gap: 16px;
@@ -2459,17 +2460,12 @@
       .anti-empty::before {
         content: "";
         position: absolute;
-        left: 24px;
-        right: 24px;
-        bottom: 22px;
-        height: 74px;
-        border: 1px solid rgba(17, 17, 17, 0.05);
-        border-radius: 28px;
+        inset: 1px;
+        border-radius: inherit;
         background:
-          linear-gradient(90deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.2)),
-          repeating-linear-gradient(90deg, rgba(17, 17, 17, 0.06) 0 1px, transparent 1px 17px),
-          linear-gradient(180deg, rgba(232, 196, 104, 0.16), rgba(17, 17, 17, 0.03));
-        opacity: 0.86;
+          radial-gradient(circle at 50% 21%, rgba(232, 196, 104, 0.11), transparent 34%),
+          radial-gradient(circle at 50% 100%, rgba(17, 17, 17, 0.05), transparent 38%);
+        opacity: 0.9;
         z-index: 0;
         pointer-events: none;
       }
@@ -2477,17 +2473,7 @@
       .vision-empty::after,
       .anti-empty::after {
         content: "";
-        position: absolute;
-        left: 50%;
-        bottom: 54px;
-        width: min(58%, 210px);
-        height: 8px;
-        border-radius: 999px;
-        background:
-          linear-gradient(90deg, rgba(232, 196, 104, 0.82), rgba(232, 196, 104, 0.16));
-        transform: translateX(-50%);
-        z-index: 0;
-        pointer-events: none;
+        display: none;
       }
 
       .vision-empty > *,
@@ -2521,21 +2507,19 @@
 
       body[data-theme="dark"] .vision-empty::before,
       body[data-theme="dark"] .anti-empty::before {
-        border-color: rgba(255, 249, 237, 0.07);
         background:
-          linear-gradient(90deg, rgba(255, 249, 237, 0.08), rgba(255, 249, 237, 0.01)),
-          repeating-linear-gradient(90deg, rgba(255, 249, 237, 0.08) 0 1px, transparent 1px 17px),
-          linear-gradient(180deg, rgba(232, 196, 104, 0.11), rgba(255, 249, 237, 0.02));
-        opacity: 0.72;
+          radial-gradient(circle at 50% 21%, rgba(232, 196, 104, 0.11), transparent 34%),
+          radial-gradient(circle at 6% 95%, rgba(218, 90, 58, 0.08), transparent 34%),
+          radial-gradient(circle at 50% 100%, rgba(255, 249, 237, 0.04), transparent 38%);
+        opacity: 0.82;
       }
 
       .anti-empty::before {
-        border-color: rgba(248, 239, 230, 0.08);
         background:
-          linear-gradient(90deg, rgba(248, 239, 230, 0.09), rgba(248, 239, 230, 0.01)),
-          repeating-linear-gradient(90deg, rgba(248, 239, 230, 0.08) 0 1px, transparent 1px 17px),
-          linear-gradient(180deg, rgba(218, 90, 58, 0.1), rgba(248, 239, 230, 0.02));
-        opacity: 0.76;
+          radial-gradient(circle at 50% 21%, rgba(218, 90, 58, 0.11), transparent 34%),
+          radial-gradient(circle at 86% 10%, rgba(232, 196, 104, 0.08), transparent 32%),
+          radial-gradient(circle at 50% 100%, rgba(248, 239, 230, 0.04), transparent 38%);
+        opacity: 0.86;
       }
 
       .anti-empty::after {
@@ -2548,10 +2532,27 @@
         width: min(100%, 312px);
         height: 142px;
         margin-bottom: 2px;
+        isolation: isolate;
+      }
+
+      .deck-frame-stack::before {
+        content: "";
+        position: absolute;
+        left: 11%;
+        right: 11%;
+        bottom: -12px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(17, 17, 17, 0.12);
+        filter: blur(16px);
+        opacity: 0.8;
+        transform: perspective(220px) rotateX(58deg);
+        z-index: -1;
       }
 
       .deck-frame {
         position: absolute;
+        --deck-rotate: 0deg;
         display: grid;
         align-content: end;
         overflow: hidden;
@@ -2563,6 +2564,8 @@
           linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(17, 17, 17, 0.05)),
           #f2f1ed;
         box-shadow: 0 18px 34px rgba(17, 17, 17, 0.08);
+        transform: rotate(var(--deck-rotate));
+        animation: deckFrameBreath 4.8s ease-in-out infinite;
       }
 
       .deck-frame:nth-child(1) {
@@ -2570,7 +2573,7 @@
         top: 18px;
         width: 43%;
         height: 112px;
-        transform: rotate(-4deg);
+        --deck-rotate: -4deg;
       }
 
       .deck-frame:nth-child(2) {
@@ -2578,7 +2581,8 @@
         top: 0;
         width: 44%;
         height: 132px;
-        transform: rotate(2deg);
+        --deck-rotate: 2deg;
+        animation-delay: 0.18s;
       }
 
       .deck-frame:nth-child(3) {
@@ -2586,7 +2590,8 @@
         top: 26px;
         width: 39%;
         height: 106px;
-        transform: rotate(5deg);
+        --deck-rotate: 5deg;
+        animation-delay: 0.36s;
       }
 
       .deck-frame span {
@@ -2645,12 +2650,117 @@
       .vision-empty .btn,
       .anti-empty .btn {
         width: min(100%, 188px);
+        min-height: 54px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px 22px 0;
+        line-height: 1;
       }
 
       .anti-empty .btn {
         border-color: #f4eadc;
         color: #111;
         background: #f4eadc;
+      }
+
+      .deck-flow {
+        width: min(100%, 290px);
+        min-height: 50px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(17, 17, 17, 0.06);
+        border-radius: 25px;
+        padding: 10px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.22)),
+          rgba(17, 17, 17, 0.03);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+      }
+
+      .deck-flow span {
+        position: relative;
+        height: 7px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(17, 17, 17, 0.1);
+      }
+
+      .deck-flow span::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, rgba(232, 196, 104, 0.92), rgba(232, 196, 104, 0.18));
+        transform: translateX(-102%);
+        animation: deckFlowTrace 2.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      }
+
+      .deck-flow span:nth-child(2)::before {
+        animation-delay: 0.16s;
+      }
+
+      .deck-flow span:nth-child(3)::before {
+        animation-delay: 0.32s;
+      }
+
+      .anti-empty .deck-flow {
+        border-color: rgba(248, 239, 230, 0.08);
+        background:
+          linear-gradient(180deg, rgba(248, 239, 230, 0.08), rgba(248, 239, 230, 0.02)),
+          rgba(0, 0, 0, 0.18);
+      }
+
+      .anti-empty .deck-flow span {
+        background: rgba(248, 239, 230, 0.12);
+      }
+
+      .anti-empty .deck-flow span::before {
+        background: linear-gradient(90deg, rgba(218, 90, 58, 0.78), rgba(232, 196, 104, 0.18));
+      }
+
+      body[data-theme="dark"] .vision-empty .deck-flow,
+      body[data-theme="dark"] .anti-empty .deck-flow {
+        border-color: rgba(255, 249, 237, 0.08);
+        background:
+          linear-gradient(180deg, rgba(255, 249, 237, 0.08), rgba(255, 249, 237, 0.018)),
+          rgba(0, 0, 0, 0.14);
+      }
+
+      body[data-theme="dark"] .vision-empty .deck-flow span,
+      body[data-theme="dark"] .anti-empty .deck-flow span {
+        background: rgba(255, 249, 237, 0.12);
+      }
+
+      @keyframes deckFrameBreath {
+        0%, 100% {
+          translate: 0 0;
+          filter: saturate(1);
+        }
+        50% {
+          translate: 0 -5px;
+          filter: saturate(1.04);
+        }
+      }
+
+      @keyframes deckFlowTrace {
+        0% {
+          transform: translateX(-102%);
+          opacity: 0;
+        }
+        18% {
+          opacity: 1;
+        }
+        64% {
+          transform: translateX(0%);
+          opacity: 1;
+        }
+        100% {
+          transform: translateX(102%);
+          opacity: 0;
+        }
       }
 
       .deck-stage.positive {
@@ -6661,7 +6771,22 @@
         .anti-empty {
           height: 100%;
           min-height: 0;
-          align-content: center;
+          grid-template-rows: clamp(132px, 21vh, 178px) auto auto auto auto minmax(44px, 1fr);
+          align-content: stretch;
+          gap: clamp(10px, 1.7vh, 15px);
+          padding: clamp(22px, 3.2vh, 30px) 22px;
+        }
+
+        .deck-frame-stack {
+          align-self: end;
+          height: clamp(118px, 18vh, 142px);
+          margin-bottom: 0;
+        }
+
+        .deck-flow {
+          align-self: end;
+          min-height: 44px;
+          padding: 8px;
         }
 
         #goals.screen.active.why-empty .why-workbench {
@@ -7052,6 +7177,51 @@
         .anti-empty::before,
         .anti-empty::after {
           display: none;
+        }
+
+        .vision-empty,
+        .anti-empty {
+          grid-template-rows: minmax(92px, 0.66fr) auto auto auto auto minmax(34px, 0.22fr);
+          gap: 7px;
+          padding: 16px 16px 18px;
+        }
+
+        .deck-frame-stack {
+          width: min(100%, 244px);
+          height: 96px;
+        }
+
+        .deck-frame:nth-child(1) {
+          top: 13px;
+          height: 78px;
+        }
+
+        .deck-frame:nth-child(2) {
+          height: 92px;
+        }
+
+        .deck-frame:nth-child(3) {
+          top: 16px;
+          height: 74px;
+        }
+
+        .deck-frame {
+          border-radius: 19px;
+          padding: 10px;
+        }
+
+        .deck-frame span {
+          font-size: 10.5px;
+        }
+
+        .deck-flow {
+          min-height: 34px;
+          border-radius: 18px;
+          padding: 7px;
+        }
+
+        .deck-flow span {
+          height: 5px;
         }
 
         .speech-workbench.script-stage .speech-head,
@@ -7676,6 +7846,7 @@
               <h2>Create the future scene first.</h2>
               <p>Upload images of how you want to look, what you want to own or experience, the places you want to live in, and the kind of people you want around you.</p>
               <button class="btn" id="createVision" type="button">Create vision</button>
+              <div class="deck-flow" aria-hidden="true"><span></span><span></span><span></span></div>
             </article>
 
             <article class="deck-stage positive hidden" id="visionStage">
@@ -7710,6 +7881,7 @@
               <h2>Create the scene you refuse to live.</h2>
               <p>Upload images that show the opposite future: the body, environment, relationships, habits, stress, loneliness, or regret you do not want to end up with.</p>
               <button class="btn" id="createAnti" type="button">Create anti-vision</button>
+              <div class="deck-flow" aria-hidden="true"><span></span><span></span><span></span></div>
             </article>
 
             <article class="deck-stage negative hidden" id="antiStage">
@@ -9475,6 +9647,7 @@
       function openDailyQuote({ force = false } = {}) {
         if (!DAILY_QUOTES.length) return;
         if (!force && !state.lifeProfile.complete) return;
+        if (!force && currentView !== "today") return;
         const dateKey = todayKey();
         if (
           !force &&
@@ -10507,6 +10680,7 @@
         if (name === "today") {
           resetLifeDashboardScroll();
           setTimeout(animateLifeClockIfNeeded, 180);
+          scheduleDailyQuote(hasPendingDailyLifeUpdate() ? 6900 : 900);
         }
       }
 
