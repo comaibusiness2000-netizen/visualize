@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-27-v131",
+  appVersion: "2026-07-27-v132",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v131");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v132");
     `
   });
   const failures = [];
@@ -491,6 +491,7 @@ try {
           '.runway-hero',
           '.runway-focus-strip',
           '.runway-years-card',
+          '.runway-years-map',
           '.runway-commit'
         ];
         const textFitSelectors = [
@@ -515,8 +516,20 @@ try {
         const vh = window.innerHeight;
         const items = [];
         const modal = document.getElementById('lifeRunwayReveal');
+        const runwayMap = document.getElementById('runwayYearsMap');
         if (!modal?.classList.contains('open')) {
           items.push({ selector: 'life runway did not open', clippedY: false, outX: false, navTooHigh: false, viewportNotCovered: false });
+        }
+        if (runwayMap && runwayMap.scrollHeight > runwayMap.clientHeight + 2) {
+          items.push({
+            selector: 'runway timeline should fit without vertical scroll',
+            clientHeight: runwayMap.clientHeight,
+            scrollHeight: runwayMap.scrollHeight,
+            clippedY: true,
+            outX: false,
+            navTooHigh: false,
+            viewportNotCovered: false
+          });
         }
         for (const selector of selectors) {
           for (const element of document.querySelectorAll(selector)) {

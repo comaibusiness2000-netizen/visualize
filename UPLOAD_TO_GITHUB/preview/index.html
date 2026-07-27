@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=131" />
+    <link rel="manifest" href="./manifest.webmanifest?v=132" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v131";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v132";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=131")
+            .register("./service-worker.js?v=132")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -6856,7 +6856,7 @@
         min-height: 0;
         display: grid;
         grid-template-rows: auto auto minmax(0, 1fr);
-        gap: 10px;
+        gap: 12px;
         padding: 16px 14px 14px;
         background:
           radial-gradient(circle at 16% 100%, rgba(218, 90, 58, 0.1), transparent 34%),
@@ -6917,14 +6917,15 @@
 
       .runway-years-map {
         min-height: 0;
-        max-height: min(270px, 36vh);
+        height: 100%;
+        align-self: stretch;
         display: grid;
-        grid-template-columns: repeat(12, minmax(0, 1fr));
-        align-content: start;
-        gap: 3px;
-        overflow-y: auto;
+        grid-template-columns: repeat(var(--runway-cols, 40), minmax(0, 1fr));
+        align-content: center;
+        gap: var(--runway-gap, 2px);
+        overflow: hidden;
+        padding: 2px 0;
         scrollbar-width: none;
-        padding-right: 2px;
       }
 
       .runway-years-map::-webkit-scrollbar {
@@ -6932,9 +6933,12 @@
       }
 
       .runway-years-map span {
-        height: 7px;
+        width: 100%;
+        min-height: 3px;
+        height: auto;
+        aspect-ratio: 1;
         border: 1px solid rgba(255, 249, 237, 0.06);
-        border-radius: 999px;
+        border-radius: 50%;
         background: rgba(255, 249, 237, 0.86);
         opacity: 0.95;
       }
@@ -7256,8 +7260,7 @@
         }
 
         .runway-years-map {
-          max-height: min(218px, 31vh);
-          gap: 2.4px;
+          gap: var(--runway-gap, 1.8px);
         }
 
         .runway-commit {
@@ -7987,12 +7990,11 @@
         }
 
         .runway-years-map {
-          max-height: min(148px, 23vh);
-          gap: 2px;
+          gap: var(--runway-gap, 1.45px);
         }
 
         .runway-years-map span {
-          height: 5px;
+          min-height: 2.4px;
         }
 
         .runway-commit {
@@ -9181,7 +9183,7 @@
             <div class="runway-years-card">
               <div class="runway-years-top">
                 <span id="runwayYearsLabel">Rows left</span>
-                <strong id="runwayRowsCount">0 rows</strong>
+                <strong id="runwayRowsCount">0 months</strong>
               </div>
               <div class="runway-years-legend" aria-hidden="true">
                 <span><i class="spent"></i><b id="runwaySpentLegend">0 spent</b></span>
@@ -9524,12 +9526,12 @@
           runwayOpen: "Open lifetime runway",
           runwayTapHint: "Open runway",
           runwayMapHint: "View full screen",
-          runwayDetailText: "Every capsule is one month. Every row is a year you can still spend intentionally.",
+          runwayDetailText: "Every dot is one month. The whole timeline fits here at once.",
           runwayUrgencyText: "Make this month count before it disappears.",
           runwayThisYear: "This year",
           runwayNow: "now",
           runwayRowsLabel: "Whole timeline",
-          runwayRowsCount: "{rows} rows",
+          runwayRowsCount: "{months} months",
           runwaySpentCount: "{months} spent",
           runwayNowMarker: "now",
           runwayLeftCount: "{months} left",
@@ -9625,12 +9627,12 @@
         monthRunwayText: "Only {rows} rows of 12 months remain. One row disappears every year.",
         runwayOpen: "Open lifetime runway",
         runwayTapHint: "Open runway",
-        runwayDetailText: "Every capsule is one month. Every row is a year you can still spend intentionally.",
+        runwayDetailText: "Every dot is one month. The whole timeline fits here at once.",
         runwayUrgencyText: "Make this month count before it disappears.",
         runwayThisYear: "This year",
         runwayNow: "now",
         runwayRowsLabel: "Whole timeline",
-        runwayRowsCount: "{rows} rows",
+        runwayRowsCount: "{months} months",
         runwaySpentCount: "{months} spent",
         runwayNowMarker: "now",
         runwayLeftCount: "{months} left",
@@ -9691,12 +9693,12 @@
         runwayOpen: "Abrir pista de vida",
         runwayTapHint: "Abrir pista",
         runwayMapHint: "Pantalla completa",
-        runwayDetailText: "Cada capsula es un mes. Cada fila es un ano que todavia puedes usar con intencion.",
+        runwayDetailText: "Cada punto es un mes. Toda la linea cabe aqui de una vez.",
         runwayUrgencyText: "Haz que este mes cuente antes de que desaparezca.",
         runwayThisYear: "Este ano",
         runwayNow: "ahora",
         runwayRowsLabel: "Linea completa",
-        runwayRowsCount: "{rows} filas",
+        runwayRowsCount: "{months} meses",
         runwaySpentCount: "{months} gastados",
         runwayNowMarker: "ahora",
         runwayLeftCount: "{months} restantes",
@@ -9774,12 +9776,12 @@
         runwayOpen: "Ouvrir la piste de vie",
         runwayTapHint: "Ouvrir",
         runwayMapHint: "Plein ecran",
-        runwayDetailText: "Chaque capsule est un mois. Chaque rangee est une annee que tu peux encore utiliser avec intention.",
+        runwayDetailText: "Chaque point est un mois. Toute la chronologie tient ici.",
         runwayUrgencyText: "Fais compter ce mois avant qu'il disparaisse.",
         runwayThisYear: "Cette annee",
         runwayNow: "maintenant",
         runwayRowsLabel: "Chronologie complete",
-        runwayRowsCount: "{rows} rangees",
+        runwayRowsCount: "{months} mois",
         runwaySpentCount: "{months} passes",
         runwayNowMarker: "maintenant",
         runwayLeftCount: "{months} restants",
@@ -9857,12 +9859,12 @@
         runwayOpen: "Abrir pista de vida",
         runwayTapHint: "Abrir pista",
         runwayMapHint: "Tela inteira",
-        runwayDetailText: "Cada capsula e um mes. Cada fileira e um ano que voce ainda pode usar com intencao.",
+        runwayDetailText: "Cada ponto e um mes. A linha inteira cabe aqui de uma vez.",
         runwayUrgencyText: "Faca este mes contar antes que ele desapareca.",
         runwayThisYear: "Este ano",
         runwayNow: "agora",
         runwayRowsLabel: "Linha completa",
-        runwayRowsCount: "{rows} fileiras",
+        runwayRowsCount: "{months} meses",
         runwaySpentCount: "{months} gastos",
         runwayNowMarker: "agora",
         runwayLeftCount: "{months} restantes",
@@ -9940,7 +9942,7 @@
         runwayMapHint: "Full screen",
         runwayUrgencyText: "Make this month count before it disappears.",
         runwayRowsLabel: "Whole timeline",
-        runwayRowsCount: "{rows} rows",
+        runwayRowsCount: "{months} months",
         runwaySpentCount: "{months} spent",
         runwayNowMarker: "now",
         runwayLeftCount: "{months} left",
@@ -10077,7 +10079,7 @@
         setText("#runwayThisYear", "runwayThisYear");
         setText("#runwayCurrentMonth", "runwayNow");
         setText("#runwayYearsLabel", "runwayRowsLabel");
-        setText("#runwayRowsCount", "runwayRowsCount", { rows: 0 });
+        setText("#runwayRowsCount", "runwayRowsCount", { months: 0, rows: 0 });
         setText("#runwaySpentLegend", "runwaySpentCount", { months: 0 });
         setText("#runwayNowLegend", "runwayNowMarker");
         setText("#runwayLeftLegend", "runwayLeftCount", { months: 0 });
@@ -10863,6 +10865,9 @@
         const totalMonths = Math.max(12, Math.round(stats.totalMonths || months || 12));
         const spentMonths = Math.min(totalMonths, Math.max(0, Math.round(stats.spentMonths || 0)));
         const rows = Math.max(1, Math.ceil(totalMonths / 12));
+        const viewportWidth = Math.max(320, Math.min(window.innerWidth || 390, 520));
+        const columns = viewportWidth < 360 ? 38 : viewportWidth < 430 ? 40 : 44;
+        const compressedRows = Math.max(1, Math.ceil(totalMonths / columns));
         const now = new Date();
         const currentMonth = now.getMonth();
         const monthName = new Intl.DateTimeFormat(state.settings.language || "en", { month: "short" }).format(now);
@@ -10884,7 +10889,7 @@
         if (textNode) textNode.textContent = uiText("runwayDetailText");
         if (currentNode) currentNode.textContent = `${uiText("runwayNow")} - ${monthName}`;
         if (yearsLabel) yearsLabel.textContent = uiText("runwayRowsLabel");
-        if (rowsCount) rowsCount.textContent = uiText("runwayRowsCount", { rows: formatNumber(rows) });
+        if (rowsCount) rowsCount.textContent = uiText("runwayRowsCount", { months: formatNumber(totalMonths), rows: formatNumber(compressedRows) });
         if (spentLegend) spentLegend.textContent = uiText("runwaySpentCount", { months: formatNumber(spentMonths) });
         if (nowLegend) nowLegend.textContent = uiText("runwayNowMarker");
         if (leftLegend) leftLegend.textContent = uiText("runwayLeftCount", { months: formatNumber(months) });
@@ -10895,17 +10900,12 @@
           }).join("");
         }
         if (yearsMap) {
+          yearsMap.style.setProperty("--runway-cols", String(columns));
+          yearsMap.style.setProperty("--runway-gap", viewportWidth < 380 ? "1.45px" : "1.8px");
           yearsMap.innerHTML = Array.from({ length: totalMonths }, (_, index) => {
             const className = index < spentMonths ? "spent" : index === spentMonths && months > 0 ? "now" : "available";
             return `<span class="${className}" aria-hidden="true"></span>`;
           }).join("");
-          requestAnimationFrame(() => {
-            const maxScroll = Math.max(0, yearsMap.scrollHeight - yearsMap.clientHeight);
-            if (!maxScroll) return;
-            const spentRatio = Math.min(1, Math.max(0, spentMonths / totalMonths));
-            const target = (yearsMap.scrollHeight * spentRatio) - (yearsMap.clientHeight * 0.42);
-            yearsMap.scrollTop = Math.max(0, Math.min(maxScroll, target));
-          });
         }
       }
 
