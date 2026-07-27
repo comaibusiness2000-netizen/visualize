@@ -34,7 +34,7 @@ if errorlevel 1 goto fail
 
 echo.
 echo 5/5 - Carico l'ultima build su App Store Connect...
-call npx.cmd eas-cli submit --platform ios --profile production --latest
+call npx.cmd eas-cli submit --platform ios --profile production --latest --wait --verbose
 if errorlevel 1 goto fail
 
 echo.
