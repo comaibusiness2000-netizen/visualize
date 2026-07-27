@@ -27,7 +27,7 @@ const viewportProfiles = [
 mkdirSync(outputDir, { recursive: true });
 
 const seedState = {
-  appVersion: "2026-07-27-v114",
+  appVersion: "2026-07-27-v115",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -197,7 +197,7 @@ try {
         selectedState.settings.language = "en";
       }
       localStorage.setItem("visualize-simple-v1", JSON.stringify(selectedState));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v114");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v115");
     `
   });
   const views = ["today", "goals", "vision", "anti", "speech", "profile"];
@@ -254,6 +254,30 @@ try {
         writeFileSync(file, Buffer.from(image.data, "base64"));
         console.log(file);
       }
+      if (view === "speech") {
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.getElementById("openSpeechEditor")?.click()`,
+          awaitPromise: true
+        });
+        await wait(360);
+        const editorImage = await cdp.send("Page.captureScreenshot", {
+          format: "png",
+          fromSurface: true
+        });
+        const editorPrefixedFile = resolve(outputDir, `${viewport.name}-speech-editor.png`);
+        writeFileSync(editorPrefixedFile, Buffer.from(editorImage.data, "base64"));
+        console.log(editorPrefixedFile);
+        if (viewport.name === "iphone-15") {
+          const editorFile = resolve(outputDir, "speech-editor.png");
+          writeFileSync(editorFile, Buffer.from(editorImage.data, "base64"));
+          console.log(editorFile);
+        }
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.getElementById("closeSpeechScript")?.click()`,
+          awaitPromise: true
+        });
+        await wait(180);
+      }
     }
 
     await cdp.send("Page.navigate", { url: `${appPath}&viewport=${viewport.name}&theme=light&t=${Date.now()}` });
@@ -300,6 +324,30 @@ try {
         const file = resolve(outputDir, `light-${view}.png`);
         writeFileSync(file, Buffer.from(image.data, "base64"));
         console.log(file);
+      }
+      if (view === "speech") {
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.getElementById("openSpeechEditor")?.click()`,
+          awaitPromise: true
+        });
+        await wait(360);
+        const editorImage = await cdp.send("Page.captureScreenshot", {
+          format: "png",
+          fromSurface: true
+        });
+        const editorPrefixedFile = resolve(outputDir, `${viewport.name}-light-speech-editor.png`);
+        writeFileSync(editorPrefixedFile, Buffer.from(editorImage.data, "base64"));
+        console.log(editorPrefixedFile);
+        if (viewport.name === "iphone-15") {
+          const editorFile = resolve(outputDir, "light-speech-editor.png");
+          writeFileSync(editorFile, Buffer.from(editorImage.data, "base64"));
+          console.log(editorFile);
+        }
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.getElementById("closeSpeechScript")?.click()`,
+          awaitPromise: true
+        });
+        await wait(180);
       }
     }
 

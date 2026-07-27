@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=114" />
+    <link rel="manifest" href="./manifest.webmanifest?v=115" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v114";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v115";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=114")
+            .register("./service-worker.js?v=115")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -2400,6 +2400,7 @@
 
       .vision-empty,
       .anti-empty {
+        position: relative;
         min-height: 482px;
         display: grid;
         align-content: center;
@@ -2414,9 +2415,54 @@
         box-shadow: 0 28px 70px rgba(17, 17, 17, 0.1);
       }
 
+      .vision-empty::before,
+      .anti-empty::before {
+        content: "";
+        position: absolute;
+        left: 24px;
+        right: 24px;
+        bottom: 22px;
+        height: 74px;
+        border: 1px solid rgba(17, 17, 17, 0.05);
+        border-radius: 28px;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.2)),
+          repeating-linear-gradient(90deg, rgba(17, 17, 17, 0.06) 0 1px, transparent 1px 17px),
+          linear-gradient(180deg, rgba(232, 196, 104, 0.16), rgba(17, 17, 17, 0.03));
+        opacity: 0.86;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .vision-empty::after,
+      .anti-empty::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 54px;
+        width: min(58%, 210px);
+        height: 8px;
+        border-radius: 999px;
+        background:
+          linear-gradient(90deg, rgba(232, 196, 104, 0.82), rgba(232, 196, 104, 0.16));
+        transform: translateX(-50%);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .vision-empty > *,
+      .anti-empty > * {
+        position: relative;
+        z-index: 1;
+      }
+
       .anti-empty {
-        color: #fff;
-        background: linear-gradient(145deg, #181818, #050505);
+        color: #f8efe6;
+        border-color: rgba(75, 53, 43, 0.18);
+        background:
+          radial-gradient(circle at 88% 4%, rgba(232, 196, 104, 0.12), transparent 32%),
+          radial-gradient(circle at 8% 100%, rgba(218, 90, 58, 0.11), transparent 34%),
+          linear-gradient(145deg, #231f1c, #121211 68%, #0c0d0d);
       }
 
       body[data-theme="dark"] .vision-empty,
@@ -2427,7 +2473,34 @@
       }
 
       body[data-theme="dark"] .anti-empty {
-        background: linear-gradient(145deg, #171717, #050505);
+        background:
+          radial-gradient(circle at 88% 4%, rgba(232, 196, 104, 0.12), transparent 32%),
+          radial-gradient(circle at 8% 100%, rgba(218, 90, 58, 0.1), transparent 34%),
+          linear-gradient(145deg, #171717, #060707);
+      }
+
+      body[data-theme="dark"] .vision-empty::before,
+      body[data-theme="dark"] .anti-empty::before {
+        border-color: rgba(255, 249, 237, 0.07);
+        background:
+          linear-gradient(90deg, rgba(255, 249, 237, 0.08), rgba(255, 249, 237, 0.01)),
+          repeating-linear-gradient(90deg, rgba(255, 249, 237, 0.08) 0 1px, transparent 1px 17px),
+          linear-gradient(180deg, rgba(232, 196, 104, 0.11), rgba(255, 249, 237, 0.02));
+        opacity: 0.72;
+      }
+
+      .anti-empty::before {
+        border-color: rgba(248, 239, 230, 0.08);
+        background:
+          linear-gradient(90deg, rgba(248, 239, 230, 0.09), rgba(248, 239, 230, 0.01)),
+          repeating-linear-gradient(90deg, rgba(248, 239, 230, 0.08) 0 1px, transparent 1px 17px),
+          linear-gradient(180deg, rgba(218, 90, 58, 0.1), rgba(248, 239, 230, 0.02));
+        opacity: 0.76;
+      }
+
+      .anti-empty::after {
+        background:
+          linear-gradient(90deg, rgba(218, 90, 58, 0.72), rgba(232, 196, 104, 0.18));
       }
 
       .deck-frame-stack {
@@ -2487,12 +2560,12 @@
       }
 
       .anti-empty .deck-frame {
-        border-color: rgba(218, 90, 58, 0.25);
-        color: rgba(255, 220, 210, 0.82);
+        border-color: rgba(218, 90, 58, 0.18);
+        color: rgba(246, 224, 214, 0.76);
         background:
-          linear-gradient(180deg, rgba(218, 90, 58, 0.12), rgba(0, 0, 0, 0.08)),
-          #241816;
-        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22);
+          linear-gradient(180deg, rgba(232, 196, 104, 0.06), rgba(218, 90, 58, 0.08)),
+          #2a201d;
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.18);
       }
 
       .vision-empty .deck-kicker,
@@ -2526,7 +2599,7 @@
       .anti-empty p,
       body[data-theme="dark"] .vision-empty p,
       body[data-theme="dark"] .anti-empty p {
-        color: #d5cbbf;
+        color: #d8cabf;
       }
 
       .vision-empty .btn,
@@ -2535,9 +2608,9 @@
       }
 
       .anti-empty .btn {
-        border-color: #f4f4f1;
+        border-color: #f4eadc;
         color: #111;
-        background: #f4f4f1;
+        background: #f4eadc;
       }
 
       .deck-stage.positive {
@@ -4028,6 +4101,44 @@
           0 0 0 1px rgba(232, 196, 104, 0.14) inset;
       }
 
+      .speech-workbench.script-stage .speech-head,
+      .speech-workbench.voice-stage .speech-head {
+        min-height: 252px;
+        row-gap: 6px;
+        padding: 26px 20px 22px;
+      }
+
+      .speech-workbench.script-stage .speech-head h2,
+      .speech-workbench.voice-stage .speech-head h2 {
+        max-width: 300px;
+        font-size: clamp(25px, 7.4vw, 32px);
+      }
+
+      .speech-workbench.script-stage .speech-head p,
+      .speech-workbench.voice-stage .speech-head p {
+        max-width: 286px;
+        font-size: 12px;
+        line-height: 1.22;
+      }
+
+      .speech-workbench.script-stage .speech-meter,
+      .speech-workbench.voice-stage .speech-meter {
+        height: 22px;
+        margin-top: 0;
+      }
+
+      .speech-workbench.script-stage .speech-meter span,
+      .speech-workbench.voice-stage .speech-meter span {
+        transform: scaleY(0.72);
+      }
+
+      .speech-workbench.script-stage .speech-play-main,
+      .speech-workbench.voice-stage .speech-play-main {
+        min-width: 158px;
+        min-height: 46px;
+        margin-top: 0;
+      }
+
       .speech-head::after {
         content: "";
         position: absolute;
@@ -4444,12 +4555,31 @@
         min-height: 0;
         display: grid;
         grid-template-rows: auto auto auto;
-        gap: 10px;
+        gap: 12px;
         overflow: visible;
-        border: 0;
-        border-radius: 0;
-        padding: 0;
-        background: transparent;
+        border: 1px solid rgba(17, 17, 17, 0.07);
+        border-radius: 28px;
+        padding: 15px;
+        background:
+          radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.11), transparent 32%),
+          radial-gradient(circle at 0% 100%, rgba(218, 90, 58, 0.05), transparent 30%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.34)),
+          var(--control);
+        box-shadow:
+          0 20px 48px rgba(17, 17, 17, 0.08),
+          0 1px 0 rgba(255, 255, 255, 0.64) inset;
+      }
+
+      body[data-theme="dark"] .speech-editor {
+        border-color: rgba(255, 249, 237, 0.1);
+        background:
+          radial-gradient(circle at 96% 0%, rgba(232, 196, 104, 0.12), transparent 32%),
+          radial-gradient(circle at 0% 100%, rgba(218, 90, 58, 0.08), transparent 31%),
+          linear-gradient(180deg, rgba(255, 249, 237, 0.035), rgba(255, 249, 237, 0.012)),
+          #1d2528;
+        box-shadow:
+          0 24px 58px rgba(0, 0, 0, 0.24),
+          0 1px 0 rgba(255, 249, 237, 0.06) inset;
       }
 
       .speech-editor-top {
@@ -4490,13 +4620,25 @@
       .speech-field textarea {
         -webkit-appearance: none;
         appearance: none;
-        border-width: 0;
-        border-bottom-width: 1px;
-        border-radius: 0;
+        border: 1px solid rgba(17, 17, 17, 0.08);
+        border-radius: 18px;
         color: var(--ink);
-        background: transparent;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.34));
         outline: none;
-        padding: 7px 0;
+        padding: 12px 14px;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.56) inset;
+      }
+
+      body[data-theme="dark"] .speech-field input,
+      body[data-theme="dark"] .speech-field textarea {
+        border-color: rgba(255, 249, 237, 0.1);
+        color: #fff9ed;
+        background:
+          linear-gradient(180deg, rgba(255, 249, 237, 0.055), rgba(255, 249, 237, 0.025));
+        box-shadow:
+          0 1px 0 rgba(255, 249, 237, 0.055) inset,
+          0 16px 34px rgba(0, 0, 0, 0.08) inset;
       }
 
       .speech-field input {
@@ -4508,12 +4650,16 @@
 
       .speech-field textarea {
         height: auto;
-        min-height: 118px;
+        min-height: 132px;
         overflow-y: auto;
         resize: none;
-        border-bottom-width: 0;
         line-height: 1.42;
         font-weight: 760;
+      }
+
+      body[data-theme="dark"] .speech-field textarea::placeholder,
+      body[data-theme="dark"] .speech-field input::placeholder {
+        color: rgba(255, 249, 237, 0.34);
       }
 
       .speech-field input:focus,
@@ -6350,7 +6496,7 @@
         }
 
         .speech-field textarea {
-          min-height: 108px;
+          min-height: 120px;
         }
 
         .voice-line {
@@ -6480,6 +6626,60 @@
       }
 
       @media (max-width: 520px) and (max-height: 740px) {
+        .vision-empty::before,
+        .vision-empty::after,
+        .anti-empty::before,
+        .anti-empty::after {
+          display: none;
+        }
+
+        .speech-workbench.script-stage .speech-head,
+        .speech-workbench.voice-stage .speech-head {
+          min-height: 184px;
+          row-gap: 5px;
+          padding: 19px 15px 16px;
+        }
+
+        .speech-workbench.script-stage .speech-head h2,
+        .speech-workbench.voice-stage .speech-head h2 {
+          font-size: clamp(24px, 7vw, 29px);
+        }
+
+        .speech-workbench.script-stage .speech-head p,
+        .speech-workbench.voice-stage .speech-head p,
+        .speech-workbench.script-stage .speech-meter,
+        .speech-workbench.voice-stage .speech-meter {
+          display: none;
+        }
+
+        .speech-workbench.script-stage .speech-play-main,
+        .speech-workbench.voice-stage .speech-play-main {
+          min-height: 40px;
+        }
+
+        .speech-workbench.script-stage .speech-editor {
+          gap: 8px;
+          border-radius: 22px;
+          padding: 10px;
+        }
+
+        .speech-workbench.script-stage .speech-field input {
+          min-height: 36px;
+          padding: 9px 12px;
+          font-size: 18px;
+        }
+
+        .speech-workbench.script-stage .speech-field textarea {
+          min-height: 76px;
+          padding: 10px 12px;
+          font-size: 14px;
+          line-height: 1.32;
+        }
+
+        .speech-workbench.script-stage .speech-actions .btn {
+          min-height: 40px;
+        }
+
         .app {
           row-gap: 8px;
           padding-top: calc(10px + env(safe-area-inset-top));
@@ -9127,12 +9327,16 @@
         const overview = document.getElementById("speechOverview");
         const scriptStage = document.getElementById("speechScriptStage");
         const voiceStage = document.getElementById("speechVoiceStage");
+        const workbench = document.querySelector(".speech-workbench");
         if (overview) overview.classList.toggle("hidden", speechStage !== "overview");
         if (scriptStage) scriptStage.classList.toggle("hidden", speechStage !== "script");
         if (voiceStage) voiceStage.classList.toggle("hidden", speechStage !== "voice");
+        if (workbench) {
+          workbench.classList.toggle("script-stage", speechStage === "script");
+          workbench.classList.toggle("voice-stage", speechStage === "voice");
+        }
         if (speechStage !== "overview") {
           requestAnimationFrame(() => {
-            const workbench = document.querySelector(".speech-workbench");
             if (workbench) workbench.scrollTo({ top: 0, behavior: "smooth" });
             if (focus && speechStage === "script") {
               const input = document.getElementById("selfTalkTitle");
