@@ -12,7 +12,7 @@ Last updated: July 24, 2026.
 
 ## App identity
 
-- App name: Visualize
+- App name: `Memento Visualize` recommended, because `Visualize` was rejected as already used.
 - Bundle ID: `com.samuelecomai.visualize`
 - SKU suggestion: `com.samuelecomai.visualize`
 - Primary language: English
@@ -25,7 +25,7 @@ Last updated: July 24, 2026.
 - Support URL: `https://comaibusiness2000-netizen.github.io/visualize/support.html`
 - Web preview: `https://comaibusiness2000-netizen.github.io/visualize/?v=60`
 
-Replace the support email in `preview/support.html` before App Store submission.
+The beta support page currently uses `comaisamuele@gmail.com`. Replace it with a dedicated support email before public App Store release if you create one.
 
 ## App Store listing draft
 
@@ -118,7 +118,7 @@ Prepare screenshots for:
 2. Apple Team Name.
 3. Apple Team ID.
 4. Confirm whether App Store seller name can be your personal legal name.
-5. Support email to replace `support@example.com`.
+5. Confirm beta support email or provide a dedicated support email.
 6. App name availability check in App Store Connect.
 7. Expo account login on this PC.
 8. EAS project init, which will replace the temporary `extra.eas.projectId` placeholder in `app.json`.

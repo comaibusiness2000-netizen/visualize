@@ -71,23 +71,6 @@ function todayKey() {
   return `${now.getFullYear()}-${month}-${day}`;
 }
 
-function dayNumberFromKey(dateKey) {
-  const parts = String(dateKey || todayKey()).split("-").map(Number);
-  const year = parts[0] || 1970;
-  const month = parts[1] || 1;
-  const day = parts[2] || 1;
-  return Math.floor(Date.UTC(year, month - 1, day) / 86400000);
-}
-
-function quoteForDate(dateKey = todayKey()) {
-  return dailyQuotes[quoteIndexForDate(dateKey)];
-}
-
-function quoteIndexForDate(dateKey = todayKey()) {
-  if (!dailyQuotes.length) return 0;
-  return dayNumberFromKey(dateKey) % dailyQuotes.length;
-}
-
 function softImpact() {
   if (Platform.OS === "web") return;
   Vibration.vibrate(7);
@@ -154,109 +137,6 @@ const voiceProfiles = [
   { id: "elias", name: "Elias", note: "Calm male", rate: 0.84, pitch: 0.9 },
   { id: "nora", name: "Nora", note: "Grounded female", rate: 0.88, pitch: 0.98 },
   { id: "matteo", name: "Matteo", note: "Steady male", rate: 0.82, pitch: 0.86 }
-];
-
-const dailyQuotes = [
-  { text: "If there is no struggle, there is no progress.", author: "Frederick Douglass", source: "Wikiquote" },
-  { text: "Energy and persistence conquer all things.", author: "Benjamin Franklin", source: "Bartlett" },
-  { text: "Lost time is never found again.", author: "Benjamin Franklin", source: "Bartlett" },
-  { text: "Well done is better than well said.", author: "Benjamin Franklin", source: "Bartlett" },
-  { text: "Diligence is the mother of good luck.", author: "Benjamin Franklin", source: "Bartlett" },
-  { text: "Resolve to perform what you ought; perform without fail what you resolve.", author: "Benjamin Franklin", source: "Bartlett" },
-  { text: "Dost thou love life? Then do not squander time.", author: "Benjamin Franklin", source: "Bartlett" },
-  { text: "He that can have patience can have what he will.", author: "Benjamin Franklin", source: "Bartlett" },
-  { text: "Never leave that till tomorrow which you can do today.", author: "Benjamin Franklin", source: "Bartlett" },
-  { text: "Little strokes fell great oaks.", author: "Benjamin Franklin", source: "Bartlett" },
-  { text: "Victory belongs to the most persevering.", author: "Napoleon Bonaparte", source: "Wikiquote" },
-  { text: "The harder the conflict, the more glorious the triumph.", author: "Thomas Paine", source: "Project Gutenberg" },
-  { text: "Either I will find a way, or make one.", author: "Hannibal", source: "Bartlett" },
-  { text: "Fortune favors the brave.", author: "Virgil", source: "Bartlett" },
-  { text: "He who has begun has half done.", author: "Horace", source: "Bartlett" },
-  { text: "Begin, be bold, and venture to be wise.", author: "Horace", source: "Bartlett" },
-  { text: "Rule your mind, or it will rule you.", author: "Horace", source: "Bartlett" },
-  { text: "Seize the day.", author: "Horace", source: "Bartlett" },
-  { text: "Dream lofty dreams, and as you dream, so shall you become.", author: "James Allen", source: "Project Gutenberg" },
-  { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu", source: "Project Gutenberg" },
-  { text: "He who conquers himself is mighty.", author: "Lao Tzu", source: "Project Gutenberg" },
-  { text: "Great acts are made up of small deeds.", author: "Lao Tzu", source: "Project Gutenberg" },
-  { text: "Cherish your visions; cherish your ideals.", author: "James Allen", source: "Project Gutenberg" },
-  { text: "Well begun is half done.", author: "Aristotle", source: "Bartlett" },
-  { text: "The greatest achievement was at first and for a time a dream.", author: "James Allen", source: "Project Gutenberg" },
-  { text: "Small opportunities are often the beginning of great enterprises.", author: "Demosthenes", source: "Bartlett" },
-  { text: "Practice is the best of all instructors.", author: "Publilius Syrus", source: "Bartlett" },
-  { text: "Strike while the iron is hot.", author: "Proverb", source: "Bartlett" },
-  { text: "Valor grows by daring, fear by holding back.", author: "Publilius Syrus", source: "Bartlett" },
-  { text: "Dreams are the seedlings of realities.", author: "James Allen", source: "Project Gutenberg" },
-  { text: "Our remedies oft in ourselves do lie.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Action is eloquence.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Strong reasons make strong actions.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Once more unto the breach.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Things won are done; joy's soul lies in the doing.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Defer no time, delays have dangerous ends.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "There is nothing either good or bad, but thinking makes it so.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Our doubts are traitors, and make us lose the good we might win.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Be great in act, as you have been in thought.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Boldness be my friend.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Men at some time are masters of their fates.", author: "William Shakespeare", source: "Bartlett" },
-  { text: "Without ambition one starts nothing.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-  { text: "Nothing great was ever achieved without enthusiasm.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-  { text: "Make the most of yourself, for that is all there is of you.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-  { text: "Always do what you are afraid to do.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-  { text: "Do the thing and you shall have the power.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-  { text: "Self-trust is the first secret of success.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-  { text: "Trust thyself: every heart vibrates to that iron string.", author: "Ralph Waldo Emerson", source: "Bartlett" },
-  { text: "The vision that you glorify in your mind is what you will build your life by.", author: "James Allen", source: "Project Gutenberg" },
-  { text: "Go confidently in the direction of your dreams.", author: "Henry David Thoreau", source: "Project Gutenberg" },
-  { text: "Live the life you have imagined.", author: "Henry David Thoreau", source: "Project Gutenberg" },
-  { text: "First say to yourself what you would be; then do what you have to do.", author: "Epictetus", source: "Project Gutenberg" },
-  { text: "No great thing is created suddenly.", author: "Epictetus", source: "Project Gutenberg" },
-  { text: "No man is free who is not master of himself.", author: "Epictetus", source: "Project Gutenberg" },
-  { text: "Practice yourself in little things; then proceed to greater.", author: "Epictetus", source: "Project Gutenberg" },
-  { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca", source: "Project Gutenberg" },
-  { text: "Achievement is the crown of effort.", author: "James Allen", source: "Project Gutenberg" },
-  { text: "It is not that we have little time, but that we waste much.", author: "Seneca", source: "Project Gutenberg" },
-  { text: "No man was ever wise by chance.", author: "Seneca", source: "Project Gutenberg" },
-  { text: "He who is brave is free.", author: "Seneca", source: "Project Gutenberg" },
-  { text: "No prize fighter can go with high spirits into the strife if he has never been beaten black and blue.", author: "Seneca", source: "Project Gutenberg" },
-  { text: "Begin at once to live.", author: "Seneca", source: "Project Gutenberg" },
-  { text: "While we wait for life, life passes.", author: "Seneca", source: "Project Gutenberg" },
-  { text: "Waste no more time talking about what a good man ought to be. Be one.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-  { text: "The impediment to action advances action.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-  { text: "Because a thing seems difficult for you, do not think it impossible.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-  { text: "The blazing fire makes flame and brightness out of everything thrown into it.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-  { text: "Do every act of your life as if it were your last.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-  { text: "What stands in the way becomes the way.", author: "Marcus Aurelius", source: "Project Gutenberg" },
-  { text: "A man can only rise, conquer, and achieve by lifting up his thoughts.", author: "James Allen", source: "Project Gutenberg" },
-  { text: "Let us, then, be up and doing.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-  { text: "Act in the living present.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-  { text: "The heights by great men reached and kept were not attained by sudden flight.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-  { text: "Still achieving, still pursuing, learn to labor and to wait.", author: "Henry Wadsworth Longfellow", source: "Bartlett" },
-  { text: "To strive, to seek, to find, and not to yield.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
-  { text: "It is not too late to seek a newer world.", author: "Alfred, Lord Tennyson", source: "Bartlett" },
-  { text: "Do not wait for extraordinary opportunities; seize common occasions and make them great.", author: "Orison Swett Marden", source: "Project Gutenberg" },
-  { text: "Grow old along with me! The best is yet to be.", author: "Robert Browning", source: "Bartlett" },
-  { text: "The best is yet to be.", author: "Robert Browning", source: "Bartlett" },
-  { text: "He never turned his back but marched breast forward.", author: "Robert Browning", source: "Bartlett" },
-  { text: "Act well your part; there all the honour lies.", author: "Alexander Pope", source: "Bartlett" },
-  { text: "The golden opportunity you are seeking is in yourself.", author: "Orison Swett Marden", source: "Project Gutenberg" },
-  { text: "Great works are performed not by strength, but perseverance.", author: "Samuel Johnson", source: "Bartlett" },
-  { text: "Few things are impossible to diligence and skill.", author: "Samuel Johnson", source: "Bartlett" },
-  { text: "The will to do springs from the knowledge that we can do.", author: "James Allen", source: "Project Gutenberg" },
-  { text: "A wise man will make more opportunities than he finds.", author: "Francis Bacon", source: "Bartlett" },
-  { text: "Weak men wait for opportunities; strong men make them.", author: "Orison Swett Marden", source: "Project Gutenberg" },
-  { text: "Where the willingness is great, the difficulties cannot be great.", author: "Niccolo Machiavelli", source: "Project Gutenberg" },
-  { text: "Awake, arise, or be forever fallen.", author: "John Milton", source: "Bartlett" },
-  { text: "Believe you can and you are halfway there.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
-  { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
-  { text: "It is hard to fail, but worse never to have tried to succeed.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
-  { text: "The credit belongs to the man who is actually in the arena.", author: "Theodore Roosevelt", source: "Project Gutenberg" },
-  { text: "Always bear in mind your own resolution to succeed.", author: "Abraham Lincoln", source: "Wikiquote" },
-  { text: "Leave nothing for tomorrow which can be done today.", author: "Abraham Lincoln", source: "Wikiquote" },
-  { text: "That which does not kill us makes us stronger.", author: "Friedrich Nietzsche", source: "Project Gutenberg" },
-  { text: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche", source: "Project Gutenberg" },
-  { text: "Become who you are.", author: "Friedrich Nietzsche", source: "Project Gutenberg" },
-  { text: "The secret of getting ahead is getting started.", author: "Mark Twain", source: "Wikiquote" },
-  { text: "Courage is resistance to fear, mastery of fear, not absence of fear.", author: "Mark Twain", source: "Wikiquote" }
 ];
 
 const copy = {
@@ -424,15 +304,7 @@ Object.assign(copy.zh, {
   "speech.swipe": "Swipe to change voice",
   "speech.ready": "Ready",
   "speech.playing": "Playing",
-  "speech.words": "words",
-  "quote.kicker": "Daily quote",
-  "quote.title": "Read it. Move.",
-  "quote.open": "open",
-  "quote.close": "Carry it",
-  "life.pressureKicker": "Today is shrinking",
-  "life.pressureTime": "{hours}h {minutes}m left today",
-  "life.pressureText": "One day closes tonight. Put one action inside it.",
-  "life.pressurePercent": "{percent}% gone"
+  "speech.words": "words"
 });
 
 Object.assign(copy.es, {
@@ -452,8 +324,7 @@ Object.assign(copy.pt, {
 
 Object.assign(copy.en, {
   "life.updateTitle": "One day spent. Use the next one.",
-  "life.updateSub": "Your clock moved. Make today earn its place.",
-  "quote.close": "Start today"
+  "life.updateSub": "Your clock moved. Make today earn its place."
 });
 
 Object.assign(copy.es, {
@@ -466,11 +337,7 @@ Object.assign(copy.es, {
   "speech.swipe": "Desliza para cambiar voz",
   "speech.ready": "Listo",
   "speech.playing": "Reproduciendo",
-  "speech.words": "palabras",
-  "quote.kicker": "Cita diaria",
-  "quote.title": "Leela. Avanza.",
-  "quote.open": "abrir",
-  "quote.close": "Llevarlo"
+  "speech.words": "palabras"
 });
 
 Object.assign(copy.fr, {
@@ -483,11 +350,7 @@ Object.assign(copy.fr, {
   "speech.swipe": "Glisse pour changer la voix",
   "speech.ready": "Pret",
   "speech.playing": "Lecture",
-  "speech.words": "mots",
-  "quote.kicker": "Citation du jour",
-  "quote.title": "Lis-la. Avance.",
-  "quote.open": "ouvrir",
-  "quote.close": "Garder"
+  "speech.words": "mots"
 });
 
 Object.assign(copy.pt, {
@@ -500,11 +363,7 @@ Object.assign(copy.pt, {
   "speech.swipe": "Deslize para mudar voz",
   "speech.ready": "Pronto",
   "speech.playing": "Tocando",
-  "speech.words": "palavras",
-  "quote.kicker": "Citacao diaria",
-  "quote.title": "Leia. Avance.",
-  "quote.open": "abrir",
-  "quote.close": "Levar comigo"
+  "speech.words": "palavras"
 });
 
 Object.assign(copy.zh, {
@@ -610,18 +469,6 @@ function lifeStats(profile) {
   const spentMonths = Math.min(totalMonths, Math.round(currentAge * 12));
   const usedPercent = Math.min(100, Math.round((currentAge / expectancy) * 100));
   return { age, expectancy, daysLeft, weeksLeft, monthsLeft, totalMonths, spentMonths, usedPercent };
-}
-
-function dayPressure(now = new Date()) {
-  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-  const totalMs = end - start;
-  const elapsedMs = Math.min(totalMs, Math.max(0, now - start));
-  const leftMs = Math.max(0, end - now);
-  const hoursLeft = Math.floor(leftMs / 3600000);
-  const minutesLeft = Math.floor((leftMs % 3600000) / 60000);
-  const usedPercent = Math.min(100, Math.max(0, Math.round((elapsedMs / totalMs) * 100)));
-  return { hoursLeft, minutesLeft, usedPercent };
 }
 
 function lifeSnapshot(stats) {
@@ -1406,7 +1253,7 @@ export default function App() {
               <View style={styles.mantraMark}>
                 <Text style={styles.mantraMarkText}>//</Text>
               </View>
-              <View style={styles.quoteMetaBlock}>
+              <View style={styles.mantraMetaBlock}>
                 <Text style={styles.mantraKicker}>{t("life.mantraKicker")}</Text>
                 <Text style={styles.mantraHint}>{activeVoiceProfile.name}</Text>
               </View>
@@ -2081,10 +1928,6 @@ export default function App() {
     );
   }
 
-  function renderQuoteReveal() {
-    return null;
-  }
-
   if (!hydrated) {
     return (
       <SafeAreaView style={[styles.screen, styles.loader]}>
@@ -2140,7 +1983,6 @@ export default function App() {
           {renderProfileModal()}
           {renderPlayer()}
           {renderLifeUpdateOverlay()}
-          {renderQuoteReveal()}
         </>
       ) : (
         renderOnboarding()
@@ -2331,15 +2173,6 @@ const styles = StyleSheet.create({
   bigProgressTrack: { height: 8, overflow: "hidden", borderRadius: 999, marginBottom: 8 },
   bigProgressFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   heroBody: { color: "rgba(255,249,237,0.72)", fontSize: 12.2, lineHeight: 16, fontWeight: "700", textAlign: "center" },
-  pressureCard: { minHeight: 92, overflow: "hidden", marginBottom: 8, borderWidth: 1, borderColor: "rgba(218,90,58,0.28)", borderRadius: 26, padding: 13, flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: "#101518", shadowColor: "#000", shadowOpacity: 0.17, shadowRadius: 24, shadowOffset: { width: 0, height: 13 }, elevation: 5 },
-  pressureGlow: { position: "absolute", right: -42, top: -28, width: 130, height: 130, borderRadius: 65, backgroundColor: "rgba(218,90,58,0.16)" },
-  pressureCopy: { flex: 1, minWidth: 0 },
-  pressureKicker: { color: "#DA5A3A", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.7, textTransform: "uppercase" },
-  pressureTime: { marginTop: 4, color: "#FFF9ED", fontSize: 22, lineHeight: 27, fontWeight: "900", letterSpacing: 0 },
-  pressureText: { marginTop: 4, color: "rgba(255,249,237,0.67)", fontSize: 12.2, lineHeight: 16, fontWeight: "800" },
-  pressureMeter: { position: "relative", width: 64, height: 64, overflow: "hidden", borderRadius: 32, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,249,237,0.09)", borderWidth: 1, borderColor: "rgba(255,249,237,0.13)" },
-  pressureMeterFill: { position: "absolute", left: 0, right: 0, bottom: 0, backgroundColor: "rgba(218,90,58,0.62)" },
-  pressurePercent: { maxWidth: 52, color: "#FFF9ED", fontSize: 10.5, lineHeight: 13, fontWeight: "900", textAlign: "center" },
   heroStatsStrip: { minHeight: 54, marginBottom: 8, borderRadius: 22, paddingHorizontal: 6, flexDirection: "row", alignItems: "stretch", backgroundColor: "#11171A", borderWidth: 1, borderColor: "rgba(232,196,104,0.16)", shadowColor: "#000", shadowOpacity: 0.14, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 5 },
   heroStatCell: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 4 },
   heroStatValue: { color: "#FFF9ED", fontSize: 16, lineHeight: 19, fontWeight: "900", textAlign: "center" },
@@ -2358,22 +2191,7 @@ const styles = StyleSheet.create({
   mantraHint: { color: "#E8C468", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "900" },
   mantraPlayHint: { overflow: "hidden", maxWidth: 76, minHeight: 28, paddingHorizontal: 11, paddingVertical: 7, borderRadius: 999, color: "#101418", backgroundColor: "#FFF9ED", fontSize: 11, lineHeight: 13, fontWeight: "900", textAlign: "center", textTransform: "lowercase" },
   mantraText: { marginTop: 10, color: "#FFF9ED", fontSize: 18, lineHeight: 22, fontWeight: "900" },
-  quoteCard: { minHeight: 110, overflow: "hidden", borderWidth: 1, borderRadius: 25, padding: 12, marginBottom: 8, shadowColor: "#000", shadowOpacity: 0.18, shadowRadius: 26, shadowOffset: { width: 0, height: 14 }, elevation: 6 },
-  quoteCardLight: { backgroundColor: "#0D1113", borderColor: "rgba(232,196,104,0.18)" },
-  quoteCardDark: { backgroundColor: "#11171A", borderColor: "rgba(232,196,104,0.24)" },
-  quoteCardGlow: { position: "absolute", right: -36, top: -54, width: 128, height: 128, borderRadius: 64, backgroundColor: "rgba(232,196,104,0.18)" },
-  quoteCardWatermark: { position: "absolute", right: 0, bottom: -11, color: "rgba(255,249,237,0.06)", fontSize: 82, lineHeight: 88, fontWeight: "900" },
-  quoteCardTop: { flexDirection: "row", alignItems: "center", gap: 10 },
-  quoteMark: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
-  quoteMarkText: { color: "#101418", fontSize: 13, lineHeight: 16, fontWeight: "900" },
-  quoteMetaBlock: { flex: 1, minWidth: 0 },
-  quoteCardKicker: { color: "rgba(255,249,237,0.72)", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.8, textTransform: "uppercase" },
-  quoteCardDay: { color: "#E8C468", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "900" },
-  quoteOpenHint: { overflow: "hidden", maxWidth: 76, minHeight: 28, paddingHorizontal: 10, paddingVertical: 7, borderRadius: 999, color: "#101418", backgroundColor: "#FFF9ED", fontSize: 11, lineHeight: 13, fontWeight: "900", textAlign: "center", textTransform: "lowercase" },
-  quoteCardText: { marginTop: 8, color: "#FFF9ED", fontSize: 16.8, lineHeight: 20, fontWeight: "900" },
-  quoteCardFooter: { marginTop: 7, flexDirection: "row", alignItems: "center", gap: 10 },
-  quoteAuthor: { color: "rgba(255,249,237,0.72)", fontSize: 10.5, lineHeight: 14, fontWeight: "900" },
-  quoteFooterLine: { flex: 1, height: 1, backgroundColor: "rgba(232,196,104,0.26)" },
+  mantraMetaBlock: { flex: 1, minWidth: 0 },
   panel: { borderWidth: 1, borderRadius: 28, padding: 16, marginBottom: 14, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 2 },
   monthPanel: { borderRadius: 28, padding: 13, paddingBottom: 13, marginBottom: 0 },
   panelHeaderRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: 12 },
@@ -2407,28 +2225,6 @@ const styles = StyleSheet.create({
   lifeUpdateDots: { marginTop: 24, flexDirection: "row", gap: 8 },
   lifeUpdateDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: "rgba(255,255,255,0.22)" },
   lifeUpdateDotHot: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.55, shadowRadius: 12, shadowOffset: { width: 0, height: 0 } },
-  quoteOverlay: { flex: 1, backgroundColor: "#060809" },
-  quoteRevealStage: { position: "relative", width: "100%", minHeight: "100%", overflow: "hidden", paddingHorizontal: 24, paddingTop: 56, paddingBottom: 30, justifyContent: "space-between", backgroundColor: "#080B0D" },
-  quoteRevealAuraTop: { position: "absolute", width: 280, height: 280, right: -108, top: -96, borderRadius: 140, backgroundColor: "rgba(232,196,104,0.18)" },
-  quoteRevealAuraBottom: { position: "absolute", width: 260, height: 260, left: -128, bottom: -112, borderRadius: 130, backgroundColor: "rgba(218,90,58,0.14)" },
-  quoteRevealSweep: { position: "absolute", left: 24, right: 24, top: 124, height: 2, borderRadius: 2, backgroundColor: "rgba(232,196,104,0.78)", shadowColor: "#E8C468", shadowOpacity: 0.58, shadowRadius: 24, shadowOffset: { width: 0, height: 9 } },
-  quoteRevealTop: { position: "absolute", left: 24, right: 24, top: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  quoteRevealLogo: { width: 50, height: 38, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.07)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
-  quoteRevealDay: { color: "rgba(255,249,237,0.6)", fontSize: 12, lineHeight: 16, fontWeight: "900" },
-  quoteRevealIndex: { position: "absolute", left: 20, right: 20, top: 106, color: "rgba(255,249,237,0.07)", fontSize: 176, lineHeight: 180, fontWeight: "900", textAlign: "center" },
-  quoteRevealMeter: { position: "absolute", left: 24, right: 24, top: 134, height: 4, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.1)" },
-  quoteRevealMeterFill: { height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
-  quoteRevealCenter: { flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 86, paddingBottom: 22 },
-  quoteRevealKicker: { color: "#E8C468", fontSize: 12, lineHeight: 16, fontWeight: "900", letterSpacing: 2.2, textTransform: "uppercase", textAlign: "center" },
-  quoteRevealTitle: { color: "rgba(255,249,237,0.78)", marginTop: 14, fontSize: 18, lineHeight: 23, fontWeight: "900", textAlign: "center" },
-  quoteRevealPlate: { width: "100%", marginTop: 26, borderTopWidth: 1, borderBottomWidth: 1, borderColor: "rgba(255,249,237,0.1)", paddingVertical: 26 },
-  quoteRevealText: { color: "#FFF9ED", fontSize: 36, lineHeight: 41, fontWeight: "900", textAlign: "center" },
-  quoteRevealBottom: { alignItems: "center" },
-  quoteRevealAuthorBox: { alignSelf: "center", minWidth: 196, borderRadius: 26, paddingHorizontal: 18, paddingVertical: 13, alignItems: "center", backgroundColor: "rgba(255,255,255,0.07)", borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" },
-  quoteRevealAuthor: { color: "#FFF9ED", fontSize: 15, lineHeight: 20, fontWeight: "900", textAlign: "center" },
-  quoteRevealSource: { color: "rgba(255,249,237,0.56)", marginTop: 2, fontSize: 12, lineHeight: 16, fontWeight: "850", textAlign: "center" },
-  quoteCloseButton: { minHeight: 56, minWidth: 248, marginTop: 34, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#FFF9ED" },
-  quoteCloseText: { color: "#101418", fontSize: 15, fontWeight: "900" },
   segment: { flexDirection: "row", borderRadius: 999, padding: 5, marginBottom: 14 },
   segmentButton: { flex: 1, minHeight: 42, alignItems: "center", justifyContent: "center", borderRadius: 999 },
   segmentActive: { backgroundColor: "#E8C468" },

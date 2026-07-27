@@ -10,13 +10,13 @@ Use this when the Apple Developer Program membership is active.
 - First-run profile now starts empty and saves locally on the device.
 - Profile includes optional personal mantra; Life shows it only when present.
 - Old daily quote popup has been disabled in the native app.
+- Support page now uses the current beta contact: `comaisamuele@gmail.com`.
 
 ## Current blockers before upload
 
-1. App Store Connect app name must be unique. `Visualize` was rejected as already used, so choose a unique public name before creating the app record.
-2. Replace the support email placeholder in `preview/support.html`.
-3. Link or initialize the EAS project so `app.json` no longer has `replace-after-eas-init`.
-4. Log in to Expo/EAS on this PC.
+1. App Store Connect app name must be unique. `Visualize` was rejected as already used, so choose a unique public name before creating the app record. Recommended first option: `Memento Visualize`.
+2. Link or initialize the EAS project so `app.json` no longer has `replace-after-eas-init`.
+3. Log in to Expo/EAS on this PC.
 
 ## What you must do
 
@@ -24,7 +24,7 @@ Use this when the Apple Developer Program membership is active.
 2. Tell Codex the Apple Team Name.
 3. Tell Codex the Apple Team ID.
 4. Confirm the Bundle ID: `com.samuelecomai.visualize`.
-5. Provide the real support email to replace `support@example.com`.
+5. Confirm whether to keep `comaisamuele@gmail.com` as beta support or replace it with a dedicated support email.
 6. Confirm whether the app name `Visualize` is available in App Store Connect.
 7. Log in to Expo/EAS on this PC when prompted.
 
@@ -50,7 +50,7 @@ Use this as the first TestFlight invite after the build is available.
 ## App Store Connect values
 
 - Platform: iOS
-- Name: Visualize
+- Name: `Memento Visualize` recommended, because `Visualize` was rejected as already used.
 - Primary language: English
 - Bundle ID: `com.samuelecomai.visualize`
 - SKU: `com.samuelecomai.visualize`
