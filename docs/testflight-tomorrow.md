@@ -7,6 +7,8 @@ Use this when the Apple Developer Program membership is active.
 - Native Expo export: passed on July 27, 2026.
 - Expo doctor: 19/19 checks passed on July 27, 2026.
 - Bundle ID in code: `com.samuelecomai.visualize`.
+- EAS project ID: `f7ee511a-7ffa-4b1f-ab03-0b474edf6164`.
+- EAS technical slug: `samuele`.
 - First-run profile now starts empty and saves locally on the device.
 - Profile includes optional personal mantra; Life shows it only when present.
 - Old daily quote popup has been disabled in the native app.
@@ -94,7 +96,7 @@ These commands are for Codex to run/guided-run tomorrow:
 npx.cmd expo-doctor
 npx.cmd expo export --platform ios --output-dir .tmp\expo-export-check --clear
 npx.cmd eas-cli login
-npx.cmd eas-cli init --id f7ee511a-7ffa-4b1f-ab03-0b474edf6164
+npx.cmd eas-cli project:info
 npx.cmd eas-cli build --platform ios --profile production
 npx.cmd eas-cli submit --platform ios --profile production
 ```

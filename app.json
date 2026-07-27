@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Kairum",
-    "slug": "visualize",
+    "slug": "samuele",
     "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,6 +20,12 @@
     },
     "plugins": [
       "expo-asset"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f7ee511a-7ffa-4b1f-ab03-0b474edf6164"
+      }
+    },
+    "owner": "samcomais-team"
   }
 }

@@ -23,8 +23,8 @@ call npx.cmd eas-cli login
 if errorlevel 1 goto fail
 
 echo.
-echo 3/5 - Collegamento progetto EAS...
-call npx.cmd eas-cli init --id f7ee511a-7ffa-4b1f-ab03-0b474edf6164
+echo 3/5 - Verifico collegamento progetto EAS...
+call npx.cmd eas-cli project:info
 if errorlevel 1 goto fail
 
 echo.
