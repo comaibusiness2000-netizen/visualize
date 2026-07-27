@@ -1,6 +1,6 @@
 {
-  "name": "Memento Visualize",
-  "short_name": "Memento",
+  "name": "Kairum",
+  "short_name": "Kairum",
   "start_url": "./index.html?v=134",
   "display": "standalone",
   "background_color": "#07090b",

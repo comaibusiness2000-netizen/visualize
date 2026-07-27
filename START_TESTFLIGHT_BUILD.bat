@@ -3,10 +3,10 @@ setlocal
 cd /d "%~dp0"
 
 echo.
-echo Memento - TestFlight build helper
+echo Kairum - TestFlight build helper
 echo.
 echo Prima di continuare assicurati che in App Store Connect esista l'app:
-echo Nome: Memento Visualize
+echo Nome: Kairum
 echo Bundle ID: com.samuelecomai.visualize
 echo SKU: com.samuelecomai.visualize
 echo.

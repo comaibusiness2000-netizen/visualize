@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Memento",
+    "name": "Kairum",
     "slug": "visualize",
     "version": "0.2.0",
     "orientation": "portrait",
@@ -15,7 +15,7 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Memento uses photos you select to create private Why, Vision, and Anti-vision photo decks saved on this device."
+        "NSPhotoLibraryUsageDescription": "Kairum uses photos you select to create private Why, Vision, and Anti-vision photo decks saved on this device."
       }
     },
     "plugins": [

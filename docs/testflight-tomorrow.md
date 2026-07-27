@@ -1,4 +1,4 @@
-# Memento Visualize TestFlight Tomorrow
+# Kairum TestFlight Tomorrow
 
 Use this when the Apple Developer Program membership is active.
 
@@ -14,7 +14,7 @@ Use this when the Apple Developer Program membership is active.
 
 ## Current blockers before upload
 
-1. App Store Connect app name must be unique. Use `Memento Visualize`; `Visualize` was rejected as already used. The installed app name is `Memento`.
+1. App Store Connect app name must be unique. Use `Kairum`. The installed app name is also `Kairum`.
 2. Log in to Expo/EAS on this PC.
 3. Link or initialize the EAS project. EAS will add the real project ID to `app.json`.
 
@@ -25,7 +25,7 @@ Use this when the Apple Developer Program membership is active.
 3. Tell Codex the Apple Team ID.
 4. Confirm the Bundle ID: `com.samuelecomai.visualize`.
 5. Confirm whether to keep `comaisamuele@gmail.com` as beta support or replace it with a dedicated support email.
-6. Use the App Store name `Memento Visualize`.
+6. Use the App Store name `Kairum`.
 7. Log in to Expo/EAS on this PC when prompted.
 
 Do not send Apple ID password, 2FA codes, recovery keys, or payment details in chat.
@@ -50,8 +50,8 @@ Use this as the first TestFlight invite after the build is available.
 ## App Store Connect values
 
 - Platform: iOS
-- Name: `Memento Visualize`
-- Installed app name: `Memento`
+- Name: `Kairum`
+- Installed app name: `Kairum`
 - Primary language: English
 - Bundle ID: `com.samuelecomai.visualize`
 - SKU: `com.samuelecomai.visualize`
@@ -78,11 +78,11 @@ Test the first-run experience:
 
 ## Apple review note
 
-Memento is currently a local-only personal productivity and visualization app. It does not require account login in this TestFlight version.
+Kairum is currently a local-only personal productivity and visualization app. It does not require account login in this TestFlight version.
 
 The app asks for photo library permission only when the user chooses to add photos to the Why tab, a Vision deck, or an Anti-vision deck. Selected images are copied into local app storage on the device.
 
-Self Speech uses device text-to-speech. The current build does not upload scripts, photos, goals, or profile data to a Memento server.
+Self Speech uses device text-to-speech. The current build does not upload scripts, photos, goals, or profile data to a Kairum server.
 
 No subscriptions, paid features, AI generation, cloud sync, or third-party analytics are active in this build.
 
