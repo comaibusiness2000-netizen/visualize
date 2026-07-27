@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=132" />
+    <link rel="manifest" href="./manifest.webmanifest?v=133" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v132";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v133";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=132")
+            .register("./service-worker.js?v=133")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -1987,13 +1987,6 @@
 
       body[data-theme="dark"] .life-dot.spent {
         background: #f4f4f1;
-      }
-
-      .life-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-top: 2px;
       }
 
       @keyframes numberTick {
@@ -7677,15 +7670,6 @@
           line-height: 1.12;
         }
 
-        .life-actions {
-          gap: 7px;
-        }
-
-        .life-actions .btn {
-          min-height: 42px;
-          font-size: 13px;
-        }
-
         .speech-workbench {
           gap: 8px;
           padding-bottom: var(--nav-clearance);
@@ -8272,15 +8256,6 @@
           font-size: 8px;
         }
 
-        .life-actions {
-          gap: 6px;
-        }
-
-        .life-actions .btn {
-          min-height: 40px;
-          font-size: 12.4px;
-        }
-
         .daily-quote-card {
           min-height: 64px;
           max-height: none;
@@ -8723,10 +8698,6 @@
                 <div class="life-stat"><strong id="lifeMonthsLeft">0</strong><span>months left</span></div>
                 <div class="life-stat"><strong id="lifeUsedPercent">0%</strong><span>life used</span></div>
               </div>
-              <div class="life-actions">
-                <button class="btn" id="reviewVisionFromLife" type="button">Vision</button>
-                <button class="btn secondary" id="editLifeInfo" type="button">Edit info</button>
-              </div>
               <button class="daily-quote-card" id="dailyQuoteCard" type="button" data-quote-index="01">
                 <span class="daily-quote-top">
                   <span class="daily-quote-badge" id="dailyQuoteBadge">01</span>
@@ -9032,6 +9003,9 @@
                 <strong id="accountStatus">Saved on this device</strong>
                 <p id="syncSummary">Your life clock, images, people, and self speeches stay available here.</p>
               </div>
+            </div>
+            <div class="action-row">
+              <button class="btn secondary" id="editLifeInfoFromProfile" type="button">Edit info</button>
             </div>
           </div>
 
@@ -10097,8 +10071,7 @@
         setText("#closeDailyQuote", "quote.close");
         setText("#lifeUpdateTitle", "lifeUpdateTitle");
         setText("#lifeUpdateSub", "lifeUpdateSub");
-        setText("#reviewVisionFromLife", "navVision");
-        setText("#editLifeInfo", "editInfo");
+        setText("#editLifeInfoFromProfile", "editInfo");
 
         setText("#whyHint", "whyHint");
         setText("#whyKicker", "whyKicker");
@@ -12732,8 +12705,10 @@
       document.getElementById("closeProfile").addEventListener("click", closeProfile);
       document.getElementById("profileScrim").addEventListener("click", closeProfile);
       document.getElementById("saveLifeProfile").addEventListener("click", saveLifeProfile);
-      document.getElementById("editLifeInfo").addEventListener("click", editLifeInfo);
-      document.getElementById("reviewVisionFromLife").addEventListener("click", () => setView("vision"));
+      document.getElementById("editLifeInfoFromProfile").addEventListener("click", () => {
+        closeProfile();
+        editLifeInfo();
+      });
       document.getElementById("lifeMonthsCard").addEventListener("click", openLifeRunway);
       document.getElementById("lifeMonthsCard").addEventListener("keydown", (event) => {
         if (event.key !== "Enter" && event.key !== " ") return;
