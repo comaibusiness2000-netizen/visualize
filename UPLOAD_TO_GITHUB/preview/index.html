@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="manifest" href="./manifest.webmanifest?v=122" />
+    <link rel="manifest" href="./manifest.webmanifest?v=128" />
     <meta name="theme-color" content="#07090b" />
     <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="./icon.svg" />
     <title>Visualize</title>
     <script>
-      const VISUALIZE_APP_VERSION = "2026-07-27-v127";
+      const VISUALIZE_APP_VERSION = "2026-07-27-v128";
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -60,7 +60,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("./service-worker.js?v=122")
+            .register("./service-worker.js?v=128")
             .then((registration) => {
               registration.update();
               if (registration.waiting) {
@@ -101,6 +101,12 @@
         --safe-bottom-raw: 0px;
         --nav-bottom: 10px;
         --nav-clearance: 10px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
       }
 
       html[data-theme="dark"],
@@ -2759,6 +2765,7 @@
         box-shadow: 0 18px 34px rgba(17, 17, 17, 0.08);
         transform: rotate(var(--deck-rotate));
         animation: deckFrameBreath 4.8s ease-in-out infinite;
+        will-change: translate, filter;
       }
 
       .deck-frame:nth-child(1) {
@@ -2858,55 +2865,74 @@
       }
 
       .deck-flow {
+        position: relative;
         width: min(100%, 318px);
-        min-height: 64px;
+        min-height: 72px;
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         align-items: stretch;
-        gap: 8px;
+        gap: 4px;
         border: 1px solid rgba(17, 17, 17, 0.06);
-        border-radius: 28px;
+        border-radius: 30px;
         padding: 8px;
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.22)),
           rgba(17, 17, 17, 0.03);
         box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+        isolation: isolate;
+      }
+
+      .deck-flow::before {
+        content: "";
+        position: absolute;
+        left: 52px;
+        right: 52px;
+        top: 30px;
+        height: 1px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.15), transparent);
+        z-index: 0;
       }
 
       .deck-flow span {
         position: relative;
         min-width: 0;
-        min-height: 48px;
+        min-height: 56px;
         display: grid;
+        grid-template-rows: auto minmax(22px, auto);
         align-content: center;
-        gap: 4px;
-        border-radius: 21px;
-        padding: 8px 6px;
+        justify-items: center;
+        gap: 5px;
+        border-radius: 22px;
+        padding: 6px 4px 12px;
         overflow: hidden;
         color: rgba(17, 17, 17, 0.72);
-        background: rgba(17, 17, 17, 0.055);
+        background: transparent;
       }
 
       .deck-flow span::before {
         content: "";
         position: absolute;
-        left: 9px;
-        right: 9px;
-        bottom: 6px;
-        height: 3px;
+        left: 50%;
+        top: 7px;
+        width: 27px;
+        height: 27px;
         border-radius: 999px;
-        background: rgba(17, 17, 17, 0.1);
+        background: rgba(17, 17, 17, 0.055);
+        transform: translateX(-50%);
+        z-index: 0;
       }
 
       .deck-flow span::after {
         content: "";
         position: absolute;
-        left: 9px;
-        bottom: 6px;
-        width: 22%;
+        left: 50%;
+        bottom: 7px;
+        width: 18px;
         height: 3px;
         border-radius: 999px;
         background: var(--gold);
+        transform: translateX(-50%);
         animation: deckStepPulse 2.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
       }
 
@@ -2931,16 +2957,33 @@
       }
 
       .deck-flow b {
+        width: 27px;
+        height: 27px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
         color: var(--gold);
         font-size: 9px;
         line-height: 1;
         font-weight: 950;
-        letter-spacing: 1.1px;
+        letter-spacing: 0.8px;
+        text-indent: 0.8px;
+        background: rgba(255, 255, 255, 0.54);
+        box-shadow:
+          0 6px 15px rgba(232, 196, 104, 0.12),
+          inset 0 0 0 1px rgba(232, 196, 104, 0.18);
       }
 
       .deck-flow em {
-        font-size: 10.5px;
-        line-height: 1.08;
+        min-height: 23px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+        font-size: 10.2px;
+        line-height: 1.12;
         font-weight: 950;
       }
 
@@ -2953,7 +2996,11 @@
 
       .anti-empty .deck-flow span {
         color: rgba(255, 247, 237, 0.78);
-        background: rgba(248, 239, 230, 0.075);
+        background: transparent;
+      }
+
+      .anti-empty .deck-flow::before {
+        background: linear-gradient(90deg, transparent, rgba(248, 239, 230, 0.16), transparent);
       }
 
       .anti-empty .deck-flow span::before {
@@ -2975,7 +3022,21 @@
       body[data-theme="dark"] .vision-empty .deck-flow span,
       body[data-theme="dark"] .anti-empty .deck-flow span {
         color: rgba(255, 249, 237, 0.78);
+        background: transparent;
+      }
+
+      body[data-theme="dark"] .vision-empty .deck-flow::before,
+      body[data-theme="dark"] .anti-empty .deck-flow::before {
+        background: linear-gradient(90deg, transparent, rgba(255, 249, 237, 0.17), transparent);
+      }
+
+      body[data-theme="dark"] .vision-empty .deck-flow b,
+      body[data-theme="dark"] .anti-empty .deck-flow b,
+      .anti-empty .deck-flow b {
         background: rgba(255, 249, 237, 0.12);
+        box-shadow:
+          0 6px 15px rgba(232, 196, 104, 0.1),
+          inset 0 0 0 1px rgba(255, 249, 237, 0.1);
       }
 
       @keyframes deckFrameBreath {
@@ -2991,15 +3052,15 @@
 
       @keyframes deckStepPulse {
         0% {
-          width: 20%;
+          width: 14px;
           opacity: 0.42;
         }
         45% {
-          width: calc(100% - 18px);
+          width: 27px;
           opacity: 1;
         }
         100% {
-          width: 20%;
+          width: 14px;
           opacity: 0.42;
         }
       }
@@ -7371,23 +7432,26 @@
 
         .deck-flow {
           align-self: center;
-          min-height: 56px;
+          min-height: 66px;
           padding: 7px;
         }
 
         .deck-flow span {
-          min-height: 42px;
+          min-height: 52px;
           border-radius: 18px;
-          padding: 7px 5px;
+          padding: 6px 4px 11px;
         }
 
         .deck-flow b {
+          width: 25px;
+          height: 25px;
           font-size: 8px;
-          letter-spacing: 0.9px;
+          letter-spacing: 0.7px;
         }
 
         .deck-flow em {
-          font-size: 9.3px;
+          min-height: 21px;
+          font-size: 9px;
         }
 
         #goals.screen.active.why-empty .why-workbench {
@@ -7796,6 +7860,12 @@
           padding: 16px 16px 18px;
         }
 
+        .vision-empty .btn,
+        .anti-empty .btn {
+          min-height: 44px;
+          margin-bottom: 7px;
+        }
+
         .deck-frame-stack {
           width: min(100%, 244px);
           height: 96px;
@@ -7825,37 +7895,54 @@
         }
 
         .deck-flow {
-          min-height: 46px;
+          min-height: 58px;
           border-radius: 18px;
           gap: 5px;
           padding: 5px;
         }
 
+        .deck-flow::before {
+          left: 40px;
+          right: 40px;
+          top: 24px;
+        }
+
         .deck-flow span {
-          min-height: 36px;
+          min-height: 48px;
           border-radius: 15px;
-          padding: 6px 4px;
+          padding: 5px 2px 10px;
         }
 
-        .deck-flow span::before,
+        .deck-flow span::before {
+          left: 50%;
+          top: 6px;
+          right: auto;
+          bottom: auto;
+          width: 23px;
+          height: 23px;
+          transform: translateX(-50%);
+        }
+
         .deck-flow span::after {
-          left: 7px;
-          right: 7px;
+          left: 50%;
+          right: auto;
           bottom: 5px;
+          width: 14px;
           height: 2px;
-        }
-
-        .deck-flow span::after {
-          width: 18%;
+          transform: translateX(-50%);
         }
 
         .deck-flow b {
+          width: 23px;
+          height: 23px;
           font-size: 7px;
           letter-spacing: 0.7px;
         }
 
         .deck-flow em {
-          font-size: 8.1px;
+          min-height: 20px;
+          font-size: 7.9px;
+          line-height: 1.1;
         }
 
         .speech-workbench.script-stage .speech-head,
@@ -9259,6 +9346,12 @@
         visionSlides: Array.isArray(savedState && savedState.visionSlides) ? savedState.visionSlides : defaults.visionSlides,
         antiSlides: Array.isArray(savedState && savedState.antiSlides) ? savedState.antiSlides : defaults.antiSlides
       };
+      document.documentElement.dataset.theme = state.settings.theme;
+      document.body.dataset.theme = state.settings.theme;
+      document.querySelector('meta[name="theme-color"]').setAttribute(
+        "content",
+        state.settings.theme === "dark" ? "#07090b" : "#f3f3f1"
+      );
 
       const UI_TEXT = {
         en: {
