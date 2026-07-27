@@ -109,7 +109,7 @@ function createCdp(wsUrl) {
 }
 
 const seedState = {
-  appVersion: "2026-07-27-v116",
+  appVersion: "2026-07-27-v117",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -179,7 +179,7 @@ try {
       const auditParams = new URL(location.href).searchParams;
       const auditScenario = auditParams.get("auditScenario") || "en-dark";
       localStorage.setItem("visualize-simple-v1", JSON.stringify(auditSeeds[auditScenario] || auditSeeds["en-dark"]));
-      localStorage.setItem("visualizeAppVersion", "2026-07-27-v116");
+      localStorage.setItem("visualizeAppVersion", "2026-07-27-v117");
     `
   });
   const failures = [];
@@ -465,6 +465,106 @@ try {
       })()`
         });
         if (result.result.value.items.length) failures.push(result.result.value);
+
+        if (view === "today" && scenario.profileComplete) {
+          await cdp.send("Runtime.evaluate", {
+            expression: `document.getElementById("lifeMonthsCard")?.click()`,
+            awaitPromise: true
+          });
+          await wait(320);
+          const runwayResult = await cdp.send("Runtime.evaluate", {
+            returnByValue: true,
+            awaitPromise: true,
+            expression: `(() => {
+        const selectors = [
+          '.runway-scrim.open',
+          '.runway-reveal-card',
+          '.runway-reveal-top',
+          '.runway-hero',
+          '.runway-focus-strip',
+          '.runway-years-card',
+          '.runway-commit'
+        ];
+        const textFitSelectors = [
+          '#runwayRevealKicker',
+          '#runwayRevealTitle',
+          '#runwayRevealMonths',
+          '#runwayRevealUnit',
+          '#runwayRevealText',
+          '#runwayThisYear',
+          '#runwayCurrentMonth',
+          '#runwayYearsLabel',
+          '#runwayRowsCount',
+          '#closeLifeRunway',
+          '#closeLifeRunwayBottom'
+        ];
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const items = [];
+        const modal = document.getElementById('lifeRunwayReveal');
+        if (!modal?.classList.contains('open')) {
+          items.push({ selector: 'life runway did not open', clippedY: false, outX: false, navTooHigh: false, viewportNotCovered: false });
+        }
+        for (const selector of selectors) {
+          for (const element of document.querySelectorAll(selector)) {
+            const rect = element.getBoundingClientRect();
+            const style = getComputedStyle(element);
+            const hiddenY = ['hidden', 'clip'].includes(style.overflowY) || ['hidden', 'clip'].includes(style.overflow);
+            const clippedY = hiddenY && element.scrollHeight > element.clientHeight + 3;
+            const outX = rect.left < -1 || rect.right > vw + 1;
+            const viewportNotCovered = selector === '.runway-reveal-card' && rect.bottom < vh - 1;
+            if (clippedY || outX || viewportNotCovered) {
+              items.push({
+                selector,
+                rect: { left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top), bottom: Math.round(rect.bottom), width: Math.round(rect.width), height: Math.round(rect.height) },
+                clientHeight: element.clientHeight,
+                scrollHeight: element.scrollHeight,
+                overflow: style.overflow,
+                overflowY: style.overflowY,
+                clippedY,
+                outX,
+                navTooHigh: false,
+                viewportNotCovered
+              });
+            }
+          }
+        }
+        for (const selector of textFitSelectors) {
+          const element = document.querySelector(selector);
+          if (!element) continue;
+          const rect = element.getBoundingClientRect();
+          const style = getComputedStyle(element);
+          const hiddenX = ['hidden', 'clip'].includes(style.overflowX) || ['hidden', 'clip'].includes(style.overflow);
+          const hiddenY = ['hidden', 'clip'].includes(style.overflowY) || ['hidden', 'clip'].includes(style.overflow);
+          const textOverflowX = element.scrollWidth > Math.ceil(element.clientWidth) + 2 && hiddenX;
+          const textOverflowY = element.scrollHeight > Math.ceil(element.clientHeight) + 2 && hiddenY;
+          if (textOverflowX || textOverflowY) {
+            items.push({
+              selector: 'runway text does not fit',
+              target: selector,
+              text: (element.textContent || '').trim().slice(0, 90),
+              rect: { left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top), bottom: Math.round(rect.bottom), width: Math.round(rect.width), height: Math.round(rect.height) },
+              clientWidth: element.clientWidth,
+              scrollWidth: element.scrollWidth,
+              clientHeight: element.clientHeight,
+              scrollHeight: element.scrollHeight,
+              clippedY: textOverflowY,
+              outX: textOverflowX,
+              navTooHigh: false,
+              viewportNotCovered: false
+            });
+          }
+        }
+        return { viewport: '${viewport.name}', scenario: '${scenario.name}', view: 'life-runway-open', vw, vh, items };
+      })()`
+          });
+          if (runwayResult.result.value.items.length) failures.push(runwayResult.result.value);
+          await cdp.send("Runtime.evaluate", {
+            expression: `document.getElementById("closeLifeRunway")?.click()`,
+            awaitPromise: true
+          });
+          await wait(120);
+        }
       }
     }
   }

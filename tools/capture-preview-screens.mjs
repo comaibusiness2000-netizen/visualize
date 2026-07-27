@@ -27,7 +27,7 @@ const viewportProfiles = [
 mkdirSync(outputDir, { recursive: true });
 
 const seedState = {
-  appVersion: "2026-07-27-v116",
+  appVersion: "2026-07-27-v117",
   goals: [],
   goalMode: "daily",
   dailyTasks: [],
@@ -220,6 +220,8 @@ try {
           document.getElementById("dailyInsight")?.setAttribute("aria-hidden", "true");
           document.getElementById("lifeUpdateOverlay")?.classList.remove("open");
           document.getElementById("lifeUpdateOverlay")?.setAttribute("aria-hidden", "true");
+          document.getElementById("lifeRunwayReveal")?.classList.remove("open");
+          document.getElementById("lifeRunwayReveal")?.setAttribute("aria-hidden", "true");
         })()`,
         awaitPromise: true
       });
@@ -238,6 +240,8 @@ try {
           document.getElementById("dailyInsight")?.setAttribute("aria-hidden", "true");
           document.getElementById("lifeUpdateOverlay")?.classList.remove("open");
           document.getElementById("lifeUpdateOverlay")?.setAttribute("aria-hidden", "true");
+          document.getElementById("lifeRunwayReveal")?.classList.remove("open");
+          document.getElementById("lifeRunwayReveal")?.setAttribute("aria-hidden", "true");
         })()`,
         awaitPromise: true
       });
@@ -253,6 +257,30 @@ try {
         const file = resolve(outputDir, `${view}.png`);
         writeFileSync(file, Buffer.from(image.data, "base64"));
         console.log(file);
+      }
+      if (view === "today") {
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.getElementById("lifeMonthsCard")?.click()`,
+          awaitPromise: true
+        });
+        await wait(520);
+        const runwayImage = await cdp.send("Page.captureScreenshot", {
+          format: "png",
+          fromSurface: true
+        });
+        const runwayPrefixedFile = resolve(outputDir, `${viewport.name}-runway.png`);
+        writeFileSync(runwayPrefixedFile, Buffer.from(runwayImage.data, "base64"));
+        console.log(runwayPrefixedFile);
+        if (viewport.name === "iphone-15") {
+          const runwayFile = resolve(outputDir, "runway.png");
+          writeFileSync(runwayFile, Buffer.from(runwayImage.data, "base64"));
+          console.log(runwayFile);
+        }
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.getElementById("closeLifeRunway")?.click()`,
+          awaitPromise: true
+        });
+        await wait(180);
       }
       if (view === "speech") {
         await cdp.send("Runtime.evaluate", {
@@ -291,6 +319,8 @@ try {
           document.getElementById("dailyInsight")?.setAttribute("aria-hidden", "true");
           document.getElementById("lifeUpdateOverlay")?.classList.remove("open");
           document.getElementById("lifeUpdateOverlay")?.setAttribute("aria-hidden", "true");
+          document.getElementById("lifeRunwayReveal")?.classList.remove("open");
+          document.getElementById("lifeRunwayReveal")?.setAttribute("aria-hidden", "true");
         })()`,
         awaitPromise: true
       });
@@ -309,6 +339,8 @@ try {
           document.getElementById("dailyInsight")?.setAttribute("aria-hidden", "true");
           document.getElementById("lifeUpdateOverlay")?.classList.remove("open");
           document.getElementById("lifeUpdateOverlay")?.setAttribute("aria-hidden", "true");
+          document.getElementById("lifeRunwayReveal")?.classList.remove("open");
+          document.getElementById("lifeRunwayReveal")?.setAttribute("aria-hidden", "true");
         })()`,
         awaitPromise: true
       });
@@ -324,6 +356,30 @@ try {
         const file = resolve(outputDir, `light-${view}.png`);
         writeFileSync(file, Buffer.from(image.data, "base64"));
         console.log(file);
+      }
+      if (view === "today") {
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.getElementById("lifeMonthsCard")?.click()`,
+          awaitPromise: true
+        });
+        await wait(520);
+        const runwayImage = await cdp.send("Page.captureScreenshot", {
+          format: "png",
+          fromSurface: true
+        });
+        const runwayPrefixedFile = resolve(outputDir, `${viewport.name}-light-runway.png`);
+        writeFileSync(runwayPrefixedFile, Buffer.from(runwayImage.data, "base64"));
+        console.log(runwayPrefixedFile);
+        if (viewport.name === "iphone-15") {
+          const runwayFile = resolve(outputDir, "light-runway.png");
+          writeFileSync(runwayFile, Buffer.from(runwayImage.data, "base64"));
+          console.log(runwayFile);
+        }
+        await cdp.send("Runtime.evaluate", {
+          expression: `document.getElementById("closeLifeRunway")?.click()`,
+          awaitPromise: true
+        });
+        await wait(180);
       }
       if (view === "speech") {
         await cdp.send("Runtime.evaluate", {
