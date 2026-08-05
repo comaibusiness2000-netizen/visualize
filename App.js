@@ -1418,7 +1418,7 @@ export default function App() {
           </View>
         </View>
 
-        <View style={styles.actionsRow}>
+        <View style={styles.deckActionsRow}>
           <TouchableOpacity style={styles.primaryButtonFlex} onPress={() => { softImpact(); addImages(kind); }}>
             <Text style={styles.primaryText}>{t("deck.add")}</Text>
           </TouchableOpacity>
@@ -1428,7 +1428,7 @@ export default function App() {
         </View>
 
         {!deck.length ? (
-          <EmptyState theme={theme} title={t("deck.emptyTitle")} text={t("deck.emptyBody")} />
+          <EmptyState theme={theme} title={t("deck.emptyTitle")} text={t("deck.emptyBody")} style={styles.deckEmptyState} />
         ) : (
           <View style={styles.deckRail}>
             {deck.map((slide) => (
@@ -2058,9 +2058,9 @@ function TabGlyph({ id, color, active }) {
   );
 }
 
-function EmptyState({ theme, title, text }) {
+function EmptyState({ theme, title, text, style }) {
   return (
-    <View style={[styles.empty, { backgroundColor: theme.card, borderColor: theme.line }]}>
+    <View style={[styles.empty, style, { backgroundColor: theme.card, borderColor: theme.line }]}>
       <Text style={[styles.panelTitle, { color: theme.ink }]}>{title}</Text>
       <Text style={[styles.body, { color: theme.muted }]}>{text}</Text>
     </View>
@@ -2264,6 +2264,7 @@ const styles = StyleSheet.create({
   progressKnob: { position: "absolute", width: 26, height: 26, marginLeft: -13, borderRadius: 13, backgroundColor: "#DA5A3A", borderWidth: 3, borderColor: "#FFFFFF" },
   progressText: { marginTop: 2, fontSize: 12, fontWeight: "900" },
   actionsRow: { flexDirection: "row", gap: 10, marginTop: 14 },
+  deckActionsRow: { flexDirection: "row", gap: 10, marginTop: 12, marginBottom: 22, zIndex: 2 },
   centerText: { textAlign: "center" },
   whyHero: { overflow: "hidden", borderWidth: 1, borderRadius: 38, padding: 22, marginBottom: 14, alignItems: "center", shadowColor: "#000", shadowOpacity: 0.1, shadowRadius: 26, shadowOffset: { width: 0, height: 14 }, elevation: 5 },
   whyAuraTop: { position: "absolute", width: 190, height: 190, right: -72, top: -86, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.16)" },
@@ -2310,6 +2311,7 @@ const styles = StyleSheet.create({
   deckFrameAnti: { borderColor: "rgba(218,90,58,0.24)", backgroundColor: "rgba(218,90,58,0.08)" },
   deckFrameLabel: { color: "rgba(255,249,237,0.78)", fontSize: 12, lineHeight: 15, fontWeight: "900" },
   deckFrameLabelAnti: { color: "rgba(255,220,210,0.82)" },
+  deckEmptyState: { marginTop: 0 },
   deckRail: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 14 },
   deckTile: { aspectRatio: 0.68 },
   speechContent: { padding: 16, paddingBottom: 90 },
