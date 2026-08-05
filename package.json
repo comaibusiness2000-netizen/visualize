@@ -1,6 +1,6 @@
 {
   "name": "visualize-ios-app",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "expo-image-picker": "~55.0.22",
     "expo-speech": "~55.0.16",
     "react": "^19.2.0",
-    "react-native": "^0.83.6"
+    "react-native": "0.83.10"
   },
   "devDependencies": {
     "@babel/core": "^7.25.0",

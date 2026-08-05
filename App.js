@@ -85,6 +85,7 @@ const blankState = {
     age: "",
     expectancy: 85,
     mantra: "",
+    startedAt: "",
     createdAt: "",
     updatedAt: "",
     lastAnimatedDate: "",
@@ -379,6 +380,19 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, number));
 }
 
+function localDayTime(value = new Date()) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
+
+function daysBetween(start, end = new Date()) {
+  const startTime = localDayTime(start);
+  const endTime = localDayTime(end);
+  if (startTime === null || endTime === null) return 0;
+  return Math.max(0, Math.floor((endTime - startTime) / 86400000));
+}
+
 function normalizeLocalRecord(record, prefix, localInstallId) {
   const value = record && typeof record === "object" ? record : {};
   const timestamp = value.createdAt || value.updatedAt || nowIso();
@@ -399,6 +413,9 @@ function mergeStoredState(saved) {
   const profile = { ...blankState.profile, ...(saved.profile || {}) };
   if (profile.complete && !profile.updatedAt) {
     profile.updatedAt = profile.createdAt || nowIso();
+  }
+  if (profile.complete && !profile.startedAt) {
+    profile.startedAt = profile.createdAt || profile.updatedAt || nowIso();
   }
   return {
     ...blankState,
@@ -458,17 +475,17 @@ async function persistPickedImage(uri, kind) {
 function lifeStats(profile) {
   const age = clamp(profile.age, 0, 120);
   const expectancy = Math.max(clamp(profile.expectancy, 50, 120), age + 1);
-  const now = new Date();
-  const createdAt = profile.createdAt ? new Date(profile.createdAt) : now;
-  const elapsedDays = Math.max(0, Math.floor((now - createdAt) / 86400000));
+  const startedAt = profile.startedAt || profile.createdAt || nowIso();
+  const elapsedDays = profile.complete ? daysBetween(startedAt) : 0;
+  const startDaysLeft = Math.max(0, Math.round((expectancy - age) * 365.25));
+  const daysLeft = Math.max(0, startDaysLeft - elapsedDays);
   const currentAge = Math.min(expectancy, age + elapsedDays / 365.25);
-  const daysLeft = Math.max(0, Math.round((expectancy - currentAge) * 365.25));
   const weeksLeft = Math.round(daysLeft / 7);
-  const monthsLeft = Math.round(daysLeft / 30.44);
   const totalMonths = Math.round(expectancy * 12);
   const spentMonths = Math.min(totalMonths, Math.round(currentAge * 12));
+  const monthsLeft = Math.max(0, totalMonths - spentMonths);
   const usedPercent = Math.min(100, Math.round((currentAge / expectancy) * 100));
-  return { age, expectancy, daysLeft, weeksLeft, monthsLeft, totalMonths, spentMonths, usedPercent };
+  return { age, expectancy, currentAge, elapsedDays, daysLeft, weeksLeft, monthsLeft, totalMonths, spentMonths, usedPercent };
 }
 
 function lifeSnapshot(stats) {
@@ -665,6 +682,7 @@ export default function App() {
       const wasAway = appStateRef.current === "inactive" || appStateRef.current === "background";
       appStateRef.current = nextState;
       if (wasAway && nextState === "active") {
+        setClockTick(Date.now());
         if (tab === "life") setTimeout(() => resetLifeScroll(false), 120);
         setTimeout(() => maybeRunDailyLifeUpdate(), 260);
       }
@@ -730,6 +748,7 @@ export default function App() {
         age,
         expectancy: Math.max(expectancy, age + 1),
         mantra,
+        startedAt: current.profile.startedAt || current.profile.createdAt || timestamp,
         createdAt: current.profile.createdAt || timestamp,
         updatedAt: timestamp,
         lastAnimatedDate: "",
@@ -1799,6 +1818,7 @@ export default function App() {
       lifeUpdate.current.daysLeft + 1,
       Number(lifeUpdate.previous.daysLeft) || 0
     );
+    const daysSpent = Math.max(1, previousDays - Number(lifeUpdate.current.daysLeft || 0));
     const fade = lifeUpdatePulse.interpolate({
       inputRange: [0, 0.12, 0.86, 1],
       outputRange: [0, 1, 1, 0]
@@ -1890,7 +1910,7 @@ export default function App() {
               {t("life.updateSub")}
             </Animated.Text>
             <Animated.View style={[styles.lifeUpdateMinusBadge, { transform: [{ scale: minusScale }] }]}>
-              <Text style={styles.lifeUpdateMinusText}>-1</Text>
+              <Text style={styles.lifeUpdateMinusText}>-{daysSpent}</Text>
             </Animated.View>
             <Animated.Text style={[styles.lifeUpdateOldNumber, { transform: [{ translateY: oldTranslate }] }]}>
               {previousDays.toLocaleString("en-US")}
