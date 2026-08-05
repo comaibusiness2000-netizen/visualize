@@ -1402,9 +1402,12 @@ export default function App() {
     const cover = deck[0];
     const title = positive ? t("deck.visionTitle") : t("deck.antiTitle");
     const body = positive ? t("deck.visionBody") : t("deck.antiBody");
+    const deckHeroTone = cover?.imageUri
+      ? { borderColor: theme.line }
+      : { borderColor: "rgba(255,249,237,0.14)" };
     return (
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.deckHero, !cover?.imageUri && styles.deckHeroEmpty, !positive && styles.deckHeroAnti, { backgroundColor: theme.card, borderColor: theme.line }]}>
+        <View style={[styles.deckHero, !cover?.imageUri && styles.deckHeroEmpty, !positive && styles.deckHeroAnti, deckHeroTone]}>
           {cover?.imageUri ? <Image source={{ uri: cover.imageUri }} style={styles.deckHeroImage} /> : null}
           {!cover?.imageUri ? renderDeckEmptyPreview(kind) : null}
           <View style={[styles.deckHeroShade, !cover?.imageUri && { opacity: 0.25 }]} />
