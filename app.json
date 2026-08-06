@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "7",
+      "buildNumber": "8",
       "bundleIdentifier": "com.samuelecomai.visualize",
       "config": {
         "usesNonExemptEncryption": false
