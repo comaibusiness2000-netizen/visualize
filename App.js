@@ -28,6 +28,7 @@ import * as Speech from "expo-speech";
 
 const STORAGE_VERSION = 2;
 const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
+const STATE_BACKUP_FILE = `${FileSystem.documentDirectory}visualize-state-v1.backup.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
@@ -74,6 +75,53 @@ function todayKey() {
 function softImpact() {
   if (Platform.OS === "web") return;
   Vibration.vibrate(7);
+}
+
+let stateWriteQueue = Promise.resolve();
+
+async function readStateFile(path) {
+  try {
+    const info = await FileSystem.getInfoAsync(path);
+    if (!info.exists) return null;
+    const raw = await FileSystem.readAsStringAsync(path);
+    return JSON.parse(raw);
+  } catch (error) {
+    return null;
+  }
+}
+
+function stateTimestamp(state) {
+  const value = state?.sync?.localUpdatedAt || state?.profile?.updatedAt || state?.profile?.createdAt || "";
+  const time = value ? new Date(value).getTime() : 0;
+  return Number.isNaN(time) ? 0 : time;
+}
+
+function choosePersistedState(primary, backup) {
+  if (!primary) return backup;
+  if (!backup) return primary;
+  if (backup.profile?.complete && !primary.profile?.complete) return backup;
+  if (primary.profile?.complete && !backup.profile?.complete) return primary;
+  return stateTimestamp(backup) > stateTimestamp(primary) ? backup : primary;
+}
+
+async function readPersistedState() {
+  const [primary, backup] = await Promise.all([
+    readStateFile(STATE_FILE),
+    readStateFile(STATE_BACKUP_FILE)
+  ]);
+  return choosePersistedState(primary, backup);
+}
+
+function persistLocalState(state) {
+  const payload = JSON.stringify(state);
+  stateWriteQueue = stateWriteQueue
+    .catch(() => {})
+    .then(async () => {
+      await FileSystem.writeAsStringAsync(STATE_BACKUP_FILE, payload);
+      await FileSystem.writeAsStringAsync(STATE_FILE, payload);
+    });
+  stateWriteQueue.catch(() => {});
+  return stateWriteQueue;
 }
 
 const blankState = {
@@ -554,6 +602,7 @@ export default function App() {
   const lifeScrollRef = useRef(null);
   const voiceScrollRef = useRef(null);
   const appStateRef = useRef("active");
+  const stateDataRef = useRef(blankState);
 
   const theme = appState.settings.darkMode ? darkTheme : lightTheme;
   const language = appState.settings.language || "en";
@@ -579,16 +628,14 @@ export default function App() {
     let mounted = true;
     async function load() {
       try {
-        const info = await FileSystem.getInfoAsync(STATE_FILE);
-        if (info.exists) {
-          const raw = await FileSystem.readAsStringAsync(STATE_FILE);
-          if (mounted) {
-            const merged = mergeStoredState(JSON.parse(raw));
-            setAppState(merged);
-            setProfileDraft(merged.profile);
-            setDraftSpeechTitle(merged.selfSpeeches[merged.activeSpeechIndex]?.title || "");
-            setDraftSpeechText(merged.selfSpeeches[merged.activeSpeechIndex]?.text || "");
-          }
+        const saved = await readPersistedState();
+        if (saved && mounted) {
+          const merged = mergeStoredState(saved);
+          stateDataRef.current = merged;
+          setAppState(merged);
+          setProfileDraft(merged.profile);
+          setDraftSpeechTitle(merged.selfSpeeches[merged.activeSpeechIndex]?.title || "");
+          setDraftSpeechText(merged.selfSpeeches[merged.activeSpeechIndex]?.text || "");
         }
       } catch (error) {
         Alert.alert("Local data", "The saved local profile could not be loaded.");
@@ -601,11 +648,6 @@ export default function App() {
       mounted = false;
     };
   }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    FileSystem.writeAsStringAsync(STATE_FILE, JSON.stringify(appState)).catch(() => {});
-  }, [appState, hydrated]);
 
   useEffect(() => {
     if (!speechPlaying) {
@@ -681,6 +723,9 @@ export default function App() {
     const subscription = AppState.addEventListener("change", (nextState) => {
       const wasAway = appStateRef.current === "inactive" || appStateRef.current === "background";
       appStateRef.current = nextState;
+      if (nextState === "inactive" || nextState === "background") {
+        persistLocalState(stateDataRef.current);
+      }
       if (wasAway && nextState === "active") {
         setClockTick(Date.now());
         if (tab === "life") setTimeout(() => resetLifeScroll(false), 120);
@@ -696,20 +741,23 @@ export default function App() {
   }, [tab, profileComplete]);
 
   function updateState(mutator) {
-    setAppState((current) => {
-      const next = typeof mutator === "function" ? mutator(current) : mutator;
-      const merged = mergeStoredState({ ...next, storageVersion: STORAGE_VERSION });
-      return {
-        ...merged,
-        sync: {
-          ...merged.sync,
-          mode: merged.sync.mode || "local",
-          migrationStatus: merged.sync.cloudEnabled ? merged.sync.migrationStatus : "local-ready",
-          hasLocalChanges: true,
-          localUpdatedAt: nowIso()
-        }
-      };
-    });
+    const current = stateDataRef.current;
+    const next = typeof mutator === "function" ? mutator(current) : mutator;
+    const merged = mergeStoredState({ ...next, storageVersion: STORAGE_VERSION });
+    const committed = {
+      ...merged,
+      sync: {
+        ...merged.sync,
+        mode: merged.sync.mode || "local",
+        migrationStatus: merged.sync.cloudEnabled ? merged.sync.migrationStatus : "local-ready",
+        hasLocalChanges: true,
+        localUpdatedAt: nowIso()
+      }
+    };
+    stateDataRef.current = committed;
+    setAppState(committed);
+    persistLocalState(committed);
+    return committed;
   }
 
   function navigateTab(nextTab) {
@@ -727,7 +775,7 @@ export default function App() {
     });
   }
 
-  function saveProfile() {
+  async function saveProfile() {
     const name = String(profileDraft.name || "").trim();
     const age = clamp(profileDraft.age, 0, 120);
     const expectancy = clamp(profileDraft.expectancy || 85, 50, 120);
@@ -740,7 +788,7 @@ export default function App() {
       Alert.alert(t("alert.profile"), t("alert.addAge"));
       return;
     }
-    updateState((current) => {
+    const committed = updateState((current) => {
       const timestamp = nowIso();
       const nextProfile = {
         complete: true,
@@ -757,6 +805,12 @@ export default function App() {
       nextProfile.lastSnapshot = lifeSnapshot(lifeStats(nextProfile));
       return { ...current, profile: nextProfile };
     });
+    try {
+      await persistLocalState(committed);
+    } catch (error) {
+      Alert.alert("Local data", "The profile could not be saved on this device. Please try again.");
+      return;
+    }
     setProfileOpen(false);
   }
 
@@ -1073,9 +1127,11 @@ export default function App() {
         style: "destructive",
         onPress: async () => {
           await FileSystem.deleteAsync(STATE_FILE, { idempotent: true }).catch(() => {});
+          await FileSystem.deleteAsync(STATE_BACKUP_FILE, { idempotent: true }).catch(() => {});
           await FileSystem.deleteAsync(IMAGE_DIR, { idempotent: true }).catch(() => {});
           Speech.stop();
           setSpeechPlaying(false);
+          stateDataRef.current = blankState;
           setAppState(blankState);
           setProfileDraft(blankState.profile);
           setDraftSpeechTitle("");
