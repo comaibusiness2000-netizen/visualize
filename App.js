@@ -5,6 +5,7 @@ import {
   Animated,
   AppState,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   NativeModules,
@@ -182,11 +183,17 @@ const languages = [
 ];
 
 const voiceProfiles = [
-  { id: "maya", name: "Maya", note: "Warm female", rate: 0.86, pitch: 1.04 },
-  { id: "elias", name: "Elias", note: "Calm male", rate: 0.84, pitch: 0.9 },
-  { id: "nora", name: "Nora", note: "Grounded female", rate: 0.88, pitch: 0.98 },
-  { id: "matteo", name: "Matteo", note: "Steady male", rate: 0.82, pitch: 0.86 }
+  { id: "maya", name: "Maya", note: "Warm female", rate: 0.84, pitch: 1.04, voiceHints: ["samantha", "moira", "tessa", "karen"], fallbackVoiceIndex: 0 },
+  { id: "noah", name: "Noah", note: "Calm male", rate: 0.76, pitch: 0.82, voiceHints: ["daniel", "alex", "tom", "aaron"], fallbackVoiceIndex: 1 },
+  { id: "iris", name: "Iris", note: "Bright female", rate: 0.98, pitch: 1.18, voiceHints: ["ava", "allison", "susan", "victoria"], fallbackVoiceIndex: 2 },
+  { id: "atlas", name: "Atlas", note: "Low male", rate: 0.86, pitch: 0.68, voiceHints: ["fred", "ralph", "oliver", "arthur"], fallbackVoiceIndex: 3 }
 ];
+
+const voiceProfileAliases = {
+  elias: "noah",
+  nora: "iris",
+  matteo: "atlas"
+};
 
 const copy = {
   en: {
@@ -594,12 +601,14 @@ export default function App() {
   const [speechPlaying, setSpeechPlaying] = useState(false);
   const [lifeUpdate, setLifeUpdate] = useState(null);
   const [clockTick, setClockTick] = useState(Date.now());
+  const [availableVoices, setAvailableVoices] = useState([]);
   const setupPulse = useRef(new Animated.Value(0)).current;
   const screenPulse = useRef(new Animated.Value(1)).current;
   const lifeUpdatePulse = useRef(new Animated.Value(0)).current;
   const playerPulse = useRef(new Animated.Value(0)).current;
   const speechPulse = useRef(new Animated.Value(0)).current;
   const lifeScrollRef = useRef(null);
+  const speechScrollRef = useRef(null);
   const voiceScrollRef = useRef(null);
   const appStateRef = useRef("active");
   const stateDataRef = useRef(blankState);
@@ -607,7 +616,8 @@ export default function App() {
   const theme = appState.settings.darkMode ? darkTheme : lightTheme;
   const language = appState.settings.language || "en";
   const languageMeta = languages.find((item) => item.id === language) || languages[0];
-  const activeVoiceProfile = voiceProfiles.find((item) => item.id === appState.settings.voiceProfileId) || voiceProfiles[0];
+  const resolvedVoiceProfileId = voiceProfileAliases[appState.settings.voiceProfileId] || appState.settings.voiceProfileId;
+  const activeVoiceProfile = voiceProfiles.find((item) => item.id === resolvedVoiceProfileId) || voiceProfiles[0];
   const t = (key, values = {}) => {
     const template = (copy[language] && copy[language][key]) || copy.en[key] || key;
     return Object.entries(values).reduce(
@@ -650,6 +660,20 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    let mounted = true;
+    Speech.getAvailableVoicesAsync()
+      .then((voices) => {
+        if (mounted && Array.isArray(voices)) {
+          setAvailableVoices(voices);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     if (!speechPlaying) {
       speechPulse.stopAnimation();
       speechPulse.setValue(0);
@@ -664,6 +688,15 @@ export default function App() {
     loop.start();
     return () => loop.stop();
   }, [speechPlaying, speechPulse]);
+
+  useEffect(() => {
+    if (speechMode !== "script") return undefined;
+    if (!Keyboard?.addListener) return undefined;
+    const subscription = Keyboard.addListener("keyboardDidShow", () => {
+      setTimeout(() => speechScrollRef.current?.scrollTo({ y: 86, animated: true }), 80);
+    });
+    return () => subscription.remove();
+  }, [speechMode]);
 
   useEffect(() => {
     Animated.loop(
@@ -1076,9 +1109,7 @@ export default function App() {
     Speech.stop();
     setSpeechPlaying(true);
     Speech.speak(text, {
-      language: languageMeta.speech,
-      rate: activeVoiceProfile.rate,
-      pitch: activeVoiceProfile.pitch,
+      ...speechOptions(activeVoiceProfile),
       onDone: () => setSpeechPlaying(false),
       onStopped: () => setSpeechPlaying(false),
       onError: () => setSpeechPlaying(false)
@@ -1088,6 +1119,30 @@ export default function App() {
   function stopSpeech() {
     setSpeechPlaying(false);
     Speech.stop();
+  }
+
+  function resolveVoiceIdentifier(profile) {
+    if (!availableVoices.length) return "";
+    const languageVoices = availableVoices.filter((voice) => normalizeLanguageId(voice.language) === language);
+    const candidates = languageVoices.length ? languageVoices : availableVoices;
+    const hints = profile.voiceHints || [];
+    const preferred = candidates.find((voice) => {
+      const label = `${voice.name || ""} ${voice.identifier || ""}`.toLowerCase();
+      return hints.some((hint) => label.includes(hint));
+    });
+    if (preferred?.identifier) return preferred.identifier;
+    const fallbackIndex = profile.fallbackVoiceIndex || 0;
+    return candidates[fallbackIndex % candidates.length]?.identifier || "";
+  }
+
+  function speechOptions(profile) {
+    const voice = resolveVoiceIdentifier(profile);
+    return {
+      language: languageMeta.speech,
+      rate: profile.rate,
+      pitch: profile.pitch,
+      ...(voice ? { voice } : {})
+    };
   }
 
   function selectVoiceProfile(index, { scroll = true } = {}) {
@@ -1113,9 +1168,7 @@ export default function App() {
     softImpact();
     Speech.stop();
     Speech.speak(profileMantra, {
-      language: languageMeta.speech,
-      rate: activeVoiceProfile.rate,
-      pitch: activeVoiceProfile.pitch
+      ...speechOptions(activeVoiceProfile)
     });
   }
 
@@ -1511,51 +1564,66 @@ export default function App() {
     const speechWords = (draftSpeechText.trim() || activeSpeech?.text || "").split(/\s+/).filter(Boolean).length;
     const speechMinutes = Math.max(1, Math.ceil(speechWords / 135));
     const waveform = [16, 30, 22, 42, 26, 36, 18, 32, 24];
+    const editingScript = speechMode === "script";
     return (
-      <ScrollView contentContainerStyle={styles.speechContent} keyboardShouldPersistTaps="handled">
-        <View style={[styles.speechHero, speechPlaying && styles.speechHeroPlaying]}>
-          <View style={styles.speechHeroAuraTop} />
-          <View style={styles.speechHeroAuraBottom} />
-          <Text style={styles.speechHeroKicker}>{t("speech.title")}</Text>
-          <Text style={styles.speechHeroTitle} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.76}>{currentSpeechTitle}</Text>
-          <Text style={styles.speechHeroBody}>{t("speech.body")}</Text>
-          <View style={styles.speechHeroMeta}>
-            <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechPlaying ? t("speech.playing") : t("speech.ready")}</Text>
-            <View style={styles.speechHeroDot} />
-            <Text style={styles.speechHeroMetaText} numberOfLines={1}>{activeVoiceProfile.name}</Text>
-            <View style={styles.speechHeroDot} />
-            <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechMinutes} min</Text>
-          </View>
-          <View style={styles.speechWaveform}>
-            {waveform.map((height, index) => {
-              const scaleY = speechPlaying
-                ? speechPulse.interpolate({
-                    inputRange: [0, 0.5, 1],
-                    outputRange: [
-                      0.68 + ((index % 3) * 0.06),
-                      1.18 - ((index % 4) * 0.04),
-                      0.78 + ((index % 2) * 0.08)
-                    ]
-                  })
-                : 1;
-              return (
-                <Animated.View
-                  key={`${index}`}
-                  style={[
-                    styles.speechWaveBar,
-                    { height, transform: [{ scaleY }] },
-                    speechPlaying && styles.speechWaveBarPlaying
-                  ]}
-                />
-              );
-            })}
-          </View>
-          <TouchableOpacity style={[styles.speechPlayButton, speechPlaying && styles.speechPlayButtonActive]} onPress={playSpeech} activeOpacity={0.88}>
-            <Text style={styles.speechPlayText}>{speechPlaying ? t("speech.playing") : t("speech.listen")}</Text>
-          </TouchableOpacity>
-        </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 8 : 0}
+        style={styles.speechKeyboard}
+      >
+        <ScrollView
+          ref={speechScrollRef}
+          automaticallyAdjustKeyboardInsets={Platform.OS === "ios"}
+          contentContainerStyle={[styles.speechContent, editingScript && styles.speechContentEditing]}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {!editingScript ? (
+            <View style={[styles.speechHero, speechPlaying && styles.speechHeroPlaying]}>
+              <View style={styles.speechHeroAuraTop} />
+              <View style={styles.speechHeroAuraBottom} />
+              <Text style={styles.speechHeroKicker}>{t("speech.title")}</Text>
+              <Text style={styles.speechHeroTitle} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.76}>{currentSpeechTitle}</Text>
+              <Text style={styles.speechHeroBody}>{t("speech.body")}</Text>
+              <View style={styles.speechHeroMeta}>
+                <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechPlaying ? t("speech.playing") : t("speech.ready")}</Text>
+                <View style={styles.speechHeroDot} />
+                <Text style={styles.speechHeroMetaText} numberOfLines={1}>{activeVoiceProfile.name}</Text>
+                <View style={styles.speechHeroDot} />
+                <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechMinutes} min</Text>
+              </View>
+              <View style={styles.speechWaveform}>
+                {waveform.map((height, index) => {
+                  const scaleY = speechPlaying
+                    ? speechPulse.interpolate({
+                        inputRange: [0, 0.5, 1],
+                        outputRange: [
+                          0.68 + ((index % 3) * 0.06),
+                          1.18 - ((index % 4) * 0.04),
+                          0.78 + ((index % 2) * 0.08)
+                        ]
+                      })
+                    : 1;
+                  return (
+                    <Animated.View
+                      key={`${index}`}
+                      style={[
+                        styles.speechWaveBar,
+                        { height, transform: [{ scaleY }] },
+                        speechPlaying && styles.speechWaveBarPlaying
+                      ]}
+                    />
+                  );
+                })}
+              </View>
+              <TouchableOpacity style={[styles.speechPlayButton, speechPlaying && styles.speechPlayButtonActive]} onPress={playSpeech} activeOpacity={0.88}>
+                <Text style={styles.speechPlayText}>{speechPlaying ? t("speech.playing") : t("speech.listen")}</Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
 
-        {speechMode === "overview" ? (
+          {speechMode === "overview" ? (
           <View style={[styles.speechStudio, { backgroundColor: theme.card, borderColor: theme.line }]}>
             <View style={[styles.speechLibraryPanel, { borderColor: theme.line }]}>
               <View style={styles.speechLibraryHeader}>
@@ -1606,6 +1674,7 @@ export default function App() {
               <TextInput
                 value={draftSpeechTitle}
                 onChangeText={setDraftSpeechTitle}
+                onFocus={() => setTimeout(() => speechScrollRef.current?.scrollTo({ y: 0, animated: true }), 90)}
                 placeholder={t("speech.titlePlaceholder")}
                 placeholderTextColor={theme.placeholder}
                 style={[styles.speechTitleInput, { color: theme.ink, borderColor: theme.line }]}
@@ -1613,9 +1682,11 @@ export default function App() {
               <TextInput
                 value={draftSpeechText}
                 onChangeText={setDraftSpeechText}
+                onFocus={() => setTimeout(() => speechScrollRef.current?.scrollTo({ y: 86, animated: true }), 90)}
                 placeholder={t("speech.textPlaceholder")}
                 placeholderTextColor={theme.placeholder}
                 multiline
+                scrollEnabled
                 style={[styles.speechScriptInput, { color: theme.ink, borderColor: theme.line }]}
               />
             </View>
@@ -1683,7 +1754,8 @@ export default function App() {
             </View>
           </View>
         )}
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 
@@ -2373,7 +2445,9 @@ const styles = StyleSheet.create({
   deckEmptyState: { marginTop: 0 },
   deckRail: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 14 },
   deckTile: { aspectRatio: 0.68 },
-  speechContent: { padding: 16, paddingBottom: 90 },
+  speechKeyboard: { flex: 1 },
+  speechContent: { flexGrow: 1, padding: 16, paddingBottom: 90 },
+  speechContentEditing: { paddingTop: 8, paddingBottom: 330 },
   speechHero: { minHeight: 0, overflow: "hidden", borderRadius: 32, paddingHorizontal: 18, paddingTop: 18, paddingBottom: 16, marginBottom: 10, alignItems: "center", backgroundColor: "#080B0D", shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 30, shadowOffset: { width: 0, height: 18 }, elevation: 8 },
   speechHeroPlaying: { shadowOpacity: 0.28, shadowRadius: 34 },
   speechHeroAuraTop: { position: "absolute", width: 190, height: 190, right: -64, top: -72, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.18)" },
@@ -2411,7 +2485,7 @@ const styles = StyleSheet.create({
   speechEditorHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 10 },
   speechEditorCount: { fontSize: 11, lineHeight: 14, fontWeight: "900", textTransform: "uppercase" },
   speechTitleInput: { minHeight: 44, borderWidth: 0, borderBottomWidth: 1, paddingHorizontal: 0, paddingVertical: 7, fontSize: 22, lineHeight: 27, fontWeight: "900" },
-  speechScriptInput: { minHeight: 124, marginTop: 10, borderWidth: 0, paddingHorizontal: 0, paddingVertical: 6, textAlignVertical: "top", fontSize: 15.5, lineHeight: 22, fontWeight: "750" },
+  speechScriptInput: { minHeight: 260, marginTop: 10, borderWidth: 0, paddingHorizontal: 0, paddingVertical: 8, textAlignVertical: "top", fontSize: 16, lineHeight: 23, fontWeight: "750" },
   voicePanel: { borderRadius: 24, paddingVertical: 12, overflow: "hidden" },
   voicePanelPremium: { borderWidth: 1 },
   voicePanelSolo: { paddingVertical: 16 },
