@@ -22,7 +22,7 @@ import {
   Vibration,
   View
 } from "react-native";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import * as ImagePicker from "expo-image-picker";
 import * as Speech from "expo-speech";
 
