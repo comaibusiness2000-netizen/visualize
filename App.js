@@ -1858,11 +1858,10 @@ export default function App() {
     const currentIndex = player.index % count;
     const slide = deck[currentIndex];
     const positive = player.kind === "vision";
-    const imageOpacity = playerPulse.interpolate({ inputRange: [0, 0.18, 1], outputRange: [0.18, 1, 1] });
-    const imageScale = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [1.08, 1.16] });
-    const imageTranslateY = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [10, -16] });
-    const copyOpacity = playerPulse.interpolate({ inputRange: [0, 0.26, 1], outputRange: [0, 0, 1] });
-    const copyTranslateY = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [34, 0] });
+    const imageOpacity = playerPulse.interpolate({ inputRange: [0, 0.18, 1], outputRange: [0.2, 1, 1] });
+    const imageScale = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [0.985, 1.015] });
+    const imageTranslateY = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [8, -4] });
+    const backdropScale = playerPulse.interpolate({ inputRange: [0, 1], outputRange: [1.1, 1.16] });
     const progress = `${Math.round(((currentIndex + 1) / count) * 100)}%`;
     const shiftPlayer = (direction) => {
       softImpact();
@@ -1883,12 +1882,22 @@ export default function App() {
     };
     return (
       <Modal visible animationType="fade" onRequestClose={closePlayer}>
+        <StatusBar hidden animated />
         <View style={styles.player}>
           {slide?.imageUri ? (
-            <Animated.Image
-              source={{ uri: slide.imageUri }}
-              style={[styles.playerImage, { opacity: imageOpacity, transform: [{ translateY: imageTranslateY }, { scale: imageScale }] }]}
-            />
+            <>
+              <Animated.Image
+                source={{ uri: slide.imageUri }}
+                resizeMode="cover"
+                blurRadius={18}
+                style={[styles.playerBackdrop, { transform: [{ scale: backdropScale }] }]}
+              />
+              <Animated.Image
+                source={{ uri: slide.imageUri }}
+                resizeMode="contain"
+                style={[styles.playerImage, { opacity: imageOpacity, transform: [{ translateY: imageTranslateY }, { scale: imageScale }] }]}
+              />
+            </>
           ) : null}
           <View style={[styles.playerShade, player.kind === "anti" && styles.playerShadeAnti]} />
           <View style={styles.playerVignetteTop} />
@@ -1905,37 +1914,15 @@ export default function App() {
           <View style={styles.playerProgressBar}>
             <View style={[styles.playerProgressFill, !positive && styles.playerProgressFillAnti, { width: progress }]} />
           </View>
-          <View style={styles.playerSegmentRow}>
-            {deck.map((item, index) => (
-              <View
-                key={item.id || `${index}`}
-                style={[
-                  styles.playerSegment,
-                  index < currentIndex && styles.playerSegmentSeen,
-                  index === currentIndex && styles.playerSegmentCurrent,
-                  !positive && index === currentIndex && styles.playerSegmentCurrentAnti
-                ]}
-              />
-            ))}
-          </View>
-          <Animated.Text style={[styles.playerIndex, !positive && styles.playerIndexAnti, { opacity: copyOpacity }]}>
-            {String(currentIndex + 1).padStart(2, "0")}
-          </Animated.Text>
-          <Animated.View style={[styles.playerText, { opacity: copyOpacity, transform: [{ translateY: copyTranslateY }] }]}>
-            <Text style={[styles.playerKicker, !positive && styles.playerKickerAnti]}>{positive ? t("tab.vision") : t("tab.anti")}</Text>
-            <Text style={styles.playerTitle}>{slide?.title || "Your deck"}</Text>
-            <Text style={styles.playerCaption}>{slide?.caption || ""}</Text>
-          </Animated.View>
           <View style={styles.playerControls}>
             <TouchableOpacity style={styles.playerControl} onPress={() => shiftPlayer(-1)}>
-              <Text style={styles.playerControlGlyph}>‹</Text>
+              <Text style={styles.playerControlGlyph}>{"<"}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.playerControl, styles.playerControlPrimary]} onPress={togglePause}>
-              <Text style={styles.playerControlPrimaryIcon}>{player.paused ? "▶" : "Ⅱ"}</Text>
-              <Text style={styles.playerControlPrimaryText}>{player.paused ? "Resume" : "Pause"}</Text>
+              <Text style={styles.playerControlPrimaryText}>{player.paused ? "Play" : "Pause"}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.playerControl} onPress={() => shiftPlayer(1)}>
-              <Text style={styles.playerControlGlyph}>›</Text>
+              <Text style={styles.playerControlGlyph}>{">"}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -2532,20 +2519,21 @@ const styles = StyleSheet.create({
   navAntiFrame: { width: 22, height: 16, borderWidth: 2, borderRadius: 7 },
   navAntiSlash: { position: "absolute", width: 4, height: 24, borderRadius: 2, transform: [{ rotate: "38deg" }] },
   navVoiceLine: { height: 3, borderRadius: 3, marginVertical: 2 },
-  player: { flex: 1, backgroundColor: "#050607", justifyContent: "flex-end" },
-  playerImage: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%" },
-  playerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.34)" },
-  playerShadeAnti: { backgroundColor: "rgba(18,8,4,0.56)" },
-  playerVignetteTop: { position: "absolute", left: 0, right: 0, top: 0, height: 190, backgroundColor: "rgba(5,6,7,0.42)" },
-  playerVignetteBottom: { position: "absolute", left: 0, right: 0, bottom: 0, height: 390, backgroundColor: "rgba(5,6,7,0.54)" },
-  playerTop: { position: "absolute", left: 20, right: 20, top: 58, zIndex: 4, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  playerIconButton: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.12)", borderWidth: 1, borderColor: "rgba(255,255,255,0.18)" },
+  player: { flex: 1, backgroundColor: "#050607" },
+  playerBackdrop: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%", opacity: 0.54 },
+  playerImage: { position: "absolute", left: 0, right: 0, top: 124, bottom: 96 },
+  playerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.08)" },
+  playerShadeAnti: { backgroundColor: "rgba(18,8,4,0.24)" },
+  playerVignetteTop: { position: "absolute", left: 0, right: 0, top: 0, height: 142, backgroundColor: "rgba(5,6,7,0.42)" },
+  playerVignetteBottom: { position: "absolute", left: 0, right: 0, bottom: 0, height: 156, backgroundColor: "rgba(5,6,7,0.34)" },
+  playerTop: { position: "absolute", left: 18, right: 18, top: 48, zIndex: 4, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  playerIconButton: { width: 42, height: 42, borderRadius: 21, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(5,6,7,0.32)", borderWidth: 1, borderColor: "rgba(255,255,255,0.16)" },
   playerIconText: { color: "#FFFFFF", fontSize: 18, lineHeight: 20, fontWeight: "900" },
-  playerTopPill: { minHeight: 44, minWidth: 128, borderRadius: 22, paddingHorizontal: 14, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.12)", borderWidth: 1, borderColor: "rgba(255,255,255,0.16)" },
-  playerTopKicker: { color: "#E8C468", fontSize: 10, lineHeight: 13, fontWeight: "900", letterSpacing: 1.6, textTransform: "uppercase" },
+  playerTopPill: { minHeight: 42, minWidth: 108, borderRadius: 21, paddingHorizontal: 14, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(5,6,7,0.28)", borderWidth: 1, borderColor: "rgba(255,255,255,0.14)" },
+  playerTopKicker: { color: "#E8C468", fontSize: 9, lineHeight: 12, fontWeight: "900", letterSpacing: 1.4, textTransform: "uppercase" },
   playerTopKickerAnti: { color: "#F09A76" },
-  playerCount: { color: "rgba(255,249,237,0.76)", marginTop: 1, fontSize: 12, lineHeight: 15, fontWeight: "900" },
-  playerProgressBar: { position: "absolute", left: 20, right: 20, top: 116, zIndex: 3, height: 4, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.18)" },
+  playerCount: { color: "rgba(255,249,237,0.82)", marginTop: 1, fontSize: 11, lineHeight: 14, fontWeight: "900" },
+  playerProgressBar: { position: "absolute", left: 18, right: 18, top: 110, zIndex: 3, height: 3, overflow: "hidden", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.17)" },
   playerProgressFill: { width: "0%", height: "100%", borderRadius: 999, backgroundColor: "#E8C468" },
   playerProgressFillAnti: { backgroundColor: "#DA5A3A" },
   playerSegmentRow: { position: "absolute", left: 20, right: 20, top: 128, zIndex: 3, flexDirection: "row", gap: 5 },
@@ -2560,10 +2548,10 @@ const styles = StyleSheet.create({
   playerKickerAnti: { color: "#F09A76" },
   playerTitle: { color: "#FFFFFF", fontSize: 39, lineHeight: 40, fontWeight: "900", marginTop: 8 },
   playerCaption: { color: "rgba(255,249,237,0.84)", fontSize: 16, lineHeight: 22, fontWeight: "750", marginTop: 9 },
-  playerControls: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 11, paddingHorizontal: 20, paddingBottom: 32 },
-  playerControl: { flex: 0.72, height: 52, borderRadius: 26, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.12)", borderWidth: 1, borderColor: "rgba(255,255,255,0.16)" },
-  playerControlPrimary: { flex: 1.55, flexDirection: "row", gap: 8, backgroundColor: "#FFF9ED", borderColor: "#FFF9ED" },
-  playerControlGlyph: { color: "#FFFFFF", fontSize: 32, lineHeight: 34, fontWeight: "900" },
-  playerControlPrimaryIcon: { color: "#101418", fontSize: 15, lineHeight: 17, fontWeight: "900" },
+  playerControls: { position: "absolute", left: 22, right: 22, bottom: 24, zIndex: 4, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 10 },
+  playerControl: { flex: 0.62, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(5,6,7,0.28)", borderWidth: 1, borderColor: "rgba(255,255,255,0.14)" },
+  playerControlPrimary: { flex: 1.15, flexDirection: "row", gap: 0, backgroundColor: "rgba(255,249,237,0.92)", borderColor: "rgba(255,249,237,0.92)" },
+  playerControlGlyph: { color: "#FFFFFF", fontSize: 30, lineHeight: 32, fontWeight: "900" },
+  playerControlPrimaryIcon: { display: "none" },
   playerControlPrimaryText: { color: "#101418", fontSize: 13, lineHeight: 17, fontWeight: "900" }
 });
