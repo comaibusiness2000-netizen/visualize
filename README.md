@@ -78,5 +78,6 @@ Current TestFlight prep:
 - Privacy URL: `https://comaibusiness2000-netizen.github.io/visualize/privacy.html`
 - Support URL: `https://comaibusiness2000-netizen.github.io/visualize/support.html`
 - App Store prep notes: `docs/app-store-prep.md`
+- Premium speech setup: `docs/premium-tts.md`
 - Tomorrow's TestFlight runbook: `docs/testflight-tomorrow.md`
 - Things you can do before Apple Developer: `docs/can-do-without-apple-developer.md`

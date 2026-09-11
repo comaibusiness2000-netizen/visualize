@@ -1,6 +1,7 @@
 [build]
   publish = "preview"
   command = ""
+  functions = "netlify/functions"
 
 [[headers]]
   for = "/*"

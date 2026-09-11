@@ -36,6 +36,9 @@ const SPEECH_AUDIO_DIR = `${FileSystem.documentDirectory}kairum-speech-audio/`;
 const PREMIUM_TTS_ENDPOINT = typeof process !== "undefined"
   ? (process.env?.EXPO_PUBLIC_TTS_ENDPOINT || "")
   : "";
+const PREMIUM_TTS_CLIENT_TOKEN = typeof process !== "undefined"
+  ? (process.env?.EXPO_PUBLIC_TTS_CLIENT_TOKEN || "")
+  : "";
 const PREMIUM_TTS_TIMEOUT_MS = 45000;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
@@ -193,7 +196,7 @@ const voiceProfiles = [
     id: "maya",
     name: "Maya",
     note: "Warm steady voice",
-    premiumVoice: "coral",
+    premiumVoice: "marin",
     premiumInstructions: "Speak like a calm human coach in a close one-to-one conversation. Warm, grounded, emotionally present, motivational without sounding theatrical. Use natural pacing, small pauses, and believable conviction.",
     rate: 0.9,
     pitch: 1.0,
@@ -210,7 +213,7 @@ const voiceProfiles = [
     id: "noah",
     name: "Noah",
     note: "Grounded male voice",
-    premiumVoice: "ash",
+    premiumVoice: "cedar",
     premiumInstructions: "Speak like a grounded male coach before an important training session. Human, steady, direct, with depth and quiet intensity. Avoid a robotic announcer tone. Let the words feel personal and lived-in.",
     rate: 0.86,
     pitch: 0.94,
@@ -717,9 +720,13 @@ async function fetchPremiumSpeechAudio(text, profile, languageId) {
   if (existing.exists) return destination;
 
   await ensureSpeechAudioDirectory();
+  const headers = { "Content-Type": "application/json" };
+  if (PREMIUM_TTS_CLIENT_TOKEN) {
+    headers["x-kairum-client-token"] = PREMIUM_TTS_CLIENT_TOKEN;
+  }
   const response = await fetchWithTimeout(PREMIUM_TTS_ENDPOINT, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({
       text,
       language: languageSpeechCode(languageId),
