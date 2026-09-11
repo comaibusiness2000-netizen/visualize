@@ -116,11 +116,12 @@ function choosePersistedState(primary, backup) {
 }
 
 async function readPersistedState() {
-  const [primary, backup] = await Promise.all([
+  const [primary, backup, temporary] = await Promise.all([
     readStateFile(STATE_FILE),
-    readStateFile(STATE_BACKUP_FILE)
+    readStateFile(STATE_BACKUP_FILE),
+    readStateFile(STATE_TEMP_FILE)
   ]);
-  return choosePersistedState(primary, backup);
+  return choosePersistedState(choosePersistedState(primary, backup), temporary);
 }
 
 function persistLocalState(state) {
@@ -1508,6 +1509,7 @@ export default function App() {
         onPress: async () => {
           await FileSystem.deleteAsync(STATE_FILE, { idempotent: true }).catch(() => {});
           await FileSystem.deleteAsync(STATE_BACKUP_FILE, { idempotent: true }).catch(() => {});
+          await FileSystem.deleteAsync(STATE_TEMP_FILE, { idempotent: true }).catch(() => {});
           await FileSystem.deleteAsync(IMAGE_DIR, { idempotent: true }).catch(() => {});
           await FileSystem.deleteAsync(SPEECH_AUDIO_DIR, { idempotent: true }).catch(() => {});
           Speech.stop();
