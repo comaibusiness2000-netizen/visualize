@@ -25,12 +25,18 @@ import {
 } from "react-native";
 import * as FileSystem from "expo-file-system/legacy";
 import * as ImagePicker from "expo-image-picker";
+import { createAudioPlayer, setAudioModeAsync } from "expo-audio";
 import * as Speech from "expo-speech";
 
 const STORAGE_VERSION = 2;
 const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const STATE_BACKUP_FILE = `${FileSystem.documentDirectory}visualize-state-v1.backup.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
+const SPEECH_AUDIO_DIR = `${FileSystem.documentDirectory}kairum-speech-audio/`;
+const PREMIUM_TTS_ENDPOINT = typeof process !== "undefined"
+  ? (process.env?.EXPO_PUBLIC_TTS_ENDPOINT || "")
+  : "";
+const PREMIUM_TTS_TIMEOUT_MS = 45000;
 const MAX_DECK_SLIDES = 10;
 const MAX_WHY_PEOPLE = 12;
 const LIFE_UPDATE_ANIMATION_VERSION = "life-reveal-v8";
@@ -183,10 +189,74 @@ const languages = [
 ];
 
 const voiceProfiles = [
-  { id: "maya", name: "Maya", note: "Warm female", rate: 0.84, pitch: 1.04, voiceHints: ["samantha", "moira", "tessa", "karen"], fallbackVoiceIndex: 0 },
-  { id: "noah", name: "Noah", note: "Calm male", rate: 0.76, pitch: 0.82, voiceHints: ["daniel", "alex", "tom", "aaron"], fallbackVoiceIndex: 1 },
-  { id: "iris", name: "Iris", note: "Bright female", rate: 0.98, pitch: 1.18, voiceHints: ["ava", "allison", "susan", "victoria"], fallbackVoiceIndex: 2 },
-  { id: "atlas", name: "Atlas", note: "Low male", rate: 0.86, pitch: 0.68, voiceHints: ["fred", "ralph", "oliver", "arthur"], fallbackVoiceIndex: 3 }
+  {
+    id: "maya",
+    name: "Maya",
+    note: "Warm steady voice",
+    premiumVoice: "coral",
+    premiumInstructions: "Speak like a calm human coach in a close one-to-one conversation. Warm, grounded, emotionally present, motivational without sounding theatrical. Use natural pacing, small pauses, and believable conviction.",
+    rate: 0.9,
+    pitch: 1.0,
+    fallbackVoiceIndex: 0,
+    voiceHints: {
+      en: ["ava", "samantha", "nicky", "allison", "susan", "moira"],
+      es: ["monica", "paulina", "marisol"],
+      fr: ["audrey", "amelie", "aurelie"],
+      pt: ["luciana", "joana"],
+      zh: ["ting-ting", "mei-jia", "sin-ji"]
+    }
+  },
+  {
+    id: "noah",
+    name: "Noah",
+    note: "Grounded male voice",
+    premiumVoice: "ash",
+    premiumInstructions: "Speak like a grounded male coach before an important training session. Human, steady, direct, with depth and quiet intensity. Avoid a robotic announcer tone. Let the words feel personal and lived-in.",
+    rate: 0.86,
+    pitch: 0.94,
+    fallbackVoiceIndex: 1,
+    voiceHints: {
+      en: ["daniel", "aaron", "alex", "oliver"],
+      es: ["jorge", "diego", "juan"],
+      fr: ["thomas", "nicolas"],
+      pt: ["felipe", "joaquim"],
+      zh: ["li-mu", "sin-ji"]
+    }
+  },
+  {
+    id: "iris",
+    name: "Iris",
+    note: "Clear focused voice",
+    premiumVoice: "nova",
+    premiumInstructions: "Speak with a focused, clear, human voice. Supportive and motivating, but not overly cheerful. Use natural rhythm and emotional emphasis where the user needs belief and momentum.",
+    rate: 0.94,
+    pitch: 1.03,
+    fallbackVoiceIndex: 2,
+    voiceHints: {
+      en: ["zoe", "victoria", "ava", "samantha"],
+      es: ["paulina", "monica"],
+      fr: ["amelie", "audrey"],
+      pt: ["joana", "luciana"],
+      zh: ["mei-jia", "ting-ting"]
+    }
+  },
+  {
+    id: "atlas",
+    name: "Atlas",
+    note: "Slow motivational voice",
+    premiumVoice: "onyx",
+    premiumInstructions: "Speak like a deep motivational mentor. Slow, composed, intense, and believable. Emphasize discipline, action, and self-respect with human pauses and emotional weight.",
+    rate: 0.8,
+    pitch: 0.9,
+    fallbackVoiceIndex: 3,
+    voiceHints: {
+      en: ["aaron", "daniel", "oliver", "alex"],
+      es: ["diego", "jorge", "juan"],
+      fr: ["thomas", "nicolas"],
+      pt: ["felipe", "joaquim"],
+      zh: ["li-mu", "ting-ting"]
+    }
+  }
 ];
 
 const voiceProfileAliases = {
@@ -194,6 +264,90 @@ const voiceProfileAliases = {
   nora: "iris",
   matteo: "atlas"
 };
+
+const roboticVoiceMarkers = [
+  "albert",
+  "bad news",
+  "bahh",
+  "bells",
+  "boing",
+  "bubbles",
+  "cellos",
+  "compact",
+  "fred",
+  "good news",
+  "hysterical",
+  "jester",
+  "junior",
+  "kathy",
+  "organ",
+  "ralph",
+  "superstar",
+  "trinoids",
+  "whisper",
+  "wobble",
+  "zarvox"
+];
+
+function languageSpeechCode(languageId) {
+  return (languages.find((item) => item.id === languageId) || languages[0]).speech;
+}
+
+function plainTextSample(text) {
+  return ` ${String(text || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, " ")} `;
+}
+
+function detectSpeechLanguageId(text, fallbackLanguageId = "en") {
+  const sample = plainTextSample(text);
+  if (/[\u4e00-\u9fff]/.test(sample)) return "zh";
+  const fallback = normalizeLanguageId(fallbackLanguageId);
+  const markerSets = {
+    en: [" i ", " you ", " the ", " and ", " will ", " my ", " myself ", " become ", " today "],
+    es: [" yo ", " tu ", " que ", " para ", " con ", " una ", " quiero ", " puedo ", " soy ", " meta ", " lograr ", " hoy "],
+    fr: [" je ", " tu ", " que ", " pour ", " avec ", " une ", " veux ", " peux ", " suis ", " objectif ", " aujourd "],
+    pt: [" eu ", " voce ", " que ", " para ", " com ", " uma ", " quero ", " posso ", " sou ", " objetivo ", " hoje "]
+  };
+  const scores = Object.fromEntries(Object.keys(markerSets).map((id) => [id, 0]));
+  Object.entries(markerSets).forEach(([id, markers]) => {
+    markers.forEach((marker) => {
+      if (sample.includes(marker)) scores[id] += 1;
+    });
+  });
+  const best = Object.entries(scores).sort((a, b) => b[1] - a[1])[0];
+  return best && best[1] >= 2 ? best[0] : fallback;
+}
+
+function voiceLabel(voice) {
+  return `${voice?.name || ""} ${voice?.identifier || ""} ${voice?.quality || ""}`.toLowerCase();
+}
+
+function voiceHintsForLanguage(profile, languageId) {
+  const hints = profile.voiceHints || {};
+  if (Array.isArray(hints)) return hints;
+  return [...(hints[languageId] || []), ...(hints.all || [])];
+}
+
+function scoreVoiceCandidate(voice, profile, targetLanguageId, index) {
+  const label = voiceLabel(voice);
+  const hints = voiceHintsForLanguage(profile, targetLanguageId);
+  const hinted = hints.some((hint) => label.includes(hint));
+  const robotic = roboticVoiceMarkers.some((marker) => label.includes(marker));
+  let score = 0;
+  if (normalizeLanguageId(voice.language) === targetLanguageId) score += 60;
+  if (String(voice.language || "").toLowerCase() === languageSpeechCode(targetLanguageId).toLowerCase()) score += 16;
+  if (String(voice.quality || "").toLowerCase() === "enhanced") score += 36;
+  if (label.includes("enhanced") || label.includes("premium")) score += 24;
+  if (label.includes("siri")) score += 18;
+  if (hinted) score += 80;
+  if (robotic) score -= 90;
+  if (label.includes("compact")) score -= 20;
+  score -= Math.abs(index - (profile.fallbackVoiceIndex || 0)) * 0.25;
+  return { voice, score, hinted, robotic };
+}
 
 const copy = {
   en: {
@@ -514,6 +668,83 @@ async function ensureImageDirectory() {
   }
 }
 
+async function ensureSpeechAudioDirectory() {
+  const info = await FileSystem.getInfoAsync(SPEECH_AUDIO_DIR);
+  if (!info.exists) {
+    await FileSystem.makeDirectoryAsync(SPEECH_AUDIO_DIR, { intermediates: true });
+  }
+}
+
+function hashString(value) {
+  let hash = 2166136261;
+  const input = String(value || "");
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(16);
+}
+
+function speechAudioFilename(text, profile, languageId) {
+  const voice = profile?.premiumVoice || profile?.id || "voice";
+  const hash = hashString(`${voice}|${languageId}|${text}`);
+  return `${SPEECH_AUDIO_DIR}${languageId}-${voice}-${hash}.mp3`;
+}
+
+async function writeSpeechBase64(destination, audioBase64) {
+  await FileSystem.writeAsStringAsync(destination, audioBase64, {
+    encoding: FileSystem.EncodingType.Base64
+  });
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = PREMIUM_TTS_TIMEOUT_MS) {
+  const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timeout = setTimeout(() => controller?.abort(), timeoutMs);
+  try {
+    return await fetch(url, {
+      ...options,
+      ...(controller ? { signal: controller.signal } : {})
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function fetchPremiumSpeechAudio(text, profile, languageId) {
+  if (!PREMIUM_TTS_ENDPOINT) return null;
+  const destination = speechAudioFilename(text, profile, languageId);
+  const existing = await FileSystem.getInfoAsync(destination);
+  if (existing.exists) return destination;
+
+  await ensureSpeechAudioDirectory();
+  const response = await fetchWithTimeout(PREMIUM_TTS_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      text,
+      language: languageSpeechCode(languageId),
+      profileId: profile.id,
+      voice: profile.premiumVoice,
+      instructions: profile.premiumInstructions,
+      format: "mp3"
+    })
+  });
+  if (!response.ok) throw new Error(`Premium speech failed: ${response.status}`);
+
+  const payload = await response.json();
+  const audioUrl = payload.audioUrl || payload.url;
+  const audioBase64 = payload.audioBase64 || payload.base64;
+  if (audioBase64) {
+    await writeSpeechBase64(destination, audioBase64);
+    return destination;
+  }
+  if (audioUrl) {
+    const downloaded = await FileSystem.downloadAsync(audioUrl, destination);
+    return downloaded.uri;
+  }
+  return null;
+}
+
 function imageExtension(uri) {
   const clean = String(uri || "").split("?")[0];
   const match = clean.match(/\.([a-zA-Z0-9]+)$/);
@@ -612,10 +843,11 @@ export default function App() {
   const voiceScrollRef = useRef(null);
   const appStateRef = useRef("active");
   const stateDataRef = useRef(blankState);
+  const premiumSpeechPlayerRef = useRef(null);
+  const premiumSpeechSubscriptionRef = useRef(null);
 
   const theme = appState.settings.darkMode ? darkTheme : lightTheme;
   const language = appState.settings.language || "en";
-  const languageMeta = languages.find((item) => item.id === language) || languages[0];
   const resolvedVoiceProfileId = voiceProfileAliases[appState.settings.voiceProfileId] || appState.settings.voiceProfileId;
   const activeVoiceProfile = voiceProfiles.find((item) => item.id === resolvedVoiceProfileId) || voiceProfiles[0];
   const t = (key, values = {}) => {
@@ -661,15 +893,30 @@ export default function App() {
 
   useEffect(() => {
     let mounted = true;
-    Speech.getAvailableVoicesAsync()
-      .then((voices) => {
-        if (mounted && Array.isArray(voices)) {
-          setAvailableVoices(voices);
-        }
-      })
-      .catch(() => {});
+    const loadVoices = () => {
+      Speech.getAvailableVoicesAsync()
+        .then((voices) => {
+          if (mounted && Array.isArray(voices)) {
+            setAvailableVoices(voices);
+          }
+        })
+        .catch(() => {});
+    };
+    loadVoices();
+    const refreshTimer = setTimeout(loadVoices, 900);
     return () => {
       mounted = false;
+      clearTimeout(refreshTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      premiumSpeechSubscriptionRef.current?.remove?.();
+      premiumSpeechSubscriptionRef.current = null;
+      premiumSpeechPlayerRef.current?.remove?.();
+      premiumSpeechPlayerRef.current = null;
+      Speech.stop();
     };
   }, []);
 
@@ -1100,45 +1347,94 @@ export default function App() {
     setDraftSpeechText(speech?.text || "");
   }
 
-  function playSpeech() {
+  async function playSpeech() {
     const text = draftSpeechText.trim() || activeSpeech?.text || "";
     if (!text) {
       Alert.alert(t("alert.selfSpeech"), t("alert.writeSpeechPlay"));
       return;
     }
-    Speech.stop();
+    const speechLanguageId = detectSpeechLanguageId(text, language);
+    stopSpeech();
     setSpeechPlaying(true);
-    Speech.speak(text, {
-      ...speechOptions(activeVoiceProfile),
-      onDone: () => setSpeechPlaying(false),
-      onStopped: () => setSpeechPlaying(false),
-      onError: () => setSpeechPlaying(false)
-    });
+    try {
+      const premiumUri = await fetchPremiumSpeechAudio(text, activeVoiceProfile, speechLanguageId);
+      if (premiumUri) {
+        await playPremiumSpeechAudio(premiumUri, {
+          title: draftSpeechTitle.trim() || activeSpeech?.title || t("speech.heading"),
+          artist: activeVoiceProfile.name
+        });
+        return;
+      }
+    } catch (error) {
+      // Premium speech falls back to local device voices when the backend is unavailable.
+    }
+    try {
+      Speech.speak(text, {
+        ...speechOptions(activeVoiceProfile, text),
+        onDone: () => setSpeechPlaying(false),
+        onStopped: () => setSpeechPlaying(false),
+        onError: () => setSpeechPlaying(false)
+      });
+    } catch (error) {
+      setSpeechPlaying(false);
+    }
   }
 
   function stopSpeech() {
     setSpeechPlaying(false);
+    premiumSpeechSubscriptionRef.current?.remove?.();
+    premiumSpeechSubscriptionRef.current = null;
+    if (premiumSpeechPlayerRef.current) {
+      try {
+        premiumSpeechPlayerRef.current.pause?.();
+        premiumSpeechPlayerRef.current.seekTo?.(0)?.catch?.(() => {});
+        premiumSpeechPlayerRef.current.remove?.();
+      } catch (error) {}
+      premiumSpeechPlayerRef.current = null;
+    }
     Speech.stop();
   }
 
-  function resolveVoiceIdentifier(profile) {
-    if (!availableVoices.length) return "";
-    const languageVoices = availableVoices.filter((voice) => normalizeLanguageId(voice.language) === language);
-    const candidates = languageVoices.length ? languageVoices : availableVoices;
-    const hints = profile.voiceHints || [];
-    const preferred = candidates.find((voice) => {
-      const label = `${voice.name || ""} ${voice.identifier || ""}`.toLowerCase();
-      return hints.some((hint) => label.includes(hint));
+  async function playPremiumSpeechAudio(uri, metadata = {}) {
+    premiumSpeechSubscriptionRef.current?.remove?.();
+    premiumSpeechSubscriptionRef.current = null;
+    premiumSpeechPlayerRef.current?.remove?.();
+    premiumSpeechPlayerRef.current = null;
+    await setAudioModeAsync({ playsInSilentMode: true, interruptionMode: "doNotMix" }).catch(() => {});
+    const audioPlayer = createAudioPlayer({ uri }, { updateInterval: 250, keepAudioSessionActive: false });
+    premiumSpeechPlayerRef.current = audioPlayer;
+    premiumSpeechSubscriptionRef.current = audioPlayer.addListener?.("playbackStatusUpdate", (status) => {
+      if (status?.didJustFinish) {
+        premiumSpeechSubscriptionRef.current?.remove?.();
+        premiumSpeechSubscriptionRef.current = null;
+        premiumSpeechPlayerRef.current?.remove?.();
+        premiumSpeechPlayerRef.current = null;
+        setSpeechPlaying(false);
+      }
     });
-    if (preferred?.identifier) return preferred.identifier;
-    const fallbackIndex = profile.fallbackVoiceIndex || 0;
-    return candidates[fallbackIndex % candidates.length]?.identifier || "";
+    audioPlayer.setActiveForLockScreen?.(true, {
+      title: metadata.title || "Self speech",
+      artist: metadata.artist || "Kairum"
+    });
+    audioPlayer.play();
   }
 
-  function speechOptions(profile) {
-    const voice = resolveVoiceIdentifier(profile);
+  function resolveVoiceIdentifier(profile, targetLanguageId) {
+    if (!availableVoices.length) return "";
+    const languageVoices = availableVoices.filter((voice) => normalizeLanguageId(voice.language) === targetLanguageId);
+    const candidates = languageVoices.length ? languageVoices : availableVoices;
+    const scored = candidates
+      .map((voice, index) => scoreVoiceCandidate(voice, profile, targetLanguageId, index))
+      .sort((a, b) => b.score - a.score);
+    const preferred = scored.find((item) => item.hinted && !item.robotic) || scored.find((item) => !item.robotic) || scored[0];
+    return preferred?.voice?.identifier || "";
+  }
+
+  function speechOptions(profile, text = "") {
+    const speechLanguageId = detectSpeechLanguageId(text, language);
+    const voice = resolveVoiceIdentifier(profile, speechLanguageId);
     return {
-      language: languageMeta.speech,
+      language: languageSpeechCode(speechLanguageId),
       rate: profile.rate,
       pitch: profile.pitch,
       ...(voice ? { voice } : {})
@@ -1163,13 +1459,34 @@ export default function App() {
     selectVoiceProfile(index, { scroll: false });
   }
 
-  function playProfileMantra() {
+  async function playProfileMantra() {
     if (!profileMantra) return;
     softImpact();
-    Speech.stop();
-    Speech.speak(profileMantra, {
-      ...speechOptions(activeVoiceProfile)
-    });
+    const speechLanguageId = detectSpeechLanguageId(profileMantra, language);
+    stopSpeech();
+    setSpeechPlaying(true);
+    try {
+      const premiumUri = await fetchPremiumSpeechAudio(profileMantra, activeVoiceProfile, speechLanguageId);
+      if (premiumUri) {
+        await playPremiumSpeechAudio(premiumUri, {
+          title: t("life.mantraKicker"),
+          artist: activeVoiceProfile.name
+        });
+        return;
+      }
+    } catch (error) {
+      // Fall back to local voices if the premium voice service is not configured or unavailable.
+    }
+    try {
+      Speech.speak(profileMantra, {
+        ...speechOptions(activeVoiceProfile, profileMantra),
+        onDone: () => setSpeechPlaying(false),
+        onStopped: () => setSpeechPlaying(false),
+        onError: () => setSpeechPlaying(false)
+      });
+    } catch (error) {
+      setSpeechPlaying(false);
+    }
   }
 
   function resetLocalData() {
@@ -1182,6 +1499,7 @@ export default function App() {
           await FileSystem.deleteAsync(STATE_FILE, { idempotent: true }).catch(() => {});
           await FileSystem.deleteAsync(STATE_BACKUP_FILE, { idempotent: true }).catch(() => {});
           await FileSystem.deleteAsync(IMAGE_DIR, { idempotent: true }).catch(() => {});
+          await FileSystem.deleteAsync(SPEECH_AUDIO_DIR, { idempotent: true }).catch(() => {});
           Speech.stop();
           setSpeechPlaying(false);
           stateDataRef.current = blankState;
