@@ -31,6 +31,7 @@ import * as Speech from "expo-speech";
 const STORAGE_VERSION = 2;
 const STATE_FILE = `${FileSystem.documentDirectory}visualize-state-v1.json`;
 const STATE_BACKUP_FILE = `${FileSystem.documentDirectory}visualize-state-v1.backup.json`;
+const STATE_TEMP_FILE = `${FileSystem.documentDirectory}visualize-state-v1.tmp.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const SPEECH_AUDIO_DIR = `${FileSystem.documentDirectory}kairum-speech-audio/`;
 const PREMIUM_TTS_ENDPOINT = typeof process !== "undefined"
@@ -127,8 +128,10 @@ function persistLocalState(state) {
   stateWriteQueue = stateWriteQueue
     .catch(() => {})
     .then(async () => {
+      await FileSystem.writeAsStringAsync(STATE_TEMP_FILE, payload);
       await FileSystem.writeAsStringAsync(STATE_BACKUP_FILE, payload);
       await FileSystem.writeAsStringAsync(STATE_FILE, payload);
+      await FileSystem.deleteAsync(STATE_TEMP_FILE, { idempotent: true }).catch(() => {});
     });
   stateWriteQueue.catch(() => {});
   return stateWriteQueue;
