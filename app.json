@@ -2,20 +2,21 @@
   "expo": {
     "name": "Kairum",
     "slug": "samuele",
-    "version": "0.2.11",
+    "version": "0.2.12",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "visualize",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "19",
+      "buildNumber": "20",
       "bundleIdentifier": "com.samuelecomai.visualize",
       "config": {
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Kairum uses photos you select to create private Why, Vision, and Anti-vision photo decks saved on this device."
+        "NSPhotoLibraryUsageDescription": "Kairum uses photos you select to create private Why, Vision, and Anti-vision photo decks saved on this device.",
+        "NSMicrophoneUsageDescription": "Kairum uses the microphone only when you choose to record your own Self Speech audio saved on this device."
       }
     },
     "plugins": [

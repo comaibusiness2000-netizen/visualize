@@ -25,7 +25,14 @@ import {
 } from "react-native";
 import * as FileSystem from "expo-file-system/legacy";
 import * as ImagePicker from "expo-image-picker";
-import { createAudioPlayer, setAudioModeAsync } from "expo-audio";
+import {
+  createAudioPlayer,
+  RecordingPresets,
+  requestRecordingPermissionsAsync,
+  setAudioModeAsync,
+  useAudioRecorder,
+  useAudioRecorderState
+} from "expo-audio";
 import * as Speech from "expo-speech";
 
 const STORAGE_VERSION = 2;
@@ -34,6 +41,13 @@ const STATE_BACKUP_FILE = `${FileSystem.documentDirectory}visualize-state-v1.bac
 const STATE_TEMP_FILE = `${FileSystem.documentDirectory}visualize-state-v1.tmp.json`;
 const IMAGE_DIR = `${FileSystem.documentDirectory}visualize-images/`;
 const SPEECH_AUDIO_DIR = `${FileSystem.documentDirectory}kairum-speech-audio/`;
+const SPEECH_RECORDING_DIR = `${FileSystem.documentDirectory}kairum-speech-recordings/`;
+const SPEECH_RECORDING_OPTIONS = {
+  ...RecordingPresets.HIGH_QUALITY,
+  numberOfChannels: 1,
+  bitRate: 96000,
+  isMeteringEnabled: true
+};
 const PREMIUM_TTS_ENDPOINT = typeof process !== "undefined"
   ? (process.env?.EXPO_PUBLIC_TTS_ENDPOINT || "")
   : "";
@@ -426,6 +440,15 @@ const copy = {
     "speech.ready": "Ready",
     "speech.playing": "Playing",
     "speech.words": "words",
+    "speech.recording": "Recording",
+    "speech.recordVoice": "Record voice",
+    "speech.stopRecording": "Stop recording",
+    "speech.replaceRecording": "Replace voice",
+    "speech.deleteRecording": "Delete",
+    "speech.recordedVoice": "Your voice",
+    "speech.noRecording": "No voice recording yet",
+    "speech.recordHint": "Save the script, then record it once with your own voice. It stays on this device.",
+    "speech.recordSaved": "Recording saved",
     "profile.kicker": "Local-only profile",
     "profile.storageTitle": "Device storage",
     "profile.storageBody": "Saved on this iPhone only. Closing the app or restarting the phone will keep the data. Deleting the app removes the local data.",
@@ -456,6 +479,8 @@ const copy = {
     "alert.selfSpeech": "Self speech",
     "alert.writeSpeech": "Write the text you want to listen to first.",
     "alert.writeSpeechPlay": "Write a speech first.",
+    "alert.allowMicrophone": "Allow microphone access to record your own self speech.",
+    "alert.recordingFailed": "The recording could not be saved. Please try again.",
     "alert.resetTitle": "Reset local data",
     "alert.resetBody": "This removes the profile, goals, images, and self speeches from this device.",
     "alert.cancel": "Cancel",
@@ -682,6 +707,20 @@ async function ensureSpeechAudioDirectory() {
   }
 }
 
+async function ensureSpeechRecordingDirectory() {
+  const info = await FileSystem.getInfoAsync(SPEECH_RECORDING_DIR);
+  if (!info.exists) {
+    await FileSystem.makeDirectoryAsync(SPEECH_RECORDING_DIR, { intermediates: true });
+  }
+}
+
+function formatSpeechDuration(milliseconds = 0) {
+  const totalSeconds = Math.max(0, Math.round(Number(milliseconds || 0) / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = `${totalSeconds % 60}`.padStart(2, "0");
+  return `${minutes}:${seconds}`;
+}
+
 function hashString(value) {
   let hash = 2166136261;
   const input = String(value || "");
@@ -841,6 +880,7 @@ export default function App() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [player, setPlayer] = useState(null);
   const [speechPlaying, setSpeechPlaying] = useState(false);
+  const [speechRecordingBusy, setSpeechRecordingBusy] = useState(false);
   const [lifeUpdate, setLifeUpdate] = useState(null);
   const [clockTick, setClockTick] = useState(Date.now());
   const [availableVoices, setAvailableVoices] = useState([]);
@@ -856,6 +896,8 @@ export default function App() {
   const stateDataRef = useRef(blankState);
   const premiumSpeechPlayerRef = useRef(null);
   const premiumSpeechSubscriptionRef = useRef(null);
+  const speechRecorder = useAudioRecorder(SPEECH_RECORDING_OPTIONS);
+  const speechRecorderState = useAudioRecorderState(speechRecorder, 250);
 
   const theme = appState.settings.darkMode ? darkTheme : lightTheme;
   const language = appState.settings.language || "en";
@@ -1358,8 +1400,131 @@ export default function App() {
     setDraftSpeechText(speech?.text || "");
   }
 
+  function ensureActiveSpeechForRecording() {
+    const existing = stateDataRef.current.selfSpeeches[stateDataRef.current.activeSpeechIndex];
+    if (existing) return existing;
+    const timestamp = nowIso();
+    const title = draftSpeechTitle.trim() || "Recorded self speech";
+    const text = draftSpeechText.trim();
+    const committed = updateState((current) => ({
+      ...current,
+      selfSpeeches: [...current.selfSpeeches, {
+        id: uid("speech"),
+        title,
+        text,
+        source: "local",
+        syncStatus: "local",
+        sourceInstallId: current.localInstallId,
+        createdAt: timestamp,
+        updatedAt: timestamp
+      }],
+      activeSpeechIndex: current.selfSpeeches.length
+    }));
+    const created = committed.selfSpeeches[committed.activeSpeechIndex];
+    setDraftSpeechTitle(created?.title || "");
+    setDraftSpeechText(created?.text || "");
+    return created;
+  }
+
+  async function persistSpeechRecording(sourceUri, durationMillis = 0) {
+    await ensureSpeechRecordingDirectory();
+    const speech = stateDataRef.current.selfSpeeches[stateDataRef.current.activeSpeechIndex];
+    const destination = `${SPEECH_RECORDING_DIR}${speech?.id || uid("speech")}-${Date.now()}.m4a`;
+    await FileSystem.copyAsync({ from: sourceUri, to: destination });
+    const previousUri = speech?.recordingUri;
+    updateState((current) => ({
+      ...current,
+      selfSpeeches: current.selfSpeeches.map((item, index) =>
+        index === current.activeSpeechIndex
+          ? {
+              ...item,
+              recordingUri: destination,
+              recordingDurationMillis: durationMillis,
+              recordingUpdatedAt: nowIso(),
+              updatedAt: nowIso()
+            }
+          : item
+      )
+    }));
+    if (previousUri && previousUri !== destination) {
+      FileSystem.deleteAsync(previousUri, { idempotent: true }).catch(() => {});
+    }
+    return destination;
+  }
+
+  async function startSpeechRecording() {
+    if (speechRecorderState.isRecording || speechRecordingBusy) return;
+    try {
+      const permission = await requestRecordingPermissionsAsync();
+      if (!permission.granted) {
+        Alert.alert(t("alert.selfSpeech"), t("alert.allowMicrophone"));
+        return;
+      }
+      ensureActiveSpeechForRecording();
+      stopSpeech();
+      setSpeechRecordingBusy(true);
+      await setAudioModeAsync({ allowsRecording: true, playsInSilentMode: true, interruptionMode: "doNotMix" }).catch(() => {});
+      await speechRecorder.prepareToRecordAsync(SPEECH_RECORDING_OPTIONS);
+      speechRecorder.record();
+      softImpact();
+    } catch (error) {
+      Alert.alert(t("alert.selfSpeech"), t("alert.recordingFailed"));
+      await setAudioModeAsync({ allowsRecording: false, playsInSilentMode: true, interruptionMode: "doNotMix" }).catch(() => {});
+    } finally {
+      setSpeechRecordingBusy(false);
+    }
+  }
+
+  async function stopSpeechRecording() {
+    if (!speechRecorderState.isRecording || speechRecordingBusy) return;
+    try {
+      setSpeechRecordingBusy(true);
+      const durationMillis = speechRecorderState.durationMillis || Math.round((speechRecorder.currentTime || 0) * 1000);
+      await speechRecorder.stop();
+      const status = speechRecorder.getStatus?.();
+      const sourceUri = speechRecorder.uri || status?.url;
+      if (!sourceUri) throw new Error("Missing recording URI");
+      await persistSpeechRecording(sourceUri, status?.durationMillis || durationMillis);
+      softImpact();
+      Alert.alert(t("alert.selfSpeech"), t("speech.recordSaved"));
+    } catch (error) {
+      Alert.alert(t("alert.selfSpeech"), t("alert.recordingFailed"));
+    } finally {
+      setSpeechRecordingBusy(false);
+      await setAudioModeAsync({ allowsRecording: false, playsInSilentMode: true, interruptionMode: "doNotMix" }).catch(() => {});
+    }
+  }
+
+  async function deleteSpeechRecording() {
+    const speech = stateDataRef.current.selfSpeeches[stateDataRef.current.activeSpeechIndex];
+    if (!speech?.recordingUri) return;
+    const uri = speech.recordingUri;
+    updateState((current) => ({
+      ...current,
+      selfSpeeches: current.selfSpeeches.map((item, index) =>
+        index === current.activeSpeechIndex
+          ? { ...item, recordingUri: "", recordingDurationMillis: 0, recordingUpdatedAt: "", updatedAt: nowIso() }
+          : item
+      )
+    }));
+    FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
+  }
+
   async function playSpeech() {
     const text = draftSpeechText.trim() || activeSpeech?.text || "";
+    const recordingUri = activeSpeech?.recordingUri || "";
+    if (recordingUri) {
+      const recordingInfo = await FileSystem.getInfoAsync(recordingUri).catch(() => null);
+      if (recordingInfo?.exists) {
+        stopSpeech();
+        setSpeechPlaying(true);
+        await playPremiumSpeechAudio(recordingUri, {
+          title: draftSpeechTitle.trim() || activeSpeech?.title || t("speech.heading"),
+          artist: t("speech.recordedVoice")
+        });
+        return;
+      }
+    }
     if (!text) {
       Alert.alert(t("alert.selfSpeech"), t("alert.writeSpeechPlay"));
       return;
@@ -1512,6 +1677,7 @@ export default function App() {
           await FileSystem.deleteAsync(STATE_TEMP_FILE, { idempotent: true }).catch(() => {});
           await FileSystem.deleteAsync(IMAGE_DIR, { idempotent: true }).catch(() => {});
           await FileSystem.deleteAsync(SPEECH_AUDIO_DIR, { idempotent: true }).catch(() => {});
+          await FileSystem.deleteAsync(SPEECH_RECORDING_DIR, { idempotent: true }).catch(() => {});
           Speech.stop();
           setSpeechPlaying(false);
           stateDataRef.current = blankState;
@@ -1893,6 +2059,10 @@ export default function App() {
     const currentSpeechPreview = draftSpeechText.trim() || activeSpeech?.text || t("speech.emptyDraft");
     const speechWords = (draftSpeechText.trim() || activeSpeech?.text || "").split(/\s+/).filter(Boolean).length;
     const speechMinutes = Math.max(1, Math.ceil(speechWords / 135));
+    const hasRecordedVoice = Boolean(activeSpeech?.recordingUri);
+    const recordingDuration = speechRecorderState.isRecording
+      ? formatSpeechDuration(speechRecorderState.durationMillis)
+      : formatSpeechDuration(activeSpeech?.recordingDurationMillis || 0);
     const waveform = [16, 30, 22, 42, 26, 36, 18, 32, 24];
     const editingScript = speechMode === "script";
     return (
@@ -1919,7 +2089,7 @@ export default function App() {
               <View style={styles.speechHeroMeta}>
                 <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechPlaying ? t("speech.playing") : t("speech.ready")}</Text>
                 <View style={styles.speechHeroDot} />
-                <Text style={styles.speechHeroMetaText} numberOfLines={1}>{activeVoiceProfile.name}</Text>
+                <Text style={styles.speechHeroMetaText} numberOfLines={1}>{hasRecordedVoice ? t("speech.recordedVoice") : activeVoiceProfile.name}</Text>
                 <View style={styles.speechHeroDot} />
                 <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechMinutes} min</Text>
               </View>
@@ -1980,6 +2150,36 @@ export default function App() {
                 <Text style={styles.speechEditBadgeText}>{t("speech.edit")}</Text>
               </View>
             </TouchableOpacity>
+
+            <View style={[styles.speechRecordingPanel, { backgroundColor: theme.soft, borderColor: theme.line }]}>
+              <View style={styles.speechRecordingHeader}>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.voiceLabel, { color: theme.muted }]}>{t("speech.recordedVoice")}</Text>
+                  <Text style={[styles.speechRecordingTitle, { color: theme.ink }]} numberOfLines={1}>
+                    {speechRecorderState.isRecording ? `${t("speech.recording")} ${recordingDuration}` : hasRecordedVoice ? `${t("speech.recordedVoice")} ${recordingDuration}` : t("speech.noRecording")}
+                  </Text>
+                </View>
+                <View style={[styles.speechRecordingDot, speechRecorderState.isRecording && styles.speechRecordingDotActive]} />
+              </View>
+              <Text style={[styles.speechRecordingHint, { color: theme.muted }]}>{t("speech.recordHint")}</Text>
+              <View style={styles.speechRecordingActions}>
+                <TouchableOpacity
+                  style={[styles.speechRecordButton, speechRecorderState.isRecording && styles.speechRecordButtonActive]}
+                  onPress={speechRecorderState.isRecording ? stopSpeechRecording : startSpeechRecording}
+                  disabled={speechRecordingBusy}
+                  activeOpacity={0.88}
+                >
+                  <Text style={styles.speechRecordButtonText}>
+                    {speechRecorderState.isRecording ? t("speech.stopRecording") : hasRecordedVoice ? t("speech.replaceRecording") : t("speech.recordVoice")}
+                  </Text>
+                </TouchableOpacity>
+                {hasRecordedVoice && !speechRecorderState.isRecording ? (
+                  <TouchableOpacity style={[styles.speechDeleteRecordingButton, { borderColor: theme.line }]} onPress={deleteSpeechRecording} activeOpacity={0.88}>
+                    <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.deleteRecording")}</Text>
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+            </View>
 
             <View style={[styles.speechVoiceSummary, { backgroundColor: theme.soft, borderColor: theme.line }]}>
               <View>
@@ -2790,6 +2990,17 @@ const styles = StyleSheet.create({
   speechCurrentPreview: { maxWidth: "88%", marginTop: 6, fontSize: 13, lineHeight: 18, fontWeight: "750" },
   speechEditBadge: { position: "absolute", right: 13, top: 13, minHeight: 30, borderRadius: 999, paddingHorizontal: 12, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
   speechEditBadgeText: { color: "#101418", fontSize: 12, fontWeight: "900" },
+  speechRecordingPanel: { borderWidth: 1, borderRadius: 24, padding: 15, gap: 10 },
+  speechRecordingHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
+  speechRecordingTitle: { marginTop: 4, fontSize: 18, lineHeight: 22, fontWeight: "900" },
+  speechRecordingHint: { fontSize: 12.5, lineHeight: 17, fontWeight: "750" },
+  speechRecordingDot: { width: 12, height: 12, borderRadius: 6, backgroundColor: "rgba(128,128,128,0.35)" },
+  speechRecordingDotActive: { backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.32, shadowRadius: 10, shadowOffset: { width: 0, height: 0 } },
+  speechRecordingActions: { flexDirection: "row", gap: 10 },
+  speechRecordButton: { flex: 1, minHeight: 46, borderRadius: 999, paddingHorizontal: 14, alignItems: "center", justifyContent: "center", backgroundColor: "#E8C468" },
+  speechRecordButtonActive: { backgroundColor: "#DA5A3A" },
+  speechRecordButtonText: { color: "#101418", fontSize: 14, lineHeight: 18, fontWeight: "900" },
+  speechDeleteRecordingButton: { minHeight: 46, borderWidth: 1, borderRadius: 999, paddingHorizontal: 15, alignItems: "center", justifyContent: "center" },
   speechVoiceSummary: { minHeight: 68, borderWidth: 1, borderRadius: 24, paddingHorizontal: 15, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 14 },
   speechVoiceSummaryName: { marginTop: 3, fontSize: 18, lineHeight: 22, fontWeight: "900" },
   speechSmallButton: { minHeight: 38, borderWidth: 1, borderRadius: 999, paddingHorizontal: 14, alignItems: "center", justifyContent: "center" },
