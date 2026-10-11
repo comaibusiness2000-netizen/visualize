@@ -161,6 +161,12 @@ const blankState = {
     age: "",
     expectancy: 85,
     mantra: "",
+    coreFocus: "",
+    coreCost: "",
+    coreDesire: "",
+    corePeople: "",
+    coreIdentity: "",
+    coreFirstAction: "",
     startedAt: "",
     createdAt: "",
     updatedAt: "",
@@ -373,18 +379,33 @@ function scoreVoiceCandidate(voice, profile, targetLanguageId, index) {
 const copy = {
   en: {
     "tab.life": "Life",
-    "tab.goals": "For who",
+    "tab.goals": "Core",
     "tab.vision": "Vision",
     "tab.anti": "Anti",
     "tab.speech": "Speech",
     "setup.kicker": "Profile setup",
     "setup.title": "Build your life clock first.",
-    "setup.body": "Visualize starts empty. Create your profile, then add your why, images, and self speech step by step.",
+    "setup.body": "Build your life clock, then define the 90-day Core that stays visible in the app.",
     "setup.name": "First name",
     "setup.age": "Age",
     "setup.estimate": "Life estimate, example 85",
     "setup.mantra": "Personal mantra",
     "setup.mantraPlaceholder": "I keep the promises I make to myself.",
+    "setup.coreKicker": "90-Day Core",
+    "setup.coreTitle": "Define what changes next.",
+    "setup.coreBody": "These answers become your permanent Core tab. Keep them honest, specific, and short.",
+    "core.focus": "Main focus",
+    "core.focusPlaceholder": "Health, money, work, relationships, discipline...",
+    "core.cost": "If nothing changes",
+    "core.costPlaceholder": "What keeps hurting or getting delayed?",
+    "core.desire": "Day 90 result",
+    "core.desirePlaceholder": "What do you want to be true 90 days from now?",
+    "core.people": "Who this is for",
+    "core.peoplePlaceholder": "Who benefits if you become this person?",
+    "core.identity": "New identity",
+    "core.identityPlaceholder": "I am becoming someone who...",
+    "core.firstAction": "First action this week",
+    "core.firstActionPlaceholder": "What is the next concrete action?",
     "setup.create": "Create profile",
     "life.kicker": "Life clock",
     "life.days": "estimated days left",
@@ -407,12 +428,14 @@ const copy = {
     "goals.emptyTitle": "Nothing here yet.",
     "goals.emptyBody": "Start with one small action or one long-term goal.",
     "goals.complete": "{progress}% complete",
-    "why.title": "Who are you doing this for?",
-    "why.body": "Upload photos of the people behind your effort: family, an ex you want to outgrow, the child you were, a future child, a rival, or someone you want to prove wrong.",
+    "why.title": "Your 90-Day Core",
+    "why.body": "The answers you wrote during onboarding stay here: what must change, why it matters, who it is for, and what you do first.",
     "why.examples": "family|younger self|future child|prove them wrong",
-    "why.add": "Add people",
+    "why.add": "Add people photos",
+    "why.editCore": "Edit Core",
+    "why.peopleTitle": "People behind it",
     "why.emptyTitle": "No faces here yet.",
-    "why.emptyBody": "Add the people, memories, or future people that make your goals personal.",
+    "why.emptyBody": "Add photos of people, memories, or future reasons that make your Core personal.",
     "deck.visionTitle": "Create your Vision",
     "deck.antiTitle": "Create your Anti-vision",
     "deck.visionBody": "Start with photos of identity, environment, people, and the future you want to make familiar.",
@@ -532,13 +555,30 @@ const copy = {
 };
 
 Object.assign(copy.zh, {
-  "tab.goals": "For who",
-  "why.title": "Who are you doing this for?",
-  "why.body": "Upload photos of family, the child you were, a future child, a rival, or someone you want to prove wrong.",
+  "tab.goals": "Core",
+  "why.title": "Your 90-Day Core",
+  "why.body": "The answers you wrote during onboarding stay here: what must change, why it matters, who it is for, and what you do first.",
   "why.examples": "family|younger self|future child|prove them wrong",
-  "why.add": "Add people",
+  "why.add": "Add people photos",
+  "why.editCore": "Edit Core",
+  "why.peopleTitle": "People behind it",
   "why.emptyTitle": "No faces here yet.",
   "why.emptyBody": "Add the people, memories, or future people that make your goals personal.",
+  "setup.coreKicker": "90-Day Core",
+  "setup.coreTitle": "Define what changes next.",
+  "setup.coreBody": "These answers become your permanent Core tab. Keep them honest, specific, and short.",
+  "core.focus": "Main focus",
+  "core.focusPlaceholder": "Health, money, work, relationships, discipline...",
+  "core.cost": "If nothing changes",
+  "core.costPlaceholder": "What keeps hurting or getting delayed?",
+  "core.desire": "Day 90 result",
+  "core.desirePlaceholder": "What do you want to be true 90 days from now?",
+  "core.people": "Who this is for",
+  "core.peoplePlaceholder": "Who benefits if you become this person?",
+  "core.identity": "New identity",
+  "core.identityPlaceholder": "I am becoming someone who...",
+  "core.firstAction": "First action this week",
+  "core.firstActionPlaceholder": "What is the next concrete action?",
   "speech.voice": "Voice",
   "speech.heading": "Script your inner voice.",
   "speech.library": "Scripts",
@@ -550,16 +590,79 @@ Object.assign(copy.zh, {
 });
 
 Object.assign(copy.es, {
+  "tab.goals": "Core",
+  "setup.coreKicker": "Core 90 dias",
+  "setup.coreTitle": "Define que cambia ahora.",
+  "setup.coreBody": "Estas respuestas quedan visibles en la tab Core. Se honesto, especifico y breve.",
+  "core.focus": "Foco principal",
+  "core.focusPlaceholder": "Salud, dinero, trabajo, relaciones, disciplina...",
+  "core.cost": "Si nada cambia",
+  "core.costPlaceholder": "Que sigue doliendo o aplazandose?",
+  "core.desire": "Resultado dia 90",
+  "core.desirePlaceholder": "Que quieres que sea verdad en 90 dias?",
+  "core.people": "Para quien es",
+  "core.peoplePlaceholder": "Quien se beneficia si te conviertes en esa persona?",
+  "core.identity": "Nueva identidad",
+  "core.identityPlaceholder": "Me estoy convirtiendo en alguien que...",
+  "core.firstAction": "Primera accion esta semana",
+  "core.firstActionPlaceholder": "Cual es la proxima accion concreta?",
+  "why.title": "Tu Core de 90 dias",
+  "why.body": "Tus respuestas del onboarding quedan aqui: que debe cambiar, por que importa, para quien es y que haces primero.",
+  "why.add": "Agregar fotos",
+  "why.editCore": "Editar Core",
+  "why.peopleTitle": "Personas detras",
   "speech.library": "Scripts",
   "speech.current": "Script actual"
 });
 
 Object.assign(copy.fr, {
+  "tab.goals": "Core",
+  "setup.coreKicker": "Core 90 jours",
+  "setup.coreTitle": "Definis ce qui change maintenant.",
+  "setup.coreBody": "Ces reponses restent visibles dans l'onglet Core. Sois honnete, precis et bref.",
+  "core.focus": "Focus principal",
+  "core.focusPlaceholder": "Sante, argent, travail, relations, discipline...",
+  "core.cost": "Si rien ne change",
+  "core.costPlaceholder": "Qu'est-ce qui continue a faire mal ou a etre repousse?",
+  "core.desire": "Resultat jour 90",
+  "core.desirePlaceholder": "Que veux-tu voir vrai dans 90 jours?",
+  "core.people": "Pour qui",
+  "core.peoplePlaceholder": "Qui beneficie si tu deviens cette personne?",
+  "core.identity": "Nouvelle identite",
+  "core.identityPlaceholder": "Je deviens quelqu'un qui...",
+  "core.firstAction": "Premiere action cette semaine",
+  "core.firstActionPlaceholder": "Quelle est la prochaine action concrete?",
+  "why.title": "Ton Core 90 jours",
+  "why.body": "Tes reponses de l'onboarding restent ici: ce qui doit changer, pourquoi, pour qui et la premiere action.",
+  "why.add": "Ajouter photos",
+  "why.editCore": "Modifier Core",
+  "why.peopleTitle": "Personnes derriere",
   "speech.library": "Scripts",
   "speech.current": "Script actuel"
 });
 
 Object.assign(copy.pt, {
+  "tab.goals": "Core",
+  "setup.coreKicker": "Core 90 dias",
+  "setup.coreTitle": "Defina o que muda agora.",
+  "setup.coreBody": "Estas respostas ficam visiveis na tab Core. Seja honesto, especifico e breve.",
+  "core.focus": "Foco principal",
+  "core.focusPlaceholder": "Saude, dinheiro, trabalho, relacoes, disciplina...",
+  "core.cost": "Se nada mudar",
+  "core.costPlaceholder": "O que continua doendo ou sendo adiado?",
+  "core.desire": "Resultado dia 90",
+  "core.desirePlaceholder": "O que voce quer que seja verdade em 90 dias?",
+  "core.people": "Para quem e",
+  "core.peoplePlaceholder": "Quem se beneficia se voce se torna essa pessoa?",
+  "core.identity": "Nova identidade",
+  "core.identityPlaceholder": "Estou me tornando alguem que...",
+  "core.firstAction": "Primeira acao esta semana",
+  "core.firstActionPlaceholder": "Qual e a proxima acao concreta?",
+  "why.title": "Seu Core de 90 dias",
+  "why.body": "Suas respostas do onboarding ficam aqui: o que deve mudar, por que importa, para quem e e o que fazer primeiro.",
+  "why.add": "Adicionar fotos",
+  "why.editCore": "Editar Core",
+  "why.peopleTitle": "Pessoas por tras",
   "speech.library": "Scripts",
   "speech.current": "Script atual"
 });
@@ -1113,6 +1216,12 @@ export default function App() {
     const age = clamp(profileDraft.age, 0, 120);
     const expectancy = clamp(profileDraft.expectancy || 85, 50, 120);
     const mantra = String(profileDraft.mantra || "").trim();
+    const coreFocus = String(profileDraft.coreFocus || "").trim();
+    const coreCost = String(profileDraft.coreCost || "").trim();
+    const coreDesire = String(profileDraft.coreDesire || "").trim();
+    const corePeople = String(profileDraft.corePeople || "").trim();
+    const coreIdentity = String(profileDraft.coreIdentity || "").trim();
+    const coreFirstAction = String(profileDraft.coreFirstAction || "").trim();
     if (!name) {
       Alert.alert(t("alert.profile"), t("alert.addName"));
       return;
@@ -1129,6 +1238,12 @@ export default function App() {
         age,
         expectancy: Math.max(expectancy, age + 1),
         mantra,
+        coreFocus,
+        coreCost,
+        coreDesire,
+        corePeople,
+        coreIdentity,
+        coreFirstAction,
         startedAt: current.profile.startedAt || current.profile.createdAt || timestamp,
         createdAt: current.profile.createdAt || timestamp,
         updatedAt: timestamp,
@@ -1718,6 +1833,23 @@ export default function App() {
             <Text style={[styles.setupText, { color: theme.muted }]}>
               {t("setup.body")}
             </Text>
+            <View style={[styles.languageGrid, styles.onboardingLanguageGrid]}>
+              {languages.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={[
+                    styles.languageButton,
+                    {
+                      borderColor: item.id === language ? "#E8C468" : theme.line,
+                      backgroundColor: item.id === language ? "rgba(232,196,104,0.18)" : "transparent"
+                    }
+                  ]}
+                  onPress={() => updateState((current) => ({ ...current, settings: { ...current.settings, language: item.id } }))}
+                >
+                  <Text style={[styles.languageText, { color: theme.ink }]}>{item.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
             <View style={styles.setupPreview}>
               <View style={styles.setupPreviewHeader}>
                 <Text style={styles.setupPreviewKicker}>{t("life.monthMap")}</Text>
@@ -1808,6 +1940,37 @@ export default function App() {
                   maxLength={140}
                   style={[styles.input, styles.mantraInput, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
                 />
+              </View>
+              <View style={[styles.coreSetupBlock, { backgroundColor: theme.soft, borderColor: theme.line }]}>
+                <Text style={[styles.setupKicker, { color: theme.muted }]}>{t("setup.coreKicker")}</Text>
+                <Text style={[styles.coreSetupTitle, { color: theme.ink }]}>{t("setup.coreTitle")}</Text>
+                <Text style={[styles.body, { color: theme.muted }]}>{t("setup.coreBody")}</Text>
+                {[
+                  ["coreFocus", "core.focus", "core.focusPlaceholder", false],
+                  ["coreCost", "core.cost", "core.costPlaceholder", true],
+                  ["coreDesire", "core.desire", "core.desirePlaceholder", true],
+                  ["corePeople", "core.people", "core.peoplePlaceholder", true],
+                  ["coreIdentity", "core.identity", "core.identityPlaceholder", true],
+                  ["coreFirstAction", "core.firstAction", "core.firstActionPlaceholder", true]
+                ].map(([field, labelKey, placeholderKey, multiline]) => (
+                  <View key={field} style={styles.setupField}>
+                    <Text style={[styles.setupFieldLabel, { color: theme.muted }]}>{t(labelKey)}</Text>
+                    <TextInput
+                      value={String(profileDraft[field] || "")}
+                      onChangeText={(value) => setProfileDraft((current) => ({ ...current, [field]: value }))}
+                      placeholder={t(placeholderKey)}
+                      placeholderTextColor={theme.placeholder}
+                      multiline={Boolean(multiline)}
+                      numberOfLines={multiline ? 2 : 1}
+                      maxLength={180}
+                      style={[
+                        styles.input,
+                        multiline && styles.coreInput,
+                        { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }
+                      ]}
+                    />
+                  </View>
+                ))}
               </View>
             </View>
             <TouchableOpacity style={styles.primaryButton} onPress={() => { softImpact(); saveProfile(); }}>
@@ -1905,8 +2068,14 @@ export default function App() {
 
   function renderGoals() {
     const people = appState.whyPeople || [];
-    const examples = t("why.examples").split("|");
-    const motiveSlots = people.length ? people.slice(0, 3) : examples.slice(0, 3).map((label, index) => ({ id: `empty-${index}`, label }));
+    const coreCards = [
+      ["core.focus", appState.profile.coreFocus],
+      ["core.cost", appState.profile.coreCost],
+      ["core.desire", appState.profile.coreDesire],
+      ["core.people", appState.profile.corePeople],
+      ["core.identity", appState.profile.coreIdentity],
+      ["core.firstAction", appState.profile.coreFirstAction]
+    ];
     return (
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.whyHero, { backgroundColor: theme.card, borderColor: theme.line }]}>
@@ -1915,42 +2084,22 @@ export default function App() {
           <Text style={[styles.kicker, { color: theme.muted }]}>{t("tab.goals")}</Text>
           <Text style={[styles.whyTitle, { color: theme.ink }]}>{t("why.title")}</Text>
           <Text style={[styles.body, styles.centerText, { color: theme.muted }]}>{t("why.body")}</Text>
-          <View style={styles.whyMotiveStack} pointerEvents="none">
-            {motiveSlots.map((slot, index) => {
-              const imageUri = slot.imageUri;
-              return (
-                <View
-                  key={slot.id}
-                  style={[
-                    styles.whyMotiveCard,
-                    index === 0 && styles.whyMotiveCardOne,
-                    index === 1 && styles.whyMotiveCardTwo,
-                    index === 2 && styles.whyMotiveCardThree,
-                    { borderColor: imageUri ? "rgba(255,249,237,0.78)" : theme.line, backgroundColor: imageUri ? "#222629" : theme.soft }
-                  ]}
-                >
-                  {imageUri ? (
-                    <Image source={{ uri: imageUri }} style={styles.whyMotiveImage} />
-                  ) : (
-                    <Text style={[styles.whyMotivePlaceholder, { color: theme.ink }]} numberOfLines={2}>{slot.label}</Text>
-                  )}
-                </View>
-              );
-            })}
-            {people.length ? (
-              <View style={styles.whyMotiveCount}>
-                <Text style={styles.whyMotiveCountText}>{people.length}</Text>
-              </View>
-            ) : null}
-          </View>
-          <View style={styles.whyChips}>
-            {examples.map((example) => (
-              <View key={example} style={[styles.whyChip, { backgroundColor: theme.soft, borderColor: theme.line }]}>
-                <Text style={[styles.whyChipText, { color: theme.ink }]}>{example}</Text>
+          <View style={styles.coreGrid}>
+            {coreCards.map(([labelKey, value], index) => (
+              <View key={labelKey} style={[styles.coreCard, index === 2 && styles.coreCardWide, { backgroundColor: theme.soft, borderColor: theme.line }]}>
+                <Text style={[styles.coreCardLabel, { color: theme.muted }]}>{t(labelKey)}</Text>
+                <Text style={[styles.coreCardText, { color: theme.ink }]}>{String(value || t("speech.emptyDraft"))}</Text>
               </View>
             ))}
           </View>
-          <TouchableOpacity style={styles.primaryButton} onPress={() => { softImpact(); addWhyPeople(); }}>
+          <TouchableOpacity style={[styles.secondaryButton, styles.coreEditButton, { borderColor: theme.line, backgroundColor: theme.control }]} onPress={() => setProfileOpen(true)}>
+            <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("why.editCore")}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.whySectionHeader}>
+          <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("why.peopleTitle")}</Text>
+          <TouchableOpacity style={styles.primaryButtonSmall} onPress={() => { softImpact(); addWhyPeople(); }}>
             <Text style={styles.primaryText}>{t("why.add")}</Text>
           </TouchableOpacity>
         </View>
@@ -2276,6 +2425,42 @@ export default function App() {
                 maxLength={140}
                 style={[styles.input, styles.mantraInput, styles.profileMantraInput, { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }]}
               />
+            </View>
+            <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
+              <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("setup.coreKicker")}</Text>
+              <Text style={[styles.body, { color: theme.muted }]}>{t("setup.coreBody")}</Text>
+              {[
+                ["coreFocus", "core.focus", "core.focusPlaceholder", false],
+                ["coreCost", "core.cost", "core.costPlaceholder", true],
+                ["coreDesire", "core.desire", "core.desirePlaceholder", true],
+                ["corePeople", "core.people", "core.peoplePlaceholder", true],
+                ["coreIdentity", "core.identity", "core.identityPlaceholder", true],
+                ["coreFirstAction", "core.firstAction", "core.firstActionPlaceholder", true]
+              ].map(([field, labelKey, placeholderKey, multiline]) => (
+                <View key={field} style={styles.profileCoreField}>
+                  <Text style={[styles.setupFieldLabel, { color: theme.muted }]}>{t(labelKey)}</Text>
+                  <TextInput
+                    value={String(appState.profile[field] || "")}
+                    onChangeText={(value) => {
+                      setProfileDraft((current) => ({ ...current, [field]: value }));
+                      updateState((current) => ({
+                        ...current,
+                        profile: { ...current.profile, [field]: value, updatedAt: nowIso() }
+                      }));
+                    }}
+                    placeholder={t(placeholderKey)}
+                    placeholderTextColor={theme.placeholder}
+                    multiline={Boolean(multiline)}
+                    numberOfLines={multiline ? 2 : 1}
+                    maxLength={180}
+                    style={[
+                      styles.input,
+                      multiline && styles.coreInput,
+                      { color: theme.ink, backgroundColor: theme.input, borderColor: theme.line }
+                    ]}
+                  />
+                </View>
+              ))}
             </View>
             <View style={[styles.panel, { backgroundColor: theme.card, borderColor: theme.line }]}>
               <Text style={[styles.panelTitle, { color: theme.ink }]}>{t("profile.appearance")}</Text>
@@ -2748,10 +2933,15 @@ const styles = StyleSheet.create({
   setupFieldLabel: { marginBottom: 5, paddingLeft: 2, fontSize: 10.5, lineHeight: 13, fontWeight: "900", letterSpacing: 0.6, textTransform: "uppercase" },
   input: { minHeight: 48, borderRadius: 18, borderWidth: 1, paddingHorizontal: 15, paddingVertical: 10, fontSize: 16, fontWeight: "750" },
   mantraInput: { minHeight: 70, textAlignVertical: "top", lineHeight: 20 },
+  coreSetupBlock: { borderWidth: 1, borderRadius: 26, padding: 14, gap: 10, marginTop: 4 },
+  coreSetupTitle: { fontSize: 24, lineHeight: 28, fontWeight: "900", textAlign: "center" },
+  coreInput: { minHeight: 74, textAlignVertical: "top", lineHeight: 20 },
   profileMantraInput: { marginTop: 12 },
+  profileCoreField: { marginTop: 12 },
   speechInput: { minHeight: 220, textAlignVertical: "top", lineHeight: 22 },
   primaryButton: { minHeight: 52, minWidth: 190, maxWidth: "100%", alignSelf: "center", borderRadius: 999, paddingHorizontal: 28, paddingVertical: 13, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", marginTop: 14, shadowColor: "#DA5A3A", shadowOpacity: 0.22, shadowRadius: 16, shadowOffset: { width: 0, height: 10 }, elevation: 4 },
   primaryButtonFlex: { flex: 1, minHeight: 52, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.18, shadowRadius: 12, shadowOffset: { width: 0, height: 8 }, elevation: 3 },
+  primaryButtonSmall: { minHeight: 42, borderRadius: 999, paddingHorizontal: 15, alignItems: "center", justifyContent: "center", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.16, shadowRadius: 10, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
   primaryText: { color: "#FFFFFF", fontSize: 15, lineHeight: 19, textAlign: "center", fontWeight: "900" },
   secondaryButton: { flex: 1, minHeight: 50, borderRadius: 999, paddingHorizontal: 16, alignItems: "center", justifyContent: "center", borderWidth: 1 },
   secondaryText: { fontSize: 15, fontWeight: "900" },
@@ -2857,6 +3047,13 @@ const styles = StyleSheet.create({
   whyAuraTop: { position: "absolute", width: 190, height: 190, right: -72, top: -86, borderRadius: 95, backgroundColor: "rgba(232,196,104,0.16)" },
   whyAuraBottom: { position: "absolute", width: 210, height: 210, left: -104, bottom: -116, borderRadius: 105, backgroundColor: "rgba(218,90,58,0.1)" },
   whyTitle: { maxWidth: 320, marginTop: 8, fontSize: 32, lineHeight: 35, fontWeight: "900", textAlign: "center" },
+  coreGrid: { width: "100%", gap: 10, marginTop: 18 },
+  coreCard: { borderWidth: 1, borderRadius: 22, paddingHorizontal: 14, paddingVertical: 13 },
+  coreCardWide: { borderColor: "rgba(232,196,104,0.5)" },
+  coreCardLabel: { fontSize: 10.5, lineHeight: 13, fontWeight: "900", letterSpacing: 1.2, textTransform: "uppercase" },
+  coreCardText: { marginTop: 6, fontSize: 16, lineHeight: 21, fontWeight: "850" },
+  coreEditButton: { flex: 0, marginTop: 14, alignSelf: "center", minWidth: 150 },
+  whySectionHeader: { minHeight: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 10 },
   whyMotiveStack: { width: 260, height: 130, marginTop: 18, marginBottom: 4, alignSelf: "center" },
   whyMotiveCard: { position: "absolute", width: 96, height: 120, overflow: "hidden", borderWidth: 2, borderRadius: 30, alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOpacity: 0.16, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 4 },
   whyMotiveCardOne: { left: 4, top: 18, transform: [{ rotate: "-7deg" }] },
@@ -2976,6 +3173,7 @@ const styles = StyleSheet.create({
   speechDockPrimary: { borderColor: "#DA5A3A", backgroundColor: "#DA5A3A", shadowColor: "#DA5A3A", shadowOpacity: 0.18, shadowRadius: 12, shadowOffset: { width: 0, height: 8 }, elevation: 3 },
   switchRow: { minHeight: 54, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   languageGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 },
+  onboardingLanguageGrid: { alignSelf: "center", justifyContent: "center", marginTop: 12, marginBottom: 2 },
   languageButton: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 13, paddingVertical: 10 },
   languageText: { fontSize: 13, fontWeight: "900" },
   dangerButton: { minHeight: 52, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundColor: "#9D3326", marginTop: 4 },
