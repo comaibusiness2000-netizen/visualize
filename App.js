@@ -2054,7 +2054,6 @@ export default function App() {
   }
 
   function renderSpeech() {
-    const activeVoiceIndex = Math.max(0, voiceProfiles.findIndex((item) => item.id === activeVoiceProfile.id));
     const currentSpeechTitle = draftSpeechTitle.trim() || activeSpeech?.title || t("speech.heading");
     const currentSpeechPreview = draftSpeechText.trim() || activeSpeech?.text || t("speech.emptyDraft");
     const speechWords = (draftSpeechText.trim() || activeSpeech?.text || "").split(/\s+/).filter(Boolean).length;
@@ -2089,7 +2088,7 @@ export default function App() {
               <View style={styles.speechHeroMeta}>
                 <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechPlaying ? t("speech.playing") : t("speech.ready")}</Text>
                 <View style={styles.speechHeroDot} />
-                <Text style={styles.speechHeroMetaText} numberOfLines={1}>{hasRecordedVoice ? t("speech.recordedVoice") : activeVoiceProfile.name}</Text>
+                <Text style={styles.speechHeroMetaText} numberOfLines={1}>{hasRecordedVoice ? t("speech.recordedVoice") : t("speech.current")}</Text>
                 <View style={styles.speechHeroDot} />
                 <Text style={styles.speechHeroMetaText} numberOfLines={1}>{speechMinutes} min</Text>
               </View>
@@ -2181,17 +2180,8 @@ export default function App() {
               </View>
             </View>
 
-            <View style={[styles.speechVoiceSummary, { backgroundColor: theme.soft, borderColor: theme.line }]}>
-              <View>
-                <Text style={[styles.voiceLabel, { color: theme.muted }]}>{t("speech.voice")}</Text>
-                <Text style={[styles.speechVoiceSummaryName, { color: theme.ink }]}>{activeVoiceProfile.name}</Text>
-              </View>
-              <TouchableOpacity style={[styles.speechSmallButton, { borderColor: theme.line }]} onPress={() => setSpeechMode("voice")} activeOpacity={0.88}>
-                <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.edit")}</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        ) : speechMode === "script" ? (
+        ) : (
           <View style={[styles.speechStudio, styles.speechEditorStage, { backgroundColor: theme.card, borderColor: theme.line }]}>
             <View style={styles.speechStageTop}>
               <TouchableOpacity style={[styles.speechBackButton, { backgroundColor: theme.soft, borderColor: theme.line }]} onPress={() => { if (draftSpeechText.trim()) saveSpeech(); else setSpeechMode("overview"); }} activeOpacity={0.88}>
@@ -2230,57 +2220,6 @@ export default function App() {
                   <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.stop")}</Text>
                 </TouchableOpacity>
               ) : null}
-            </View>
-          </View>
-        ) : (
-          <View style={[styles.speechStudio, styles.speechEditorStage, { backgroundColor: theme.card, borderColor: theme.line }]}>
-            <View style={styles.speechStageTop}>
-              <TouchableOpacity style={[styles.speechBackButton, { backgroundColor: theme.soft, borderColor: theme.line }]} onPress={() => setSpeechMode("overview")} activeOpacity={0.88}>
-                <Text style={[styles.secondaryText, { color: theme.ink }]}>{t("speech.back")}</Text>
-              </TouchableOpacity>
-              <Text style={[styles.speechEditorCount, { color: theme.muted }]}>{t("speech.swipe")}</Text>
-            </View>
-
-            <View style={[styles.voicePanel, styles.voicePanelPremium, styles.voicePanelSolo, { backgroundColor: theme.soft, borderColor: theme.line }]}>
-              <View style={styles.voiceHeader}>
-                <Text style={[styles.voiceLabel, { color: theme.muted }]}>{t("speech.voice")}</Text>
-                <Text style={[styles.voiceHint, { color: theme.muted }]}>{activeVoiceProfile.name}</Text>
-              </View>
-              <ScrollView
-                ref={voiceScrollRef}
-                horizontal
-                pagingEnabled={false}
-                snapToInterval={238}
-                decelerationRate="fast"
-                showsHorizontalScrollIndicator={false}
-                onMomentumScrollEnd={handleVoiceMomentumEnd}
-                contentOffset={{ x: activeVoiceIndex * 238, y: 0 }}
-                contentContainerStyle={styles.voiceRail}
-              >
-                {voiceProfiles.map((profile, index) => (
-                  <TouchableOpacity
-                    key={profile.id}
-                    activeOpacity={0.88}
-                    style={[
-                      styles.voiceCard,
-                      styles.voiceCardSolo,
-                      {
-                        backgroundColor: profile.id === activeVoiceProfile.id ? "#101418" : theme.card,
-                        borderColor: profile.id === activeVoiceProfile.id ? "#E8C468" : theme.line
-                      }
-                    ]}
-                    onPress={() => selectVoiceProfile(index)}
-                  >
-                    <Text style={[styles.voiceName, { color: profile.id === activeVoiceProfile.id ? "#FFF9ED" : theme.ink }]}>{profile.name}</Text>
-                    <Text style={[styles.voiceNote, { color: profile.id === activeVoiceProfile.id ? "#D8D1C2" : theme.muted }]}>{profile.note}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-              <View style={styles.voiceDots}>
-                {voiceProfiles.map((profile) => (
-                  <View key={profile.id} style={[styles.voiceDot, profile.id === activeVoiceProfile.id && styles.voiceDotActive]} />
-                ))}
-              </View>
             </View>
           </View>
         )}
