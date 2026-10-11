@@ -2,14 +2,14 @@
   "expo": {
     "name": "Kairum",
     "slug": "samuele",
-    "version": "0.2.12",
+    "version": "0.2.13",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "visualize",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "21",
+      "buildNumber": "22",
       "bundleIdentifier": "com.samuelecomai.visualize",
       "config": {
         "usesNonExemptEncryption": false
